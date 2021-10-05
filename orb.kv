@@ -1,0 +1,722 @@
+#:kivy 1.11.0
+#:import sp kivy.metrics.sp
+#:import dp kivy.metrics.dp
+#:import data_manager data_manager
+
+########################################################################################
+# MAIN
+########################################################################################
+
+<MainLayout>:
+    id: main_layout
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: 35 / 255, 35 / 255, 35 / 255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    MainMenu_ActionBar:
+        id: ActionBar
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        ScreenManager:
+            id: sm
+            ChannelsScreen:
+                id: channels
+            PayScreen
+            IngestInvoicesScreen
+            ConnectScreen
+            NewAddressScreen
+            OpenChannelScreen
+            WelcomeScreen
+            FirstScreen
+            MailScreen
+            ConsoleScreen
+        StatusLine
+            id: status_line
+
+<Node@Button>
+    background_color: (0, 0, 0, 0)
+    background_normal: ''
+    font_size: 15
+    canvas.before:
+        Color: 
+            rgba: root.col
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [8]
+            size: (70, 100)
+
+########################################################################################
+# STATUS LINE IO
+########################################################################################
+
+<StatusLineInput>
+    id: input
+    multiline: False
+    on_text_validate: root.got_input(self.text)
+    text: ''
+    foreground_color: 1, 1, 1, 1
+    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
+
+<StatusLineOutput>
+    text: root.output
+    multiline: False
+    foreground_color: 1, 1, 1, 1
+    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
+
+
+########################################################################################
+# STATUS LINE
+########################################################################################
+
+<StatusLine>
+    id: status_line
+    height: 50
+    size_hint_y: None
+    orientation: 'horizontal'
+    canvas.before:
+        Color:
+            rgba: 55 / 255, 55 / 255, 55 / 255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Button:
+        text: 'se'
+        size_hint_x: None
+        width: 50
+        on_release: app.root.ids.sm.current = 'console'
+    StatusLineInput:
+        id: line_input
+    Button:
+        disabled: 1
+        width: 2
+        size_hint_x: None
+    StatusLineOutput:
+        id: line_output
+
+########################################################################################
+# ATTRIBUTE EDITOR
+########################################################################################
+
+<AttributeEditor>
+    ScrollView:
+        size_hint: 0.5, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        do_scroll_x: False
+        GridLayout:
+            cols: 1
+            padding: 50
+            spacing: 50
+            size_hint_y: None
+            height: self.minimum_height
+            Label:
+                text: root.selection
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: None, None
+                size: 480, 80
+                Label:
+                    text: 'Pubkey'
+                TextInput:
+                    text: root.channel.remote_pubkey if root.channel else '' 
+
+########################################################################################
+# MENU BAR
+########################################################################################
+
+
+<MainMenu_ActionBar@ActionBar>:
+    height: 50
+    size_hint_y: None
+    ActionView:
+        id: ActionView
+        HiddenIcon_ActionPrevious:
+        ActionGroup:
+            id: App_ActionGroup
+            mode: 'spinner'
+            font_size: '12sp'
+            text: '         Tools          '
+            font_name: 'DejaVuSans'
+            ActionButton:
+                text: 'Channels'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'channels'
+            ActionButton:
+                text: 'Pay'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'pay'
+            ActionButton:
+                text: 'Mail'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'mail'
+            ActionButton:
+                text: 'Open Channel'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'open_channel'
+            ActionButton:
+                text: 'New Address'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'new_address'
+            ActionButton:
+                text: 'Connect'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'connect'
+            ActionButton:
+                text: 'Ingest Invoices'
+                font_size: '12sp'
+                on_release:  app.root.ids.sm.current = 'ingest_invoices'
+        ActionGroup:
+            id: App_ActionGroup
+            mode: 'spinner'
+            text: 'App'
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            ActionButton:
+                text: 'Settings'
+                font_size: '12sp'
+                on_press: app.open_settings()
+            ActionButton:
+                text: 'Quit'
+                font_size: '12sp'
+                on_press: app.get_running_app().stop()
+        ActionButton:
+            text: 'Refresh'
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            on_press: app.root.refresh_channels()
+        ActionGroup:
+            id: scripts
+            font_size: '12sp'
+            text: '     Scripts     '
+            font_name: 'DejaVuSans'
+            mode: 'spinner'
+            # ActionButton:
+            #     text: 'Example'
+            #     font_size: '12sp'
+
+<HiddenIcon_ActionPrevious@ActionPrevious>:
+    title: ''   # app.title if app.title is not None else 'Action Previous'
+    with_previous: False
+    app_icon: ''
+    app_icon_width: 0
+    app_icon_height: 0
+    size_hint_x: None
+    width: len(self.title) * 10
+
+<WelcomeScreen>:
+    name: 'welcome'
+    Label:
+        text: 'Lightning Orb'
+        font_size: sp(50)
+
+########################################################################################
+# BALANCE
+########################################################################################
+
+
+<BalanceScreen>:
+    total_balance: total_balance
+    confirmed_balance: confirmed_balance
+    unconfirmed_balance: unconfirmed_balance
+    name: 'balance'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'On-Chain Wallet:'
+            font_size: 60
+        Label:
+            id: total_balance
+            text: 'Total Balance'
+            font_size: 50
+        Label:
+            id: confirmed_balance
+            text: 'Confirmed Balance'
+            font_size: 50
+        Label:
+            id: unconfirmed_balance
+            text: ''
+            font_size: 50
+
+########################################################################################
+# CHANNELS
+########################################################################################
+
+<ChannelsWidget>:
+
+<ChannelsLayout>:
+    canvas:
+        Color:
+            rgb: .2, .2, .2
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    ChannelsWidget:
+
+<ChannelsScreen>:
+    name: 'channels'
+    BoxLayout:
+        orientation: 'horizontal'
+        ChannelsLayout:
+        AttributeEditor:
+            size_hint: (0.3, 1)
+    HUD:
+        id: hud
+
+<ChannelWidget>:
+
+<FeeWidget>:
+    # ScatterLayout:
+    #     pos: root.c[0]-150, root.c[1]-150
+    #     size_hint: None, None
+    #     size: 200, 200
+    #     # pos_hint: {'center_x': .5, 'center_y': .5}
+    #     # rotation: 45
+    #     do_rotation: False
+    #     do_scale: False
+    #     do_translation: False
+    #     Slider:
+    #         id: slider
+    #         width: 600
+    #         value: root.to_fee
+    #         value_track: True
+    #         cursor_size: [20,20]
+    #         background_width: 10
+    #         value_track_color: [0.8, 0.5, 0.5, 1]
+    #         value_track_width: 1
+    #         max: 5000
+    #         on_touch_up: root.on_slider_touch_up(int(slider.value))
+    #     Label:
+    #         pos: root.pos[0], root.pos[1]-20
+    #         rgba: 0.5, 0.5, 0.5, 1
+    #         text: str(int(slider.value)) + 'ppm'
+    #         font_size: '24sp'
+    #         canvas.before:
+    #             PushMatrix
+    #             Scale:
+    #                 origin: self.center
+    #                 xyz: .2, .2, 1
+    #         canvas.after:
+    #             PopMatrix
+
+
+########################################################################################
+# HUD
+########################################################################################
+
+<HUD>:
+    size_hint_y: None
+    height: hud_label.height
+    Label:
+        id: hud_label
+        text: root.hud
+        size_hint: [None, None]
+        markup: True
+        size: self.texture_size
+
+########################################################################################
+# PATH FINDING
+########################################################################################
+
+<PathFindingLayout>:
+    canvas:
+        Color:
+            rgb: .2, .2, .2
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    PathFindingWidget:
+
+
+########################################################################################
+# PAY
+########################################################################################
+
+<PayScreen>:
+    name: 'pay'
+    GridLayout:
+        cols: 1
+        padding: 50
+        spacing: 50
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            orientation: 'horizontal'
+            Label:
+                text: "Fee rate PPM"
+                font_name: 'DejaVuSans'
+                font_size: '24sp'
+                size_hint_y: None
+                height: 60
+                canvas.before:
+                    PushMatrix
+                    Scale:
+                        origin: self.center
+                        xyz: .5, .5, 1
+                canvas.after:
+                    PopMatrix
+            TextInput:
+                id: fee_rate
+                multiline: False
+                size_hint_y: None
+                text: '500'
+                height: 60
+                font_size: '12sp'
+        # PathFindingLayout:
+        ScrollView:
+            size_hint: 0.5, 1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            do_scroll_x: False
+            GridLayout:
+                id: output
+                cols: 1
+                padding: 50
+                spacing: 50
+                size_hint_y: None
+                height: self.minimum_height
+        Button:
+            text: 'Pay'
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            on_release: root.pay() 
+            size_hint_y: None
+            height: 60
+        Button:
+            text: 'Kill'
+            font_size: '12sp'
+            font_name: 'DejaVuSans'
+            size_hint_y: None
+            height: 60
+
+########################################################################################
+# MAIL
+########################################################################################
+
+<MailScreen>:
+    name: 'mail'
+    ScrollView:
+        size_hint: 0.5, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        do_scroll_x: False
+        GridLayout:
+            id: inbox
+            cols: 1
+            padding: 50
+            spacing: 50
+            size_hint_y: None
+            height: self.minimum_height
+
+########################################################################################
+# OPEN CHANNEL
+########################################################################################
+
+<OpenChannelScreen>:
+    name: 'open_channel'
+    GridLayout:
+        cols: 1
+        row_force_default: True
+        row_default_height: 60
+        padding: 50
+        spacing: 50
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'Pubkey'
+            TextInput:
+                id: pk
+                size_hint_y: 1
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'Sats'
+            TextInput:
+                id: sats
+                size_hint_y: 1
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'Sats per v/byte'
+            TextInput:
+                id: sats_per_vbyte
+                size_hint_y: 1
+        Button:
+            text: 'open'
+            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
+
+########################################################################################
+# NEW ADDRESS
+########################################################################################
+
+<NewAddressScreen>:
+    name: 'new_address'
+    GridLayout:
+        cols: 1
+        row_force_default: True
+        row_default_height: 60
+        padding: 50
+        spacing: 50
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'Address'
+            TextInput:
+                id: address
+                text: 
+                size_hint_y: 1
+    Image:
+        id: img
+        source: ''
+
+
+########################################################################################
+# CONNECT
+########################################################################################
+
+<ConnectScreen>:
+    name: 'connect'
+    GridLayout:
+        cols: 1
+        row_force_default: True
+        row_default_height: 60
+        padding: 50
+        spacing: 50
+        Label:
+            text: "Connection with node is required before a channel can be opened."
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'Address'
+            TextInput:
+                id: address
+                size_hint_y: 1
+        Button:
+            text: 'Address'
+            on_release: root.connect(address.text)
+
+########################################################################################
+# INGEST INVOICES
+########################################################################################
+
+<IngestInvoicesScreen>:
+    name: 'ingest_invoices'
+    count: count
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            padding: 20
+            spacing: 20
+            BoxLayout:
+                size_hint_y: None
+                height: 150
+                orientation: 'horizontal'
+                Label:
+                    text: "Ingest"
+                    size_hint_y: None
+                    height: 150
+                TextInput:
+                    id: invoices
+                    multiline: True
+                    size_hint_y: None
+                    height: 150
+            Label:
+                id: count
+                size_hint_y: None
+                height: 50
+                text: ''
+            ScrollView:
+                size_hint: 0.5, 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: False
+                GridLayout:
+                    id: scroll_view
+                    cols: 1
+                    padding: 50
+                    spacing: 50
+                    size_hint_y: None
+                    height: self.minimum_height
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 80
+                Button:
+                    text: 'clear'
+                    size_hint_y: None
+                    height: 80
+                    on_release: root.clear_store()
+                Button:
+                    text: 'ingest'
+                    size_hint_y: None
+                    height: 80
+                    on_release: root.do_ingest(invoices.text)
+
+########################################################################################
+# INVOICE
+########################################################################################
+
+<Invoice>
+    orientation: 'vertical'
+    size_hint_y: None
+    height: 300
+    padding: 10
+    spacing: 10
+    canvas.before:
+        Color:
+            rgba: 55 / 255, 55 / 255, 55 / 255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Raw: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: root.destination[:10] + '...'
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Description: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: f'S{root.num_satoshis:,}'
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Amount: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: str(root.timestamp)
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Description: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: root.description[:50]
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+
+
+########################################################################################
+# CONSOLE SCREEN
+########################################################################################
+
+<ConsoleInput>:
+    id: text_input
+    multiline: True
+    size_hint_y: 1
+    foreground_color: 1, 1, 1, 1
+    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
+
+<ConsoleOutput>:
+    id: console_output
+    text: root.output
+    # disabled: 1
+    multiline: True
+    size_hint_y: 1
+    foreground_color: 1, 1, 1, 1
+    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
+
+
+<ConsoleScreen>:
+    name: 'console'
+    BoxLayout:
+        orientation: 'vertical'
+        ConsoleInput:
+            id: console_input
+        ConsoleOutput:
+            id: console_output
+
+<InstallScript>
+    size: (500,250)
+    size_hint: (None, None)
+    title: 'Install Script'
+    BoxLayout:
+        orientation: 'vertical'
+        TextInput:
+            id: script_name
+            text: 'example'
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                id: install
+                text: 'Install'
+<LoadScript>
+    size: (500,800)
+    size_hint: (None, None)
+    title: 'Load Script'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            id: grid
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: None, None
+            height: self.minimum_height
+            do_scroll_x: False
+
+<Project>:
+    id: contextual
+    ActionPrevious:
+        title: "Return"
+        width: 100
+        with_previous: True
+        on_release: app.root.ids.sm.current = 'channels'
+    ActionOverflow:
+    ActionButton:
+        id: run
+        text: 'Run'
+    ActionButton:
+        id: load
+        text: 'Load'
+    ActionButton:
+        id: install
+        text: 'Install'

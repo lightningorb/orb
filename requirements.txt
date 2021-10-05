@@ -1,0 +1,6 @@
+simple-chalk
+kivy
+qrcode
+grpcio
+yachalk
+numpy
