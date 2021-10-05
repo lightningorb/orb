@@ -7,20 +7,29 @@ from pathlib import Path
 
 
 class OrbApp(App):
-    title = "Lightning orb"
+    title = "Orb"
 
     def load_kvs(self):
+        """
+        This method enables splitting up .kv files,
+        currently not used.
+        """
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
             if path != "orb.kv" and "tutes" not in path:
                 Builder.load_file(path)
 
     def build(self):
+        """
+        Main build method for the app.
+        """
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
-        main_layout = MainLayout()
-        return main_layout
+        return MainLayout()
 
     def build_config(self, config):
+        """
+        Default config values.
+        """
         config.add_section("lnd")
         config.set("lnd", "hostname", "localhost:10009")
         config.set("lnd", "tls_certificate", "")
@@ -28,6 +37,9 @@ class OrbApp(App):
         config.set("lnd", "macaroon_admin", "")
 
     def build_settings(self, settings):
+        """
+        Configuration screen for the app.
+        """
         settings.add_json_panel(
             "Orb",
             self.config,
@@ -68,6 +80,9 @@ class OrbApp(App):
         )
 
     def on_config_change(self, config, section, key, value):
-        if config is self.config:
-            token = (section, key)
+        """
+        What to do when a config value changes. TODO: needs fixing.
+        Currently we'd end up with multiple LND instances for example?
+        Simply not an option.
+        """
         data_manager.data_man = data_manager.DataManager(config=self.config)

@@ -9,7 +9,6 @@ from orb_app import OrbApp
 from kivy.app import App
 
 from channel_widget import *
-from screens.welcome_screen import *
 from screens.first_screen import *
 from screens.channels_screen import *
 from screens.pay_screen import *
