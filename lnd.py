@@ -21,19 +21,11 @@ MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
 
 class Lnd:
-    def __init__(self, lnd_dir, server, network):
+    def __init__(self, tls_certificate, server, network, macaroon):
         os.environ["GRPC_SSL_CIPHER_SUITES"] = "HIGH+ECDSA"
-        if lnd_dir == "_DEFAULT_":
-            lnd_dir = "~/.lnd"
-            lnd_dir2 = "~/umbrel/lnd"
-            lnd_dir = expanduser(lnd_dir)
-            lnd_dir2 = expanduser(lnd_dir2)
-            if not os.path.isdir(lnd_dir) and os.path.isdir(lnd_dir2):
-                lnd_dir = lnd_dir2
-        else:
-            lnd_dir = expanduser(lnd_dir)
-
-        combined_credentials = self.get_credentials(lnd_dir, network)
+        combined_credentials = self.get_credentials(
+            tls_certificate.encode(), network, macaroon.encode()
+        )
         channel_options = [
             ("grpc.max_message_length", MESSAGE_SIZE_MB),
             ("grpc.max_receive_message_length", MESSAGE_SIZE_MB),
@@ -46,12 +38,8 @@ class Lnd:
         self.invoices_stub = invoicesrpc.InvoicesStub(grpc_channel)
 
     @staticmethod
-    def get_credentials(lnd_dir, network):
-        with open(f"{lnd_dir}/tls.cert", "rb") as f:
-            tls_certificate = f.read()
+    def get_credentials(tls_certificate, network, macaroon):
         ssl_credentials = grpc.ssl_channel_credentials(tls_certificate)
-        with open(f"{lnd_dir}/data/chain/bitcoin/{network}/admin.macaroon", "rb") as f:
-            macaroon = codecs.encode(f.read(), "hex")
         auth_credentials = grpc.metadata_call_credentials(
             lambda _, callback: callback([("macaroon", macaroon)], None)
         )

@@ -17,17 +17,26 @@ from channel_widget import ChannelWidget
 from kivy.clock import Clock
 import threading
 from htlc import Htlc
+from time import sleep
 
 
 def thread_function(inst):
-    lnd = data_manager.data_man.lnd
-    for e in lnd.get_htlc_events():
-        htlc = Htlc(lnd, e)
-        print(htlc.__dict__)
-        print("-" * 100)
-        for l in inst.lines:
-            if l.channel.chan_id in [e.outgoing_channel_id, e.incoming_channel_id]:
-                l.anim_htlc(htlc)
+    while True:
+        try:
+            lnd = data_manager.data_man.lnd
+            for e in lnd.get_htlc_events():
+                htlc = Htlc(lnd, e)
+                print(htlc.__dict__)
+                print("-" * 100)
+                for l in inst.lines:
+                    if l.channel.chan_id in [
+                        e.outgoing_channel_id,
+                        e.incoming_channel_id,
+                    ]:
+                        l.anim_htlc(htlc)
+        except:
+            print("Exception getting HTLCs - let's sleep")
+            sleep(10)
 
 
 class ChannelsLayout(RelativeLayout):
@@ -73,24 +82,31 @@ class ChannelsWidget(Scatter):
         self.button = None
         self.obj = InstructionGroup()
         lnd = data_manager.data_man.lnd
-        self.channels = sorted(
-            lnd.get_channels(), key=lambda x: x.local_balance / x.capacity, reverse=True
-        )
-        if not self.channels:
-            return
-        self.info = lnd.get_info()
-        max_cap = max([c.capacity for c in self.channels])
-        caps = {c.chan_id: max(2, int(c.capacity / max_cap) * 5) for c in self.channels}
-        for i, c in enumerate(self.channels):
-            l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
-            self.lines.append(l)
-            b = Node(text=lnd.get_node_alias(c.remote_pubkey), channel=c)
-            self.add_widget(b)
-            self.add_widget(l)
-            self.nodes.append(b)
-        self.node = Node(text=self.info.alias)
-        self.add_widget(self.node)
-        self.bind(pos=self.update_rect, size=self.update_rect)
+        try:
+            self.channels = sorted(
+                lnd.get_channels(),
+                key=lambda x: x.local_balance / x.capacity,
+                reverse=True,
+            )
+            if not self.channels:
+                return
+            self.info = lnd.get_info()
+            max_cap = max([c.capacity for c in self.channels])
+            caps = {
+                c.chan_id: max(2, int(c.capacity / max_cap) * 5) for c in self.channels
+            }
+            for i, c in enumerate(self.channels):
+                l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
+                self.lines.append(l)
+                b = Node(text=lnd.get_node_alias(c.remote_pubkey), channel=c)
+                self.add_widget(b)
+                self.add_widget(l)
+                self.nodes.append(b)
+            self.node = Node(text=self.info.alias)
+            self.add_widget(self.node)
+            self.bind(pos=self.update_rect, size=self.update_rect)
+        except:
+            print("Issue getting channels")
 
     def update_rect(self, *args):
         w = self.size[0]

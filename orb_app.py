@@ -23,8 +23,9 @@ class OrbApp(App):
     def build_config(self, config):
         config.add_section("lnd")
         config.set("lnd", "hostname", "localhost:10009")
-        config.set("lnd", "lnd_dir", "~/.lnd")
+        config.set("lnd", "tls_certificate", "")
         config.set("lnd", "network", "mainnet")
+        config.set("lnd", "macaroon_admin", "")
 
     def build_settings(self, settings):
         settings.add_json_panel(
@@ -41,19 +42,26 @@ class OrbApp(App):
                         "key": "hostname",
                     },
                     {
-                        "type": "string",
-                        "title": "lnd dir",
-                        "desc": "Path to .lnd directory",
-                        "section": "lnd",
-                        "key": "lnd_dir",
-                    },
-                    {
                         "type": "options",
                         "title": "Network",
                         "desc": "Network to connect to",
                         "section": "lnd",
                         "key": "network",
                         "options": ["mainnet", "testnet"],
+                    },
+                    {
+                        "type": "string",
+                        "title": "Admin Macaroon",
+                        "desc": "hex encoded macaroon: codecs.encode(..., 'hex')",
+                        "section": "lnd",
+                        "key": "macaroon_admin",
+                    },
+                    {
+                        "type": "string",
+                        "title": "tls certificate",
+                        "desc": "plain-text TLS certificate",
+                        "section": "lnd",
+                        "key": "tls_certificate",
                     },
                 ]
             ),

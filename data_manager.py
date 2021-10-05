@@ -20,17 +20,23 @@ class DataManager:
         else:
             from mock_lnd import Lnd
 
-        user_data_dir = App.get_running_app().user_data_dir
-
-        self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
         if not mock:
-            self.lnd = Lnd(
-                os.path.expanduser(config["lnd"]["lnd_dir"]),
-                config["lnd"]["hostname"],
-                config["lnd"]["network"],
-            )
+            try:
+                self.lnd = Lnd(
+                    config["lnd"]["tls_certificate"],
+                    config["lnd"]["hostname"],
+                    config["lnd"]["network"],
+                    config["lnd"]["macaroon_admin"],
+                )
+            except:
+                from mock_lnd import Lnd as MockLnd
+
+                self.lnd = MockLnd()
         else:
             self.lnd = Lnd()
+
+        user_data_dir = App.get_running_app().user_data_dir
+        self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
 
 
 data_man = None
