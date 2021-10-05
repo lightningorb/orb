@@ -283,6 +283,7 @@ class PayScreen(Screen):
 
         avoid.clear()
         self.thread = threading.Thread(target=thread_function)
+        self.thread.daemon = True
         self.thread.start()
 
     def kill(self):

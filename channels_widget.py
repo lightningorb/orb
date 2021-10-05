@@ -71,6 +71,7 @@ class ChannelsWidget(Scatter):
         controllers["channels_widget"] = self
 
         x = threading.Thread(target=thread_function, args=(self,))
+        x.daemon = True
         x.start()
 
         self.nodes = []
