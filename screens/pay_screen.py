@@ -12,7 +12,6 @@ from random import choice
 from kivy.uix.label import Label
 from routes import Routes
 from output import *
-from path_finding_widget import *
 import time
 from kivy.clock import mainthread
 

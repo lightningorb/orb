@@ -186,7 +186,7 @@
             text: 'Refresh'
             font_name: 'DejaVuSans'
             font_size: '12sp'
-            on_press: app.root.refresh_channels()
+            on_press: app.root.ids.sm.get_screen("channels").refresh()
         ActionGroup:
             id: scripts
             font_size: '12sp'
@@ -240,20 +240,18 @@
 
 <ChannelsWidget>:
 
-<ChannelsLayout>:
-    canvas:
-        Color:
-            rgb: .2, .2, .2
-        Rectangle:
-            size: self.size
-            pos: self.pos
-    ChannelsWidget:
-
 <ChannelsScreen>:
     name: 'channels'
     BoxLayout:
         orientation: 'horizontal'
-        ChannelsLayout:
+        RelativeLayout:
+            id: relative_layout
+            canvas:
+                Color:
+                    rgb: .2, .2, .2
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
         AttributeEditor:
             size_hint: (0.3, 1)
     HUD:

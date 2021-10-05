@@ -1,16 +1,29 @@
+from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
 from channels_widget import *
-from data_manager import controllers
 
 
 class ChannelsScreen(Screen):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(ChannelsScreen, self).__init__()
+        self.channels_widget = None
 
-    # built = False
+    def on_enter(self, *args):
+        if not self.channels_widget:
+            self.build()
 
-    # def on_enter(self, *args):
-    #     if not self.built:
-    #         # print("ON ENTER")
-    #         # controllers["channels_widget"].build()
-    #         self.built = True
-    #         self.ids.hud.build()
+    def build(self):
+        print("ON ENTER")
+
+        @mainthread
+        def delayed():
+            self.channels_widget = ChannelsWidget()
+            self.ids.relative_layout.add_widget(self.channels_widget)
+
+        delayed()
+
+    def refresh(self):
+        if self.channels_widget:
+            self.channels_widget.htlcs_thread.stop()
+            self.ids.relative_layout.clear_widgets()
+            self.build()

@@ -2,8 +2,6 @@ from kivy.app import App
 from kivy.storage.jsonstore import JsonStore
 import os
 
-controllers = {}
-
 
 class DataManager:
     def __init__(self, config, mock=False):

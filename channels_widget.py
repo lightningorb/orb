@@ -1,3 +1,4 @@
+import threading
 from kivy.uix.slider import Slider
 import math
 from kivy.graphics import Line, Color, InstructionGroup
@@ -11,7 +12,6 @@ from kivy.uix.button import Button
 from kivy.properties import ObjectProperty
 from kivy.uix.relativelayout import RelativeLayout
 from threading import Thread
-from data_manager import controllers
 import data_manager
 from channel_widget import ChannelWidget
 from kivy.clock import Clock
@@ -20,27 +20,37 @@ from htlc import Htlc
 from time import sleep
 
 
-def thread_function(inst):
-    while True:
-        try:
-            lnd = data_manager.data_man.lnd
-            for e in lnd.get_htlc_events():
-                htlc = Htlc(lnd, e)
-                print(htlc.__dict__)
-                print("-" * 100)
-                for l in inst.lines:
-                    if l.channel.chan_id in [
-                        e.outgoing_channel_id,
-                        e.incoming_channel_id,
-                    ]:
-                        l.anim_htlc(htlc)
-        except:
-            print("Exception getting HTLCs - let's sleep")
-            sleep(10)
+class HTLCsThread(threading.Thread):
+    def __init__(self, inst, *args, **kwargs):
+        super(HTLCsThread, self).__init__(*args, **kwargs)
+        self._stop_event = threading.Event()
+        self.inst = inst
 
+    def run(self):
+        while not self.stopped():
+            try:
+                lnd = data_manager.data_man.lnd
+                for e in lnd.get_htlc_events():
+                    if self.stopped():
+                        return
+                    htlc = Htlc(lnd, e)
+                    print(htlc.__dict__)
+                    print("-" * 100)
+                    for l in self.inst.lines:
+                        if l.channel.chan_id in [
+                            e.outgoing_channel_id,
+                            e.incoming_channel_id,
+                        ]:
+                            l.anim_htlc(htlc)
+            except:
+                print("Exception getting HTLCs - let's sleep")
+                sleep(10)
 
-class ChannelsLayout(RelativeLayout):
-    pass
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
 
 
 class AttributeEditor(BoxLayout):
@@ -68,11 +78,10 @@ class Node(Button):
 class ChannelsWidget(Scatter):
     def __init__(self, **kwargs):
         super(ChannelsWidget, self).__init__(**kwargs)
-        controllers["channels_widget"] = self
 
-        x = threading.Thread(target=thread_function, args=(self,))
-        x.daemon = True
-        x.start()
+        self.htlcs_thread = HTLCsThread(inst=self)
+        self.htlcs_thread.daemon = True
+        self.htlcs_thread.start()
 
         self.nodes = []
         self.edges = []
@@ -108,6 +117,9 @@ class ChannelsWidget(Scatter):
             self.bind(pos=self.update_rect, size=self.update_rect)
         except:
             print("Issue getting channels")
+
+    def refresh(self):
+        print("refresh")
 
     def update_rect(self, *args):
         w = self.size[0]
