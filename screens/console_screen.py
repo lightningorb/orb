@@ -90,7 +90,6 @@ class ConsoleInput(TextInput):
             pass
 
         def do_load(button, *args):
-            print(button.text)
             sc = {}
             try:
                 sc = data_manager.data_man.store.get("scripts")
@@ -98,6 +97,7 @@ class ConsoleInput(TextInput):
                 pass
             script = sc.get(button.text, None)
             self.text = script
+            inst.dismiss()
 
         for name in sc:
             button = Button(text=name, size_hint=(None, None), size=(480, 40))
@@ -119,6 +119,7 @@ class ConsoleInput(TextInput):
             sc[inst.ids.script_name.text] = self.text
             data_manager.data_man.store.put("scripts", **sc)
             ui_actions.populate_scripts()
+            inst.dismiss()
 
         inst.ids.install.bind(on_release=do_install)
 
