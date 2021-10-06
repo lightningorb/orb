@@ -36,5 +36,16 @@ class DataManager:
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
 
+    @property
+    def cert_path(self):
+        user_data_dir = App.get_running_app().user_data_dir
+        return os.path.join(user_data_dir, "tls.cert")
+
+    @staticmethod
+    def save_cert(cert):
+        user_data_dir = App.get_running_app().user_data_dir
+        with open(os.path.join(user_data_dir, "tls.cert"), "w") as f:
+            f.write(cert)
+
 
 data_man = None

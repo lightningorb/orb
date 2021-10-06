@@ -31,7 +31,9 @@ class OrbApp(App):
         Default config values.
         """
         config.add_section("lnd")
-        config.set("lnd", "hostname", "localhost:10009")
+        config.set("lnd", "hostname", "localhost")
+        config.set("lnd", "rest_port", "8080")
+        config.set("lnd", "grpc_port", "10009")
         config.set("lnd", "tls_certificate", "")
         config.set("lnd", "network", "mainnet")
         config.set("lnd", "macaroon_admin", "")
@@ -49,9 +51,23 @@ class OrbApp(App):
                     {
                         "type": "string",
                         "title": "Host",
-                        "desc": "The node's FQDN:PORT, e.g localhost:10009",
+                        "desc": "The node's IP or domain, e.g 1.1.1.1",
                         "section": "lnd",
                         "key": "hostname",
+                    },
+                    {
+                        "type": "string",
+                        "title": "GRPC Port",
+                        "desc": "The node's GRPC port, usually 10009",
+                        "section": "lnd",
+                        "key": "grpc_port",
+                    },
+                    {
+                        "type": "string",
+                        "title": "REST Port",
+                        "desc": "The node's REST API port, usually 8080",
+                        "section": "lnd",
+                        "key": "rest_port",
                     },
                     {
                         "type": "options",
@@ -85,4 +101,6 @@ class OrbApp(App):
         Currently we'd end up with multiple LND instances for example?
         Simply not an option.
         """
+        if key == "tls_certificate":
+            data_manager.DataManager.save_cert(value)
         data_manager.data_man = data_manager.DataManager(config=self.config)

@@ -31,7 +31,7 @@ class Lnd:
             ("grpc.max_receive_message_length", MESSAGE_SIZE_MB),
         ]
         grpc_channel = grpc.secure_channel(
-            server, combined_credentials, channel_options
+            server + ":10009", combined_credentials, channel_options
         )
         self.stub = lnrpc.LightningStub(grpc_channel)
         self.router_stub = lnrouterrpc.RouterStub(grpc_channel)
