@@ -24,6 +24,9 @@ class OrbApp(App):
         """
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
+        # from lnd_rest import Lnd
+        # lnd = Lnd()
+        # lnd.get_balance()
         return MainLayout()
 
     def build_config(self, config):
@@ -34,6 +37,7 @@ class OrbApp(App):
         config.set("lnd", "hostname", "localhost")
         config.set("lnd", "rest_port", "8080")
         config.set("lnd", "grpc_port", "10009")
+        config.set("lnd", "protocol", "grpc")
         config.set("lnd", "tls_certificate", "")
         config.set("lnd", "network", "mainnet")
         config.set("lnd", "macaroon_admin", "")
@@ -76,6 +80,14 @@ class OrbApp(App):
                         "section": "lnd",
                         "key": "network",
                         "options": ["mainnet", "testnet"],
+                    },
+                    {
+                        "type": "options",
+                        "title": "API Protocol",
+                        "desc": "Whether to use GRPC or REST",
+                        "section": "lnd",
+                        "key": "protocol",
+                        "options": ["grpc", "rest", "mock"],
                     },
                     {
                         "type": "string",

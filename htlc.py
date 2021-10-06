@@ -1,7 +1,10 @@
-from grpc_generated import router_pb2 as lnrouter
-from grpc_generated import lightning_pb2 as lnrpc
-from lnd import Lnd
-import datetime
+try:
+    from grpc_generated import router_pb2 as lnrouter
+    from grpc_generated import lightning_pb2 as lnrpc
+    from lnd import Lnd
+    import datetime
+except:
+    pass
 
 
 class Htlc:

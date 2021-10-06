@@ -97,15 +97,16 @@ class ChannelsWidget(Scatter):
         try:
             self.channels = sorted(
                 lnd.get_channels(),
-                key=lambda x: x.local_balance / x.capacity,
+                key=lambda x: int(x.local_balance) / int(x.capacity),
                 reverse=True,
             )
             if not self.channels:
                 return
             self.info = lnd.get_info()
-            max_cap = max([c.capacity for c in self.channels])
+            max_cap = max([int(c.capacity) for c in self.channels])
             caps = {
-                c.chan_id: max(2, int(c.capacity / max_cap) * 5) for c in self.channels
+                c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5)
+                for c in self.channels
             }
             for i, c in enumerate(self.channels):
                 l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])

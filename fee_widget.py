@@ -1,5 +1,4 @@
 from lerp import *
-import numpy as np
 import data_manager
 from kivy.graphics.context_instructions import Color
 from kivy.properties import ObjectProperty
@@ -8,6 +7,11 @@ from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from kivy.uix.slider import Slider
+
+try:
+    import numpy as np
+except:
+    pass
 
 
 class FeeWidget(Widget):
@@ -42,13 +46,16 @@ class FeeWidget(Widget):
             self.lnd.update_channel_policy(channel=self.channel, fee_rate=int(val))
 
     def update_rect(self, *args):
-        v = np.array(self.b) - np.array(self.a)
-        ub = v / np.linalg.norm(v)
-        orth = np.random.randn(2)
-        orth -= orth.dot(ub) * ub
-        orth = orth / np.linalg.norm(orth)
-        handle_a = self.c + orth * self.to_fee_norm
-        handle_b = self.c + orth * -self.to_fee_norm
-        self.circle_1.circle = (handle_a[0], handle_a[1], 5)
-        self.circle_2.circle = (handle_b[0], handle_b[1], 5)
-        self.line.points = (handle_a[0], handle_a[1], handle_b[0], handle_b[1])
+        try:
+            v = np.array(self.b) - np.array(self.a)
+            ub = v / np.linalg.norm(v)
+            orth = np.random.randn(2)
+            orth -= orth.dot(ub) * ub
+            orth = orth / np.linalg.norm(orth)
+            handle_a = self.c + orth * self.to_fee_norm
+            handle_b = self.c + orth * -self.to_fee_norm
+            self.circle_1.circle = (handle_a[0], handle_a[1], 5)
+            self.circle_2.circle = (handle_b[0], handle_b[1], 5)
+            self.line.points = (handle_a[0], handle_a[1], handle_b[0], handle_b[1])
+        except:
+            pass

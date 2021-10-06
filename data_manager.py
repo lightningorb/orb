@@ -4,35 +4,27 @@ import os
 
 
 class DataManager:
-    def __init__(self, config, mock=False):
-        self.init(config=config, mock=mock)
+    def __init__(self, config):
+        self.init(config=config)
 
-    def init(self, config, mock=False):
-        if not mock:
-            try:
-                from lnd import Lnd
-            except:
-                from mock_lnd import Lnd
+    def init(self, config):
+        if config["lnd"]["protocol"] == "grpc":
+            from lnd import Lnd as grpc_lnd
 
-                mock = True
-        else:
-            from mock_lnd import Lnd
+            self.lnd = grpc_lnd(
+                config["lnd"]["tls_certificate"],
+                config["lnd"]["hostname"],
+                config["lnd"]["network"],
+                config["lnd"]["macaroon_admin"],
+            )
+        elif config["lnd"]["protocol"] == "rest":
+            from lnd_rest import Lnd as rest_lnd
 
-        if not mock:
-            try:
-                self.lnd = Lnd(
-                    config["lnd"]["tls_certificate"],
-                    config["lnd"]["hostname"],
-                    config["lnd"]["network"],
-                    config["lnd"]["macaroon_admin"],
-                )
-            except:
-                from mock_lnd import Lnd as MockLnd
+            self.lnd = rest_lnd()
+        elif config["lnd"]["protocol"] == "mock":
+            from mock_lnd import Lnd as mock_lnd
 
-                self.lnd = MockLnd()
-        else:
-            self.lnd = Lnd()
-
+            self.lnd = MockLnd()
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
 
