@@ -18,6 +18,7 @@ from kivy.clock import Clock
 import threading
 from htlc import Htlc
 from time import sleep
+from traceback import print_exc
 
 
 class HTLCsThread(threading.Thread):
@@ -44,6 +45,7 @@ class HTLCsThread(threading.Thread):
                             l.anim_htlc(htlc)
             except:
                 print("Exception getting HTLCs - let's sleep")
+                print_exc()
                 sleep(10)
 
     def stop(self):
@@ -116,6 +118,7 @@ class ChannelsWidget(Scatter):
             self.add_widget(self.node)
             self.bind(pos=self.update_rect, size=self.update_rect)
         except:
+            print_exc()
             print("Issue getting channels")
 
     def refresh(self):
