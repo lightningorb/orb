@@ -7,15 +7,18 @@ from functools import lru_cache
 from os.path import expanduser
 import threading
 
-import grpc
 
-from grpc_generated import router_pb2 as lnrouter
-from grpc_generated import router_pb2_grpc as lnrouterrpc
-from grpc_generated import lightning_pb2 as ln
-from grpc_generated import lightning_pb2_grpc as lnrpc
-from grpc_generated import invoices_pb2 as invoices
-from grpc_generated import invoices_pb2_grpc as invoicesrpc
+try:
+    import grpc
 
+    from grpc_generated import router_pb2 as lnrouter
+    from grpc_generated import router_pb2_grpc as lnrouterrpc
+    from grpc_generated import lightning_pb2 as ln
+    from grpc_generated import lightning_pb2_grpc as lnrpc
+    from grpc_generated import invoices_pb2 as invoices
+    from grpc_generated import invoices_pb2_grpc as invoicesrpc
+except:
+    pass
 
 MESSAGE_SIZE_MB = 50 * 1024 * 1024
 

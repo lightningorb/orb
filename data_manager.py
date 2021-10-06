@@ -9,22 +9,25 @@ class DataManager:
 
     def init(self, config):
         if config["lnd"]["protocol"] == "grpc":
-            from lnd import Lnd as grpc_lnd
+            try:
+                from lnd import Lnd as grpc_lnd
 
-            self.lnd = grpc_lnd(
-                config["lnd"]["tls_certificate"],
-                config["lnd"]["hostname"],
-                config["lnd"]["network"],
-                config["lnd"]["macaroon_admin"],
-            )
+                self.lnd = grpc_lnd(
+                    config["lnd"]["tls_certificate"],
+                    config["lnd"]["hostname"],
+                    config["lnd"]["network"],
+                    config["lnd"]["macaroon_admin"],
+                )
+            except:
+                from mock_lnd import Lnd as mock_lnd
+                self.lnd = mock_lnd()                
         elif config["lnd"]["protocol"] == "rest":
             from lnd_rest import Lnd as rest_lnd
 
             self.lnd = rest_lnd()
         elif config["lnd"]["protocol"] == "mock":
             from mock_lnd import Lnd as mock_lnd
-
-            self.lnd = MockLnd()
+            self.lnd = mock_lnd()
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
 

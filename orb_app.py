@@ -37,7 +37,7 @@ class OrbApp(App):
         config.set("lnd", "hostname", "localhost")
         config.set("lnd", "rest_port", "8080")
         config.set("lnd", "grpc_port", "10009")
-        config.set("lnd", "protocol", "grpc")
+        config.set("lnd", "protocol", "mock")
         config.set("lnd", "tls_certificate", "")
         config.set("lnd", "network", "mainnet")
         config.set("lnd", "macaroon_admin", "")
