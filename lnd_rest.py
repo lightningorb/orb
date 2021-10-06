@@ -45,6 +45,35 @@ class Lnd:
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return Munch.fromDict(r.json())
 
+    @lru_cache(maxsize=None)
+    def get_edge(self, channel_id):
+        url = f"{self.fqdn}/v1/graph/edge/{channel_id}"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        return Munch.fromDict(r.json())
+
+    def get_policy_to(self, channel_id):
+        edge = self.get_edge(channel_id)
+        # node1_policy contains the fee base and rate for payments from node1 to node2
+        if edge.node1_pub == self.get_own_pubkey():
+            return Munch.fromDict(edge.node1_policy)
+        return Munch.fromDict(edge.node2_policy)
+
+    def get_policy_from(self, channel_id):
+        edge = self.get_edge(channel_id)
+        # node1_policy contains the fee base and rate for payments from node1 to node2
+        if edge.node1_pub == self.get_own_pubkey():
+            return Munch.fromDict(edge.node2_policy)
+        return Munch.fromDict(edge.node1_policy)
+
+    def get_own_pubkey(self):
+        return self.get_info().identity_pubkey
+
+    @lru_cache(maxsize=None)
+    def get_node_alias(self, pub_key):
+        url = f"{self.fqdn}/v1/graph/node/{pub_key}"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        return Munch.fromDict(r.json()).node.alias
+
 
 if __name__ == "__name__":
     lnd = Lnd()

@@ -50,14 +50,13 @@ class ChannelWidget(Widget):
 
     def update_rect(self, *args):
         c, p = self.channel, self.points
-        cap = c.capacity
 
         A = (p[0], p[1])
         B = (p[2], p[3])
 
         a = lerp_2d(A, B, 0.10)
         b = lerp_2d(A, B, 0.90)
-        c = lerp_2d(a, b, (c.local_balance / c.capacity))
+        c = lerp_2d(a, b, (int(c.local_balance) / int(c.capacity)))
 
         self.line_local.points = [a[0], a[1], c[0], c[1]]
         self.line_remote.points = [c[0], c[1], b[0], b[1]]
