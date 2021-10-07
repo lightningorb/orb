@@ -42,6 +42,12 @@
     font_size: 15
     canvas.before:
         Color: 
+            rgba: (0.3,0.3,0.9,1)
+        RoundedRectangle:
+            size: (72, 102)
+            pos: [self.pos[0]-1, self.pos[1]-1]
+            radius: [8]
+        Color: 
             rgba: root.col
         RoundedRectangle:
             size: self.size
@@ -182,11 +188,11 @@
                 text: 'Quit'
                 font_size: '12sp'
                 on_press: app.get_running_app().stop()
-        ActionButton:
-            text: 'Refresh'
-            font_name: 'DejaVuSans'
-            font_size: '12sp'
-            on_press: app.root.ids.sm.get_screen("channels").refresh()
+        # ActionButton:
+        #     text: 'Refresh'
+        #     font_name: 'DejaVuSans'
+        #     font_size: '12sp'
+        #     on_press: app.root.ids.sm.get_screen("channels").refresh()
         ActionGroup:
             id: scripts
             font_size: '12sp'
@@ -238,20 +244,19 @@
 # CHANNELS
 ########################################################################################
 
-<ChannelsWidget>:
-
 <ChannelsScreen>:
     name: 'channels'
     BoxLayout:
         orientation: 'horizontal'
+        canvas:
+            Color:
+                rgb: .2, .2, .3
+            Rectangle:
+                size: self.size
+                pos: self.pos
         RelativeLayout:
             id: relative_layout
-            canvas:
-                Color:
-                    rgb: .2, .2, .2
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+            ChannelsWidget
         AttributeEditor:
             size_hint: (0.3, 1)
     HUD:

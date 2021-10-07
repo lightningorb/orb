@@ -6,12 +6,21 @@ from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
+from kivy.core.audio import SoundLoader
 
-# from numpy.linalg import norm
+try:
+    from numpy.linalg import norm
+    import numpy as np
+except:
+    pass
+
 from HUD import *
 from fee_widget import FeeWidget
 from lerp import *
 from kivy.animation import Animation
+
+send_settle = SoundLoader.load("audio/send_settle.wav")
+forward_settle = SoundLoader.load("audio/forward_settle.wav")
 
 
 class ChannelWidget(Widget):
@@ -26,13 +35,13 @@ class ChannelWidget(Widget):
 
     # def on_touch_down(self, touch):
     #     Widget.on_touch_down(self, touch)
-    # p1 = np.array(self.a)
-    # p2 = np.array(self.b)
-    # p3 = np.array(touch.pos)
-    # d = np.cross(p2 - p1, p3 - p1) / np.linalg.norm(p2 - p1)
-    # line_width = (5, 7)[abs(d) < 10]
-    # self.line_local.width = line_width
-    # self.line_remote.width = line_width
+    #     p1 = np.array(self.a)
+    #     p2 = np.array(self.b)
+    #     p3 = np.array(touch.pos)
+    #     d = np.cross(p2 - p1, p3 - p1) / np.linalg.norm(p2 - p1)
+    #     line_width = (self.width, 7)[abs(d) < 10]
+    #     self.line_local.width = line_width
+    #     self.line_remote.width = line_width
 
     def __init__(self, **kwargs):
         super(ChannelWidget, self).__init__(**kwargs)
@@ -42,9 +51,9 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.local_line_col = Color(0.5, 1, 0.5, 1)
-            self.line_local = Line(cap="square", points=[0, 0, 0, 0], width=self.width)
+            self.line_local = Line(points=[0, 0, 0, 0], width=self.width)
             self.remote_line_col = Color(0.5, 0.5, 1, 1)
-            self.line_remote = Line(cap="square", points=[0, 0, 0, 0], width=self.width)
+            self.line_remote = Line(points=[0, 0, 0, 0], width=self.width)
 
         self.bind(points=self.update_rect)
 
@@ -72,10 +81,12 @@ class ChannelWidget(Widget):
     def anim_htlc(self, htlc):
         # {'incoming_channel': '02234cf94dd9a4b76cb4', 'outgoing_channel': 'southxchange.com', 'outgoing_channel_id': 771459139617882112, 'outgoing_channel_capacity': 10000000, 'outgoing_channel_remote_balance': 1230859, 'outgoing_channel_local_balance': 8767049, 'timestamp': 1633386523, 'event_type': 'SEND', 'event_outcome': 'settle_event'}
         # {'incoming_channel': 'WalletOfSatoshi.com', 'incoming_channel_id': 770369523584794633, 'incoming_channel_capacity': 10000000, 'incoming_channel_remote_balance': 4165791, 'incoming_channel_local_balance': 5803036, 'outgoing_channel': 'OpenNode.com', 'outgoing_channel_id': 773460250725974024, 'outgoing_channel_capacity': 5000000, 'outgoing_channel_remote_balance': 26381, 'outgoing_channel_local_balance': 4971532, 'timestamp': 1633405927, 'event_type': 'FORWARD', 'event_outcome': 'settle_event'}
-        if htlc.event_type in "SEND" and htlc.event_outcome == "settle_event":
+        if htlc.event_type == "SEND" and htlc.event_outcome == "settle_event":
             self.channel.local_balance = htlc.outgoing_channel_local_balance
             self.channel.remote_balance = htlc.outgoing_channel_remote_balance
-        if htlc.event_type in "FORWARD" and htlc.event_outcome == "settle_event":
+            send_settle.play()
+        elif htlc.event_type == "FORWARD" and htlc.event_outcome == "settle_event":
+            forward_settle.play()
             if htlc.outgoing_channel_id == self.channel.chan_id:
                 self.channel.local_balance = htlc.outgoing_channel_local_balance
                 self.channel.remote_balance = htlc.outgoing_channel_remote_balance
@@ -88,11 +99,11 @@ class ChannelWidget(Widget):
         cols = {"forward_fail_event": [1, 0.5, 0.5, 1]}
         col = cols.get(htlc.event_outcome, [1, 1, 1, 1])
         (
-            Animation(rgba=col, duration=0.1)
-            + Animation(rgba=[0.5, 0.5, 1, 1], duration=0.5)
+            Animation(rgba=col, duration=0.2)
+            + Animation(rgba=[0.5, 0.5, 1, 1], duration=5)
         ).start(self.remote_line_col)
 
         (
-            Animation(rgba=col, duration=0.1)
-            + Animation(rgba=[0.5, 1, 0.5, 1], duration=0.5)
+            Animation(rgba=col, duration=0.2)
+            + Animation(rgba=[0.5, 1, 0.5, 1], duration=5)
         ).start(self.local_line_col)

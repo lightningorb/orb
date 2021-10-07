@@ -151,5 +151,6 @@ class ChannelsWidget(Scatter):
 
     def on_touch_down(self, touch):
         Scatter.on_touch_down(self, touch)
+        self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
         for n in self.nodes:
             n.col = [80 / 255, 80 / 255, 80 / 255, 1]
