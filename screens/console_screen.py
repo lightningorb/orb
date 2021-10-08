@@ -52,6 +52,15 @@ class ConsoleScreen(Screen):
 
         delayed()
 
+    @mainthread
+    def print(self, text):
+        app = App.get_running_app()
+        console = app.root.ids.sm.get_screen("console")
+        out = "\n".join(console.ids.console_output.output.split("\n")[:100])
+        console.ids.console_output.output = out + "\n" + str(text)
+        last_line = [x for x in text.split("\n") if x][-1]
+        app.root.ids.status_line.ids.line_output.output = last_line
+
 
 class InstallScript(Popup):
     pass

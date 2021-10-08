@@ -27,3 +27,9 @@ def populate_scripts():
             btn.bind(on_release=run)
 
     delayed()
+
+
+def console_output(text):
+    app = App.get_running_app()
+    console = app.root.ids.sm.get_screen("console")
+    console.print(text)

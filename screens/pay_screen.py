@@ -13,7 +13,7 @@ from kivy.uix.label import Label
 from routes import Routes
 from output import *
 import time
-from kivy.clock import mainthread
+from ui_actions import console_output
 
 # from grandalf.layouts import SugiyamaLayout
 # from grandalf.graphs import Vertex, Edge, Graph, graph_core
@@ -43,37 +43,37 @@ def handle_error(inst, response, route, routes, pk=None):
         code = -1000
         failure_source_pubkey = route.hops[-1].pub_key
     if code == 15:
-        inst.print("Temporary channel failure")
+        console_output("Temporary channel failure")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Temporary channel failure"
     elif code == 18:
-        inst.print("Unknown next peer")
+        console_output("Unknown next peer")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Unknown next peer"
     elif code == 12:
-        inst.print("Fee insufficient")
+        console_output("Fee insufficient")
         if pk == failure_source_pubkey:
             return "Fee insufficient"
     elif code == 14:
-        inst.print("Channel disabled")
+        console_output("Channel disabled")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Channel disabled"
     elif code == 13:
-        inst.print("Incorrect CLTV expiry")
+        console_output("Incorrect CLTV expiry")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Incorrect CLTV expiry"
     elif code == -1000:
-        inst.print("Timeout")
+        console_output("Timeout")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Timeout"
     else:
-        inst.print(f"Unknown error code {repr(code)}:")
-        inst.print(repr(response))
+        console_output(f"Unknown error code {repr(code)}:")
+        console_output(repr(response))
         if pk == failure_source_pubkey:
             return f"Unknown error code {repr(code)}:"
 
@@ -104,15 +104,6 @@ class PayScreen(Screen):
         self.output.lnd = data_manager.data_man.lnd
         self.store = data_manager.data_man.store
 
-    @mainthread
-    def print(self, text):
-        app = App.get_running_app()
-        console = app.root.ids.sm.get_screen("console")
-        out = "\n".join(console.ids.console_output.output.split("\n")[:100])
-        console.ids.console_output.output = out + "\n" + str(text)
-        app.root.ids.status_line.ids.line_output.output = str(text)
-        self.ids.output.add_widget(Label(text=str(text)))
-
     def load(self):
         try:
             return self.store.get("ingested_invoice")["invoices"]
@@ -133,15 +124,15 @@ class PayScreen(Screen):
         def thread_function():
             info = data_manager.data_man.lnd.get_info()
             alias = info.alias
-            self.print("pay")
-            self.print("loading invoices")
-            self.print("loaded")
+            console_output("pay")
+            console_output("loading invoices")
+            console_output("loaded")
             # nodes = set([alias])
             # edges = set()
             while True:
                 inv = self.get_invoice()
                 if not inv:
-                    self.print("no more invoices")
+                    console_output("no more invoices")
                     return
                 else:
                     peer = get_low_inbound_peer(avoid)
@@ -150,7 +141,7 @@ class PayScreen(Screen):
                             peer.remote_pubkey
                         )
                         # nodes.add(peer_alias)
-                        self.print(peer_alias)
+                        console_output(peer_alias)
                         # edges.add((alias, peer_alias))
                         payment_request = data_manager.data_man.lnd.decode_request(
                             inv["raw"]
@@ -197,7 +188,7 @@ class PayScreen(Screen):
                                 )
                                 # nodes.add(node_alias)
                                 text = f"{j:<5}:        {node_alias}"
-                                self.print(text)
+                                console_output(text)
                                 # if prev:
                                 #     edges.add((node_alias, prev))
                                 # prev = node_alias
@@ -237,7 +228,7 @@ class PayScreen(Screen):
                             #         )
 
                             if is_successful:
-                                self.print("SUCCESS")
+                                console_output("SUCCESS")
                                 self.remove_invoice(inv)
                                 sleep(10)
                                 break
@@ -272,12 +263,12 @@ class PayScreen(Screen):
                                 handle_error(self, response, route, routes)
 
                         if not has_next:
-                            self.print("No routes found!")
+                            console_output("No routes found!")
                             sleep(2)
-                            self.print(f"adding {peer.chan_id} to avoid list")
+                            console_output(f"adding {peer.chan_id} to avoid list")
                             avoid[peer.chan_id] += 1
                     else:
-                        self.print("No channels left to rebalance")
+                        console_output("No channels left to rebalance")
                         sleep(60)
 
         avoid.clear()

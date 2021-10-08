@@ -1,4 +1,5 @@
 import base64
+from ui_actions import console_output
 
 MAX_ROUTES_TO_REQUEST = 100
 
@@ -112,7 +113,7 @@ class Routes:
         if pair in self.ignored_pairs:
             return
         if show_message:
-            self.inst.print(
+            console_output(
                 f"Ignoring {self.inst.output.get_channel_representation(chan_id, to_pubkey, from_pubkey)}"
             )
         self.ignored_pairs.append(pair)
