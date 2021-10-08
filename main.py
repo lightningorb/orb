@@ -8,6 +8,7 @@ from kivy.uix.scatter import Scatter
 from orb_app import OrbApp
 from kivy.app import App
 
+from attribute_editor import *
 from channel_widget import *
 from screens.first_screen import *
 from screens.channels_screen import *

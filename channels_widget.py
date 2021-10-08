@@ -55,12 +55,6 @@ class HTLCsThread(threading.Thread):
         return self._stop_event.is_set()
 
 
-class AttributeEditor(BoxLayout):
-    selection_type = ObjectProperty("")
-    selection = ObjectProperty("")
-    channel = ObjectProperty(None)
-
-
 class Node(Button):
     col = ListProperty([80 / 255, 80 / 255, 80 / 255, 1])
     channel = ObjectProperty(None)
