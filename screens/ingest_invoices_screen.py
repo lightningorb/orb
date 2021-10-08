@@ -6,6 +6,7 @@ from kivy.uix.screenmanager import Screen
 import data_manager
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
+from decorators import guarded
 
 
 class Invoice(BoxLayout):
@@ -24,6 +25,7 @@ class IngestInvoicesScreen(Screen):
         super(IngestInvoicesScreen, self).__init__(**kwargs)
         self.store = data_manager.data_man.store
 
+    @guarded
     def clear_store(self):
         self.store.delete("ingested_invoice")
         self.ids.scroll_view.clear_widgets()
