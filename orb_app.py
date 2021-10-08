@@ -1,3 +1,7 @@
+from kivymd.app import MDApp
+
+# from kivymd.screen import MDScreen
+from kivymd.uix.button import MDRectangleFlatButton
 from kivy.app import App
 from main_layout import MainLayout
 import data_manager
@@ -6,7 +10,7 @@ from kivy.lang import Builder
 from pathlib import Path
 
 
-class OrbApp(App):
+class OrbApp(MDApp):
     title = "Orb"
 
     def load_kvs(self):
@@ -22,6 +26,7 @@ class OrbApp(App):
         """
         Main build method for the app.
         """
+        self.theme_cls.theme_style = "Dark"  # "Light"
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
         # from lnd_rest import Lnd

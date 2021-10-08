@@ -6,3 +6,4 @@ grpcio
 yachalk
 numpy
 munch
+kivymd

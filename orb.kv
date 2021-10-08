@@ -3,6 +3,7 @@
 #:import dp kivy.metrics.dp
 #:import data_manager data_manager
 
+
 ########################################################################################
 # MAIN
 ########################################################################################
@@ -89,10 +90,12 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    Button:
+    MDRaisedButton:
         text: 'se'
         size_hint_x: None
-        width: 50
+        width: 30
+        size_hint_y: 1
+        md_bg_color: 0.3,0.3,0.3,1
         on_release: app.root.ids.sm.current = 'console'
     StatusLineInput:
         id: line_input
@@ -109,25 +112,32 @@
 
 <AttributeEditor>
     ScrollView:
-        size_hint: 0.5, 1
+        size_hint: 1, 1
         pos_hint: {'center_x': .5, 'center_y': .5}
         do_scroll_x: False
         GridLayout:
             cols: 1
-            padding: 50
-            spacing: 50
             size_hint_y: None
-            height: self.minimum_height
+            height: 400
             Label:
                 text: root.selection
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: None, None
-                size: 480, 80
-                Label:
-                    text: 'Pubkey'
-                TextInput:
-                    text: root.channel.remote_pubkey if root.channel else '' 
+            MDTextField:
+                helper_text: "Pubkey"
+                helper_text_mode: "persistent"
+                text: root.channel.remote_pubkey if root.channel else '' 
+            Label:
+                text: 'Base fee'
+            MDSlider:
+                min: 0
+                max: 100
+                value: 40
+            Label:
+                text: 'Fee rate ppm'
+            MDSlider:
+                min: 0
+                max: 100
+                value: 40
+
 
 ########################################################################################
 # MENU BAR
@@ -258,7 +268,7 @@
             id: relative_layout
             ChannelsWidget
         AttributeEditor:
-            size_hint: (0.3, 1)
+            size_hint: (0.2, 1)
     HUD:
         id: hud
 
