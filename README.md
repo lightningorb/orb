@@ -48,7 +48,7 @@ sudo ufw allow 8080
 Encode your macaroon to hex, so you can paste it into the application:
 
 ```
-python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex"))'
+python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
 ```
 
 Next cat your cert:

@@ -6,7 +6,7 @@ from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
-from kivy.core.audio import SoundLoader
+from audio_manager import audio_manager
 
 try:
     from numpy.linalg import norm
@@ -18,9 +18,6 @@ from HUD import *
 from fee_widget import FeeWidget
 from lerp import *
 from kivy.animation import Animation
-
-send_settle = SoundLoader.load("audio/send_settle.wav")
-forward_settle = SoundLoader.load("audio/forward_settle.wav")
 
 
 class ChannelWidget(Widget):
@@ -84,9 +81,9 @@ class ChannelWidget(Widget):
         if htlc.event_type == "SEND" and htlc.event_outcome == "settle_event":
             self.channel.local_balance = htlc.outgoing_channel_local_balance
             self.channel.remote_balance = htlc.outgoing_channel_remote_balance
-            send_settle.play()
+            audio_manager.play_send_settle()
         elif htlc.event_type == "FORWARD" and htlc.event_outcome == "settle_event":
-            forward_settle.play()
+            audio_manager.play_forward_settle()
             if htlc.outgoing_channel_id == self.channel.chan_id:
                 self.channel.local_balance = htlc.outgoing_channel_local_balance
                 self.channel.remote_balance = htlc.outgoing_channel_remote_balance

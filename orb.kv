@@ -40,7 +40,8 @@
 <Node@Button>
     background_color: (0, 0, 0, 0)
     background_normal: ''
-    font_size: 15
+    font_size: '80sp'
+    # font_size: 15
     canvas.before:
         Color: 
             rgba: (0.3,0.3,0.9,1)
@@ -55,7 +56,13 @@
             pos: self.pos
             radius: [8]
             size: (70, 100)
-
+    # canvas.before:
+        PushMatrix
+        Scale:
+            origin: self.center
+            xyz: .1, .1, 1
+    canvas.after:
+        PopMatrix
 ########################################################################################
 # STATUS LINE IO
 ########################################################################################
