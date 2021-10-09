@@ -1,10 +1,10 @@
 # import numpy as np
 import data_manager
 from kivy.graphics.context_instructions import Color
+from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.properties import NumericProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
-from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from audio_manager import audio_manager
 
@@ -45,12 +45,15 @@ class ChannelWidget(Widget):
         lnd = data_manager.data_man.lnd
         self.to_fee = FeeWidget(channel=self.channel)
         self.add_widget(self.to_fee)
+        self.anim_rectangles = []
 
         with self.canvas.before:
             self.local_line_col = Color(0.5, 1, 0.5, 1)
             self.line_local = Line(points=[0, 0, 0, 0], width=self.width)
             self.remote_line_col = Color(0.5, 0.5, 1, 1)
             self.line_remote = Line(points=[0, 0, 0, 0], width=self.width)
+            Color(0.5, 1, 0.5, 1)
+            self.anim_rect = RoundedRectangle(pos=[0, 0], size=[0, 0], radius=[5])
 
         self.bind(points=self.update_rect)
 
@@ -75,14 +78,39 @@ class ChannelWidget(Widget):
         self.to_fee.b = self.b
         self.to_fee.c = self.c
 
+    def anim_outgoing(self, s=10):
+        anim = Animation(pos=self.c, size=(0, 0), duration=0)
+        anim += Animation(pos=self.c, size=(0, 0), duration=0.4)
+        anim += Animation(size=(s, s), duration=0)
+        anim += Animation(pos=self.b, duration=0.4)
+        anim += Animation(pos=(-1000, -1000), duration=0)
+        anim.start(self.anim_rect)
+
+    def anim_incoming(self, s=10):
+        anim = Animation(pos=self.b, size=(s, s), duration=0)
+        anim += Animation(pos=self.c, duration=0.4)
+        anim += Animation(size=(0, 0), pos=(-1000, -1000), duration=0)
+        anim.start(self.anim_rect)
+
     def anim_htlc(self, htlc):
-        # {'incoming_channel': '02234cf94dd9a4b76cb4', 'outgoing_channel': 'southxchange.com', 'outgoing_channel_id': 771459139617882112, 'outgoing_channel_capacity': 10000000, 'outgoing_channel_remote_balance': 1230859, 'outgoing_channel_local_balance': 8767049, 'timestamp': 1633386523, 'event_type': 'SEND', 'event_outcome': 'settle_event'}
-        # {'incoming_channel': 'WalletOfSatoshi.com', 'incoming_channel_id': 770369523584794633, 'incoming_channel_capacity': 10000000, 'incoming_channel_remote_balance': 4165791, 'incoming_channel_local_balance': 5803036, 'outgoing_channel': 'OpenNode.com', 'outgoing_channel_id': 773460250725974024, 'outgoing_channel_capacity': 5000000, 'outgoing_channel_remote_balance': 26381, 'outgoing_channel_local_balance': 4971532, 'timestamp': 1633405927, 'event_type': 'FORWARD', 'event_outcome': 'settle_event'}
-        if htlc.event_type == "SEND" and htlc.event_outcome == "settle_event":
+        send = htlc.event_type == "SEND"
+        forward = htlc.event_type == "FORWARD"
+        settle = htlc.event_outcome == "settle_event"
+        outgoing = htlc.outgoing_channel_id == self.channel.chan_id
+
+        if send and outgoing:
+            self.anim_outgoing()
+        elif forward:
+            if outgoing:
+                self.anim_outgoing()
+            else:
+                self.anim_incoming()
+
+        if send and settle:
+            audio_manager.play_send_settle()
             self.channel.local_balance = htlc.outgoing_channel_local_balance
             self.channel.remote_balance = htlc.outgoing_channel_remote_balance
-            audio_manager.play_send_settle()
-        elif htlc.event_type == "FORWARD" and htlc.event_outcome == "settle_event":
+        elif forward and settle:
             audio_manager.play_forward_settle()
             if htlc.outgoing_channel_id == self.channel.chan_id:
                 self.channel.local_balance = htlc.outgoing_channel_local_balance
