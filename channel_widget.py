@@ -127,10 +127,10 @@ class ChannelWidget(Widget):
         col = cols.get(htlc.event_outcome, [1, 1, 1, 1])
         (
             Animation(rgba=col, duration=0.2)
-            + Animation(rgba=[0.5, 0.5, 1, 1], duration=5)
+            + Animation(rgba=[0.5, 0.5, 1, 1], duration=1)
         ).start(self.remote_line_col)
 
         (
             Animation(rgba=col, duration=0.2)
-            + Animation(rgba=[0.5, 1, 0.5, 1], duration=5)
+            + Animation(rgba=[0.5, 1, 0.5, 1], duration=1)
         ).start(self.local_line_col)
