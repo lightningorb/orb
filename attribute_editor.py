@@ -153,23 +153,25 @@ class AEChannel(GridLayout):
                 )
                 widget.add_widget(Label(text=field[0].name))
                 widget.add_widget(MDCheckbox(active=field[1]))
+                self.add_widget(widget)
             elif field[0].type == 11:
                 self.add_widget(Label(text="         "))
                 self.add_widget(Label(text=field[0].name))
-                for f in field[1].DESCRIPTOR.fields:
-                    widget = MDTextField(
-                        helper_text=f.name,
-                        helper_text_mode="persistent",
-                        text=str(getattr(field[1], f.name)),
-                    )
-                    self.add_widget(widget)
-                    widget = None
+                try:
+                    for f in field[1].DESCRIPTOR.fields:
+                        widget = MDTextField(
+                            helper_text=f.name,
+                            helper_text_mode="persistent",
+                            text=str(getattr(field[1], f.name)),
+                        )
+                        self.add_widget(widget)
+                except:
+                    pass
             else:
                 widget = MDTextField(
                     helper_text=field[0].name,
                     helper_text_mode="persistent",
                     text=str(field[1]),
                 )
-            if widget:
                 self.add_widget(widget)
         self.add_widget(Label(text="         "))
