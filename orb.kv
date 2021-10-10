@@ -369,15 +369,33 @@
 # HUD
 ########################################################################################
 
-<HUD>:
+<HUD1>:
     size_hint_y: None
     height: hud_label.height
     Label:
         id: hud_label
+        pos: root.pos
         text: root.hud
         size_hint: [None, None]
         markup: True
         size: self.texture_size
+
+<HUD2>:
+    size_hint_y: 1
+    pos: [0, self.height-hud_label.height]
+    Label:
+        id: hud_label
+        pos: root.pos
+        text: root.hud
+        size_hint: [None, None]
+        markup: True
+        size: self.texture_size
+
+
+<HUD>:
+    size_hint: [1, 1]
+    HUD1
+    HUD2
 
 ########################################################################################
 # PATH FINDING

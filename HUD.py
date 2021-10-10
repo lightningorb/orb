@@ -1,14 +1,29 @@
 import data_manager
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 
 
-class HUD(BoxLayout):
+class HUD(FloatLayout):
+    pass
+
+
+class HUD1(FloatLayout):
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
-        BoxLayout.__init__(self, *args, **kwargs)
+        FloatLayout.__init__(self, *args, **kwargs)
+        lnd = data_manager.data_man.lnd
+        fr = lnd.fee_report()
+        self.hud = f"Day: S{fr.day_fee_sum:,}\nWeek S{fr.week_fee_sum:,}\nMonth: S{fr.month_fee_sum:,}"
+
+
+class HUD2(FloatLayout):
+    hud = ObjectProperty("")
+
+    def __init__(self, *args, **kwargs):
+        FloatLayout.__init__(self, *args, **kwargs)
         lnd = data_manager.data_man.lnd
         bal = lnd.get_balance()
         tot = int(bal.total_balance)
