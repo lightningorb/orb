@@ -160,7 +160,7 @@ class Lnd:
         except:
             return None
 
-    @lru_cache(maxsize=None)
+    # @lru_cache(maxsize=None)
     def get_edge(self, channel_id):
         return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
 
@@ -245,16 +245,10 @@ class Lnd:
         )
         return response
 
-    def update_channel_policy(self, channel, fee_rate=None, base_fee_msat=None):
+    def update_channel_policy(self, channel, *args, **kwargs):
         tx, output = channel.channel_point.split(":")
         cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
-        print((fee_rate / 1e6) if fee_rate else None)
-        request = ln.PolicyUpdateRequest(
-            chan_point=cp,
-            base_fee_msat=base_fee_msat,
-            fee_rate=(fee_rate / 1e6) if fee_rate else None,
-            time_lock_delta=44,
-        )
+        request = ln.PolicyUpdateRequest(*args, **kwargs, chan_point=cp)
         return self.stub.UpdateChannelPolicy(request)
 
     def get_htlc_events(self):

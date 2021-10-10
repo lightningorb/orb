@@ -120,35 +120,80 @@
 <FeeRateSlider>:
     BoxLayout:
         orientation: 'vertical'
-        size: root.size
+        height: 200
+        size_hint_y: None
+        size_hint_x: None
         pos: root.pos
+        width: root.width
         Label:
             text: 'Fee rate ppm'
         MDSlider:
             id: slider
             min: 0
+            step: 5
             on_touch_up: root.slider_up(int(self.value))
             hint: True
-        Label:
+        MDTextField:
             text: str(int(slider.value))
+
+<AEFees>:
+    BoxLayout:
+        orientation: 'vertical'
+        height: 500
+        size_hint_y: None
+        size_hint_x: None
+        pos: root.pos
+        width: root.width
+        Label:
+            text: "         "
+        Label:
+            text: "Fees:"
+        MDTextField:
+            text: str(root.fee_rate_milli_msat)
+            helper_text: 'Fee Rate Milli Msat'
+            helper_text_mode: "persistent"
+            on_text_validate: root.fee_rate_milli_msat_changed(self.text)
+        MDTextField:
+            text: str(root.fee_base_msat)
+            helper_text: 'Fee Base Msat'
+            helper_text_mode: "persistent"
+            on_text_validate: root.fee_base_msat_changed(self.text)
+        MDTextField:
+            text: str(root.min_htlc)
+            helper_text: 'Min HTLC msat'
+            helper_text_mode: "persistent"
+            on_text_validate: root.min_htlc_changed(self.text)
+        MDTextField:
+            text: str(root.max_htlc_msat)
+            helper_text: 'Max HTLC msat'
+            helper_text_mode: "persistent"
+            on_text_validate: root.max_htlc_msat_changed(self.text)
+        MDTextField:
+            text: str(root.time_lock_delta)
+            helper_text: 'Time Lock Delta'
+            helper_text_mode: "persistent"
+            on_text_validate: root.time_lock_delta_changed(self.text)
+
+<AEChannel@GridLayout>:
+    cols: 1
+    size_hint_y: None
+    height: 5000
+    Label:
+        text: '         '
+    AEFees:
+        channel: root.channel
+        height: 500
+        size_hint_y: None
+        size_hint_x: None
+        width: root.width
 
 <AttributeEditor>
     ScrollView:
+        id: ae_scroll_view
         size_hint: 1, 1
         pos_hint: {'center_x': .5, 'center_y': .5}
         do_scroll_x: False
-        GridLayout:
-            cols: 1
-            size_hint_y: None
-            height: 400
-            Label:
-                text: root.selection
-            MDTextField:
-                helper_text: "Pubkey"
-                helper_text_mode: "persistent"
-                text: root.channel.remote_pubkey if root.channel else '' 
-            FeeRateSlider:
-                channel: root.channel
+        do_scroll_y: True
 
 ########################################################################################
 # MENU BAR

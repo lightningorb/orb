@@ -46,6 +46,7 @@ class ChannelWidget(Widget):
         self.to_fee = FeeWidget(channel=self.channel)
         self.add_widget(self.to_fee)
         self.anim_rectangles = []
+        print(self.channel)
 
         with self.canvas.before:
             self.local_line_col = Color(0.5, 1, 0.5, 1)

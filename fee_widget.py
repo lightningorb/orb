@@ -43,7 +43,9 @@ class FeeWidget(Widget):
         if int(val) != self.to_fee:
             self.to_fee = int(val)
             print(self.channel)
-            self.lnd.update_channel_policy(channel=self.channel, fee_rate=int(val))
+            self.lnd.update_channel_policy(
+                channel=self.channel, fee_rate=int(val) / 1e6
+            )
 
     def update_rect(self, *args):
         try:

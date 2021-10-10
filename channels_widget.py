@@ -35,8 +35,6 @@ class HTLCsThread(threading.Thread):
                     if self.stopped():
                         return
                     htlc = Htlc(lnd, e)
-                    print(htlc.__dict__)
-                    print("-" * 100)
                     for l in self.inst.lines:
                         if l.channel.chan_id in [
                             e.outgoing_channel_id,
