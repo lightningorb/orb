@@ -9,6 +9,8 @@ Policy = namedtuple("Policy", "fee_rate_milli_msat")
 Balance = namedtuple("Balance", "total_balance confirmed_balance unconfirmed_balance")
 ChannelBalance = namedtuple("ChannelBalance", "local_balance remote_balance")
 CB = namedtuple("ChannelBalanceObj", "sat")
+FeeReport = namedtuple("FeeReport", "day_fee_sum week_fee_sum month_fee_sum")
+
 
 class Lnd(object):
     def get_channels(self):
@@ -74,3 +76,10 @@ class Lnd(object):
 
     def channel_balance(self):
         return ChannelBalance(local_balance=CB(sat=0), remote_balance=CB(sat=0))
+
+    def fee_report(self):
+        return FeeReport(
+            day_fee_sum=1000,
+            week_fee_sum=1000,
+            month_fee_sum=1000,
+        )
