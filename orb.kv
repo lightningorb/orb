@@ -178,6 +178,12 @@
     cols: 1
     size_hint_y: None
     height: 5000
+    canvas.before:
+        Color:
+            rgba: .3, .3, .4, .3
+        Rectangle:
+            size: self.size
+            pos: self.pos
     Label:
         text: '         '
     AEFees:
@@ -372,7 +378,14 @@
 <HUD1>:
     size_hint_y: None
     height: hud_label.height
+    width: hud_label.width
     Label:
+        canvas.before:
+            Color:
+                rgba: .3, .3, .4, .3
+            Rectangle:
+                size: self.size
+                pos: self.pos
         id: hud_label
         pos: root.pos
         text: root.hud
@@ -383,7 +396,14 @@
 <HUD2>:
     size_hint_y: 1
     pos: [0, self.height-hud_label.height]
+    width: hud_label.width
     Label:
+        canvas.before:
+            Color:
+                rgba: .3, .3, .4, .3
+            Rectangle:
+                size: self.size
+                pos: self.pos
         id: hud_label
         pos: root.pos
         text: root.hud

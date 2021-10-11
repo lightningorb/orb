@@ -46,7 +46,6 @@ class ChannelWidget(Widget):
         self.to_fee = FeeWidget(channel=self.channel)
         self.add_widget(self.to_fee)
         self.anim_rectangles = []
-        print(self.channel)
 
         with self.canvas.before:
             self.local_line_col = Color(0.5, 1, 0.5, 1)
@@ -54,7 +53,9 @@ class ChannelWidget(Widget):
             self.remote_line_col = Color(0.5, 0.5, 1, 1)
             self.line_remote = Line(points=[0, 0, 0, 0], width=self.width)
             Color(0.5, 1, 0.5, 1)
-            self.anim_rect = RoundedRectangle(pos=[0, 0], size=[0, 0], radius=[5])
+            self.anim_rect = RoundedRectangle(
+                pos=[-1000, -1000], size=[0, 0], radius=[5]
+            )
 
         self.bind(points=self.update_rect)
 
