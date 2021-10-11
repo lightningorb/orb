@@ -1,5 +1,5 @@
 import io
-from kivy.uix.screenmanager import Screen
+from kivy.uix.popup import Popup
 import data_manager
 from kivy.uix.image import Image
 from kivy.core.image import Image as CoreImage
@@ -12,11 +12,11 @@ except:
     pass
 
 
-class NewAddressScreen(Screen):
-    def on_enter(self):
+class NewAddress(Popup):
+    def __init__(self, *args, **kwargs):
+        super(NewAddress, self).__init__()
         ad = data_manager.data_man.lnd.new_address().address
         self.ids.address.text = ad
-        # image = Image(source="")
         imgIO = io.BytesIO()
         qr = qrcode.make(ad)
         qr.save(imgIO, ext="png")

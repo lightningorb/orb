@@ -2,6 +2,7 @@
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
 #:import data_manager data_manager
+#:import NewAddress screens.new_address_screen.NewAddress
 
 
 ########################################################################################
@@ -29,7 +30,6 @@
             PayScreen
             IngestInvoicesScreen
             ConnectScreen
-            NewAddressScreen
             OpenChannelScreen
             FirstScreen
             MailScreen
@@ -216,7 +216,7 @@
             id: App_ActionGroup
             mode: 'spinner'
             font_size: '12sp'
-            text: '         Tools          '
+            text: '       Lightning         '
             font_name: 'DejaVuSans'
             ActionButton:
                 text: 'Channels'
@@ -235,10 +235,6 @@
                 font_size: '12sp'
                 on_release:  app.root.ids.sm.current = 'open_channel'
             ActionButton:
-                text: 'New Address'
-                font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'new_address'
-            ActionButton:
                 text: 'Connect'
                 font_size: '12sp'
                 on_release:  app.root.ids.sm.current = 'connect'
@@ -246,6 +242,20 @@
                 text: 'Ingest Invoices'
                 font_size: '12sp'
                 on_release:  app.root.ids.sm.current = 'ingest_invoices'
+        ActionGroup:
+            id: App_ActionGroup
+            mode: 'spinner'
+            text: '  On-Chain  '
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            ActionButton:
+                text: 'New Address'
+                font_size: '12sp'
+                on_release:  NewAddress().open()
+            ActionButton:
+                text: 'Send Coins'
+                font_size: '12sp'
+                on_press: app.open_settings()
         ActionGroup:
             id: App_ActionGroup
             mode: 'spinner'
@@ -579,25 +589,27 @@
 # NEW ADDRESS
 ########################################################################################
 
-<NewAddressScreen>:
-    name: 'new_address'
-    GridLayout:
-        cols: 1
-        row_force_default: True
-        row_default_height: 60
-        padding: 50
-        spacing: 50
+<NewAddress>:
+    title: "New Wallet Address"
+    size: (800,550)
+    size_hint: (None, None)
+    BoxLayout:
+        spacing: 20
+        padding: 20
+        orientation: 'vertical'
         BoxLayout:
+            size_hint_y: None
+            height: 120
             orientation: 'horizontal'
             Label:
                 text: 'Address'
-            TextInput:
+            MDTextField:
                 id: address
                 text: 
                 size_hint_y: 1
-    Image:
-        id: img
-        source: ''
+        Image:
+            id: img
+            source: ''
 
 
 ########################################################################################

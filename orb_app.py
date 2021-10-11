@@ -29,6 +29,7 @@ class OrbApp(MDApp):
         self.theme_cls.theme_style = "Dark"  # "Light"
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
+        # self.theme_cls.primary_palette = "Red"
         # from lnd_rest import Lnd
         # lnd = Lnd()
         # lnd.get_balance()
