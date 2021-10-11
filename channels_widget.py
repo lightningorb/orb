@@ -15,10 +15,13 @@ from threading import Thread
 import data_manager
 from channel_widget import ChannelWidget
 from kivy.clock import Clock
+from collections import deque
 import threading
 from htlc import Htlc
 from time import sleep
 from traceback import print_exc
+from kivy.graphics.transformation import Matrix
+from kivy.clock import mainthread
 
 
 class HTLCsThread(threading.Thread):
@@ -142,7 +145,14 @@ class ChannelsWidget(Scatter):
             node.pos = [x, y]
 
     def on_touch_down(self, touch):
-        Scatter.on_touch_down(self, touch)
-        self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
-        for n in self.nodes:
-            n.col = [80 / 255, 80 / 255, 80 / 255, 1]
+        if touch.is_mouse_scrolling:
+            delta = 0.2
+            s = dict(scrolldown=1 + delta, scrollup=1 - delta).get(touch.button)
+            if s:
+                mat = Matrix().scale(s, s, s)
+                self.apply_transform(mat, anchor=touch.pos)
+        else:
+            self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
+            for n in self.nodes:
+                n.col = [80 / 255, 80 / 255, 80 / 255, 1]
+            Scatter.on_touch_down(self, touch)
