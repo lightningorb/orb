@@ -3,6 +3,7 @@
 #:import dp kivy.metrics.dp
 #:import data_manager data_manager
 #:import NewAddress screens.new_address_screen.NewAddress
+#:import SendCoins screens.send_coins.SendCoins
 
 
 ########################################################################################
@@ -251,11 +252,11 @@
             ActionButton:
                 text: 'New Address'
                 font_size: '12sp'
-                on_release:  NewAddress().open()
+                on_release: NewAddress().open()
             ActionButton:
                 text: 'Send Coins'
                 font_size: '12sp'
-                on_press: app.open_settings()
+                on_press: SendCoins().open()
         ActionGroup:
             id: App_ActionGroup
             mode: 'spinner'
@@ -584,32 +585,6 @@
         Button:
             text: 'open'
             on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
-
-########################################################################################
-# NEW ADDRESS
-########################################################################################
-
-<NewAddress>:
-    title: "New Wallet Address"
-    size: (800,550)
-    size_hint: (None, None)
-    BoxLayout:
-        spacing: 20
-        padding: 20
-        orientation: 'vertical'
-        BoxLayout:
-            size_hint_y: None
-            height: 120
-            orientation: 'horizontal'
-            Label:
-                text: 'Address'
-            MDTextField:
-                id: address
-                text: 
-                size_hint_y: 1
-        Image:
-            id: img
-            source: ''
 
 
 ########################################################################################

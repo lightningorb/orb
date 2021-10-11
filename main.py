@@ -19,6 +19,7 @@ from screens.new_address_screen import *
 from screens.connect_screen import *
 from screens.ingest_invoices_screen import *
 from screens.console_screen import *
+from screens.send_coins import *
 
 from main_layout import *
 from status_line import *
