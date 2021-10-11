@@ -386,12 +386,27 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
+            Color:
+                rgba: .6, .6, .8, 1
+            Line:
+                points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
+                width: 1
+            Line:
+                points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
+                width: 1
+            Line:
+                points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
+                width: 1
+            Line:
+                points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
+                width: 1
+
         id: hud_label
-        pos: root.pos
+        pos: [root.pos[0]+2, root.pos[1]+2]
         text: root.hud
         size_hint: [None, None]
         markup: True
-        size: self.texture_size
+        size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
 <HUD2>:
     size_hint_y: 1
@@ -404,12 +419,26 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
+            Color:
+                rgba: .6, .6, .8, 1
+            Line:
+                points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
+                width: 1
+            Line:
+                points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
+                width: 1
+            Line:
+                points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
+                width: 1
+            Line:
+                points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
+                width: 1
         id: hud_label
-        pos: root.pos
+        pos: [root.pos[0]+2, root.pos[1]-2]
         text: root.hud
         size_hint: [None, None]
         markup: True
-        size: self.texture_size
+        size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
 
 <HUD>:
