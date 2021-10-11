@@ -3,6 +3,8 @@ from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
+from decorators import guarded
 
 
 class HUD(FloatLayout):
@@ -14,6 +16,11 @@ class HUD1(FloatLayout):
 
     def __init__(self, *args, **kwargs):
         FloatLayout.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.get_lnd_data, 60)
+        Clock.schedule_once(self.get_lnd_data, 1)
+
+    @guarded
+    def get_lnd_data(self, *args):
         lnd = data_manager.data_man.lnd
         fr = lnd.fee_report()
         self.hud = f"Day: S{fr.day_fee_sum:,}\nWeek S{fr.week_fee_sum:,}\nMonth: S{fr.month_fee_sum:,}"
@@ -24,6 +31,11 @@ class HUD2(FloatLayout):
 
     def __init__(self, *args, **kwargs):
         FloatLayout.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.get_lnd_data, 60)
+        Clock.schedule_once(self.get_lnd_data, 1)
+
+    @guarded
+    def get_lnd_data(self, *args):
         lnd = data_manager.data_man.lnd
         bal = lnd.get_balance()
         tot = int(bal.total_balance)

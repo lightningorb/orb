@@ -1,12 +1,14 @@
+import functools
 from ui_actions import console_output
 from traceback import format_exc
 
 
 def guarded(func):
-    def wrapper(*args):
+    @functools.wraps(func)
+    def wrapper_decorator(*args, **kwargs):
         try:
-            func(*args)
+            return func(*args, **kwargs)
         except:
             console_output(format_exc())
 
-    return wrapper
+    return wrapper_decorator
