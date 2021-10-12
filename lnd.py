@@ -6,9 +6,6 @@ import secrets
 from functools import lru_cache
 from os.path import expanduser
 import threading
-from cachetools import TTLCache
-
-cache = TTLCache(maxsize=10, ttl=10)
 
 try:
     import grpc
@@ -115,15 +112,12 @@ class Lnd:
         )
         return self.stub.DecodePayReq(request)
 
-    def get_channels(self, active_only=False):
-        if "channels" in cache:
-            return cache["channels"]
-        cache["channels"] = self.stub.ListChannels(
+    def get_channels(self, active_only=False, use_cache=True):
+        return self.stub.ListChannels(
             ln.ListChannelsRequest(
                 active_only=active_only,
             )
         ).channels
-        return cache["channels"]
 
     @lru_cache(maxsize=None)
     def get_max_channel_capacity(self):
