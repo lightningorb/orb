@@ -2,11 +2,12 @@ from kivy.event import EventDispatcher
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
-from kivy.uix.screenmanager import Screen
-import data_manager
+from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
+
 from decorators import guarded
+import data_manager
 
 
 class Invoice(BoxLayout):
@@ -18,22 +19,20 @@ class Invoice(BoxLayout):
     description = ObjectProperty("")
 
 
-class IngestInvoicesScreen(Screen):
+class IngestInvoicesScreen(Popup):
     count = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(IngestInvoicesScreen, self).__init__(**kwargs)
         self.store = data_manager.data_man.store
+        self.ids.scroll_view.clear_widgets()
+        for inv in self.load():
+            self.ids.scroll_view.add_widget(Invoice(**inv))
 
     @guarded
     def clear_store(self):
         self.store.delete("ingested_invoice")
         self.ids.scroll_view.clear_widgets()
-
-    def on_enter(self):
-        self.ids.scroll_view.clear_widgets()
-        for inv in self.load():
-            self.ids.scroll_view.add_widget(Invoice(**inv))
 
     def load(self):
         try:

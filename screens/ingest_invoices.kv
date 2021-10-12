@@ -1,0 +1,65 @@
+########################################################################################
+# INGEST INVOICES
+########################################################################################
+
+<IngestInvoicesScreen>:
+    size_hint: .8, .8
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    count: count
+    title: 'Ingest Invoices'
+    BoxLayout:
+        padding: 20
+        spacing: 20
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            padding: 20
+            spacing: 20
+            BoxLayout:
+                size_hint_y: None
+                height: 150
+                orientation: 'horizontal'
+                Label:
+                    text: "Ingest"
+                    size_hint_y: None
+                    height: 150
+                TextInput:
+                    id: invoices
+                    multiline: True
+                    size_hint_y: None
+                    height: 150
+            Label:
+                id: count
+                size_hint_y: None
+                height: 50
+                text: ''
+            ScrollView:
+                size_hint: 0.5, 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: False
+                GridLayout:
+                    id: scroll_view
+                    cols: 1
+                    padding: 50
+                    spacing: 50
+                    size_hint_y: None
+                    height: self.minimum_height
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 80
+                padding: 50
+                spacing: 50
+                MDRaisedButton:
+                    text: 'clear'
+                    size_hint_y: None
+                    height: 80
+                    width: 200
+                    on_release: root.clear_store()
+                MDRaisedButton:
+                    text: 'ingest'
+                    size_hint_y: None
+                    height: 80
+                    width: 200
+                    on_release: root.do_ingest(invoices.text)

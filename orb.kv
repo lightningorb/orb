@@ -4,7 +4,7 @@
 #:import data_manager data_manager
 #:import NewAddress screens.new_address_screen.NewAddress
 #:import SendCoins screens.send_coins.SendCoins
-
+#:import IngestInvoicesScreen screens.ingest_invoices_screen.IngestInvoicesScreen
 
 ########################################################################################
 # MAIN
@@ -29,7 +29,6 @@
             ChannelsScreen:
                 id: channels
             PayScreen
-            IngestInvoicesScreen
             ConnectScreen
             OpenChannelScreen
             FirstScreen
@@ -242,7 +241,7 @@
             ActionButton:
                 text: 'Ingest Invoices'
                 font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'ingest_invoices'
+                on_release: IngestInvoicesScreen().open()
         ActionGroup:
             id: App_ActionGroup
             mode: 'spinner'
@@ -611,153 +610,6 @@
         Button:
             text: 'Address'
             on_release: root.connect(address.text)
-
-########################################################################################
-# INGEST INVOICES
-########################################################################################
-
-<IngestInvoicesScreen>:
-    name: 'ingest_invoices'
-    count: count
-    BoxLayout:
-        orientation: 'vertical'
-        GridLayout:
-            cols: 1
-            padding: 20
-            spacing: 20
-            BoxLayout:
-                size_hint_y: None
-                height: 150
-                orientation: 'horizontal'
-                Label:
-                    text: "Ingest"
-                    size_hint_y: None
-                    height: 150
-                TextInput:
-                    id: invoices
-                    multiline: True
-                    size_hint_y: None
-                    height: 150
-            Label:
-                id: count
-                size_hint_y: None
-                height: 50
-                text: ''
-            ScrollView:
-                size_hint: 0.5, 1
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                do_scroll_x: False
-                GridLayout:
-                    id: scroll_view
-                    cols: 1
-                    padding: 50
-                    spacing: 50
-                    size_hint_y: None
-                    height: self.minimum_height
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: 80
-                Button:
-                    text: 'clear'
-                    size_hint_y: None
-                    height: 80
-                    on_release: root.clear_store()
-                Button:
-                    text: 'ingest'
-                    size_hint_y: None
-                    height: 80
-                    on_release: root.do_ingest(invoices.text)
-
-########################################################################################
-# INVOICE
-########################################################################################
-
-<Invoice>
-    orientation: 'vertical'
-    size_hint_y: None
-    height: 300
-    padding: 10
-    spacing: 10
-    canvas.before:
-        Color:
-            rgba: 55 / 255, 55 / 255, 55 / 255, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        Label:
-            text: 'Raw: '
-            height: 80
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 80
-            text: root.destination[:10] + '...'
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        Label:
-            text: 'Description: '
-            height: 80
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 80
-            text: f'S{root.num_satoshis:,}'
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        Label:
-            text: 'Amount: '
-            height: 80
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 80
-            text: str(root.timestamp)
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        Label:
-            text: 'Description: '
-            height: 80
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 80
-            text: root.description[:50]
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-
 
 ########################################################################################
 # CONSOLE SCREEN

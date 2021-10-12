@@ -1,0 +1,89 @@
+########################################################################################
+# INVOICE
+########################################################################################
+
+<Invoice>
+    orientation: 'vertical'
+    size_hint_y: None
+    height: 300
+    padding: 10
+    spacing: 10
+    canvas.before:
+        Color:
+            rgba: 55 / 255, 55 / 255, 55 / 255, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Raw: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: root.destination[:10] + '...'
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Amount: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: f'S{root.num_satoshis:,}'
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Timestamp: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: str(root.timestamp)
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Description: '
+            height: 80
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 80
+            text: root.description[:50]
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+
