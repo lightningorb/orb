@@ -1,59 +1,16 @@
-import threading
-from kivy.uix.slider import Slider
 import math
-from kivy.graphics import Line, Color, InstructionGroup
-from kivy.uix.boxlayout import BoxLayout
+from kivy.graphics import InstructionGroup
 from kivy.properties import ListProperty
-from kivy.graphics.context_instructions import Color
-from kivy.graphics.vertex_instructions import Rectangle, Line
-from kivy.uix.widget import Widget
 from kivy.uix.scatter import Scatter
 from kivy.uix.button import Button
 from kivy.properties import ObjectProperty
-from kivy.uix.relativelayout import RelativeLayout
-from threading import Thread
 import data_manager
 from channel_widget import ChannelWidget
-from kivy.clock import Clock
-from collections import deque
-import threading
-from htlc import Htlc
-from time import sleep
 from traceback import print_exc
 from kivy.graphics.transformation import Matrix
-from kivy.clock import mainthread
 
-
-class HTLCsThread(threading.Thread):
-    def __init__(self, inst, *args, **kwargs):
-        super(HTLCsThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
-        self.inst = inst
-
-    def run(self):
-        while not self.stopped():
-            try:
-                lnd = data_manager.data_man.lnd
-                for e in lnd.get_htlc_events():
-                    if self.stopped():
-                        return
-                    htlc = Htlc(lnd, e)
-                    for l in self.inst.lines:
-                        if l.channel.chan_id in [
-                            e.outgoing_channel_id,
-                            e.incoming_channel_id,
-                        ]:
-                            l.anim_htlc(htlc)
-            except:
-                print("Exception getting HTLCs - let's sleep")
-                print_exc()
-                sleep(10)
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
+from htlcs_thread import HTLCsThread
+from channels_thread import ChannelsThread
 
 
 class Node(Button):
@@ -80,6 +37,10 @@ class ChannelsWidget(Scatter):
         self.htlcs_thread.daemon = True
         self.htlcs_thread.start()
 
+        self.channels_thread = ChannelsThread(inst=self)
+        self.channels_thread.daemon = True
+        self.channels_thread.start()
+
         self.nodes = []
         self.edges = []
         self.lines = []
@@ -104,6 +65,9 @@ class ChannelsWidget(Scatter):
                 for c in self.channels
             }
             for i, c in enumerate(self.channels):
+                """
+                The Node and ChannelWidget should live together in their own widget
+                """
                 l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
                 self.lines.append(l)
                 b = Node(text=lnd.get_node_alias(c.remote_pubkey), channel=c)
@@ -121,6 +85,10 @@ class ChannelsWidget(Scatter):
         print("refresh")
 
     def update_rect(self, *args):
+        """
+        The node + channel widget should know how to place itself, this
+        code doesn't belong here.
+        """
         w = self.size[0]
         h = self.size[1]
         w_2 = w / 2

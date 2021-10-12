@@ -6,6 +6,7 @@ import secrets
 from functools import lru_cache
 from os.path import expanduser
 import threading
+from traceback import print_exc
 
 try:
     import grpc
@@ -17,7 +18,7 @@ try:
     from grpc_generated import invoices_pb2 as invoices
     from grpc_generated import invoices_pb2_grpc as invoicesrpc
 except:
-    pass
+    print_exc()
 
 MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
@@ -253,6 +254,10 @@ class Lnd:
     def get_htlc_events(self):
         request = lnrouter.SubscribeHtlcEventsRequest()
         return self.router_stub.SubscribeHtlcEvents(request)
+
+    def get_channel_events(self):
+        request = ln.ChannelEventSubscription()
+        return self.stub.SubscribeChannelEvents(request)
 
     def get_alias_from_channel_id(self, chan_id):
         for channel in self.get_channels():
