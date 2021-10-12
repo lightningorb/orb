@@ -19,6 +19,11 @@ from fee_widget import FeeWidget
 from lerp import *
 from kivy.animation import Animation
 
+RED = [1, 0.5, 0.5, 1]
+WHITE = [1, 1, 1, 1]
+BLUE = [0.5, 0.5, 1, 1]
+GREEN = [0.5, 1, 0.5, 1]
+
 
 class ChannelWidget(Widget):
     local_line_col = ObjectProperty(None)
@@ -99,6 +104,7 @@ class ChannelWidget(Widget):
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
         settle = htlc.event_outcome == "settle_event"
+        fail = htlc.event_outcome == "link_fail_event"
         outgoing = htlc.outgoing_channel_id == self.channel.chan_id
 
         if send and outgoing:
@@ -121,17 +127,20 @@ class ChannelWidget(Widget):
             if htlc.incoming_channel_id == self.channel.chan_id:
                 self.channel.local_balance = htlc.incoming_channel_local_balance
                 self.channel.remote_balance = htlc.incoming_channel_remote_balance
+        elif fail:
+            audio_manager.play_link_fail_event()
 
         self.update_rect()
 
-        cols = {"forward_fail_event": [1, 0.5, 0.5, 1]}
-        col = cols.get(htlc.event_outcome, [1, 1, 1, 1])
-        (
-            Animation(rgba=col, duration=0.2)
-            + Animation(rgba=[0.5, 0.5, 1, 1], duration=1)
-        ).start(self.remote_line_col)
+        cols = {
+            "forward_fail_event": RED,
+            "link_fail_event": RED,
+        }
+        col = cols.get(htlc.event_outcome, WHITE)
+        (Animation(rgba=col, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
+            self.remote_line_col
+        )
 
-        (
-            Animation(rgba=col, duration=0.2)
-            + Animation(rgba=[0.5, 1, 0.5, 1], duration=1)
-        ).start(self.local_line_col)
+        (Animation(rgba=col, duration=0.2) + Animation(rgba=GREEN, duration=1)).start(
+            self.local_line_col
+        )
