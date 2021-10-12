@@ -126,7 +126,6 @@ class FeeRateSlider(Widget):
 
 
 class AttributeEditor(BoxLayout):
-    selection_type = ObjectProperty("")
     selection = ObjectProperty("")
     channel = ObjectProperty(None)
 
@@ -143,6 +142,9 @@ class AttributeEditor(BoxLayout):
                 size=[self.size[0], self.size[1] - 100],
             )
         )
+
+    def clear(self):
+        self.ids.ae_scroll_view.clear_widgets()
 
 
 class AEChannel(GridLayout):

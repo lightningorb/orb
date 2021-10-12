@@ -73,6 +73,7 @@ class ChannelsWidget(Scatter):
             if s:
                 self.apply_transform(Matrix().scale(s, s, s), anchor=touch.pos)
         else:
+            self.attribute_editor.clear()
             if self.node:
                 self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
             for cn in self.cn:
