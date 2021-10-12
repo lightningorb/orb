@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.storage.jsonstore import JsonStore
 import os
+from traceback import print_exc
 
 
 class DataManager:
@@ -19,14 +20,17 @@ class DataManager:
                     config["lnd"]["macaroon_admin"],
                 )
             except:
+                print(print_exc())
                 from mock_lnd import Lnd as mock_lnd
-                self.lnd = mock_lnd()                
+
+                self.lnd = mock_lnd()
         elif config["lnd"]["protocol"] == "rest":
             from lnd_rest import Lnd as rest_lnd
 
             self.lnd = rest_lnd()
         elif config["lnd"]["protocol"] == "mock":
             from mock_lnd import Lnd as mock_lnd
+
             self.lnd = mock_lnd()
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))

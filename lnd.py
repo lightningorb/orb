@@ -6,7 +6,9 @@ import secrets
 from functools import lru_cache
 from os.path import expanduser
 import threading
+from cachetools import TTLCache
 
+cache = TTLCache(maxsize=10, ttl=10)
 
 try:
     import grpc
@@ -114,11 +116,14 @@ class Lnd:
         return self.stub.DecodePayReq(request)
 
     def get_channels(self, active_only=False):
-        return self.stub.ListChannels(
+        if "channels" in cache:
+            return cache["channels"]
+        cache["channels"] = self.stub.ListChannels(
             ln.ListChannelsRequest(
                 active_only=active_only,
             )
         ).channels
+        return cache["channels"]
 
     @lru_cache(maxsize=None)
     def get_max_channel_capacity(self):
@@ -264,6 +269,15 @@ class Lnd:
         for channel in self.get_channels():
             if chan_id == channel.chan_id:
                 return channel.capacity
+
+    def get_channel_pending_htlcs(self, chan_id):
+        for channel in self.get_channels():
+            if chan_id == channel.chan_id:
+                pending_in = sum(p.amount for p in channel.pending_htlcs if p.incoming)
+                pending_out = sum(
+                    p.amount for p in channel.pending_htlcs if not p.incoming
+                )
+                return dict(pending_in=pending_in, pending_out=pending_out)
 
     # def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
     #     secret = secrets.token_bytes(32)

@@ -61,3 +61,8 @@ class FeeWidget(Widget):
             self.line.points = (handle_a[0], handle_a[1], handle_b[0], handle_b[1])
         except:
             pass
+
+    def set_points(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
