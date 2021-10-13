@@ -16,7 +16,7 @@ class CNWidget(Widget):
         lnd = data_manager.data_man.lnd
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
         self.b = Node(
-            text=lnd.get_node_alias(c.remote_pubkey),
+            text='',
             channel=c,
             attribute_editor=attribute_editor,
         )
