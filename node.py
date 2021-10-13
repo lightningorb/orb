@@ -3,7 +3,7 @@ from kivy.clock import Clock
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.button import Button
 import data_manager
-
+from threading import Thread
 
 class Node(Button):
     attribute_editor = ObjectProperty(None)
@@ -13,12 +13,8 @@ class Node(Button):
     def __init__(self, *args, **kwargs):
         super(Node, self).__init__(*args, **kwargs)
         lnd = data_manager.data_man.lnd
-        def thread_function():
-            if self.channel:
-                alias = lnd.get_node_alias(self.channel.remote_pubkey)
-                self.text = alias
-        x = threading.Thread(target=thread_function)
-        x.start()
+        if self.channel:
+            Thread(target=lambda: setattr(self, 'text', lnd.get_node_alias(self.channel.remote_pubkey))).start()
 
     def on_release(self):
         self.col = [150 / 255, 150 / 255, 150 / 255, 1]
