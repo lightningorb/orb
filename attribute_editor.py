@@ -1,3 +1,4 @@
+from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.properties import NumericProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -22,13 +23,17 @@ class AEFees(Widget):
 
     def on_channel(self, inst, channel):
         if channel:
-            policy_to = data_manager.data_man.lnd.get_policy_to(channel.chan_id)
-            self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-            self.time_lock_delta = policy_to.time_lock_delta
-            self.min_htlc = policy_to.min_htlc
-            self.max_htlc_msat = policy_to.max_htlc_msat
-            self.last_update = policy_to.last_update
-            self.fee_base_msat = policy_to.fee_base_msat
+
+            def update(*args):
+                policy_to = data_manager.data_man.lnd.get_policy_to(channel.chan_id)
+                self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+                self.time_lock_delta = policy_to.time_lock_delta
+                self.min_htlc = policy_to.min_htlc
+                self.max_htlc_msat = policy_to.max_htlc_msat
+                self.last_update = policy_to.last_update
+                self.fee_base_msat = policy_to.fee_base_msat
+
+            Clock.schedule_once(update, 0.1)
 
     @guarded
     def fee_rate_milli_msat_changed(self, val):

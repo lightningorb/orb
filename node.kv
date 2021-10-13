@@ -1,0 +1,24 @@
+<Node@Button>
+    background_color: (0, 0, 0, 0)
+    background_normal: ''
+    font_size: '80sp'
+    canvas.before:
+        Color: 
+            rgba: (0.3,0.3,0.9,1)
+        RoundedRectangle:
+            size: (72, 102)
+            pos: [self.pos[0]-1, self.pos[1]-1]
+            radius: [8]
+        Color: 
+            rgba: root.col
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [8]
+            size: (70, 100)
+        PushMatrix
+        Scale:
+            origin: self.center
+            xyz: .1, .1, 1
+    canvas.after:
+        PopMatrix

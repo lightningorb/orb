@@ -27,6 +27,10 @@ ORANGE = [1, 1, 0.5, 1]
 
 
 class ChannelWidget(Widget):
+    """
+    This is the Channel line ------------ between two nodes.
+    """
+
     local_line_col = ObjectProperty(None)
     remote_line_col = ObjectProperty(None)
     channel = ObjectProperty("")
@@ -155,7 +159,12 @@ class ChannelWidget(Widget):
                 self.channel.local_balance = htlc.incoming_channel_local_balance
                 self.channel.remote_balance = htlc.incoming_channel_remote_balance
         elif fail:
-            audio_manager.play_link_fail_event()
+            if htlc.wire_failure in ["FEE_INSUFFICIENT"]:
+                pass
+            else:
+                print("FAIL!")
+                print(htlc.__dict__)
+                audio_manager.play_link_fail_event()
 
         self.update_rect()
 

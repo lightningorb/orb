@@ -37,32 +37,6 @@
         StatusLine
             id: status_line
 
-<Node@Button>
-    background_color: (0, 0, 0, 0)
-    background_normal: ''
-    font_size: '80sp'
-    # font_size: 15
-    canvas.before:
-        Color: 
-            rgba: (0.3,0.3,0.9,1)
-        RoundedRectangle:
-            size: (72, 102)
-            pos: [self.pos[0]-1, self.pos[1]-1]
-            radius: [8]
-        Color: 
-            rgba: root.col
-        RoundedRectangle:
-            size: self.size
-            pos: self.pos
-            radius: [8]
-            size: (70, 100)
-    # canvas.before:
-        PushMatrix
-        Scale:
-            origin: self.center
-            xyz: .1, .1, 1
-    canvas.after:
-        PopMatrix
 ########################################################################################
 # STATUS LINE IO
 ########################################################################################
@@ -270,11 +244,11 @@
                 text: 'Quit'
                 font_size: '12sp'
                 on_press: app.get_running_app().stop()
-        # ActionButton:
-        #     text: 'Refresh'
-        #     font_name: 'DejaVuSans'
-        #     font_size: '12sp'
-        #     on_press: app.root.ids.sm.get_screen("channels").refresh()
+        ActionButton:
+            text: 'Refresh'
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            on_press: app.root.ids.sm.get_screen("channels").refresh()
         ActionGroup:
             id: scripts
             font_size: '12sp'
@@ -338,8 +312,10 @@
                 pos: self.pos
         RelativeLayout:
             id: relative_layout
-            ChannelsWidget
+            # ChannelsWidget
+            #     id: channels_widget
         AttributeEditor:
+            id: attribute_editor
             size_hint: (0.2, 1)
     HUD:
         id: hud
