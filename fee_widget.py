@@ -7,6 +7,7 @@ from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
 from kivy.uix.slider import Slider
+from threading import Thread
 
 try:
     import numpy as np
@@ -20,32 +21,31 @@ class FeeWidget(Widget):
     b = ListProperty([0, 0])
     c = ListProperty([0, 0])
     to_fee = NumericProperty(0)
+    to_fee_norm = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super(FeeWidget, self).__init__(**kwargs)
         self.lnd = data_manager.data_man.lnd
-        self.policy_to = self.lnd.get_policy_to(self.channel.chan_id)
-        self.policy_from = self.lnd.get_policy_from(self.channel.chan_id)
-        self.to_fee = self.policy_to.fee_rate_milli_msat
-        self.to_fee_norm = min(int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30)
-        self.from_fee = self.policy_from.fee_rate_milli_msat
+
+        def update():
+            self.policy_to = self.lnd.get_policy_to(self.channel.chan_id)
+            self.policy_from = self.lnd.get_policy_from(self.channel.chan_id)
+            self.to_fee = self.policy_to.fee_rate_milli_msat
+            self.to_fee_norm = min(int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30)
+            self.from_fee = self.policy_from.fee_rate_milli_msat
+
+        self.bind(a=self.update_rect)
+        self.bind(b=self.update_rect)
+        self.bind(c=self.update_rect)
+        self.bind(to_fee_norm=self.update_rect)
+
+        Thread(target=update).start()
+
         with self.canvas.before:
             Color(0.5, 1, 0.5, 1)
             self.circle_1 = Line(circle=(150, 150, 50))
             self.circle_2 = Line(circle=(150, 150, 50))
             self.line = Line(points=[0, 0, 0, 0])
-
-        self.bind(a=self.update_rect)
-        self.bind(b=self.update_rect)
-        self.bind(c=self.update_rect)
-
-    def on_slider_touch_up(self, val):
-        if int(val) != self.to_fee:
-            self.to_fee = int(val)
-            print(self.channel)
-            self.lnd.update_channel_policy(
-                channel=self.channel, fee_rate=int(val) / 1e6
-            )
 
     def update_rect(self, *args):
         try:

@@ -49,7 +49,6 @@ class ChannelWidget(Widget):
 
     def __init__(self, **kwargs):
         super(ChannelWidget, self).__init__(**kwargs)
-        lnd = data_manager.data_man.lnd
         self.to_fee = FeeWidget(channel=self.channel)
         self.add_widget(self.to_fee)
         self.anim_rectangles = []
