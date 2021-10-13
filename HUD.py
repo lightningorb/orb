@@ -23,7 +23,7 @@ class HUD1(FloatLayout):
     def get_lnd_data(self, *args):
         lnd = data_manager.data_man.lnd
         fr = lnd.fee_report()
-        self.hud = f"Day: S{fr.day_fee_sum:,}\nWeek S{fr.week_fee_sum:,}\nMonth: S{fr.month_fee_sum:,}"
+        self.hud = f"Day: S{int(fr.day_fee_sum):,}\nWeek S{int(fr.week_fee_sum):,}\nMonth: S{int(fr.month_fee_sum):,}"
 
 
 class HUD2(FloatLayout):

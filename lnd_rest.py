@@ -74,6 +74,10 @@ class Lnd:
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return Munch.fromDict(r.json()).node.alias
 
+    def fee_report(self):
+        url = f"{self.fqdn}/v1/fees"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        return Munch.fromDict(r.json())
 
 if __name__ == "__name__":
     lnd = Lnd()

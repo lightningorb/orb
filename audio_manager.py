@@ -1,31 +1,26 @@
-try:
-    from kivy.core.audio import SoundLoader
-except:
-    pass
+from kivy.utils import platform
 
+ios = platform == 'ios'
 
 class AudioManager:
-    send_settle = SoundLoader.load("audio/send_settle.wav")
-    forward_settle = SoundLoader.load("audio/forward_settle.wav")
-    link_fail_event = SoundLoader.load("audio/link_fail_event.wav")
+    def __init__(self):
+        if not ios:
+            from kivy.core.audio import SoundLoader
+            self.send_settle = SoundLoader.load("audio/send_settle.wav")
+            self.forward_settle = SoundLoader.load("audio/forward_settle.wav")
+            self.link_fail_event = SoundLoader.load("audio/link_fail_event.wav")
 
     def play_send_settle(self):
-        try:
+        if not ios:
             self.send_settle.play()
-        except:
-            pass
 
     def play_forward_settle(self):
-        try:
+        if not ios:
             self.forward_settle.play()
-        except:
-            pass
 
     def play_link_fail_event(self):
-        try:
+        if not ios:
             self.link_fail_event.play()
-        except:
-            pass
 
 
 audio_manager = AudioManager()
