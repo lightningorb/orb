@@ -12,8 +12,8 @@ class SentReceivedWidget(Widget):
         self.channel = channel
 
         with self.canvas:
-            self.sent = Line(points=[0, 0, 0, 0], width=1)
-            # self.received = Line(points=[0, 0, 0, 0], width=3)
+            Color(*[0.5, 1, 0.5, 1])
+            self.sent = Line(points=[0, 0, 0, 0], width=2)
 
     def update_rect(self, x, y):
         offset = 0.1
@@ -22,4 +22,3 @@ class SentReceivedWidget(Widget):
         x += x * offset
         y += y * offset
         self.sent.points = [x, y, x + x * sent, y + y * sent]
-        # self.received.points = [x, y, x * received, y * received]

@@ -29,6 +29,8 @@ class OrbApp(MDApp):
         self.theme_cls.theme_style = "Dark"  # "Light"
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
+        print(self.config["debug"]["layouts"])
+        print(type(self.config["debug"]["layouts"]))
         # self.theme_cls.primary_palette = "Red"
         # from lnd_rest import Lnd
         # lnd = Lnd()
@@ -47,6 +49,8 @@ class OrbApp(MDApp):
         config.set("lnd", "tls_certificate", "")
         config.set("lnd", "network", "mainnet")
         config.set("lnd", "macaroon_admin", "")
+        config.add_section("debug")
+        config.set("debug", "layouts", "0")
 
     def build_settings(self, settings):
         """
@@ -108,6 +112,13 @@ class OrbApp(MDApp):
                         "desc": "plain-text TLS certificate",
                         "section": "lnd",
                         "key": "tls_certificate",
+                    },
+                    {
+                        "type": "bool",
+                        "title": "debug layouts",
+                        "desc": "Display layouts for debugging purposes",
+                        "section": "debug",
+                        "key": "layouts",
                     },
                 ]
             ),

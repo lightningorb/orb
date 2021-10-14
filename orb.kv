@@ -24,8 +24,20 @@
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba: 1, 0, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
+            Rectangle:
+                pos: self.pos
+                size: self.size
         ScreenManager:
             id: sm
+            canvas.before:
+                Color:
+                    rgba: 0, 1, 1, (0.1 * (app.config['debug']['layouts'] == '1'))
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             ChannelsScreen:
                 id: channels
             PayScreen
@@ -269,52 +281,35 @@
     width: len(self.title) * 10
 
 ########################################################################################
-# BALANCE
-########################################################################################
-
-
-<BalanceScreen>:
-    total_balance: total_balance
-    confirmed_balance: confirmed_balance
-    unconfirmed_balance: unconfirmed_balance
-    name: 'balance'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'On-Chain Wallet:'
-            font_size: 60
-        Label:
-            id: total_balance
-            text: 'Total Balance'
-            font_size: 50
-        Label:
-            id: confirmed_balance
-            text: 'Confirmed Balance'
-            font_size: 50
-        Label:
-            id: unconfirmed_balance
-            text: ''
-            font_size: 50
-
-########################################################################################
 # CHANNELS
 ########################################################################################
 
 <ChannelsWidget>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 1, (0.1 * (app.config['debug']['layouts'] == '1'))
+        Rectangle:
+            size: self.size
     RelativeLayout:
+        canvas.before:
+            Color:
+                rgba: 0, 1, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
+            Rectangle:
+                size: [root.size[0]*10, root.size[1]*10]
+                pos: -10000, -10000
         id: relative_layout
         pos: [root.width/2.5, root.height/2]
 
 <ChannelsScreen>:
     name: 'channels'
     RelativeLayout:
-        # This RelativeLayout places itself correctly based on the siae
+        # This RelativeLayout places itself correctly based on the size
         # and position of its parents. So we can safely add the ChannelsWidget
         # and AttributeEditor to it, in relative terms.
         id: relative_layout
         canvas:
             Color:
-                rgb: .2, .2, .3
+                rgba: .2, .2, .3, 1
             Rectangle:
                 size: self.size
                 pos: self.pos
