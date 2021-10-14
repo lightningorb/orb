@@ -7,3 +7,4 @@ yachalk
 numpy
 munch
 kivymd
+kivy_garden.contextmenu

@@ -1,8 +1,6 @@
 import data_manager
 from kivy.properties import ObjectProperty
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from decorators import guarded
 

@@ -1,8 +1,25 @@
 from functools import lru_cache
-import base64, codecs, json, requests
+import base64, json, requests
 from kivy.app import App
 import os
 from munch import Munch
+
+
+def to_int(d):
+    for k, v in d.items():
+        if type(v) is dict:
+            d[k] = to_int(d[k])
+        elif type(v) is list:
+            for i in range(len(v)):
+                d[k][i] = to_int(d[k][i])
+        else:
+            try:
+                d[k] = float(d[k])
+                if int(d[k]) - d[k] == 0:
+                    d[k] = int(d[k])
+            except:
+                pass
+    return d
 
 
 class Lnd:
@@ -37,7 +54,8 @@ class Lnd:
             verify=self.cert_path,
             data={"active_only": active_only},
         )
-        return Munch.fromDict(r.json()).channels
+        obj = to_int(r.json())
+        return Munch.fromDict(obj).channels
 
     @lru_cache(maxsize=None)
     def get_info(self):
@@ -79,6 +97,72 @@ class Lnd:
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return Munch.fromDict(r.json())
 
-if __name__ == "__name__":
-    lnd = Lnd()
-    lnd.get_balance()
+    def decode_payment_request(self, payment_request):
+        url = f"{self.fqdn}/v1/payreq/{payment_request}"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        return Munch.fromDict(to_int(r.json()))
+
+    def decode_request(self, payment_request):
+        url = f"{self.fqdn}/v1/payreq/{payment_request}"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        return Munch.fromDict(to_int(r.json()))
+
+    def get_route(
+        self,
+        pub_key,
+        amount,
+        ignored_pairs,
+        ignored_nodes,
+        last_hop_pubkey,
+        outgoing_chan_id,
+        fee_limit_msat,
+    ):
+        if fee_limit_msat:
+            fee_limit = {"fixed_msat": int(fee_limit_msat)}
+        else:
+            fee_limit = None
+        if last_hop_pubkey:
+            last_hop_pubkey = base64.b16decode(last_hop_pubkey, True)
+        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}"
+        r = requests.get(
+            url,
+            headers=self.headers,
+            verify=self.cert_path,
+            data=json.dumps(
+                {
+                    "amt": amount,
+                    "last_hop_pubkey": last_hop_pubkey,
+                    "fee_limit.fixed_msat": fee_limit_msat,
+                    "ignored_nodes": [x["from"] for x in ignored_pairs],
+                    "outgoing_chan_id": outgoing_chan_id,
+                }
+            ),
+        )
+        obj = to_int(r.json())
+        print(obj)
+        return Munch.fromDict(obj).routes
+        # request = ln.QueryRoutesRequest(
+        #     pub_key=pub_key,
+        #     last_hop_pubkey=last_hop_pubkey,
+        #     outgoing_chan_id=outgoing_chan_id,
+        #     amt=amount,
+        #     ignored_pairs=ignored_pairs,
+        #     fee_limit=fee_limit,
+        #     ignored_nodes=ignored_nodes,
+        #     use_mission_control=True,
+        # )
+        # try:
+        #     response = self.stub.QueryRoutes(request)
+        #     return response.routes
+        # except:
+        #     return None
+
+    def send_payment(self, payment_request, route):
+        last_hop = route.hops[-1]
+        last_hop.mpp_record.payment_addr = payment_request.payment_addr
+        last_hop.mpp_record.total_amt_msat = payment_request.num_msat
+        request = lnrouter.SendToRouteRequest(route=route)
+        request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
+        result = []
+        res = self.router_stub.SendToRouteV2(request)
+        return res

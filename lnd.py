@@ -1,11 +1,7 @@
 import base64
 import codecs
-from hashlib import sha256
 import os
-import secrets
 from functools import lru_cache
-from os.path import expanduser
-import threading
 from traceback import print_exc
 
 try:
@@ -191,20 +187,8 @@ class Lnd:
         request = lnrouter.SendToRouteRequest(route=route)
         request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
         result = []
-
-        # def thread_function():
-        #     """
-        #     Sometimes this function gets stuck, so run on a thread with a timeout
-        #     """
         res = self.router_stub.SendToRouteV2(request)
         return res
-        # result.append(res)
-
-        # x = threading.Thread(target=thread_function)
-        # x.start()
-        # x.join(timeout=60)
-        # if result:
-        #     return result[0]
 
     @staticmethod
     def hex_string_to_bytes(hex_string):

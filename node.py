@@ -1,5 +1,3 @@
-import threading
-from kivy.clock import Clock
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.button import Button
 import data_manager

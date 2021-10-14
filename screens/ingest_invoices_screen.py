@@ -7,6 +7,7 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
 from decorators import guarded
+from traceback import print_exc
 import data_manager
 
 
@@ -49,6 +50,7 @@ class IngestInvoicesScreen(Popup):
             if line:
                 try:
                     req = data_manager.data_man.lnd.decode_payment_request(line)
+                    print(req)
                     data = dict(
                         raw=line,
                         destination=req.destination,
@@ -61,6 +63,7 @@ class IngestInvoicesScreen(Popup):
                     self.ids.scroll_view.add_widget(Invoice(**data))
                 except:
                     print(f"Problem decoding: {line}")
+                    print_exc()
                     not_ingested.append(line)
         self.store.put("ingested_invoice", invoices=invs)
         self.count.text = str(len(self.load()))

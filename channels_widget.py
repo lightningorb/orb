@@ -1,6 +1,5 @@
 from kivy.properties import ObjectProperty
 from kivy.uix.scatter import Scatter
-from channel_widget import ChannelWidget
 from traceback import print_exc
 from kivy.graphics.transformation import Matrix
 
@@ -19,11 +18,11 @@ class ChannelsWidget(Scatter):
 
         self.htlcs_thread = HTLCsThread(inst=self)
         self.htlcs_thread.daemon = True
-        # self.htlcs_thread.start()
+        self.htlcs_thread.start()
 
         self.channels_thread = ChannelsThread(inst=self)
         self.channels_thread.daemon = True
-        # self.channels_thread.start()
+        self.channels_thread.start()
 
         self.cn = []
         self.channels = []

@@ -1,8 +1,4 @@
 from kivymd.app import MDApp
-
-# from kivymd.screen import MDScreen
-from kivymd.uix.button import MDRectangleFlatButton
-from kivy.app import App
 from main_layout import MainLayout
 import data_manager
 import json

@@ -1,8 +1,5 @@
 import sys
 
-from yachalk import chalk
-
-
 class Output:
     def __init__(self, lnd):
         self.lnd = lnd

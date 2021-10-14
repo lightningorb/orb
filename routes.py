@@ -76,11 +76,6 @@ class Routes:
     def get_amount(self):
         return self.payment_request.num_satoshis
 
-    def ignore_first_hop(self, channel, show_message=True):
-        own_key = self.lnd.get_own_pubkey()
-        other_key = channel.remote_pubkey
-        self.ignore_edge_from_to(channel.chan_id, own_key, other_key, show_message)
-
     def ignore_edge_on_route(self, failure_source_pubkey, route):
         ignore_next = False
         for hop in route.hops:
@@ -91,19 +86,6 @@ class Routes:
                 return
             if hop.pub_key == failure_source_pubkey:
                 ignore_next = True
-
-    def ignore_hop_on_route(self, hop_to_ignore, route):
-        previous_pubkey = self.lnd.get_own_pubkey()
-        for hop in route.hops:
-            if hop == hop_to_ignore:
-                self.ignore_edge_from_to(hop.chan_id, previous_pubkey, hop.pub_key)
-                return
-            previous_pubkey = hop.pub_key
-
-    def ignore_channel(self, chan_id):
-        edge = self.lnd.get_edge(chan_id)
-        self.ignore_edge_from_to(chan_id, edge.node1_pub, edge.node2_pub)
-        self.ignore_edge_from_to(chan_id, edge.node2_pub, edge.node1_pub)
 
     def ignore_edge_from_to(self, chan_id, from_pubkey, to_pubkey, show_message=True):
         pair = {

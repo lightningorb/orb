@@ -1,11 +1,8 @@
-# import numpy as np
-import data_manager
+from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.properties import NumericProperty
-from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
-from kivy.uix.widget import Widget
 from audio_manager import audio_manager
 
 try:

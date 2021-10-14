@@ -1,4 +1,3 @@
-from lerp import *
 import data_manager
 from kivy.graphics.context_instructions import Color
 from kivy.properties import ObjectProperty
@@ -6,7 +5,6 @@ from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
-from kivy.uix.slider import Slider
 from threading import Thread
 
 try:

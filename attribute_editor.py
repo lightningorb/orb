@@ -7,7 +7,6 @@ from kivy.properties import ObjectProperty
 import data_manager
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.selectioncontrol import MDCheckbox
-from kivymd.uix.slider import MDSlider
 from kivy.uix.widget import Widget
 from decorators import guarded
 

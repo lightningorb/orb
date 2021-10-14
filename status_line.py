@@ -1,14 +1,9 @@
 from kivy.clock import mainthread
-from kivy.uix.label import Label
 from kivy.properties import StringProperty
-from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from io import StringIO
 import sys
-
-from data_manager import data_man
-
 
 class StatusLine(BoxLayout):
     def __init__(self, *args, **kwargs):
