@@ -17,12 +17,9 @@ class ChannelsScreen(Screen):
     def build(self, *args):
         @mainthread
         def delayed():
-            ae = AttributeEditor(
-                size_hint=(0.2, 1), pos_hint={"center_x": 0.9, "center_y": 0.5}
-            )
+            ae = self.ids.attribute_editor
             self.channels_widget = ChannelsWidget(attribute_editor=ae)
-            self.ids.relative_layout.add_widget(self.channels_widget)
-            self.ids.relative_layout.add_widget(ae)
+            self.ids.cw_layout.add_widget(self.channels_widget)
 
         delayed()
 
@@ -30,5 +27,5 @@ class ChannelsScreen(Screen):
         if self.channels_widget:
             self.channels_widget.htlcs_thread.stop()
             self.channels_widget.channels_thread.stop()
-            self.ids.relative_layout.clear_widgets()
+            self.ids.cw_layout.clear_widgets()
             self.build()
