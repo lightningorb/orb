@@ -45,10 +45,9 @@ class ChannelsWidget(Scatter):
                 for c in self.channels
             }
             for i, c in enumerate(self.channels):
-                self.cn.append(
-                    CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
-                )
-                self.ids.relative_layout.add_widget(self.cn[-1])
+                cn = CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
+                self.cn.append(cn)
+                self.ids.relative_layout.add_widget(cn)
             self.node = Node(
                 text=self.info.alias, attribute_editor=self.attribute_editor
             )
@@ -61,8 +60,11 @@ class ChannelsWidget(Scatter):
     def update_rect(self, *args):
         if self.node:
             self.node.pos = (-(70 / 2), -(100 / 2))
-        for i in range(len(self.channels)):
-            self.cn[i].update_rect(i, len(self.channels))
+        for i in range(len(self.cn)):
+            """
+            TODO: is something bad here
+            """
+            self.cn[i].update_rect(i, len(self.cn))
 
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:

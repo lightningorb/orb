@@ -21,8 +21,8 @@ class CNWidget(Widget):
             channel=c,
             attribute_editor=attribute_editor,
         )
-        # self.sent_received_widget = SentReceivedWidget()
-        # self.add_widget(self.sent_received_widget)
+        self.sent_received_widget = SentReceivedWidget(channel=c)
+        self.add_widget(self.sent_received_widget)
         self.add_widget(self.b)
         self.add_widget(self.l)
 
@@ -31,4 +31,4 @@ class CNWidget(Widget):
         y = math.cos(i / n * 3.14378 * 2) * self.radius
         self.l.points = [0, 0, x, y]
         self.b.pos = (x - (70 / 2), y - (100 / 2))
-        # self.sent_received_widget.update_rect(x, y)
+        self.sent_received_widget.update_rect(x, y)
