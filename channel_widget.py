@@ -54,10 +54,10 @@ class ChannelWidget(Widget):
         self.anim_rectangles = []
 
         self.pending_in = sum(
-            p.amount for p in self.channel.pending_htlcs if p.incoming
+            int(p.amount) for p in self.channel.pending_htlcs if p.incoming
         )
         self.pending_out = sum(
-            p.amount for p in self.channel.pending_htlcs if not p.incoming
+            int(p.amount) for p in self.channel.pending_htlcs if not p.incoming
         )
 
         with self.canvas.before:
