@@ -4,6 +4,7 @@ from kivy.uix.widget import Widget
 from channel_widget import ChannelWidget
 from node import Node
 import data_manager
+from sent_received_widget import SentReceivedWidget
 
 
 class CNWidget(Widget):
@@ -16,15 +17,18 @@ class CNWidget(Widget):
         lnd = data_manager.data_man.lnd
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
         self.b = Node(
-            text='',
+            text="",
             channel=c,
             attribute_editor=attribute_editor,
         )
+        # self.sent_received_widget = SentReceivedWidget()
+        # self.add_widget(self.sent_received_widget)
         self.add_widget(self.b)
         self.add_widget(self.l)
 
-    def update_rect(self, w_2, h_2, i, n):
-        x = math.sin(i / n * 3.14378 * 2) * self.radius + w_2
-        y = math.cos(i / n * 3.14378 * 2) * self.radius + h_2
-        self.l.points = [w_2, h_2, x, y]
+    def update_rect(self, i, n):
+        x = math.sin(i / n * 3.14378 * 2) * self.radius
+        y = math.cos(i / n * 3.14378 * 2) * self.radius
+        self.l.points = [0, 0, x, y]
         self.b.pos = (x - (70 / 2), y - (100 / 2))
+        # self.sent_received_widget.update_rect(x, y)

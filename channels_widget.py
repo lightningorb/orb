@@ -14,8 +14,8 @@ import data_manager
 class ChannelsWidget(Scatter):
     attribute_editor = ObjectProperty(None)
 
-    def __init__(self, **kwargs):
-        super(ChannelsWidget, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(ChannelsWidget, self).__init__(*args, **kwargs)
 
         self.htlcs_thread = HTLCsThread(inst=self)
         self.htlcs_thread.daemon = True
@@ -48,22 +48,21 @@ class ChannelsWidget(Scatter):
                 self.cn.append(
                     CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
                 )
-                self.add_widget(self.cn[-1])
+                self.ids.relative_layout.add_widget(self.cn[-1])
             self.node = Node(
                 text=self.info.alias, attribute_editor=self.attribute_editor
             )
-            self.add_widget(self.node)
+            self.ids.relative_layout.add_widget(self.node)
             self.bind(pos=self.update_rect, size=self.update_rect)
         except:
             print_exc()
             print("Issue getting channels")
 
     def update_rect(self, *args):
-        w_2, h_2 = self.size[0] / 2, self.size[1] / 2
         if self.node:
-            self.node.pos = (w_2 - (70 / 2), h_2 - (100 / 2))
+            self.node.pos = (-(70 / 2), -(100 / 2))
         for i in range(len(self.channels)):
-            self.cn[i].update_rect(w_2, h_2, i, len(self.channels))
+            self.cn[i].update_rect(i, len(self.channels))
 
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:
@@ -76,4 +75,4 @@ class ChannelsWidget(Scatter):
                 self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
             for cn in self.cn:
                 cn.b.col = [80 / 255, 80 / 255, 80 / 255, 1]
-        Scatter.on_touch_down(self, touch)
+        super(ChannelsWidget, self).on_touch_down(touch)

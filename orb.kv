@@ -300,23 +300,24 @@
 # CHANNELS
 ########################################################################################
 
+<ChannelsWidget>:
+    RelativeLayout:
+        id: relative_layout
+        pos: [root.width/2.5, root.height/2]
+
 <ChannelsScreen>:
     name: 'channels'
-    BoxLayout:
-        orientation: 'horizontal'
+    RelativeLayout:
+        # This RelativeLayout places itself correctly based on the siae
+        # and position of its parents. So we can safely add the ChannelsWidget
+        # and AttributeEditor to it, in relative terms.
+        id: relative_layout
         canvas:
             Color:
                 rgb: .2, .2, .3
             Rectangle:
                 size: self.size
                 pos: self.pos
-        RelativeLayout:
-            id: relative_layout
-            # ChannelsWidget
-            #     id: channels_widget
-        AttributeEditor:
-            id: attribute_editor
-            size_hint: (0.2, 1)
     HUD:
         id: hud
 

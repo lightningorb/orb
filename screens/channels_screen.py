@@ -1,7 +1,8 @@
 from kivy.clock import Clock
 from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
-from channels_widget import *
+from channels_widget import ChannelsWidget
+from attribute_editor import AttributeEditor
 
 
 class ChannelsScreen(Screen):
@@ -16,10 +17,12 @@ class ChannelsScreen(Screen):
     def build(self, *args):
         @mainthread
         def delayed():
-            self.channels_widget = ChannelsWidget(
-                attribute_editor=self.ids.attribute_editor
+            ae = AttributeEditor(
+                size_hint=(0.2, 1), pos_hint={"center_x": 0.9, "center_y": 0.5}
             )
+            self.channels_widget = ChannelsWidget(attribute_editor=ae)
             self.ids.relative_layout.add_widget(self.channels_widget)
+            self.ids.relative_layout.add_widget(ae)
 
         delayed()
 
@@ -27,5 +30,5 @@ class ChannelsScreen(Screen):
         if self.channels_widget:
             self.channels_widget.htlcs_thread.stop()
             self.channels_widget.channels_thread.stop()
-            self.ids.relative_layout.clear_widgets()
+            self.ids.box_layout.clear_widgets()
             self.build()
