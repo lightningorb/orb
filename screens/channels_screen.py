@@ -30,5 +30,5 @@ class ChannelsScreen(Screen):
         if self.channels_widget:
             self.channels_widget.htlcs_thread.stop()
             self.channels_widget.channels_thread.stop()
-            self.ids.box_layout.clear_widgets()
+            self.ids.relative_layout.clear_widgets()
             self.build()
