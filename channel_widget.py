@@ -158,9 +158,7 @@ class ChannelWidget(Widget):
                 self.channel.local_balance = htlc.incoming_channel_local_balance
                 self.channel.remote_balance = htlc.incoming_channel_remote_balance
         elif fail:
-            if htlc.wire_failure in ["FEE_INSUFFICIENT"]:
-                pass
-            else:
+            if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                 print("FAIL!")
                 print(htlc.__dict__)
                 audio_manager.play_link_fail_event()
