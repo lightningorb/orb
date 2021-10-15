@@ -103,25 +103,6 @@
 # ATTRIBUTE EDITOR
 ########################################################################################
 
-<FeeRateSlider>:
-    BoxLayout:
-        orientation: 'vertical'
-        height: 200
-        size_hint_y: None
-        size_hint_x: None
-        pos: root.pos
-        width: root.width
-        Label:
-            text: 'Fee rate ppm'
-        MDSlider:
-            id: slider
-            min: 0
-            step: 5
-            on_touch_up: root.slider_up(int(self.value))
-            hint: True
-        MDTextField:
-            text: str(int(slider.value))
-
 <AEFees>:
     BoxLayout:
         orientation: 'vertical'
