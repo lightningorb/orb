@@ -15,12 +15,14 @@ class ChannelsThread(threading.Thread):
         while not self.stopped():
             try:
                 lnd = data_manager.data_man.lnd
-                for e in lnd.get_channel_events():
-                    if self.stopped():
-                        return
-                    print(e)
-                    if e.open_channel:
-                        self.inst.channels.append(e.open_channel)
+                it = lnd.get_channel_events()
+                if it:
+                    for e in it:
+                        if self.stopped():
+                            return
+                        print(e)
+                        if e.open_channel:
+                            self.inst.channels.append(e.open_channel)
             except:
                 print("Exception getting Channels - let's sleep")
                 print_exc()

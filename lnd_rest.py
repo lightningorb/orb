@@ -1,3 +1,4 @@
+from lnd_base import LndBase
 from functools import lru_cache
 import base64, json, requests
 from kivy.app import App
@@ -5,24 +6,7 @@ import os
 from munch import Munch
 
 
-def to_int(d):
-    for k, v in d.items():
-        if type(v) is dict:
-            d[k] = to_int(d[k])
-        elif type(v) is list:
-            for i in range(len(v)):
-                d[k][i] = to_int(d[k][i])
-        else:
-            try:
-                d[k] = float(d[k])
-                if int(d[k]) - d[k] == 0:
-                    d[k] = int(d[k])
-            except:
-                pass
-    return d
-
-
-class Lnd:
+class Lnd(LndBase):
     def __init__(self):
         app = App.get_running_app()
         data_dir = app.user_data_dir
@@ -171,3 +155,13 @@ class Lnd:
         result = []
         res = self.router_stub.SendToRouteV2(request)
         return res
+
+    def get_htlc_events(self):
+        url = f"{self.fqdn}/v2/router/htlcevents"
+        print("url", url)
+        r = requests.get(url, headers=self.headers, verify=self.cert_path, stream=True)
+        print("got r", r)
+        return r
+
+    def get_channel_events(self):
+        pass

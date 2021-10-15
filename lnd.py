@@ -3,6 +3,7 @@ import codecs
 import os
 from functools import lru_cache
 from traceback import print_exc
+from lnd_base import LndBase
 
 try:
     import grpc
@@ -19,7 +20,7 @@ except:
 MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
 
-class Lnd:
+class Lnd(LndBase):
     def __init__(self, tls_certificate, server, network, macaroon):
         os.environ["GRPC_SSL_CIPHER_SUITES"] = "HIGH+ECDSA"
         combined_credentials = self.get_credentials(
@@ -242,25 +243,6 @@ class Lnd:
     def get_channel_events(self):
         request = ln.ChannelEventSubscription()
         return self.stub.SubscribeChannelEvents(request)
-
-    def get_alias_from_channel_id(self, chan_id):
-        for channel in self.get_channels():
-            if chan_id == channel.chan_id:
-                return self.get_node_alias(channel.remote_pubkey)
-
-    def get_channel_capacity(self, chan_id):
-        for channel in self.get_channels():
-            if chan_id == channel.chan_id:
-                return channel.capacity
-
-    def get_channel_pending_htlcs(self, chan_id):
-        for channel in self.get_channels():
-            if chan_id == channel.chan_id:
-                pending_in = sum(p.amount for p in channel.pending_htlcs if p.incoming)
-                pending_out = sum(
-                    p.amount for p in channel.pending_htlcs if not p.incoming
-                )
-                return dict(pending_in=pending_in, pending_out=pending_out)
 
     # def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
     #     secret = secrets.token_bytes(32)
