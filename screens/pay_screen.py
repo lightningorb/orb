@@ -230,7 +230,7 @@ class PayScreen(Screen):
                             if is_successful:
                                 console_output("SUCCESS")
                                 self.remove_invoice(inv)
-                                sleep(10)
+                                sleep(0.5)
                                 break
 
                             #                 log = schemas.Log(
