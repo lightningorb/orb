@@ -56,9 +56,9 @@ class Htlc:
         else:
             self.event_type = htlc.event_type
 
-        self.event_outcome = "forward_event"
+        # self.event_outcome = "forward_event"
 
-        return
+        # return
         self.event_outcome = self.get_enum_name_from_value(
             htlc.DESCRIPTOR.fields_by_name.items(), htlc.ListFields()[-1][0].number
         )
