@@ -37,7 +37,6 @@ class HTLCsThread(threading.Thread):
                             e.get("outgoing_channel_id"),
                             e.get("incoming_channel_id"),
                         ]
-                        print(chans)
                         if self.inst.cn[cid].l.channel.chan_id in chans:
                             print("DOING ANIM")
                             self.inst.cn[cid].l.anim_htlc(Htlc(lnd, e))

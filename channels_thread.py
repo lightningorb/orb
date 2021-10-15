@@ -27,6 +27,7 @@ class ChannelsThread(threading.Thread):
                 print("Exception getting Channels - let's sleep")
                 print_exc()
                 sleep(10)
+            sleep(10)
 
     def stop(self):
         self._stop_event.set()
