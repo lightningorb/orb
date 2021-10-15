@@ -28,24 +28,18 @@ class ChannelsWidget(Scatter):
         self.radius = 600
         self.node = None
         self.lnd = data_manager.data_man.lnd
-        try:
-            channels = self.get_channels()
-            if not channels:
-                return
-            caps = self.get_caps(channels)
-            self.info = self.lnd.get_info()
-            for i, c in enumerate(channels):
-                cn = CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
-                self.cn[c.chan_id] = cn
-                self.ids.relative_layout.add_widget(cn)
-            self.node = Node(
-                text=self.info.alias, attribute_editor=self.attribute_editor
-            )
-            self.ids.relative_layout.add_widget(self.node)
-            self.bind(pos=self.update_rect, size=self.update_rect)
-        except:
-            print_exc()
-            print("Issue getting channels")
+        channels = self.get_channels()
+        if not channels:
+            return
+        caps = self.get_caps(channels)
+        self.info = self.lnd.get_info()
+        for i, c in enumerate(channels):
+            cn = CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
+            self.cn[c.chan_id] = cn
+            self.ids.relative_layout.add_widget(cn)
+        self.node = Node(text=self.info.alias, attribute_editor=self.attribute_editor)
+        self.ids.relative_layout.add_widget(self.node)
+        self.bind(pos=self.update_rect, size=self.update_rect)
 
     def get_caps(self, channels):
         max_cap = max([int(c.capacity) for c in channels])
@@ -71,7 +65,7 @@ class ChannelsWidget(Scatter):
                 / int(x.b.channel.capacity),
             )
         ):
-            self.cn[cn.b.channel.chan_id].update_rect(i, len(self.cn))
+            cn.update_rect(i, len(self.cn))
 
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:

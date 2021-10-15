@@ -28,11 +28,12 @@ class FeeWidget(Widget):
         def update():
             self.policy_to = self.lnd.get_policy_to(self.channel.chan_id)
             self.policy_from = self.lnd.get_policy_from(self.channel.chan_id)
-            self.to_fee = self.policy_to.fee_rate_milli_msat
-            self.to_fee_norm = min(
-                int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30
-            )
-            self.from_fee = self.policy_from.fee_rate_milli_msat
+            if self.policy_to:
+                self.to_fee = self.policy_to.fee_rate_milli_msat
+                self.to_fee_norm = min(
+                    int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30
+                )
+                self.from_fee = self.policy_from.fee_rate_milli_msat
 
         self.bind(a=self.update_rect)
         self.bind(b=self.update_rect)

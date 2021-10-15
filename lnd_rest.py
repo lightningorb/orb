@@ -54,8 +54,7 @@ class Lnd:
             verify=self.cert_path,
             data={"active_only": active_only},
         )
-        obj = to_int(r.json())
-        return Munch.fromDict(obj).channels
+        return Munch.fromDict(r.json()).channels
 
     @lru_cache(maxsize=None)
     def get_info(self):
@@ -70,7 +69,11 @@ class Lnd:
         return Munch.fromDict(r.json())
 
     def get_policy_to(self, channel_id):
+
         edge = self.get_edge(channel_id)
+        if edge.get("error"):
+            print(edge.error)
+            return None
         # node1_policy contains the fee base and rate for payments from node1 to node2
         if edge.node1_pub == self.get_own_pubkey():
             return Munch.fromDict(edge.node1_policy)
@@ -78,6 +81,9 @@ class Lnd:
 
     def get_policy_from(self, channel_id):
         edge = self.get_edge(channel_id)
+        if edge.get("error"):
+            print(edge.error)
+            return None
         # node1_policy contains the fee base and rate for payments from node1 to node2
         if edge.node1_pub == self.get_own_pubkey():
             return Munch.fromDict(edge.node2_policy)
@@ -100,12 +106,12 @@ class Lnd:
     def decode_payment_request(self, payment_request):
         url = f"{self.fqdn}/v1/payreq/{payment_request}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(to_int(r.json()))
+        return Munch.fromDict(r.json())
 
     def decode_request(self, payment_request):
         url = f"{self.fqdn}/v1/payreq/{payment_request}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(to_int(r.json()))
+        return Munch.fromDict(r.json())
 
     def get_route(
         self,
@@ -138,8 +144,7 @@ class Lnd:
                 }
             ),
         )
-        obj = to_int(r.json())
-        print(obj)
+        obj = r.json()
         return Munch.fromDict(obj).routes
         # request = ln.QueryRoutesRequest(
         #     pub_key=pub_key,
