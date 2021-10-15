@@ -1,0 +1,59 @@
+########################################################################################
+# HUD
+########################################################################################
+
+<BorderedLabel>:
+    canvas.before:
+        Color:
+            rgba: .3, .3, .4, .3
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: .6, .6, .8, 1
+        Line:
+            points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
+            width: 1
+
+<HUD1>:
+    id: hud_label
+    text: root.hud
+    size_hint: [None, None]
+    markup: True
+    size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
+<HUD2>:
+    id: hud_label
+    text: root.hud
+    size_hint: [None, None]
+    markup: True
+    size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
+<HUD3>:
+    id: hud_label
+    text: root.hud
+    size_hint: [None, None]
+    markup: True
+    size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
+<HUD>:
+    size_hint: [1, 1]
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: 1, 0, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    HUD1
+    HUD2
+    HUD3

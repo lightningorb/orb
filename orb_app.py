@@ -25,13 +25,9 @@ class OrbApp(MDApp):
         self.theme_cls.theme_style = "Dark"  # "Light"
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
-        print(self.config["debug"]["layouts"])
-        print(type(self.config["debug"]["layouts"]))
         # self.theme_cls.primary_palette = "Red"
-        # from lnd_rest import Lnd
-        # lnd = Lnd()
-        # lnd.get_balance()
-        return MainLayout()
+        self.main_layout = MainLayout()
+        return self.main_layout
 
     def build_config(self, config):
         """
@@ -45,6 +41,8 @@ class OrbApp(MDApp):
         config.set("lnd", "tls_certificate", "")
         config.set("lnd", "network", "mainnet")
         config.set("lnd", "macaroon_admin", "")
+        config.add_section("display")
+        config.set("display", "channel_length", 600)
         config.add_section("debug")
         config.set("debug", "layouts", "0")
 
@@ -116,6 +114,13 @@ class OrbApp(MDApp):
                         "section": "debug",
                         "key": "layouts",
                     },
+                    {
+                        "type": "numeric",
+                        "title": "channel length",
+                        "desc": "Make sure everything fits the screen on startup",
+                        "section": "display",
+                        "key": "channel_length",
+                    },
                 ]
             ),
         )
@@ -129,3 +134,4 @@ class OrbApp(MDApp):
         if key == "tls_certificate":
             data_manager.DataManager.save_cert(value)
         data_manager.data_man = data_manager.DataManager(config=self.config)
+        self.main_layout.do_layout()

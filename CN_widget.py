@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.properties import ObjectProperty
 import math
 from kivy.uix.widget import Widget
@@ -13,7 +14,6 @@ class CNWidget(Widget):
     def __init__(self, c, caps, attribute_editor, *args):
         super(CNWidget, self).__init__(*args)
         self.attribute_editor = attribute_editor
-        self.radius = 600
         lnd = data_manager.data_man.lnd
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
         self.b = Node(
@@ -27,6 +27,7 @@ class CNWidget(Widget):
         self.add_widget(self.l)
 
     def update_rect(self, i, n):
+        self.radius = int(App.get_running_app().config["display"]["channel_length"])
         x = math.sin(i / n * 3.14378 * 2) * self.radius
         y = math.cos(i / n * 3.14378 * 2) * self.radius
         points = [0, 0, x, y]
