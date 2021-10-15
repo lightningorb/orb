@@ -1,3 +1,4 @@
+from kivy.animation import Animation
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.button import Button
 import data_manager
@@ -18,6 +19,9 @@ class Node(Button):
                     self, "text", lnd.get_node_alias(self.channel.remote_pubkey)
                 )
             ).start()
+
+    def anim_to_pos(self, pos):
+        Animation(pos=pos, duration=1).start(self)
 
     def on_release(self):
         self.col = [150 / 255, 150 / 255, 150 / 255, 1]

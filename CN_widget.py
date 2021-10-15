@@ -29,6 +29,12 @@ class CNWidget(Widget):
     def update_rect(self, i, n):
         x = math.sin(i / n * 3.14378 * 2) * self.radius
         y = math.cos(i / n * 3.14378 * 2) * self.radius
-        self.l.points = [0, 0, x, y]
-        self.b.pos = (x - (70 / 2), y - (100 / 2))
+        points = [0, 0, x, y]
+        pos = (x - (70 / 2), y - (100 / 2))
+        if self.l.points == [0, 0, 0, 0]:
+            self.l.points = points
+            self.b.pos = pos
+        else:
+            self.l.anim_to_pos(points)
+            self.b.anim_to_pos(pos)
         self.sent_received_widget.update_rect(x, y)

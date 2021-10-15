@@ -29,7 +29,9 @@ class FeeWidget(Widget):
             self.policy_to = self.lnd.get_policy_to(self.channel.chan_id)
             self.policy_from = self.lnd.get_policy_from(self.channel.chan_id)
             self.to_fee = self.policy_to.fee_rate_milli_msat
-            self.to_fee_norm = min(int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30)
+            self.to_fee_norm = min(
+                int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30
+            )
             self.from_fee = self.policy_from.fee_rate_milli_msat
 
         self.bind(a=self.update_rect)
@@ -48,15 +50,17 @@ class FeeWidget(Widget):
     def update_rect(self, *args):
         try:
             v = np.array(self.b) - np.array(self.a)
-            ub = v / np.linalg.norm(v)
-            orth = np.random.randn(2)
-            orth -= orth.dot(ub) * ub
-            orth = orth / np.linalg.norm(orth)
-            handle_a = self.c + orth * self.to_fee_norm
-            handle_b = self.c + orth * -self.to_fee_norm
-            self.circle_1.circle = (handle_a[0], handle_a[1], 5)
-            self.circle_2.circle = (handle_b[0], handle_b[1], 5)
-            self.line.points = (handle_a[0], handle_a[1], handle_b[0], handle_b[1])
+            d = np.linalg.norm(v)
+            if d:
+                ub = v / d
+                orth = np.random.randn(2)
+                orth -= orth.dot(ub) * ub
+                orth = orth / np.linalg.norm(orth)
+                handle_a = self.c + orth * self.to_fee_norm
+                handle_b = self.c + orth * -self.to_fee_norm
+                self.circle_1.circle = (handle_a[0], handle_a[1], 5)
+                self.circle_2.circle = (handle_b[0], handle_b[1], 5)
+                self.line.points = (handle_a[0], handle_a[1], handle_b[0], handle_b[1])
         except:
             pass
 

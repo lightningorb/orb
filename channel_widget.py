@@ -119,6 +119,9 @@ class ChannelWidget(Widget):
         anim += Animation(pos=(-1000, -1000), duration=0.1)
         anim.start(self.anim_rect)
 
+    def anim_to_pos(self, points):
+        Animation(points=points, duration=1).start(self)
+
     def anim_htlc(self, htlc):
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"

@@ -19,12 +19,13 @@ class HTLCsThread(threading.Thread):
                 for e in lnd.get_htlc_events():
                     if self.stopped():
                         return
-                    for cn in self.inst.cn:
-                        if cn.l.channel.chan_id in [
+                    self.inst.update_rect()
+                    for cid in self.inst.cn:
+                        if self.inst.cn[cid].l.channel.chan_id in [
                             e.outgoing_channel_id,
                             e.incoming_channel_id,
                         ]:
-                            cn.l.anim_htlc(Htlc(lnd, e))
+                            self.inst.cn[cid].l.anim_htlc(Htlc(lnd, e))
             except:
                 print("Exception getting HTLCs - let's sleep")
                 print_exc()

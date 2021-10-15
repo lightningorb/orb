@@ -24,28 +24,19 @@ class ChannelsWidget(Scatter):
         self.channels_thread.daemon = True
         self.channels_thread.start()
 
-        self.cn = []
-        self.channels = []
+        self.cn = {}
         self.radius = 600
         self.node = None
-        lnd = data_manager.data_man.lnd
+        self.lnd = data_manager.data_man.lnd
         try:
-            self.channels = sorted(
-                lnd.get_channels(),
-                key=lambda x: int(x.local_balance) / int(x.capacity),
-                reverse=True,
-            )
-            if not self.channels:
+            channels = self.get_channels()
+            if not channels:
                 return
-            self.info = lnd.get_info()
-            max_cap = max([int(c.capacity) for c in self.channels])
-            caps = {
-                c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5)
-                for c in self.channels
-            }
-            for i, c in enumerate(self.channels):
+            caps = self.get_caps(channels)
+            self.info = self.lnd.get_info()
+            for i, c in enumerate(channels):
                 cn = CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
-                self.cn.append(cn)
+                self.cn[c.chan_id] = cn
                 self.ids.relative_layout.add_widget(cn)
             self.node = Node(
                 text=self.info.alias, attribute_editor=self.attribute_editor
@@ -56,14 +47,31 @@ class ChannelsWidget(Scatter):
             print_exc()
             print("Issue getting channels")
 
+    def get_caps(self, channels):
+        max_cap = max([int(c.capacity) for c in channels])
+        caps = {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}
+        return caps
+
+    def get_channels(self):
+        channels = sorted(
+            self.lnd.get_channels(),
+            key=lambda x: int(x.local_balance) / int(x.capacity),
+            reverse=True,
+        )
+        return channels
+
     def update_rect(self, *args):
         if self.node:
             self.node.pos = (-(70 / 2), -(100 / 2))
-        for i in range(len(self.cn)):
-            """
-            TODO: is something bad here
-            """
-            self.cn[i].update_rect(i, len(self.cn))
+        for i, cn in enumerate(
+            sorted(
+                self.cn.values(),
+                reverse=True,
+                key=lambda x: int(x.b.channel.local_balance)
+                / int(x.b.channel.capacity),
+            )
+        ):
+            self.cn[cn.b.channel.chan_id].update_rect(i, len(self.cn))
 
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:
@@ -75,6 +83,6 @@ class ChannelsWidget(Scatter):
             self.attribute_editor.clear()
             if self.node:
                 self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
-            for cn in self.cn:
+            for cn in self.cn.values():
                 cn.b.col = [80 / 255, 80 / 255, 80 / 255, 1]
         super(ChannelsWidget, self).on_touch_down(touch)
