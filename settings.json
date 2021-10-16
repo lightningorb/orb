@@ -1,0 +1,93 @@
+[
+   {
+      "type":"title",
+      "title":"Connection Settings"
+   },
+   {
+      "type":"string",
+      "title":"Host",
+      "desc":"The node's IP or domain, e.g 1.1.1.1",
+      "section":"lnd",
+      "key":"hostname"
+   },
+   {
+      "type":"string",
+      "title":"GRPC Port",
+      "desc":"The node's GRPC port, usually 10009",
+      "section":"lnd",
+      "key":"grpc_port"
+   },
+   {
+      "type":"string",
+      "title":"REST Port",
+      "desc":"The node's REST API port, usually 8080",
+      "section":"lnd",
+      "key":"rest_port"
+   },
+   {
+      "type":"options",
+      "title":"Network",
+      "desc":"Network to connect to",
+      "section":"lnd",
+      "key":"network",
+      "options":[
+         "mainnet",
+         "testnet"
+      ]
+   },
+   {
+      "type":"options",
+      "title":"API Protocol",
+      "desc":"Whether to use GRPC or REST",
+      "section":"lnd",
+      "key":"protocol",
+      "options":[
+         "grpc",
+         "rest",
+         "mock"
+      ]
+   },
+   {
+      "type":"string",
+      "title":"Admin Macaroon",
+      "desc":"hex encoded macaroon: codecs.encode(..., 'hex')",
+      "section":"lnd",
+      "key":"macaroon_admin"
+   },
+   {
+      "type":"string",
+      "title":"tls certificate",
+      "desc":"plain-text TLS certificate",
+      "section":"lnd",
+      "key":"tls_certificate"
+   },
+   {
+      "type":"title",
+      "title":"Debug"
+   },
+   {
+      "type":"bool",
+      "title":"debug layouts",
+      "desc":"Display layouts for debugging purposes",
+      "section":"debug",
+      "key":"layouts"
+   },
+   {
+      "type":"title",
+      "title":"Display"
+   },
+   {
+      "type":"numeric",
+      "title":"channel length",
+      "desc":"Make sure everything fits the screen on startup",
+      "section":"display",
+      "key":"channel_length"
+   },
+   {
+      "type":"bool",
+      "title":"Show Sent and Received",
+      "desc":"Display amount sent and received by each node",
+      "section":"display",
+      "key":"show_sent_received"
+   }
+]

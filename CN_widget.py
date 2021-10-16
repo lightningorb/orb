@@ -21,8 +21,13 @@ class CNWidget(Widget):
             channel=c,
             attribute_editor=attribute_editor,
         )
-        self.sent_received_widget = SentReceivedWidget(channel=c)
-        self.add_widget(self.sent_received_widget)
+        self.show_sent_received = (
+            App.get_running_app().config["display"]["show_sent_received"] == "1"
+        )
+        self.sent_received_widget = None
+        if self.show_sent_received:
+            self.sent_received_widget = SentReceivedWidget(channel=c)
+            self.add_widget(self.sent_received_widget)
         self.add_widget(self.b)
         self.add_widget(self.l)
 
@@ -38,4 +43,5 @@ class CNWidget(Widget):
         else:
             self.l.anim_to_pos(points)
             self.b.anim_to_pos(pos)
-        self.sent_received_widget.update_rect(x, y)
+        if self.show_sent_received and self.sent_received_widget:
+            self.sent_received_widget.update_rect(x, y)
