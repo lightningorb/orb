@@ -4,6 +4,9 @@ import data_manager
 import json
 from kivy.lang import Builder
 from pathlib import Path
+from monkey_patch import patch_settings
+
+patch_settings()
 
 
 class OrbApp(MDApp):
@@ -107,6 +110,7 @@ class OrbApp(MDApp):
                         "section": "lnd",
                         "key": "tls_certificate",
                     },
+                    {"type": "title", "title": "Debug"},
                     {
                         "type": "bool",
                         "title": "debug layouts",
@@ -114,6 +118,7 @@ class OrbApp(MDApp):
                         "section": "debug",
                         "key": "layouts",
                     },
+                    {"type": "title", "title": "Display"},
                     {
                         "type": "numeric",
                         "title": "channel length",
