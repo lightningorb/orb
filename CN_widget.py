@@ -28,8 +28,8 @@ class CNWidget(Widget):
         if self.show_sent_received:
             self.sent_received_widget = SentReceivedWidget(channel=c)
             self.add_widget(self.sent_received_widget)
-        self.add_widget(self.b)
         self.add_widget(self.l)
+        self.add_widget(self.b)
 
     def update_rect(self, i, n):
         self.radius = int(App.get_running_app().config["display"]["channel_length"])
