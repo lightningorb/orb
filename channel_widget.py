@@ -4,6 +4,7 @@ from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
 from audio_manager import audio_manager
+from segment import Segment
 
 try:
     from numpy.linalg import norm
@@ -59,11 +60,20 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.local_line_col = Color(*GREEN)
-            self.line_local = Line(points=[0, 0, 0, 0], width=self.width)
+            self.line_local = Segment(
+                amount=self.channel.local_balance,
+                points=[0, 0, 0, 0],
+                width=self.width,
+                cap="none",
+            )
             Color(*ORANGE)
-            self.line_pending = Line(points=[0, 0, 0, 0], width=self.width)
+            self.line_pending = Segment(
+                points=[0, 0, 0, 0], width=self.width, cap="none"
+            )
             self.remote_line_col = Color(*BLUE)
-            self.line_remote = Line(points=[0, 0, 0, 0], width=self.width)
+            self.line_remote = Segment(
+                points=[0, 0, 0, 0], width=self.width, cap="none"
+            )
             Color(0.5, 1, 0.5, 1)
             self.anim_rect = RoundedRectangle(
                 pos=[-1000, -1000], size=[0, 0], radius=[5]
@@ -103,6 +113,9 @@ class ChannelWidget(Widget):
         self.line_remote.points = [cb[0], cb[1], b[0], b[1]]
         self.to_fee.set_points(a, b, c)
         self.a, self.b, self.c = a, b, c
+        self.line_local.update_rect(amount=self.channel.local_balance)
+        self.line_pending.update_rect()
+        self.line_remote.update_rect()
 
     def anim_outgoing(self, s=10):
         anim = Animation(pos=self.c, size=(0, 0), duration=0)
