@@ -42,11 +42,15 @@ class FeeWidget(Widget):
 
         Thread(target=update).start()
 
-        with self.canvas.before:
-            Color(0.5, 1, 0.5, 1)
-            self.circle_1 = Line(circle=(150, 150, 50))
-            self.circle_2 = Line(circle=(150, 150, 50))
-            self.line = Line(points=[0, 0, 0, 0])
+        try:
+            np
+            with self.canvas.before:
+                Color(0.5, 1, 0.5, 1)
+                self.circle_1 = Line(circle=(150, 150, 50))
+                self.circle_2 = Line(circle=(150, 150, 50))
+                self.line = Line(points=[0, 0, 0, 0])
+        except:
+            pass
 
     def update_rect(self, *args):
         try:
