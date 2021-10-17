@@ -16,12 +16,7 @@ from HUD import *
 from fee_widget import FeeWidget
 from lerp import *
 from kivy.animation import Animation
-
-RED = [1, 0.5, 0.5, 1]
-WHITE = [1, 1, 1, 1]
-BLUE = [0.5, 0.5, 1, 1]
-GREEN = [0.5, 1, 0.5, 1]
-ORANGE = [1, 1, 0.5, 1]
+from colors import *
 
 
 class ChannelWidget(Widget):
@@ -59,20 +54,18 @@ class ChannelWidget(Widget):
         )
 
         with self.canvas.before:
-            self.local_line_col = Color(*GREEN)
             self.line_local = Segment(
                 amount=self.channel.local_balance,
                 points=[0, 0, 0, 0],
                 width=self.width,
                 cap="none",
+                color=GREEN,
             )
-            Color(*ORANGE)
             self.line_pending = Segment(
-                points=[0, 0, 0, 0], width=self.width, cap="none"
+                points=[0, 0, 0, 0], width=self.width, cap="none", color=ORANGE
             )
-            self.remote_line_col = Color(*BLUE)
             self.line_remote = Segment(
-                points=[0, 0, 0, 0], width=self.width, cap="none"
+                points=[0, 0, 0, 0], width=self.width, cap="none", color=BLUE
             )
             Color(0.5, 1, 0.5, 1)
             self.anim_rect = RoundedRectangle(
@@ -108,9 +101,9 @@ class ChannelWidget(Widget):
         c = lerp_2d(a, b, r)
         ca = lerp_2d(a, b, r - self.pending_out / int(chan.capacity))
         cb = lerp_2d(a, b, r + self.pending_in / int(chan.capacity))
-        self.line_local.points = [a[0], a[1], ca[0], ca[1]]
-        self.line_pending.points = [ca[0], ca[1], cb[0], cb[1]]
-        self.line_remote.points = [cb[0], cb[1], b[0], b[1]]
+        self.line_local.line.points = [a[0], a[1], ca[0], ca[1]]
+        self.line_pending.line.points = [ca[0], ca[1], cb[0], cb[1]]
+        self.line_remote.line.points = [cb[0], cb[1], b[0], b[1]]
         self.to_fee.set_points(a, b, c)
         self.a, self.b, self.c = a, b, c
         self.line_local.update_rect(amount=self.channel.local_balance)
@@ -184,9 +177,9 @@ class ChannelWidget(Widget):
         }
         col = cols.get(htlc.event_outcome, WHITE)
         (Animation(rgba=col, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
-            self.remote_line_col
+            self.line_remote.color
         )
 
         (Animation(rgba=col, duration=0.2) + Animation(rgba=GREEN, duration=1)).start(
-            self.local_line_col
+            self.line_local.color
         )
