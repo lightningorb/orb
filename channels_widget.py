@@ -33,13 +33,18 @@ class ChannelsWidget(Scatter):
             return
         caps = self.get_caps(channels)
         self.info = self.lnd.get_info()
-        for i, c in enumerate(channels):
-            cn = CNWidget(c=c, caps=caps, attribute_editor=self.attribute_editor)
-            self.cn[c.chan_id] = cn
-            self.ids.relative_layout.add_widget(cn)
+        for c in channels:
+            self.add_channel(channel=c, caps=caps)
         self.node = Node(text=self.info.alias, attribute_editor=self.attribute_editor)
         self.ids.relative_layout.add_widget(self.node)
         self.bind(pos=self.update_rect, size=self.update_rect)
+
+    def add_channel(self, channel, caps=None):
+        if not caps:
+            caps = self.get_caps(self.get_channels())
+        cn = CNWidget(c=channel, caps=caps, attribute_editor=self.attribute_editor)
+        self.cn[channel.chan_id] = cn
+        self.ids.relative_layout.add_widget(cn)
 
     def get_caps(self, channels):
         max_cap = max([int(c.capacity) for c in channels])

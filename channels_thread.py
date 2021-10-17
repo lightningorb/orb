@@ -21,8 +21,8 @@ class ChannelsThread(threading.Thread):
                         if self.stopped():
                             return
                         print(e)
-                        if e.open_channel:
-                            self.inst.channels.append(e.open_channel)
+                        if e.open_channel.chan_id:
+                            self.inst.add_channel(e.open_channel)
             except:
                 print("Exception getting Channels - let's sleep")
                 print_exc()
