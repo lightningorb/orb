@@ -172,13 +172,17 @@ class ConsoleInput(TextInput):
         inst.open()
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
+        to_save = self.text
+        if text:
+            to_save += text
         do_eval = keycode[1] == "enter" and self.selection_text
-        data_manager.data_man.store.put("console_input", text=self.text)
+        data_manager.data_man.store.put("console_input", text=to_save)
         if do_eval:
             self.output += str(self.selection_text)
             self.exec(self.selection_text)
+            return True
         else:
-            super(ConsoleInput, self).keyboard_on_key_down(
+            return super(ConsoleInput, self).keyboard_on_key_down(
                 window, keycode, text, modifiers
             )
 
