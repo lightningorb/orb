@@ -5,6 +5,7 @@ Config.set("graphics", "height", "800")
 
 from kivy.uix.widget import Widget
 from kivy.uix.scatter import Scatter
+import kivy_garden.contextmenu
 from orb_app import OrbApp
 from kivy.app import App
 
@@ -23,6 +24,7 @@ from screens.send_coins import *
 
 from main_layout import *
 from status_line import *
+from top_menu import *
 
 if __name__ == "__main__":
     OrbApp().run()

@@ -10,6 +10,8 @@
 # MAIN
 ########################################################################################
 
+<TopMenu@AppMenu>:
+
 <MainLayout>:
     id: main_layout
     orientation: 'vertical'
@@ -19,9 +21,8 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    MainMenu_ActionBar:
-        id: ActionBar
     BoxLayout:
+        id: box_layout
         orientation: "vertical"
         size: root.width, root.height
         canvas.before:
@@ -48,6 +49,65 @@
             ConsoleScreen
         StatusLine
             id: status_line
+    TopMenu:
+        id: app_menu
+        top: root.height
+        cancel_handler_widget: main_layout
+
+        AppMenuTextItem:
+            text: "View"
+            ContextMenu:
+                id: view
+                ContextMenuTextItem:
+                    text: "Refresh"
+                    on_release: app.root.ids.sm.get_screen("channels").refresh()
+        AppMenuTextItem:
+            text: "Lightning"
+            ContextMenu:
+                ContextMenuTextItem:
+                    text: "Channels"
+                    on_release:  app.root.ids.sm.current = 'channels'
+                ContextMenuTextItem:
+                    text: "Pay"
+                    on_release:  app.root.ids.sm.current = 'pay'
+                ContextMenuTextItem:
+                    text: "Mail"
+                    on_release:  app.root.ids.sm.current = 'mail'
+                ContextMenuTextItem:
+                    text: "Open Channel"
+                    on_release:  app.root.ids.sm.current = 'open_channel'
+                ContextMenuTextItem:
+                    text: "Connect"
+                    on_release:  app.root.ids.sm.current = 'connect'
+                ContextMenuTextItem:
+                    text: "Console"
+                    on_release:  app.root.ids.sm.current = 'console'
+                ContextMenuTextItem:
+                    text: "Ingest Invoices"
+                    on_release: IngestInvoicesScreen().open()
+        AppMenuTextItem:
+            text: "On-Chain"
+            ContextMenu:
+                ContextMenuTextItem:
+                    text: "New Address"
+                    on_release: NewAddress().open()
+                ContextMenuTextItem:
+                    text: "Send Coins"
+                    on_press: SendCoins().open()
+        AppMenuTextItem:
+            text: "App"
+            ContextMenu:
+                ContextMenuTextItem:
+                    text: "Settings"
+                    on_release: app.open_settings()
+                ContextMenuTextItem:
+                    text: "Quit"
+                    on_release: app.get_running_app().stop()
+        AppMenuTextItem:
+            text: "Scripts"
+            id: scripts
+
+
 
 ########################################################################################
 # STATUS LINE IO
@@ -174,98 +234,6 @@
         do_scroll_x: False
         do_scroll_y: True
 
-########################################################################################
-# MENU BAR
-########################################################################################
-
-
-<MainMenu_ActionBar@ActionBar>:
-    height: 50
-    size_hint_y: None
-    ActionView:
-        id: ActionView
-        HiddenIcon_ActionPrevious:
-        ActionGroup:
-            id: App_ActionGroup
-            mode: 'spinner'
-            font_size: '12sp'
-            text: '       Lightning         '
-            font_name: 'DejaVuSans'
-            ActionButton:
-                text: 'Channels'
-                font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'channels'
-            ActionButton:
-                text: 'Pay'
-                font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'pay'
-            ActionButton:
-                text: 'Mail'
-                font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'mail'
-            ActionButton:
-                text: 'Open Channel'
-                font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'open_channel'
-            ActionButton:
-                text: 'Connect'
-                font_size: '12sp'
-                on_release:  app.root.ids.sm.current = 'connect'
-            ActionButton:
-                text: 'Ingest Invoices'
-                font_size: '12sp'
-                on_release: IngestInvoicesScreen().open()
-        ActionGroup:
-            id: App_ActionGroup
-            mode: 'spinner'
-            text: '  On-Chain  '
-            font_name: 'DejaVuSans'
-            font_size: '12sp'
-            ActionButton:
-                text: 'New Address'
-                font_size: '12sp'
-                on_release: NewAddress().open()
-            ActionButton:
-                text: 'Send Coins'
-                font_size: '12sp'
-                on_press: SendCoins().open()
-        ActionGroup:
-            id: App_ActionGroup
-            mode: 'spinner'
-            text: 'App'
-            font_name: 'DejaVuSans'
-            font_size: '12sp'
-            ActionButton:
-                text: 'Settings'
-                font_size: '12sp'
-                on_press: app.open_settings()
-            ActionButton:
-                text: 'Quit'
-                font_size: '12sp'
-                on_press: app.get_running_app().stop()
-        ActionButton:
-            text: 'Refresh'
-            font_name: 'DejaVuSans'
-            font_size: '12sp'
-            on_press: app.root.ids.sm.get_screen("channels").refresh()
-        ActionGroup:
-            id: scripts
-            font_size: '12sp'
-            text: '     Scripts     '
-            font_name: 'DejaVuSans'
-            mode: 'spinner'
-            # ActionButton:
-            #     text: 'Example'
-            #     font_size: '12sp'
-
-<HiddenIcon_ActionPrevious@ActionPrevious>:
-    title: ''   # app.title if app.title is not None else 'Action Previous'
-    with_previous: False
-    app_icon: ''
-    app_icon_width: 0
-    app_icon_height: 0
-    size_hint_x: None
-    width: len(self.title) * 10
 
 ########################################################################################
 # CHANNELS
@@ -472,6 +440,7 @@
 
 <ConsoleInput>:
     id: text_input
+    disabled: False
     multiline: True
     size_hint_y: 1
     foreground_color: 1, 1, 1, 1
@@ -511,7 +480,7 @@
                 id: install
                 text: 'Install'
 <LoadScript>
-    size: (500,800)
+    size: (600,800)
     size_hint: (None, None)
     title: 'Load Script'
     ScrollView:
@@ -526,20 +495,36 @@
             height: self.minimum_height
             do_scroll_x: False
 
-<Project>:
-    id: contextual
-    ActionPrevious:
-        title: "Return"
-        width: 100
-        with_previous: True
-        on_release: app.root.ids.sm.current = 'channels'
-    ActionOverflow:
-    ActionButton:
-        id: run
-        text: 'Run'
-    ActionButton:
-        id: load
-        text: 'Load'
-    ActionButton:
-        id: install
-        text: 'Install'
+<DeleteScript>
+    size: (600,800)
+    size_hint: (None, None)
+    title: 'Delete Script'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            id: grid
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: None, None
+            height: self.minimum_height
+            do_scroll_x: False
+
+# <Project>:
+#     id: contextual
+#     ActionPrevious:
+#         title: "Return"
+#         width: 100
+#         with_previous: True
+#         on_release: app.root.ids.sm.current = 'channels'
+#     ActionOverflow:
+#     ActionButton:
+#         id: run
+#         text: 'Run'
+#     ActionButton:
+#         id: load
+#         text: 'Load'
+#     ActionButton:
+#         id: install
+#         text: 'Install'

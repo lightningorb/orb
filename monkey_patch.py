@@ -13,3 +13,16 @@ def patch_settings():
         return self.content.add_widget(*largs)
 
     SettingItem.add_widget = add_widget
+
+
+def patch_store():
+    from kivy.storage.jsonstore import JsonStore
+
+    def get(self, key, default=None):
+        try:
+            return self.orig_get(key)
+        except:
+            return default
+
+    JsonStore.orig_get = JsonStore.get
+    JsonStore.get = get

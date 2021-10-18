@@ -25,7 +25,6 @@ class ChannelsScreen(Screen):
 
     def refresh(self):
         if self.channels_widget:
-            print(dir(self.channels_widget))
             self.channels_widget.htlcs_thread.stop()
             self.channels_widget.channels_thread.stop()
             self.ids.cw_layout.clear_widgets()

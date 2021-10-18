@@ -13,13 +13,10 @@ from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.app import App
+from time import time
 
 import ui_actions
 from traceback import format_exc
-
-
-class Project(ContextualActionView):
-    pass
 
 
 class ConsoleScreen(Screen):
@@ -41,14 +38,7 @@ class ConsoleScreen(Screen):
             except:
                 pass
             app = App.get_running_app()
-            project = Project()
-            # add the contextual menu for the console to the menu bar
-            app.root.ids.ActionBar.add_widget(project)
-
-            # bind run and install buttons
-            project.ids.run.bind(on_release=self.ids.console_input.run)
-            project.ids.load.bind(on_release=self.ids.console_input.load)
-            project.ids.install.bind(on_release=self.ids.console_input.install)
+            app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
 
         delayed()
 
@@ -66,6 +56,10 @@ class InstallScript(Popup):
     pass
 
 
+class DeleteScript(Popup):
+    pass
+
+
 class LoadScript(Popup):
     pass
 
@@ -73,6 +67,28 @@ class LoadScript(Popup):
 class ConsoleInput(TextInput):
 
     output = StringProperty("")
+
+    def __init__(self, *args, **kwargs):
+        super(ConsoleInput, self).__init__(*args, **kwargs)
+        # self.bind(focus=self.on_focus)
+        self.tapped = 0
+        self.double_tapped = False
+
+    def on_touch_down(self, touch):
+        """
+        Sadly, the context menu has focus issues with a TextInput underneath it,
+        so to fix this issue, the console's TextInput needs to be enabled by
+        double-tapping it.
+        """
+        if self.collide_point(*touch.pos):
+            if time() - self.tapped < 0.3:
+                self.double_tapped = True
+            self.tapped = time()
+            if self.double_tapped:
+                return super(ConsoleInput, self).on_touch_down(touch)
+            return False
+        self.double_tapped = False
+        return super(ConsoleInput, self).on_touch_down(touch)
 
     def exec(self, text):
         lnd = data_manager.data_man.lnd
@@ -127,10 +143,33 @@ class ConsoleInput(TextInput):
                 pass
             sc[inst.ids.script_name.text] = self.text
             data_manager.data_man.store.put("scripts", **sc)
-            ui_actions.populate_scripts()
+            app = App.get_running_app()
+            app.root.ids.app_menu.populate_scripts()
             inst.dismiss()
 
         inst.ids.install.bind(on_release=do_install)
+
+    def delete(self, *args):
+        inst = LoadScript()
+        try:
+            sc = data_manager.data_man.store.get("scripts")
+        except:
+            pass
+
+        def do_delete(button, *args):
+            sc = data_manager.data_man.store.get("scripts", {})
+            del sc[button.text]
+            data_manager.data_man.store.put("scripts", **sc)
+            app = App.get_running_app()
+            app.root.ids.app_menu.populate_scripts()
+            inst.dismiss()
+
+        for name in sc:
+            button = Button(text=name, size_hint=(None, None), size=(480, 40))
+            button.bind(on_release=do_delete)
+            inst.ids.grid.add_widget(button)
+
+        inst.open()
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         do_eval = keycode[1] == "enter" and self.selection_text
