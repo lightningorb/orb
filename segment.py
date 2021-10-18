@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
@@ -13,6 +14,8 @@ class Segment(Widget):
         self.amount = amount
         self.d = 3
         self.r = self.d / 2
+        opacity = float(App.get_running_app().config["display"]["channel_opacity"])
+        color[-1] = opacity
         with self.canvas:
             self.color = Color(*color)
             self.line = Line(points=points, width=width, cap=cap)

@@ -89,5 +89,12 @@
       "desc":"Display amount sent and received by each node",
       "section":"display",
       "key":"show_sent_received"
+   },
+   {
+      "type":"numeric",
+      "title":"channel opacity",
+      "desc":"Opacity of your channels, ranges from 0 to 1",
+      "section":"display",
+      "key":"channel_opacity"
    }
 ]

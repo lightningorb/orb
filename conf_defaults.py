@@ -10,6 +10,6 @@ def set_conf_defaults(config):
     config.add_section("display")
     config.set("display", "channel_length", 600)
     config.set("display", "show_sent_received", 0)
+    config.set("display", "channel_opacity", 0.8)
     config.add_section("debug")
     config.set("debug", "layouts", 0)
-    config.set("debug", "blah", 0)
