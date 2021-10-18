@@ -6,7 +6,7 @@ from kivy.app import App
 from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenu
 from kivy_garden.contextmenu import AppMenuTextItem
-
+from decorators import guarded
 import data_manager
 
 
@@ -25,6 +25,7 @@ class TopMenu(AppMenu):
         cm = ContextMenu()
         for script in scripts:
 
+            @guarded
             def run(self, *args):
                 lnd = data_manager.data_man.lnd
                 exec(scripts[self.text])
