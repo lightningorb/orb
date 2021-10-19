@@ -5,6 +5,7 @@
 #:import NewAddress screens.new_address_screen.NewAddress
 #:import SendCoins screens.send_coins.SendCoins
 #:import IngestInvoicesScreen screens.ingest_invoices_screen.IngestInvoicesScreen
+#:import PayScreen screens.pay_screen.PayScreen
 
 ########################################################################################
 # MAIN
@@ -41,7 +42,6 @@
                     size: self.size
             ChannelsScreen:
                 id: channels
-            PayScreen
             ConnectScreen
             OpenChannelScreen
             FirstScreen
@@ -69,7 +69,7 @@
                     on_release:  app.root.ids.sm.current = 'channels'
                 ContextMenuTextItem:
                     text: "Pay"
-                    on_release:  app.root.ids.sm.current = 'pay'
+                    on_release:  PayScreen().open()
                 ContextMenuTextItem:
                     text: "Mail"
                     on_release:  app.root.ids.sm.current = 'mail'
@@ -291,67 +291,6 @@
             size: self.size
             pos: self.pos
     PathFindingWidget:
-
-
-########################################################################################
-# PAY
-########################################################################################
-
-<PayScreen>:
-    name: 'pay'
-    GridLayout:
-        cols: 1
-        padding: 50
-        spacing: 50
-        BoxLayout:
-            size_hint_y: None
-            height: 60
-            orientation: 'horizontal'
-            Label:
-                text: "Fee rate PPM"
-                font_name: 'DejaVuSans'
-                font_size: '24sp'
-                size_hint_y: None
-                height: 60
-                canvas.before:
-                    PushMatrix
-                    Scale:
-                        origin: self.center
-                        xyz: .5, .5, 1
-                canvas.after:
-                    PopMatrix
-            TextInput:
-                id: fee_rate
-                multiline: False
-                size_hint_y: None
-                text: '500'
-                height: 60
-                font_size: '12sp'
-        # PathFindingLayout:
-        ScrollView:
-            size_hint: 0.5, 1
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            do_scroll_x: False
-            GridLayout:
-                id: output
-                cols: 1
-                padding: 50
-                spacing: 50
-                size_hint_y: None
-                height: self.minimum_height
-        Button:
-            text: 'Pay'
-            font_name: 'DejaVuSans'
-            font_size: '12sp'
-            on_release: root.pay() 
-            size_hint_y: None
-            height: 60
-        Button:
-            text: 'Kill'
-            font_size: '12sp'
-            font_name: 'DejaVuSans'
-            size_hint_y: None
-            height: 60
 
 ########################################################################################
 # MAIL

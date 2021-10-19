@@ -1,0 +1,65 @@
+########################################################################################
+# PAY
+########################################################################################
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: 800, 60
+
+<PayScreen>:
+    title: 'Pay Invoices'
+    size: (800, 500)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Fee rate PPM"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: 60
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        TextInput:
+            id: fee_rate
+            multiline: False
+            size_hint_y: None
+            text: '500'
+            height: 60
+            font_size: '12sp'
+        Label:
+            text: "First Hop Channel"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: 60
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_id
+            text: 'any'
+            height: 60
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.first_hop_spinner_click(spinner_id.text)
+        Splitter:
+            horizontal: True
+        Button:
+            text: 'Pay'
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            on_release: root.pay() 
+            size_hint_y: None
+            height: 60

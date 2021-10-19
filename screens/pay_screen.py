@@ -1,3 +1,5 @@
+from kivy.uix.popup import Popup
+from kivy.clock import mainthread
 from kivy.app import App
 from kivy.uix.screenmanager import Screen
 
@@ -78,7 +80,7 @@ def handle_error(inst, response, route, routes, pk=None):
             return f"Unknown error code {repr(code)}:"
 
 
-def get_low_inbound_peer(avoid):
+def get_low_inbound_channel(avoid):
     chans = []
     channels = data_manager.data_man.lnd.get_channels(active_only=True)
     for chan in channels:
@@ -94,15 +96,35 @@ def get_low_inbound_peer(avoid):
                 continue
             chans.append(chan)
     if chans:
-        return choice(chans)
+        return choice(chans).chan_id
 
 
-class PayScreen(Screen):
+class PaymentUIOption:
+    auto_first_hop = 0
+    user_selected_first_hop = 1
+
+
+class PayScreen(Popup):
     def __init__(self, **kwargs):
-        Screen.__init__(self, **kwargs)
+        Popup.__init__(self, **kwargs)
         self.output = Output(None)
         self.output.lnd = data_manager.data_man.lnd
+        lnd = data_manager.data_man.lnd
         self.store = data_manager.data_man.store
+        self.chan_id = None
+
+        @mainthread
+        def delayed():
+            channels = lnd.get_channels()
+            for c in channels:
+                self.ids.spinner_id.values.append(
+                    f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}"
+                )
+
+        delayed()
+
+    def first_hop_spinner_click(self, chan):
+        self.chan_id = int(chan.split(":")[0])
 
     def load(self):
         try:
@@ -112,7 +134,7 @@ class PayScreen(Screen):
 
     def get_invoice(self):
         try:
-            return next(iter(self.load()), None)
+            return choice(self.load())
         except:
             return []
 
@@ -129,20 +151,22 @@ class PayScreen(Screen):
             console_output("loaded")
             # nodes = set([alias])
             # edges = set()
+            payment_opt = (
+                PaymentUIOption.user_selected_first_hop
+                if self.chan_id
+                else PaymentUIOption.auto_first_hop
+            )
             while True:
                 inv = self.get_invoice()
                 if not inv:
                     console_output("no more invoices")
                     return
                 else:
-                    peer = get_low_inbound_peer(avoid)
-                    if peer:
-                        peer_alias = data_manager.data_man.lnd.get_node_alias(
-                            peer.remote_pubkey
-                        )
-                        # nodes.add(peer_alias)
-                        console_output(peer_alias)
-                        # edges.add((alias, peer_alias))
+                    if payment_opt == PaymentUIOption.user_selected_first_hop:
+                        chan_id = self.chan_id
+                    else:
+                        chan_id = get_low_inbound_channel(avoid)
+                    if chan_id:
                         payment_request = data_manager.data_man.lnd.decode_request(
                             inv["raw"]
                         )
@@ -155,7 +179,7 @@ class PayScreen(Screen):
                             lnd=data_manager.data_man.lnd,
                             pub_key=payment_request.destination,
                             payment_request=payment_request,
-                            outgoing_chan_id=peer.chan_id,
+                            outgoing_chan_id=chan_id,
                             last_hop_pubkey=None,
                             fee_limit_msat=fee_limit_msat,
                             inst=self,
@@ -165,8 +189,9 @@ class PayScreen(Screen):
                         has_next = False
                         count = 0
                         while routes.has_next():
-                            if count > 10:
-                                break
+                            if payment_opt == PaymentUIOption.auto_first_hop:
+                                if count > 10:
+                                    break
                             count += 1
                             has_next = True
                             route = routes.get_next()
@@ -264,9 +289,12 @@ class PayScreen(Screen):
 
                         if not has_next:
                             console_output("No routes found!")
-                            sleep(2)
-                            console_output(f"adding {peer.chan_id} to avoid list")
-                            avoid[peer.chan_id] += 1
+                            if payment_opt == PaymentUIOption.auto_first_hop:
+                                sleep(2)
+                                console_output(f"adding {chan_id} to avoid list")
+                                avoid[chan_id] += 1
+                            else:
+                                sleep(60)
                     else:
                         console_output("No channels left to rebalance")
                         sleep(60)
