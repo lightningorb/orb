@@ -24,6 +24,7 @@ class Segment(Widget):
             self.line = Line(points=points, width=width, cap=cap)
 
     def update_rect(self, amount=0):
+        amount = int(amount)
         a = lerp_2d(self.line.points[:2], self.line.points[2:], 0.02)
         b = lerp_2d(self.line.points[:2], self.line.points[2:], 0.98)
         n = ceil(amount / 1e6)
