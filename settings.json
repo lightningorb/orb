@@ -96,5 +96,47 @@
       "desc":"Opacity of your channels, ranges from 0 to 1",
       "section":"display",
       "key":"channel_opacity"
+   },
+   {
+      "type":"string",
+      "title":"background color",
+      "desc":"Color of the channels widget background",
+      "section":"display",
+      "key":"channels_background_color"
+   },
+   {
+      "type":"string",
+      "title":"1M color",
+      "desc":"Color for displaying 1 Million Satoshis",
+      "section":"display",
+      "key":"1m_color"
+   },
+   {
+      "type":"string",
+      "title":"Node background color",
+      "desc":"Background color of lightning nodes",
+      "section":"display",
+      "key":"node_background_color"
+   },
+   {
+      "type":"string",
+      "title":"Node selected background color",
+      "desc":"Background color of selected lightning nodes",
+      "section":"display",
+      "key":"node_selected_background_color"
+   },
+   {
+      "type":"numeric",
+      "title":"Node width",
+      "desc":"Width of a lightning node",
+      "section":"display",
+      "key":"node_width"
+   },
+   {
+      "type":"numeric",
+      "title":"Node height",
+      "desc":"Height of a lightning node",
+      "section":"display",
+      "key":"node_height"
    }
 ]

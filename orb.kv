@@ -6,6 +6,7 @@
 #:import SendCoins screens.send_coins.SendCoins
 #:import IngestInvoicesScreen screens.ingest_invoices_screen.IngestInvoicesScreen
 #:import PayScreen screens.pay_screen.PayScreen
+#:import prefs_col utils.prefs_col
 
 ########################################################################################
 # MAIN
@@ -262,7 +263,7 @@
         orientation: 'horizontal'
         canvas:
             Color:
-                rgba: .2, .2, .3, 1
+                rgba: prefs_col('display.channels_background_color')
             Rectangle:
                 size: self.size
                 pos: self.pos

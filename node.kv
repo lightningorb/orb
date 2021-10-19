@@ -1,3 +1,5 @@
+#:import prefs_col utils.prefs_col
+
 <Node@Button>
     background_color: (0, 0, 0, 0)
     background_normal: ''
@@ -6,7 +8,7 @@
         Color: 
             rgba: (0.3,0.3,0.9,1)
         RoundedRectangle:
-            size: (72, 102)
+            size: (prefs_col('display.node_width')+2, prefs_col('display.node_height')+2)
             pos: [self.pos[0]-1, self.pos[1]-1]
             radius: [8]
         Color: 
@@ -15,7 +17,7 @@
             size: self.size
             pos: self.pos
             radius: [8]
-            size: (70, 100)
+            size: (prefs_col('display.node_width'), prefs_col('display.node_height'))
         PushMatrix
         Scale:
             origin: self.center

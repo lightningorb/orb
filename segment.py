@@ -7,6 +7,7 @@ from kivy.graphics import InstructionGroup
 from lerp import lerp_2d
 from math import ceil
 from colors import *
+from utils import prefs_col
 
 
 class Segment(Widget):
@@ -31,7 +32,7 @@ class Segment(Widget):
         diff = n - len(self.e)
         for _ in range(abs(diff)):
             if diff > 0:
-                c = Color(*BRIGHT_GREEN)
+                c = Color(*prefs_col('display.1m_color'))
                 e = Ellipse(pos=[0, 0], size=[self.d, self.d])
                 self.e.append(e)
                 self.c.append(c)

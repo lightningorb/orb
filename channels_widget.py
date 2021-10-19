@@ -8,7 +8,7 @@ from channels_thread import ChannelsThread
 from CN_widget import CNWidget
 from node import Node
 import data_manager
-
+from utils import pref
 
 class ChannelsWidget(Scatter):
     attribute_editor = ObjectProperty(None)
@@ -61,7 +61,7 @@ class ChannelsWidget(Scatter):
 
     def update_rect(self, *args):
         if self.node:
-            self.node.pos = (-(70 / 2), -(100 / 2))
+            self.node.pos = (-(int(pref('display.node_width')) / 2), -(int(pref('display.node_height')) / 2))
         for i, cn in enumerate(
             sorted(
                 self.cn.values(),
