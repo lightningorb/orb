@@ -2,6 +2,9 @@
 # INVOICE
 ########################################################################################
 
+#:import datetime datetime.datetime
+
+
 <Invoice>
     orientation: 'vertical'
     size_hint_y: None
@@ -64,7 +67,7 @@
         Label:
             size_hint_y: None
             height: 80
-            text: str(root.timestamp)
+            text: datetime.fromtimestamp(int(root.timestamp)).strftime('%Y-%m-%d %H:%M:%S')
             valign: "middle"
             halign: "left"
             text_size: self.size
