@@ -80,19 +80,27 @@ def handle_error(inst, response, route, routes, pk=None):
             return f"Unknown error code {repr(code)}:"
 
 
-def get_low_inbound_channel(avoid):
+def get_low_inbound_channel(avoid, payment_request):
     chans = []
+    payment_amount = payment_request.num_satoshis
     channels = data_manager.data_man.lnd.get_channels(active_only=True)
     for chan in channels:
-        if (chan.remote_balance + 1e6) / chan.capacity < 0.5:
+        pending_out = sum(
+            int(p.amount) for p in chan.pending_htlcs if not p.incoming
+        )
+        actual_available_outbound = chan.local_balance - pending_out
+        enough_available_outbound = (payment_amount < actual_available_outbound)
+        more_than_half_outbound = (actual_available_outbound / chan.capacity) > 0.5
+        good_candidate = enough_available_outbound and more_than_half_outbound
+        if good_candidate:
             if chan.chan_id in [*avoid.keys()]:
                 avoid[chan.chan_id] += 1
                 if avoid[chan.chan_id] > 5:
                     del avoid[chan.chan_id]
                 else:
                     continue
-            alias = data_manager.data_man.lnd.get_node_alias(chan.remote_pubkey)
-            if alias in ["LOOP"]:
+            if chan.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d':
+                # do NOT ever make payments through LOOP
                 continue
             chans.append(chan)
     if chans:
@@ -162,14 +170,14 @@ class PayScreen(Popup):
                     console_output("no more invoices")
                     return
                 else:
+                    payment_request = data_manager.data_man.lnd.decode_request(
+                        inv["raw"]
+                    )
                     if payment_opt == PaymentUIOption.user_selected_first_hop:
                         chan_id = self.chan_id
                     else:
-                        chan_id = get_low_inbound_channel(avoid)
+                        chan_id = get_low_inbound_channel(avoid, payment_request)
                     if chan_id:
-                        payment_request = data_manager.data_man.lnd.decode_request(
-                            inv["raw"]
-                        )
                         fee_rate = int(self.ids.fee_rate.text)
                         fee_limit_sat = fee_rate * (
                             1_000_000 / payment_request.num_satoshis
