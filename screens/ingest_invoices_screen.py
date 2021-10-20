@@ -34,6 +34,7 @@ class IngestInvoicesScreen(Popup):
     def clear_store(self):
         self.store.delete("ingested_invoice")
         self.ids.scroll_view.clear_widgets()
+        self.count.text = '0'
 
     def load(self):
         try:
