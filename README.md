@@ -59,6 +59,8 @@ cat ~/.lnd/tls.cert
 
 And paste that into orb.
 
+Next change the protocol from mock to grpc.
+
 In orb now press 'refresh' to see your channels. If this doesn't work, you may need to restart the application to pick up the new config.
 
 
