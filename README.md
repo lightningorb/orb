@@ -76,7 +76,9 @@ To write or execute scripts in Orb:
 ```python
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+
 info =  lnd.get_info()
+
 popup = Popup(title='Node Info',
     content=Label(text=f'Alias:\n\n{info.alias}\n\nPublic Key: \n\n{info.identity_pubkey}'),
     size_hint=(None, None), size=(1200, 400))
@@ -88,10 +90,13 @@ popup.open()
 ```python
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+
 fr =  lnd.fee_report()
+
 Popup(title='Fee Report',
     content=Label(text=f'Day: S{fr.day_fee_sum:,}\nWeek S{fr.week_fee_sum:,}\nMonth: S{fr.month_fee_sum:,}'),
     size_hint=(None, None), size=(400, 400)).open()
+
 ```
 
 ## REST API example
@@ -145,10 +150,29 @@ popup.open()
 
 ```python
 from kivy.app import App
+
 app = App.get_running_app()
 show = app.config["display"]["show_sent_received"]
 app.config["display"]["show_sent_received"] = "10"[show == "1"]
 app.root.ids.sm.get_screen("channels").refresh()
+```
+
+## Update fees
+
+```python
+from lerp import lerp
+
+LOOP =  '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
+channels = lnd.get_channels()
+ratio = sum(c.local_balance for c in channels) / sum(c.capacity for c in channels)
+
+for c in channels:
+    if c.remote_pubkey == LOOP:
+        fee_rate = (1000, 10000)[c.local_balance < 5e6]
+    else:
+        fee_rate = int(lerp(0, 1000, c.remote_balance / c.capacity))
+    print(f"Updating {lnd.get_node_alias(c.remote_pubkey)}: {fee_rate}")
+    lnd.update_channel_policy(channel=c, fee_rate=fee_rate/1e6, time_lock_delta=44)
 ```
 
 ------------------------------
