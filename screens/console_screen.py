@@ -136,11 +136,7 @@ class ConsoleInput(TextInput):
         inst.open()
 
         def do_install(_, *args):
-            sc = {}
-            try:
-                sc = data_manager.data_man.store.get("scripts")
-            except:
-                pass
+            sc = data_manager.data_man.store.get("scripts", {})
             sc[inst.ids.script_name.text] = self.text
             data_manager.data_man.store.put("scripts", **sc)
             app = App.get_running_app()
