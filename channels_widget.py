@@ -9,6 +9,7 @@ from CN_widget import CNWidget
 from node import Node
 import data_manager
 from utils import pref
+from prefs import is_mock
 
 class ChannelsWidget(Scatter):
     attribute_editor = ObjectProperty(None)
@@ -18,11 +19,13 @@ class ChannelsWidget(Scatter):
 
         self.htlcs_thread = HTLCsThread(inst=self)
         self.htlcs_thread.daemon = True
-        self.htlcs_thread.start()
+        if not is_mock():
+            self.htlcs_thread.start()
 
         self.channels_thread = ChannelsThread(inst=self)
         self.channels_thread.daemon = True
-        self.channels_thread.start()
+        if not is_mock():
+            self.channels_thread.start()
 
         self.cn = {}
         self.radius = 600
@@ -34,10 +37,12 @@ class ChannelsWidget(Scatter):
         caps = self.get_caps(channels)
         self.info = self.lnd.get_info()
         for c in channels:
-            self.add_channel(channel=c, caps=caps)
-        self.node = Node(text=self.info.alias, attribute_editor=self.attribute_editor)
-        self.ids.relative_layout.add_widget(self.node)
-        self.bind(pos=self.update_rect, size=self.update_rect)
+            if not is_mock():
+                self.add_channel(channel=c, caps=caps)
+        if not is_mock():
+            self.node = Node(text=self.info.alias, attribute_editor=self.attribute_editor)
+            self.ids.relative_layout.add_widget(self.node)
+            self.bind(pos=self.update_rect, size=self.update_rect)
 
     def add_channel(self, channel, caps=None):
         if not caps:

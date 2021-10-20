@@ -4,11 +4,10 @@ import data_manager
 import json
 from kivy.lang import Builder
 from pathlib import Path
-from monkey_patch import *
+from monkey_patch import do_monkey_patching
 from conf_defaults import set_conf_defaults
 
-patch_settings()
-patch_store()
+do_monkey_patching()
 
 
 class OrbApp(MDApp):

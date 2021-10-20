@@ -26,3 +26,19 @@ def patch_store():
 
     JsonStore.orig_get = JsonStore.get
     JsonStore.get = get
+
+def patch_kv_settings():
+    from kivy.uix.settings import Settings
+
+    def add_kivy_panel(self):
+        from kivy import kivy_data_dir
+        from kivy.config import Config
+        from os.path import join
+        self.add_json_panel('App Settings', Config, join(kivy_data_dir, 'settings_kivy.json'))
+
+    Settings.add_kivy_panel = add_kivy_panel
+
+def do_monkey_patching():
+    patch_store()
+    patch_settings()
+    patch_kv_settings()

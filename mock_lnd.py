@@ -1,11 +1,31 @@
 from collections import namedtuple
+from dataclasses import dataclass
+from typing import Any
 
-Channel = namedtuple(
-    "Channel", "capacity remote_pubkey local_balance remote_balance chan_id"
-)
+@dataclass
+class Channel:
+
+    capacity: Any
+    remote_pubkey: Any
+    local_balance: Any
+    remote_balance: Any
+    chan_id: Any
+    pending_htlcs: Any
+
+    def ListFields(self):
+        return []
+
+@dataclass
+class Policy:
+    fee_rate_milli_msat: Any
+    min_htlc: Any = 1
+    max_htlc_msat: Any = 1000000
+    time_lock_delta: Any = 44
+    last_update: Any = '0'
+
+
 Info = namedtuple("Info", "alias")
 NodeInfo = namedtuple("NodeInfo", "alias")
-Policy = namedtuple("Policy", "fee_rate_milli_msat")
 Balance = namedtuple("Balance", "total_balance confirmed_balance unconfirmed_balance")
 ChannelBalance = namedtuple("ChannelBalance", "local_balance remote_balance")
 CB = namedtuple("ChannelBalanceObj", "sat")
@@ -17,6 +37,7 @@ class Lnd(object):
         return [
             Channel(
                 capacity=1000000,
+                pending_htlcs=[],
                 local_balance=750000,
                 remote_balance=250000,
                 remote_pubkey="a",
@@ -24,6 +45,7 @@ class Lnd(object):
             ),
             Channel(
                 capacity=1000000,
+                pending_htlcs=[],
                 local_balance=600000,
                 remote_balance=400000,
                 remote_pubkey="b",
@@ -31,6 +53,7 @@ class Lnd(object):
             ),
             Channel(
                 capacity=1000000,
+                pending_htlcs=[],
                 local_balance=500000,
                 remote_balance=500000,
                 remote_pubkey="c",
@@ -38,6 +61,7 @@ class Lnd(object):
             ),
             Channel(
                 capacity=1000000,
+                pending_htlcs=[],
                 local_balance=500000,
                 remote_balance=500000,
                 remote_pubkey="d",
@@ -45,6 +69,7 @@ class Lnd(object):
             ),
             Channel(
                 capacity=1000000,
+                pending_htlcs=[],
                 local_balance=500000,
                 remote_balance=500000,
                 remote_pubkey="e",
@@ -52,6 +77,7 @@ class Lnd(object):
             ),
             Channel(
                 capacity=1000000,
+                pending_htlcs=[],
                 local_balance=500000,
                 remote_balance=500000,
                 remote_pubkey="f",
