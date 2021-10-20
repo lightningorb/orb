@@ -18,7 +18,6 @@ class TopMenu(AppMenu):
 
         delayed()
 
-        app = App.get_running_app()
         scripts = data_manager.data_man.store.get("scripts", [])
         menu = [x for x in self.children if x.text.lower() == "scripts"][0]
         menu.clear_widgets()
@@ -31,6 +30,15 @@ class TopMenu(AppMenu):
                 exec(scripts[self.text])
 
             cm.add_widget(ContextMenuTextItem(text=script, on_release=run))
+        menu.add_widget(cm)
+        cm._on_visible(False)
+
+    def add_channels_menu(self):
+        app = App.get_running_app()
+        menu = [x for x in self.children if x.text.lower() == "view"][0]
+        menu.clear_widgets()
+        cm = ContextMenu()
+        cm.add_widget(ContextMenuTextItem(text="Refresh", on_release=app.root.ids.sm.get_screen("channels").refresh))
         menu.add_widget(cm)
         cm._on_visible(False)
 
