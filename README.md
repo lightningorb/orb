@@ -151,4 +151,10 @@ app.config["display"]["show_sent_received"] = "10"[show == "1"]
 app.root.ids.sm.get_screen("channels").refresh()
 ```
 
-Please note that this internal API is subject to change.
+------------------------------
+
+You can run the script by either selecting the code (e.g with ctrl-a) and hitting Enter, or with `view > run`.
+
+You can install a script via `view > install`. Name the script, and it will then appear in the `script` menu.
+
+Please note that this internal API is currently subject to change.
