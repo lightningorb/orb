@@ -45,6 +45,44 @@
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
+<HUD5>:
+    id: hud_label
+    text: root.hud
+    size_hint: [None, None]
+    markup: True
+    size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
+<HUD4>:
+    size_hint: [None, None]
+    size: [300, 150]
+    canvas.before:
+        Color:
+            rgba: .3, .3, .4, .3
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: .6, .6, .8, 1
+        Line:
+            points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
+            width: 1
+    Label:
+        id: rate
+        pos: [root.pos[0], root.pos[1] + root.height - self.texture_size[1]-30]
+        font_size: '10sp'
+        size_hint: [None, None]
+        markup: True
+        size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
 <HUD>:
     size_hint: [1, 1]
     orientation: 'vertical'
@@ -54,6 +92,8 @@
         Rectangle:
             pos: self.pos
             size: self.size
+    HUD5
+    HUD4
     HUD1
     HUD2
     HUD3
