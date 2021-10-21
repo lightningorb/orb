@@ -1,3 +1,7 @@
+from traceback import format_exc
+import sys
+from io import StringIO
+from ui_actions import console_output
 from kivy_garden.contextmenu import AppMenu
 from kivy.clock import mainthread
 from kivy.uix.actionbar import ActionButton
@@ -23,15 +27,26 @@ class TopMenu(AppMenu):
         menu.clear_widgets()
         cm = ContextMenu()
         for script in scripts:
-
-            @guarded
+            tm = self
             def run(self, *args):
-                lnd = data_manager.data_man.lnd
-                exec(scripts[self.text])
-
+                tm.exec(scripts[self.text])
             cm.add_widget(ContextMenuTextItem(text=script, on_release=run))
         menu.add_widget(cm)
         cm._on_visible(False)
+
+    def exec(self, text):
+        lnd = data_manager.data_man.lnd
+        old_stdout = sys.stdout
+        sys.stdout = mystdout = StringIO()
+        try:
+            exec(text)
+            sys.stdout = old_stdout
+            message = mystdout.getvalue()
+            console_output(message.strip() + "\n")
+        except:
+            exc = format_exc()
+            if exc:
+                console_output(exc)
 
     def add_channels_menu(self):
         app = App.get_running_app()

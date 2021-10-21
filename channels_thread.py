@@ -1,3 +1,4 @@
+from ui_actions import console_output
 import threading
 from time import sleep
 from traceback import print_exc
@@ -21,8 +22,11 @@ class ChannelsThread(threading.Thread):
                         if self.stopped():
                             return
                         print(e)
+                        # console_output(str(e))
                         if e.open_channel.chan_id:
                             self.inst.add_channel(e.open_channel)
+                        if e.closed_channel.chan_id:
+                            self.inst.remove_channel(e.open_channel)
             except:
                 print("Exception getting Channels - let's sleep")
                 print_exc()

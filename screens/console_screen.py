@@ -7,6 +7,7 @@ from kivy.uix.actionbar import ContextualActionView
 from kivy.uix.button import Button
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
+from kivy.properties import BooleanProperty
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.clock import mainthread
@@ -16,9 +17,46 @@ from kivy.app import App
 from time import time
 from kivy.uix.codeinput import CodeInput
 from pygments.lexers import CythonLexer
+from kivy.uix.splitter import Splitter
+from kivy.properties import ObjectProperty
 
 import ui_actions
 from traceback import format_exc
+
+class ConsoleSplitter(Splitter):
+
+    input = ObjectProperty(None)
+    output = ObjectProperty(None)
+
+    def __init__(self, *args, **kwargs):
+        super(ConsoleSplitter, self).__init__(*args, **kwargs)
+        self.pressed = False
+        self.pressed_pos = (0, 0)
+        self.input_pressed_height = 0
+        self.output_pressed_height = 0
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.pressed = True
+            self.pressed_pos = touch.pos
+            self.input_pressed_height = self.input.height
+            self.output_pressed_height = self.output.height
+        return super(ConsoleSplitter, self).on_touch_down(touch)
+
+    def on_touch_up(self, touch):
+        if self.collide_point(*touch.pos):
+            self.pressed = False
+        return super(ConsoleSplitter, self).on_touch_down(touch)
+
+    def on_touch_move(self, touch):
+        if self.pressed:
+            print(touch)
+            self.input.height = self.input_pressed_height + (self.pressed_pos[1] - touch.pos[1])
+            self.output.height = self.output_pressed_height - (self.pressed_pos[1] - touch.pos[1])
+            self.input.size_hint = (None, None)
+            self.output.size_hint = (None, None)
+            return True
+        return super(ConsoleSplitter, self).on_touch_move(touch)
 
 
 class ConsoleScreen(Screen):
@@ -53,8 +91,9 @@ class ConsoleScreen(Screen):
             lines = lines[1:]
         out = "\n".join(lines)
         console.ids.console_output.output = out + "\n" + str(text)
-        last_line = [x for x in text.split("\n") if x][-1]
-        app.root.ids.status_line.ids.line_output.output = last_line
+        last_line = next(iter([x for x in text.split("\n") if x][::-1]), None)
+        if last_line:
+            app.root.ids.status_line.ids.line_output.output = last_line
 
 
 class InstallScript(Popup):

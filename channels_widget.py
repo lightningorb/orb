@@ -51,6 +51,9 @@ class ChannelsWidget(Scatter):
         self.cn[channel.chan_id] = cn
         self.ids.relative_layout.add_widget(cn)
 
+    def remove_channel(self, channel, caps=None):
+        pass
+
     def get_caps(self, channels):
         max_cap = max([int(c.capacity) for c in channels])
         caps = {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}

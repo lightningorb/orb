@@ -17,6 +17,10 @@
     size_hint_y: 1
     background_color: (150 / 255, 155 / 255, 160 / 255, 1)
 
+<ConsoleSplitter@Splitter>:
+    horizontal: True
+    height: 5
+    size_hint_y: None
 
 <ConsoleScreen>:
     name: 'console'
@@ -24,6 +28,9 @@
         orientation: 'vertical'
         ConsoleInput:
             id: console_input
+        ConsoleSplitter:
+            input: console_input
+            output: console_output
         ConsoleOutput:
             id: console_output
 

@@ -177,28 +177,30 @@ for c in channels:
 
 ## Get last payment
 
+In this example, rather than using the `lnd` object that magically exists within our scope, we import the relevant functions from the `prefs` module.
+
+This pattern should remain quite consistent, and make it very easy to copy and paste examples from the lighting api docs into the console, and get them working.
+
 ```python
-from kivy.app import App
 import codecs, grpc, os
 from grpc_generated import lightning_pb2 as lnrpc
 from grpc_generated import lightning_pb2_grpc as lightningstub
+from prefs import hostname, cert, macaroon, grpc_port
 
 os.environ['GRPC_SSL_CIPHER_SUITES'] = 'HIGH+ECDSA'
-app = App.get_running_app()
-hostname = app.config['lnd']['hostname']
-cert = app.config['lnd']['tls_certificate'].encode()
-grpc_port = app.config['lnd']['grpc_port']
-macaroon = app.config['lnd']['macaroon_admin']
-ssl_creds = grpc.ssl_channel_credentials(cert)
-channel = grpc.secure_channel(f'{hostname}:{grpc_port}', ssl_creds)
+ssl_creds = grpc.ssl_channel_credentials(cert())
+channel = grpc.secure_channel(f'{hostname()}:{grpc_port()}', ssl_creds)
 stub = lightningstub.LightningStub(channel)
+
 request = lnrpc.ListPaymentsRequest(
         include_incomplete=True,
         index_offset=0,
         max_payments=1,
         reversed=True,
     )
-response = stub.ListPayments(request, metadata=[('macaroon', macaroon)])
+
+response = stub.ListPayments(request, metadata=[('macaroon', macaroon())])
+
 print(response)
 ```
 

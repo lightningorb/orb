@@ -1,3 +1,4 @@
+from ui_actions import console_output
 from munch import Munch
 import json
 import threading
@@ -28,6 +29,8 @@ class HTLCsThread(threading.Thread):
                     self.inst.update_rect()
                     if rest:
                         e = Munch.fromDict(json.loads(e)["result"])
+                    htlc = Htlc(lnd, e)
+                    # console_output(str(htlc.__dict__))
                     for cid in self.inst.cn:
                         chans = [
                             e.outgoing_channel_id
@@ -38,7 +41,7 @@ class HTLCsThread(threading.Thread):
                             else None,
                         ]
                         if self.inst.cn[cid].l.channel.chan_id in chans:
-                            self.inst.cn[cid].l.anim_htlc(Htlc(lnd, e))
+                            self.inst.cn[cid].l.anim_htlc(htlc)
             except:
                 print("Exception getting HTLCs - let's sleep")
                 print_exc()
