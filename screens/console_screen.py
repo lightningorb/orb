@@ -14,6 +14,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.app import App
 from time import time
+from kivy.uix.codeinput import CodeInput
+from pygments.lexers import CythonLexer
 
 import ui_actions
 from traceback import format_exc
@@ -67,13 +69,12 @@ class LoadScript(Popup):
     pass
 
 
-class ConsoleInput(TextInput):
+class ConsoleInput(CodeInput):
 
     output = StringProperty("")
 
     def __init__(self, *args, **kwargs):
-        super(ConsoleInput, self).__init__(*args, **kwargs)
-        # self.bind(focus=self.on_focus)
+        super(ConsoleInput, self).__init__(lexer=CythonLexer(), *args, **kwargs)
         self.tapped = 0
         self.double_tapped = False
 

@@ -27,18 +27,11 @@ class ChannelWidget(Widget):
     local_line_col = ObjectProperty(None)
     remote_line_col = ObjectProperty(None)
     channel = ObjectProperty("")
-    points = ListProperty([0, 0, 0, 0])
-    width = NumericProperty(0)
 
-    # def on_touch_down(self, touch):
-    #     Widget.on_touch_down(self, touch)
-    #     p1 = np.array(self.a)
-    #     p2 = np.array(self.b)
-    #     p3 = np.array(touch.pos)
-    #     d = np.cross(p2 - p1, p3 - p1) / np.linalg.norm(p2 - p1)
-    #     line_width = (self.width, 7)[abs(d) < 10]
-    #     self.line_local.width = line_width
-    #     self.line_remote.width = line_width
+    # where the channel starts and ends
+    points = ListProperty([0, 0, 0, 0])
+
+    width = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super(ChannelWidget, self).__init__(**kwargs)
@@ -55,7 +48,7 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.line_local = Segment(
-                amount=self.channel.local_balance,
+                amount=self.channel.local_balance - self.pending_out,
                 points=[0, 0, 0, 0],
                 width=self.width,
                 cap="none",
@@ -96,10 +89,19 @@ class ChannelWidget(Widget):
         chan, p = self.channel, self.points
         trim = 0.1
         r = int(chan.local_balance) / int(chan.capacity)
+
+        # trim starting point so it doesn't overlap node
         a = lerp_2d(p[:2], p[2:], trim)
+        # trim ending points so it doesn't overlap node
         b = lerp_2d(p[:2], p[2:], 1 - trim)
+
+        # c is the 'center point' where local meets remote
         c = lerp_2d(a, b, r)
+
+        # ca is where the local line ends, minus pending out HTLC amounts
+        # e.g the outbound that's actually available
         ca = lerp_2d(a, b, r - self.pending_out / int(chan.capacity))
+
         cb = lerp_2d(a, b, r + self.pending_in / int(chan.capacity))
         self.line_local.line.points = [a[0], a[1], ca[0], ca[1]]
         self.line_pending.line.points = [ca[0], ca[1], cb[0], cb[1]]

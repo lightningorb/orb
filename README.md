@@ -175,6 +175,33 @@ for c in channels:
     lnd.update_channel_policy(channel=c, fee_rate=fee_rate/1e6, time_lock_delta=44)
 ```
 
+## Get last payment
+
+```python
+from kivy.app import App
+import codecs, grpc, os
+from grpc_generated import lightning_pb2 as lnrpc
+from grpc_generated import lightning_pb2_grpc as lightningstub
+
+os.environ['GRPC_SSL_CIPHER_SUITES'] = 'HIGH+ECDSA'
+app = App.get_running_app()
+hostname = app.config['lnd']['hostname']
+cert = app.config['lnd']['tls_certificate'].encode()
+grpc_port = app.config['lnd']['grpc_port']
+macaroon = app.config['lnd']['macaroon_admin']
+ssl_creds = grpc.ssl_channel_credentials(cert)
+channel = grpc.secure_channel(f'{hostname}:{grpc_port}', ssl_creds)
+stub = lightningstub.LightningStub(channel)
+request = lnrpc.ListPaymentsRequest(
+        include_incomplete=True,
+        index_offset=0,
+        max_payments=1,
+        reversed=True,
+    )
+response = stub.ListPayments(request, metadata=[('macaroon', macaroon)])
+print(response)
+```
+
 ------------------------------
 
 You can run the script by either selecting the code (e.g with ctrl-a) and hitting Enter, or with `view > run`.

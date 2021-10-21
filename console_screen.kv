@@ -1,0 +1,74 @@
+########################################################################################
+# CONSOLE SCREEN
+########################################################################################
+
+<ConsoleInput>:
+    id: text_input
+    disabled: False
+    multiline: True
+    size_hint_y: 1
+    background_color: (150 / 255, 155 / 255, 160 / 255, 1) if self.focus else (140 / 255, 145 / 255, 150 / 255, 1)
+
+<ConsoleOutput>:
+    id: console_output
+    text: root.output
+    #disabled: 1
+    multiline: True
+    size_hint_y: 1
+    background_color: (150 / 255, 155 / 255, 160 / 255, 1)
+
+
+<ConsoleScreen>:
+    name: 'console'
+    BoxLayout:
+        orientation: 'vertical'
+        ConsoleInput:
+            id: console_input
+        ConsoleOutput:
+            id: console_output
+
+<InstallScript>
+    size: (500,250)
+    size_hint: (None, None)
+    title: 'Install Script'
+    BoxLayout:
+        orientation: 'vertical'
+        TextInput:
+            id: script_name
+            text: 'example'
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                id: install
+                text: 'Install'
+<LoadScript>
+    size: (600,800)
+    size_hint: (None, None)
+    title: 'Load Script'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            id: grid
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: None, None
+            height: self.minimum_height
+            do_scroll_x: False
+
+<DeleteScript>
+    size: (600,800)
+    size_hint: (None, None)
+    title: 'Delete Script'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            id: grid
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: None, None
+            height: self.minimum_height
+            do_scroll_x: False

@@ -3,6 +3,11 @@ from kivy.config import Config
 Config.set("graphics", "width", "1400")
 Config.set("graphics", "height", "800")
 
+import kivy.weakmethod
+import kivy.core.text.text_sdl2
+import kivy.core.window.window_sdl2
+import kivy.graphics.cgl_backend
+import kivymd.icon_definitions
 from kivy.uix.widget import Widget
 from kivy.uix.scatter import Scatter
 import kivy_garden.contextmenu
