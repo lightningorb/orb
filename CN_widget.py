@@ -6,6 +6,7 @@ from channel_widget import ChannelWidget
 from node import Node
 import data_manager
 from sent_received_widget import SentReceivedWidget
+from utils import pref
 
 
 class CNWidget(Widget):
@@ -36,7 +37,7 @@ class CNWidget(Widget):
         x = math.sin(i / n * 3.14378 * 2) * self.radius
         y = math.cos(i / n * 3.14378 * 2) * self.radius
         points = [0, 0, x, y]
-        pos = (x - (70 / 2), y - (100 / 2))
+        pos = (x - (pref('display.node_width') / 2), y - (pref('display.node_height') / 2))
         if self.l.points == [0, 0, 0, 0]:
             self.l.points = points
             self.b.pos = pos

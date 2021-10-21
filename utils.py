@@ -8,4 +8,7 @@ def prefs_col(name):
 def pref(name):
 	app = App.get_running_app()
 	section, key = name.split('.')
-	return app.config[section][key]
+	try:
+		return float(app.config[section][key])
+	except:
+		return app.config[section][key]
