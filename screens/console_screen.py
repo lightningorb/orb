@@ -84,16 +84,17 @@ class ConsoleScreen(Screen):
 
     @mainthread
     def print(self, text):
-        app = App.get_running_app()
-        console = app.root.ids.sm.get_screen("console")
-        lines = console.ids.console_output.output.split("\n")
-        if len(lines) > 100:
-            lines = lines[1:]
-        out = "\n".join(lines)
-        console.ids.console_output.output = out + "\n" + str(text)
-        last_line = next(iter([x for x in text.split("\n") if x][::-1]), None)
-        if last_line:
-            app.root.ids.status_line.ids.line_output.output = last_line
+        if text:
+            app = App.get_running_app()
+            console = app.root.ids.sm.get_screen("console")
+            lines = console.ids.console_output.output.split("\n")
+            if len(lines) > 100:
+                lines = lines[1:]
+            out = "\n".join(lines)
+            console.ids.console_output.output = out + "\n" + str(text)
+            last_line = next(iter([x for x in text.split("\n") if x][::-1]), None)
+            if last_line:
+                app.root.ids.status_line.ids.line_output.output = last_line
 
 
 class InstallScript(Popup):

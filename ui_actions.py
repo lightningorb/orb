@@ -5,11 +5,17 @@ from kivy.app import App
 from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenu
 from kivy_garden.contextmenu import AppMenuTextItem
+from threading import Lock
 
 import data_manager
 
+mutex = Lock()
 
 def console_output(text):
-    app = App.get_running_app()
-    console = app.root.ids.sm.get_screen("console")
-    console.print(text)
+    mutex.acquire()
+    try:
+	    app = App.get_running_app()
+	    console = app.root.ids.sm.get_screen("console")
+	    console.print(text)
+    finally:
+        mutex.release()

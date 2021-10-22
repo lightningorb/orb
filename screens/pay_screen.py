@@ -2,7 +2,9 @@ from kivy.uix.popup import Popup
 from kivy.clock import mainthread
 from kivy.app import App
 from kivy.uix.screenmanager import Screen
+from threading import Thread
 
+from queue import Queue
 from time import sleep
 import threading
 from simple_chalk import *
@@ -16,12 +18,14 @@ from routes import Routes
 from output import *
 import time
 from ui_actions import console_output
-
+import concurrent.futures
+from channel_selector import get_low_inbound_channel
 # from grandalf.layouts import SugiyamaLayout
 # from grandalf.graphs import Vertex, Edge, Graph, graph_core
 
 avoid = Counter()
-
+pk_ignore = set(['021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'])
+chan_ignore = set([])
 
 class defaultview(object):
     w, h = 1000, 500
@@ -79,37 +83,19 @@ def handle_error(inst, response, route, routes, pk=None):
         if pk == failure_source_pubkey:
             return f"Unknown error code {repr(code)}:"
 
-
-def get_low_inbound_channel(avoid, payment_request):
-    chans = []
-    payment_amount = payment_request.num_satoshis
-    channels = data_manager.data_man.lnd.get_channels(active_only=True)
-    for chan in channels:
-        pending_out = sum(
-            int(p.amount) for p in chan.pending_htlcs if not p.incoming
-        )
-        actual_available_outbound = chan.local_balance - pending_out
-        enough_available_outbound = (payment_amount < actual_available_outbound)
-        more_than_half_outbound = (actual_available_outbound / chan.capacity) > 0.5
-        good_candidate = enough_available_outbound and more_than_half_outbound
-        if good_candidate:
-            if chan.chan_id in [*avoid.keys()]:
-                avoid[chan.chan_id] += 1
-                if avoid[chan.chan_id] > 5:
-                    del avoid[chan.chan_id]
-                else:
-                    continue
-            if chan.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d':
-                # do NOT ever make payments through LOOP
-                continue
-            chans.append(chan)
-    if chans:
-        return choice(chans).chan_id
-
-
 class PaymentUIOption:
     auto_first_hop = 0
     user_selected_first_hop = 1
+
+
+class PaymentStatus:
+    success = 0
+    exception = 1
+    failure = 2
+    no_routes = 3
+    error = 4
+    none = 5
+    max_paths_exceeded = 6
 
 
 class PayScreen(Popup):
@@ -135,177 +121,130 @@ class PayScreen(Popup):
         self.chan_id = int(chan.split(":")[0])
 
     def load(self):
-        try:
-            return self.store.get("ingested_invoice")["invoices"]
-        except:
-            return []
+        return self.store.get("ingested_invoice", {}).get("invoices", [])
 
-    def get_invoice(self):
-        try:
-            return choice(self.load())
-        except:
-            return []
+    def get_random_invoice(self):
+        invoices = self.load()
+        if invoices:
+            return choice(invoices)
 
     def remove_invoice(self, inv):
-        invs = [x for x in self.load() if x["raw"] != inv["raw"]]
+        invs = [x for x in self.load() if x["raw"] != inv]
         self.store.put("ingested_invoice", invoices=invs)
 
     def pay(self):
+
+        def pay_thread(thread_n, fee_rate, payment_request, payment_request_raw, chan_id, payment_opt, max_paths):
+            print(f"starting payment thread {thread_n} for chan: {chan_id}")
+            fee_limit_sat = fee_rate * (
+                1_000_000 / payment_request.num_satoshis
+            )
+            fee_limit_msat = fee_limit_sat * 1_000
+            routes = Routes(
+                lnd=data_manager.data_man.lnd,
+                pub_key=payment_request.destination,
+                payment_request=payment_request,
+                outgoing_chan_id=chan_id,
+                last_hop_pubkey=None,
+                fee_limit_msat=fee_limit_msat,
+                inst=self,
+            )
+            has_next = False
+            count = 0
+            while routes.has_next():
+                if count > max_paths:
+                    return payment_request_raw, chan_id, PaymentStatus.max_paths_exceeded
+                count += 1
+                has_next = True
+                route = routes.get_next()
+                for j, hop in enumerate(route.hops):
+                    node_alias = data_manager.data_man.lnd.get_node_alias(
+                        hop.pub_key
+                    )
+                    text = f"{j:<5}:        {node_alias}"
+                    console_output(f'T{thread_n}: {text}')
+                try:
+                    response = data_manager.data_man.lnd.send_payment(
+                        payment_request, route
+                    )
+                except:
+                    console_output(f'T{thread_n}: {str(traceback.print_exc())}')
+                    console_output(f"T{thread_n}: exception - removing invoice")
+                    return payment_request_raw, chan_id, PaymentStatus.exception
+                is_successful = response and response.failure.code == 0
+                if is_successful:
+                    console_output(f"T{thread_n}: SUCCESS")
+                    return payment_request_raw, chan_id, PaymentStatus.success
+                else:
+                    handle_error(self, response, route, routes)
+            if not has_next:
+                console_output(f"T{thread_n}: No routes found!")
+                return payment_request_raw, chan_id, PaymentStatus.no_routes
+            return payment_request_raw, chan_id, PaymentStatus.none
+
         def thread_function():
-            info = data_manager.data_man.lnd.get_info()
-            alias = info.alias
-            console_output("pay")
-            console_output("loading invoices")
-            console_output("loaded")
-            # nodes = set([alias])
-            # edges = set()
             payment_opt = (
                 PaymentUIOption.user_selected_first_hop
                 if self.chan_id
                 else PaymentUIOption.auto_first_hop
             )
+            auto = payment_opt == PaymentUIOption.auto_first_hop
+
             while True:
-                inv = self.get_invoice()
-                if not inv:
+                que = Queue()
+                threads_list = list()
+                invoices = self.load()
+                if not invoices:
                     console_output("no more invoices")
                     return
-                else:
+                for i in range(min(len(invoices), int(self.ids.num_threads.text))):
                     payment_request = data_manager.data_man.lnd.decode_request(
-                        inv["raw"]
+                        invoices[i]["raw"]
                     )
                     if payment_opt == PaymentUIOption.user_selected_first_hop:
                         chan_id = self.chan_id
                     else:
-                        chan_id = get_low_inbound_channel(avoid, payment_request)
-                    if chan_id:
-                        fee_rate = int(self.ids.fee_rate.text)
-                        fee_limit_sat = fee_rate * (
-                            1_000_000 / payment_request.num_satoshis
-                        )
-                        fee_limit_msat = fee_limit_sat * 1_000
-                        routes = Routes(
+                        chan_id = get_low_inbound_channel(
                             lnd=data_manager.data_man.lnd,
-                            pub_key=payment_request.destination,
-                            payment_request=payment_request,
-                            outgoing_chan_id=chan_id,
-                            last_hop_pubkey=None,
-                            fee_limit_msat=fee_limit_msat,
-                            inst=self,
+                            avoid=avoid,
+                            pk_ignore=pk_ignore,
+                            chan_ignore=chan_ignore,
+                            num_sats=payment_request.num_satoshis
+                            )
+                    print(f"CHAN: {chan_id}")
+                    if chan_id:
+                        chan_ignore.add(chan_id)
+                        t = Thread(
+                            target=lambda q, kwargs: q.put(pay_thread(**kwargs)),
+                            args=(que, dict(
+                                thread_n=i,
+                                fee_rate=int(self.ids.fee_rate.text),
+                                payment_request=payment_request,
+                                payment_request_raw=invoices[i]['raw'],
+                                chan_id=chan_id,
+                                payment_opt=payment_opt,
+                                max_paths=int(self.ids.max_paths.text)))
                         )
-                        start = time.time()
-                        attempts = []
-                        has_next = False
-                        count = 0
-                        while routes.has_next():
-                            if payment_opt == PaymentUIOption.auto_first_hop:
-                                if count > 10:
-                                    break
-                            count += 1
-                            has_next = True
-                            route = routes.get_next()
-                            #             paths = []
-                            #             for h in route.hops:
-                            #                 p = schemas.Path(
-                            #                     alias="",
-                            #                     pk=h.pub_key,
-                            #                     rate=int(h.fee * (1e6 / payment_request.num_satoshis)),
-                            #                     fee=h.fee,
-                            #                     succeeded=False,
-                            #                 )
-                            #                 paths.append(p)
+                        t.start()
+                        threads_list.append(t)
+                for t in threads_list:
+                    t.join()
+                while not que.empty():
+                    payment_request_raw, chan_id, status = que.get()
+                    if chan_id in chan_ignore:
+                        chan_ignore.remove(chan_id)
+                    if status in [PaymentStatus.success, PaymentStatus.exception]:
+                        self.remove_invoice(payment_request_raw)
+                    elif status == PaymentStatus.no_routes or status == PaymentStatus.max_paths_exceeded:
+                        if auto:
+                            console_output(f"adding {chan_id} to avoid list")
+                            avoid[chan_id] += 1
+                if not threads_list:
+                    console_output("No channels left to rebalance")
+                    sleep(60)
+                sleep(60)
 
-                            prev = None
-                            for j, hop in enumerate(route.hops):
-                                node_alias = data_manager.data_man.lnd.get_node_alias(
-                                    hop.pub_key
-                                )
-                                # nodes.add(node_alias)
-                                text = f"{j:<5}:        {node_alias}"
-                                console_output(text)
-                                # if prev:
-                                #     edges.add((node_alias, prev))
-                                # prev = node_alias
-                            try:
-                                response = data_manager.data_man.lnd.send_payment(
-                                    payment_request, route
-                                )
-                            except:
-                                print(traceback.print_exc())
-                                print("exception - removing invoice", inv)
-                                self.remove_invoice(inv)
-                                break
-                            is_successful = response and response.failure.code == 0
-                            #             attempt = schemas.Attempt(
-                            #                 path=paths,
-                            #                 code=response.failure.code if response else -1000,
-                            #                 weakest_link="",
-                            #                 weakest_link_pk="",
-                            #                 succeeded=is_successful,
-                            #             )
-                            #             attempts.append(attempt)
-                            # V = [Vertex(n) for n in nodes]
-                            # Vd = {v.data: v for v in V}
-                            # g = Graph(V, [Edge(Vd[a], Vd[b]) for a, b in edges])
 
-                            # for v in g.V():
-                            #     v.view = defaultview()
-
-                            # if False:
-                            #     sug = SugiyamaLayout(g.C[0])
-                            #     sug.init_all(roots=[Vd[alias]])
-                            #     sug.draw()
-                            #     for v in g.C[0].sV:
-                            #         print(
-                            #             "%s: (%d,%d)"
-                            #             % (v.data, v.view.xy[0], v.view.xy[1])
-                            #         )
-
-                            if is_successful:
-                                console_output("SUCCESS")
-                                self.remove_invoice(inv)
-                                sleep(0.5)
-                                break
-
-                            #                 log = schemas.Log(
-                            #                     tokens=payment_request.num_satoshis,
-                            #                     dest=lnd.get_info().identity_pubkey,
-                            #                     attempts=attempts,
-                            #                     failed_attempts=attempts[:-1],
-                            #                     succeeded_attempt=attempts[-1] if is_successful else None,
-                            #                     succeeded=is_successful,
-                            #                     log_id="",
-                            #                     fee=route.total_fees,
-                            #                     paid=payment_request.num_satoshis,
-                            #                     preimage="",
-                            #                     relays=[],
-                            #                     success=[],
-                            #                     latency=int((time.time() - start) * 1000),
-                            #                 )
-                            #                 fn = routable.ingest(log)
-                            #                 output.print_line("")
-                            #                 output.print_line("Routable.space ingest:")
-                            #                 output.print_line(fn, end="  ")
-                            #                 output.print_line(f"http://localhost/log/{fn}")
-                            #                 break
-                            else:
-                                #                 attempt.weakest_link_pk = (
-                                #                     get_failure_source_pubkey(response, route)
-                                #                     if response
-                                #                     else route.hops[-1].pub_key
-                                #                 )
-                                handle_error(self, response, route, routes)
-
-                        if not has_next:
-                            console_output("No routes found!")
-                            if payment_opt == PaymentUIOption.auto_first_hop:
-                                sleep(2)
-                                console_output(f"adding {chan_id} to avoid list")
-                                avoid[chan_id] += 1
-                            else:
-                                sleep(60)
-                    else:
-                        console_output("No channels left to rebalance")
-                        sleep(60)
 
         avoid.clear()
         self.thread = threading.Thread(target=thread_function)
