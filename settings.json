@@ -138,5 +138,16 @@
       "desc":"Height of a lightning node",
       "section":"display",
       "key":"node_height"
+   },
+   {
+      "type":"title",
+      "title":"Audio"
+   },
+   {
+      "type":"numeric",
+      "title":"Volume",
+      "desc":"Audio volume",
+      "section":"audio",
+      "key":"volume"
    }
 ]

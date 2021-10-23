@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from pathlib import Path
 from monkey_patch import do_monkey_patching
 from conf_defaults import set_conf_defaults
+from audio_manager import audio_manager
 
 do_monkey_patching()
 
@@ -31,6 +32,7 @@ class OrbApp(MDApp):
         data_manager.data_man = data_manager.DataManager(config=self.config)
         # self.theme_cls.primary_palette = "Red"
         self.main_layout = MainLayout()
+        audio_manager.set_volume()
         return self.main_layout
 
     def build_config(self, config):
@@ -51,6 +53,8 @@ class OrbApp(MDApp):
         Currently we'd end up with multiple LND instances for example?
         Simply not an option.
         """
+        if f'{section}.{key}' == 'audio.volume':
+            audio_manager.set_volume()
         if key == "tls_certificate":
             data_manager.DataManager.save_cert(value)
         data_manager.data_man = data_manager.DataManager(config=self.config)
