@@ -175,6 +175,8 @@ class ConsoleInput(CodeInput):
             inst.ids.grid.add_widget(button)
 
         inst.open()
+        app = App.get_running_app()
+        app.root.ids.app_menu.close_all()
 
     def install(self, *args):
         inst = InstallScript()
@@ -189,6 +191,8 @@ class ConsoleInput(CodeInput):
             inst.dismiss()
 
         inst.ids.install.bind(on_release=do_install)
+        app = App.get_running_app()
+        app.root.ids.app_menu.close_all()
 
     def delete(self, *args):
         inst = LoadScript()
@@ -211,6 +215,8 @@ class ConsoleInput(CodeInput):
             inst.ids.grid.add_widget(button)
 
         inst.open()
+        app = App.get_running_app()
+        app.root.ids.app_menu.close_all()
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         to_save = self.text

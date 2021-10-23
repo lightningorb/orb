@@ -29,7 +29,10 @@ class TopMenu(AppMenu):
         for script in scripts:
             tm = self
             def run(self, *args):
+                app = App.get_running_app()
+                app.root.ids.app_menu.close_all()
                 tm.exec(scripts[self.text])
+                return True
             cm.add_widget(ContextMenuTextItem(text=script, on_release=run))
         menu.add_widget(cm)
         cm._on_visible(False)

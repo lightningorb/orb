@@ -57,55 +57,62 @@
 
         AppMenuTextItem:
             text: "View"
-            ContextMenu:
-                id: view
-                ContextMenuTextItem:
-                    text: "Refresh"
-                    on_release: app.root.ids.sm.get_screen("channels").refresh()
         AppMenuTextItem:
             text: "Lightning"
             ContextMenu:
                 ContextMenuTextItem:
                     text: "Channels"
-                    on_release:  app.root.ids.sm.current = 'channels'
+                    on_release: app_menu.close_all()
+                    on_press: app.root.ids.sm.current = 'channels'
                 ContextMenuTextItem:
                     text: "Pay"
-                    on_release:  PayScreen().open()
+                    on_release: app_menu.close_all()
+                    on_press:  PayScreen().open()
                 ContextMenuTextItem:
                     text: "Mail"
-                    on_release:  app.root.ids.sm.current = 'mail'
+                    on_press:  app.root.ids.sm.current = 'mail'
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Open Channel"
-                    on_release:  OpenChannelScreen().open()
+                    on_press:  OpenChannelScreen().open()
+                    on_release: app_menu.close_all()
 #                ContextMenuTextItem:
 #                    text: "Close Channel"
-#                    on_release:  CloseChannel().open()
+#                    on_press:  CloseChannel().open()
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Connect"
-                    on_release:  ConnectScreen().open()
+                    on_press:  ConnectScreen().open()
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Console"
-                    on_release:  app.root.ids.sm.current = 'console'
+                    on_press:  app.root.ids.sm.current = 'console'
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Ingest Invoices"
-                    on_release: IngestInvoicesScreen().open()
+                    on_press: IngestInvoicesScreen().open()
+                    on_release: app_menu.close_all()
         AppMenuTextItem:
             text: "On-Chain"
             ContextMenu:
                 ContextMenuTextItem:
                     text: "New Address"
+                    on_press: app_menu.close_all()
                     on_release: NewAddress().open()
                 ContextMenuTextItem:
                     text: "Send Coins"
-                    on_press: SendCoins().open()
+                    on_press: app_menu.close_all()
+                    on_release: SendCoins().open()
         AppMenuTextItem:
             text: "App"
             ContextMenu:
                 ContextMenuTextItem:
                     text: "Settings"
+                    on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuTextItem:
                     text: "Quit"
+                    on_press: app_menu.close_all()
                     on_release: app.get_running_app().stop()
         AppMenuTextItem:
             text: "Scripts"

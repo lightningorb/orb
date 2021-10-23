@@ -34,3 +34,5 @@ class ChannelsScreen(Screen):
             self.channels_widget.channels_thread.stop()
             self.ids.cw_layout.clear_widgets()
             self.build()
+            app = App.get_running_app()
+            app.root.ids.app_menu.close_all()
