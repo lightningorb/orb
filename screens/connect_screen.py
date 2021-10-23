@@ -1,12 +1,11 @@
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
+from decorators import guarded
 
-from data_manager import data_man
+class ConnectScreen(Popup):
+	@guarded
+	def connect(self, address):
+		from data_manager import data_man
+		res = data_man.lnd.connect(address)
+		print(res)
 
-
-class ConnectScreen(Screen):
-    def connect(self, address):
-        try:
-            result = data_man.lnd.connect(address)
-            print(result)
-        except:
-            print("Maybe something went wrong")

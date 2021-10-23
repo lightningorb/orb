@@ -85,6 +85,7 @@ class ConsoleScreen(Screen):
     @mainthread
     def print(self, text):
         if text:
+            text = str(text)
             app = App.get_running_app()
             console = app.root.ids.sm.get_screen("console")
             lines = console.ids.console_output.output.split("\n")

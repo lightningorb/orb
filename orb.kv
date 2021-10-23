@@ -6,6 +6,9 @@
 #:import SendCoins screens.send_coins.SendCoins
 #:import IngestInvoicesScreen screens.ingest_invoices_screen.IngestInvoicesScreen
 #:import PayScreen screens.pay_screen.PayScreen
+#:import ConnectScreen screens.connect_screen.ConnectScreen
+#:import OpenChannelScreen screens.open_channel_screen.OpenChannelScreen
+#:import CloseChannel screens.close_channel.CloseChannel
 #:import prefs_col utils.prefs_col
 
 ########################################################################################
@@ -43,9 +46,6 @@
                     size: self.size
             ChannelsScreen:
                 id: channels
-            ConnectScreen
-            OpenChannelScreen
-            FirstScreen
             MailScreen
             ConsoleScreen
         StatusLine
@@ -76,10 +76,13 @@
                     on_release:  app.root.ids.sm.current = 'mail'
                 ContextMenuTextItem:
                     text: "Open Channel"
-                    on_release:  app.root.ids.sm.current = 'open_channel'
+                    on_release:  OpenChannelScreen().open()
+#                ContextMenuTextItem:
+#                    text: "Close Channel"
+#                    on_release:  CloseChannel().open()
                 ContextMenuTextItem:
                     text: "Connect"
-                    on_release:  app.root.ids.sm.current = 'connect'
+                    on_release:  ConnectScreen().open()
                 ContextMenuTextItem:
                     text: "Console"
                     on_release:  app.root.ids.sm.current = 'console'
@@ -311,65 +314,3 @@
             size_hint_y: None
             height: self.minimum_height
 
-########################################################################################
-# OPEN CHANNEL
-########################################################################################
-
-<OpenChannelScreen>:
-    name: 'open_channel'
-    GridLayout:
-        cols: 1
-        row_force_default: True
-        row_default_height: 60
-        padding: 50
-        spacing: 50
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Pubkey'
-            TextInput:
-                id: pk
-                size_hint_y: 1
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Sats'
-            TextInput:
-                id: sats
-                size_hint_y: 1
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Sats per v/byte'
-            TextInput:
-                id: sats_per_vbyte
-                size_hint_y: 1
-        Button:
-            text: 'open'
-            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
-
-
-########################################################################################
-# CONNECT
-########################################################################################
-
-<ConnectScreen>:
-    name: 'connect'
-    GridLayout:
-        cols: 1
-        row_force_default: True
-        row_default_height: 60
-        padding: 50
-        spacing: 50
-        Label:
-            text: "Connection with node is required before a channel can be opened."
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Address'
-            TextInput:
-                id: address
-                size_hint_y: 1
-        Button:
-            text: 'Address'
-            on_release: root.connect(address.text)

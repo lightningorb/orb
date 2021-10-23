@@ -75,12 +75,12 @@ To write or execute scripts in Orb:
 
 ```python
 from kivy.uix.popup import Popup
-from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 
 info =  lnd.get_info()
 
 popup = Popup(title='Node Info',
-    content=Label(text=f'Alias:\n\n{info.alias}\n\nPublic Key: \n\n{info.identity_pubkey}'),
+    content=TextInput(text=f'Alias:\n\n{info.alias}\n\nPublic Key: \n\n{info.identity_pubkey}'),
     size_hint=(None, None), size=(1200, 400))
 popup.open()
 ```

@@ -61,8 +61,11 @@ class HUD2(BorderedLabel):
 
         cbal = lnd.channel_balance()
         self.hud += f"  Local Balance: S{int(cbal.local_balance.sat):,}\n"
-        self.hud += f"  Remote Balance: S{int(cbal.remote_balance.sat):,}"
+        self.hud += f"  Remote Balance: S{int(cbal.remote_balance.sat):,}\n"
 
+        total = tot + int(cbal.local_balance.sat)
+
+        self.hud += f"  Total Balance: S{total:,}"
 
 class HUD3(BorderedLabel):
     hud = ObjectProperty("")

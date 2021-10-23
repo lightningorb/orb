@@ -32,8 +32,6 @@ class ChannelsWidget(Scatter):
         self.node = None
         self.lnd = data_manager.data_man.lnd
         channels = self.get_channels()
-        if not channels:
-            return
         caps = self.get_caps(channels)
         self.info = self.lnd.get_info()
         for c in channels:
@@ -55,9 +53,10 @@ class ChannelsWidget(Scatter):
         pass
 
     def get_caps(self, channels):
+        if not channels:
+            return 1
         max_cap = max([int(c.capacity) for c in channels])
-        caps = {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}
-        return caps
+        return {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}
 
     def get_channels(self):
         channels = sorted(

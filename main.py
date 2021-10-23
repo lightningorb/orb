@@ -16,7 +16,6 @@ from kivy.app import App
 
 from attribute_editor import *
 from channel_widget import *
-from screens.first_screen import *
 from screens.channels_screen import *
 from screens.pay_screen import *
 from screens.mail_screen import *

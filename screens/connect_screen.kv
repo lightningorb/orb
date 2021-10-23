@@ -1,0 +1,28 @@
+########################################################################################
+# CONNECT
+########################################################################################
+
+<ConnectScreen>:
+    name: 'connect'
+    title: 'Connect'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    size: [600, 400]
+    GridLayout:
+        cols: 1
+        row_force_default: True
+        row_default_height: 60
+        padding: 50
+        spacing: 50
+        MDTextField:
+            id: address
+            helper_text: 'Address'
+            helper_text_mode: "persistent"
+        MDRaisedButton:
+            text: 'Connect'
+            size_hint_x: None
+            width: 30
+            size_hint_y: 1
+            md_bg_color: 0.3,0.3,0.3,1
+            on_release: root.connect(address.text)

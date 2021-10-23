@@ -1,0 +1,35 @@
+########################################################################################
+# OPEN CHANNEL
+########################################################################################
+
+<OpenChannelScreen>:
+    title: 'Open Channel'
+    size: (800, 600)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    GridLayout:
+        cols: 1
+        row_force_default: True
+        row_default_height: 60
+        padding: 50
+        spacing: 50
+        MDTextField:
+            id: pk
+            helper_text: 'Pubkey'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: sats
+            helper_text: 'Sats'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: sats_per_vbyte
+            helper_text: 'Sats per v/byte'
+            helper_text_mode: "persistent"
+        MDRaisedButton:
+            text: 'open'
+            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
+            size_hint_x: None
+            width: 100
+            size_hint_y: 1
+            md_bg_color: 0.3,0.3,0.3,1

@@ -213,6 +213,13 @@ class Lnd(LndBase):
         response = self.stub.OpenChannelSync(request)
         return response
 
+    def close_channel(self, channel_point, force, sat_per_vbyte):
+        request = ln.CloseChannelRequest(
+            channel_point=channel_point,
+            force=force,
+            sat_per_vbyte=sat_per_vbyte)
+        return self.stub.CloseChannel(request)
+
     def new_address(self):
         request = ln.NewAddressRequest(type=0, account=None)
         response = self.stub.NewAddress(request)
