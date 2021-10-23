@@ -1,7 +1,6 @@
 from kivy.config import Config
 
-Config.set("graphics", "width", "1400")
-Config.set("graphics", "height", "800")
+Config.set('graphics', 'window_state', 'maximized')
 
 import kivy.weakmethod
 import kivy.core.text.text_sdl2
