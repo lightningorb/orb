@@ -97,7 +97,8 @@ class PayScreen(Popup):
                                 fee_rate=int(self.ids.fee_rate.text),
                                 payment_request=payment_request,
                                 payment_request_raw=invoices[i]['raw'],
-                                chan_id=chan_id,
+                                outgoing_chan_id=chan_id,
+                                last_hop_pubkey=None,
                                 max_paths=int(self.ids.max_paths.text)))
                         )
                         t.start()
