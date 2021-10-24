@@ -65,10 +65,10 @@ def handle_error(inst, response, route, routes, pk=None):
 
 def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, outgoing_chan_id, last_hop_pubkey, max_paths):
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
-    fee_limit_sat = fee_rate * (
-        1_000_000 / payment_request.num_satoshis
-    )
+    fee_limit_sat = fee_rate * payment_request.num_satoshis / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
+    console_output(f'fee_limit_sat: {fee_limit_sat}')
+    console_output(f'fee_limit_msat: {fee_limit_msat}')
     routes = Routes(
         lnd=data_manager.data_man.lnd,
         pub_key=payment_request.destination,
