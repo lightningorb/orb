@@ -18,6 +18,6 @@ def set_conf_defaults(config):
     config.set("display", "node_width", 70)
     config.set("display", "node_height", 100)
     config.add_section("audio")
-    config.set("audio", "volume", 0.5)
+    config.set("audio", "volume", 0.2)
     config.add_section("debug")
     config.set("debug", "layouts", 0)
