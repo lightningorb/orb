@@ -140,6 +140,13 @@
       "key":"node_height"
    },
    {
+      "type":"string",
+      "title":"Node Alias Font Size",
+      "desc":"The size of the font used for node aliases",
+      "section":"display",
+      "key":"node_alias_font_size"
+   },
+   {
       "type":"title",
       "title":"Audio"
    },
