@@ -154,20 +154,13 @@ class ConsoleInput(CodeInput):
 
     def load(self, *args):
         inst = LoadScript()
-        try:
-            sc = data_manager.data_man.store.get("scripts")
-        except:
-            pass
 
         def do_load(button, *args):
-            sc = {}
-            try:
-                sc = data_manager.data_man.store.get("scripts")
-            except:
-                pass
-            script = sc.get(button.text, None)
-            self.text = script
+            sc = data_manager.data_man.store.get("scripts", {})
+            self.text = sc.get(button.text, '')
             inst.dismiss()
+
+        sc = data_manager.data_man.store.get("scripts", {})
 
         for name in sc:
             button = Button(text=name, size_hint=(None, None), size=(480, 40))
