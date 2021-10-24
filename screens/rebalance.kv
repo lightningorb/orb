@@ -1,0 +1,74 @@
+<Rebalance>:
+    title: 'Rebalance'
+    size: (800, 900)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        Splitter:
+            horizontal: True
+        MDTextField:
+            id: amount
+            text: str(1000000)
+            helper_text: 'Sats'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: fee_rate
+            text: str(500)
+            helper_text: 'Fee Rate PPM'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: max_paths
+            text: str(10)
+            helper_text: 'Max Paths'
+            helper_text_mode: "persistent"
+        Label:
+            text: "First Hop Channel"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: 60
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_out_id
+            text: 'any'
+            height: 60
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.first_hop_spinner_click(spinner_out_id.text)
+        Label:
+            text: "Last Hop Pubkey"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: 60
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_in_id
+            text: 'any'
+            height: 60
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.last_hop_spinner_click(spinner_in_id.text)
+        Splitter:
+            horizontal: True
+        Button:
+            text: 'Rebalance'
+            font_name: 'DejaVuSans'
+            font_size: '12sp'
+            on_release: root.rebalance() 
+            size_hint_y: None
+            height: 60

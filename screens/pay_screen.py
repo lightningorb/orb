@@ -98,7 +98,6 @@ class PayScreen(Popup):
                                 payment_request=payment_request,
                                 payment_request_raw=invoices[i]['raw'],
                                 chan_id=chan_id,
-                                payment_opt=payment_opt,
                                 max_paths=int(self.ids.max_paths.text)))
                         )
                         t.start()

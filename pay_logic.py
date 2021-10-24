@@ -63,8 +63,8 @@ def handle_error(inst, response, route, routes, pk=None):
         if pk == failure_source_pubkey:
             return f"Unknown error code {repr(code)}:"
 
-def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, chan_id, payment_opt, max_paths):
-    print(f"starting payment thread {thread_n} for chan: {chan_id}")
+def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, outgoing_chan_id, last_hop_pubkey, max_paths):
+    print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * (
         1_000_000 / payment_request.num_satoshis
     )
@@ -73,8 +73,8 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, c
         lnd=data_manager.data_man.lnd,
         pub_key=payment_request.destination,
         payment_request=payment_request,
-        outgoing_chan_id=chan_id,
-        last_hop_pubkey=None,
+        outgoing_chan_id=outgoing_chan_id,
+        last_hop_pubkey=last_hop_pubkey,
         fee_limit_msat=fee_limit_msat,
         inst=inst,
     )
@@ -82,7 +82,7 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, c
     count = 0
     while routes.has_next():
         if count > max_paths:
-            return payment_request_raw, chan_id, PaymentStatus.max_paths_exceeded
+            return payment_request_raw, outgoing_chan_id, PaymentStatus.max_paths_exceeded
         count += 1
         has_next = True
         route = routes.get_next()
@@ -99,14 +99,14 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, c
         except:
             console_output(f'T{thread_n}: {str(print_exc())}')
             console_output(f"T{thread_n}: exception - removing invoice")
-            return payment_request_raw, chan_id, PaymentStatus.exception
+            return payment_request_raw, outgoing_chan_id, PaymentStatus.exception
         is_successful = response and response.failure.code == 0
         if is_successful:
             console_output(f"T{thread_n}: SUCCESS")
-            return payment_request_raw, chan_id, PaymentStatus.success
+            return payment_request_raw, outgoing_chan_id, PaymentStatus.success
         else:
             handle_error(inst, response, route, routes)
     if not has_next:
         console_output(f"T{thread_n}: No routes found!")
-        return payment_request_raw, chan_id, PaymentStatus.no_routes
-    return payment_request_raw, chan_id, PaymentStatus.none
+        return payment_request_raw, outgoing_chan_id, PaymentStatus.no_routes
+    return payment_request_raw, outgoing_chan_id, PaymentStatus.none

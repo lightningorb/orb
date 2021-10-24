@@ -9,6 +9,7 @@
 #:import ConnectScreen screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen screens.open_channel_screen.OpenChannelScreen
 #:import CloseChannel screens.close_channel.CloseChannel
+#:import Rebalance screens.rebalance.Rebalance
 #:import prefs_col utils.prefs_col
 
 ########################################################################################
@@ -68,6 +69,10 @@
                     text: "Pay"
                     on_release: app_menu.close_all()
                     on_press:  PayScreen().open()
+                ContextMenuTextItem:
+                    text: "Rebalance"
+                    on_release: app_menu.close_all()
+                    on_press:  Rebalance().open()
                 ContextMenuTextItem:
                     text: "Mail"
                     on_press:  app.root.ids.sm.current = 'mail'

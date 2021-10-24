@@ -135,7 +135,7 @@ class ChannelWidget(Widget):
         forward = htlc.event_type == "FORWARD"
         settle = htlc.event_outcome == "settle_event"
         fail = htlc.event_outcome == "link_fail_event"
-        outgoing = htlc.outgoing_channel_id == self.channel.chan_id
+        outgoing = hasattr(htlc, 'outgoing_channel_id') and htlc.outgoing_channel_id == self.channel.chan_id
         incoming = forward and htlc.incoming_channel_id == self.channel.chan_id
 
         if incoming:
