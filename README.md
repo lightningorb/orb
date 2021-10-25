@@ -13,6 +13,7 @@ git clone https://<github_username>@github.com/bc31164b-cfd5-4a63-8144-875100622
 git config --global credential.helper store
 cd orb
 pip3 install -r requirements.txt
+sudo apt-get intall -y xclip xsel # Linux users only
 python3 main.py
 ```
 
