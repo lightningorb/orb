@@ -3,6 +3,7 @@ from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty
+from kivy.properties import NumericProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
@@ -16,9 +17,14 @@ import requests
 class Bordered(Widget):
     pass
 
-class BorderedLabel(Label):
-    pass
+class Hideable():
+    alpha = NumericProperty(0)
 
+    def show(self):
+        self.alpha = 1
+
+class BorderedLabel(Label, Hideable):
+    pass
 
 class HUD(BoxLayout):
     pass
@@ -40,6 +46,7 @@ class HUD1(BorderedLabel):
         @mainthread
         def update_gui(text):
             self.hud = text
+            self.show()
 
         def func():
             lnd = data_manager.data_man.lnd
@@ -65,6 +72,7 @@ class HUD2(BorderedLabel):
         @mainthread
         def update_gui(text):
             self.hud = text
+            self.show()
 
         def func():
             lnd = data_manager.data_man.lnd
@@ -101,8 +109,9 @@ class HUD3(BorderedLabel):
         dpi_info = Metrics.dpi
         pixel_density_info = Metrics.density
         self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+        self.show()
 
-class HUD4(FloatLayout):
+class HUD4(FloatLayout, Hideable):
     """
     BTC Price HUD
     """
@@ -110,7 +119,7 @@ class HUD4(FloatLayout):
         FloatLayout.__init__(self, *args, **kwargs)
         with self.canvas.before:
             Color(1,1,1,1)
-            self.line = Line(points=[0,0,500,500], width=1)
+            self.line = Line(points=[0,0,0,0], width=1)
         self.bind(pos=self.update_rect, size=self.update_rect)
         Clock.schedule_interval(self.update_price, 60)
         Clock.schedule_once(self.update_price, 1)
@@ -120,6 +129,7 @@ class HUD4(FloatLayout):
         self.ids.rate.text = text
         if points:
             self.line.points = points
+        self.show()
 
     def update_rect(self, *args):
         def func():
@@ -154,6 +164,7 @@ class HUD5(BorderedLabel):
         @mainthread
         def update_gui(text):
             self.hud = text
+            self.show()
 
         def func():
             fees = requests.get("https://mempool.space/api/v1/fees/recommended").json()

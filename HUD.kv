@@ -5,12 +5,12 @@
 <BorderedLabel>:
     canvas.before:
         Color:
-            rgba: .3, .3, .4, .3
+            rgba: .3, .3, .4, root.alpha * 0.3
         Rectangle:
             size: self.size
             pos: self.pos
         Color:
-            rgba: .6, .6, .8, 1
+            rgba: .6, .6, .8, root.alpha
         Line:
             points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
             width: 1
@@ -57,12 +57,12 @@
     size: [300, 150]
     canvas.before:
         Color:
-            rgba: .3, .3, .4, .3
+            rgba: .3, .3, .4, root.alpha * 0.3
         Rectangle:
             size: self.size
             pos: self.pos
         Color:
-            rgba: .6, .6, .8, 1
+            rgba: .6, .6, .8, root.alpha
         Line:
             points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
             width: 1
