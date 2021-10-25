@@ -1,3 +1,4 @@
+from kivy.clock import mainthread
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.uix.floatlayout import FloatLayout
@@ -24,6 +25,9 @@ class HUD(BoxLayout):
 
 
 class HUD1(BorderedLabel):
+    """
+    Fee Summary HUD
+    """
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
@@ -33,12 +37,21 @@ class HUD1(BorderedLabel):
 
     @guarded
     def get_lnd_data(self, *args):
-        lnd = data_manager.data_man.lnd
-        fr = lnd.fee_report()
-        self.hud = f"Day: S{int(fr.day_fee_sum):,}\nWeek S{int(fr.week_fee_sum):,}\nMonth: S{int(fr.month_fee_sum):,}"
+        @mainthread
+        def update_gui(text):
+            self.hud = text
+
+        def func():
+            lnd = data_manager.data_man.lnd
+            fr = lnd.fee_report()
+            update_gui(f"Day: S{int(fr.day_fee_sum):,}\nWeek S{int(fr.week_fee_sum):,}\nMonth: S{int(fr.month_fee_sum):,}")
+        threading.Thread(target=func).start()
 
 
 class HUD2(BorderedLabel):
+    """
+    Balance HUD
+    """
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
@@ -48,26 +61,37 @@ class HUD2(BorderedLabel):
 
     @guarded
     def get_lnd_data(self, *args):
-        lnd = data_manager.data_man.lnd
-        bal = lnd.get_balance()
-        tot = int(bal.total_balance)
-        conf = int(bal.confirmed_balance)
-        unconf = int(bal.unconfirmed_balance)
 
-        self.hud = f"  Chain Balance: S{tot:,}\n"
-        if tot != conf:
-            self.hud += f"  Conf. Chain Balance: S{conf:,}\n"
-            self.hud += f"  Unconf. Chain Balance: S{unconf:,}\n"
+        @mainthread
+        def update_gui(text):
+            self.hud = text
 
-        cbal = lnd.channel_balance()
-        self.hud += f"  Local Balance: S{int(cbal.local_balance.sat):,}\n"
-        self.hud += f"  Remote Balance: S{int(cbal.remote_balance.sat):,}\n"
+        def func():
+            lnd = data_manager.data_man.lnd
+            bal = lnd.get_balance()
+            tot = int(bal.total_balance)
+            conf = int(bal.confirmed_balance)
+            unconf = int(bal.unconfirmed_balance)
 
-        total = tot + int(cbal.local_balance.sat)
+            hud = f"Chain Balance: S{tot:,}\n"
+            if tot != conf:
+                hud += f"Conf. Chain Balance: S{conf:,}\n"
+                hud += f"Unconf. Chain Balance: S{unconf:,}\n"
 
-        self.hud += f"  Total Balance: S{total:,}"
+            cbal = lnd.channel_balance()
+            hud += f"Local Balance: S{int(cbal.local_balance.sat):,}\n"
+            hud += f"Remote Balance: S{int(cbal.remote_balance.sat):,}\n"
+
+            total = tot + int(cbal.local_balance.sat)
+
+            hud += f"Total Balance: S{total:,}"
+            update_gui(hud)
+        threading.Thread(target=func).start()
 
 class HUD3(BorderedLabel):
+    """
+    DPI HUD
+    """
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
@@ -79,6 +103,9 @@ class HUD3(BorderedLabel):
         self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
 
 class HUD4(FloatLayout):
+    """
+    BTC Price HUD
+    """
     def __init__(self, *args, **kwargs):
         FloatLayout.__init__(self, *args, **kwargs)
         with self.canvas.before:
@@ -88,6 +115,12 @@ class HUD4(FloatLayout):
         Clock.schedule_interval(self.update_price, 60)
         Clock.schedule_once(self.update_price, 1)
 
+    @mainthread
+    def update_gui(self, text, points):
+        self.ids.rate.text = text
+        if points:
+            self.line.points = points
+
     def update_rect(self, *args):
         def func():
             # this probably shouldn't be in update_rect
@@ -96,15 +129,14 @@ class HUD4(FloatLayout):
             for i, key in enumerate(d):
                 g.append(i/len(d)*self.size[0])
                 g.append(self.pos[1]+((d[key]-min_price)/(max_price-min_price))*self.size[1])
-            self.line.points = g
             rate = str(int(requests.get("https://api.coindesk.com/v1/bpi/currentprice.json").json()['bpi']['USD']['rate_float']))
-            self.ids.rate.text = f'${rate}'
+            self.update_gui(f'${rate}', g)
         threading.Thread(target=func).start()
 
     def update_price(self, *args):
         def func():
             rate = int(requests.get("https://api.coindesk.com/v1/bpi/currentprice.json").json()['bpi']['USD']['rate_float'])
-            self.ids.rate.text = f'${rate}'
+            self.update_gui(f'${rate}', None)
         threading.Thread(target=func).start()
 
 
@@ -118,11 +150,16 @@ class HUD5(BorderedLabel):
 
     @guarded
     def get_fees(self, *args):
+
+        @mainthread
+        def update_gui(text):
+            self.hud = text
+
         def func():
             fees = requests.get("https://mempool.space/api/v1/fees/recommended").json()
             text = f"""\
 Low priority: {fees["hourFee"]} sat/vB
 Medium priority: {fees["halfHourFee"]} sat/vB
 High priority: {fees["fastestFee"]} sat/vB"""
-            self.hud = text
+            update_gui(text)
         threading.Thread(target=func).start()

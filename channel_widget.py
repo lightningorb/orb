@@ -48,7 +48,7 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.line_local = Segment(
-                amount=self.channel.local_balance - self.pending_out,
+                amount=int(self.channel.local_balance )- int(self.pending_out),
                 points=[0, 0, 0, 0],
                 width=self.width,
                 cap="none",

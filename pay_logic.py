@@ -86,12 +86,13 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, o
         count += 1
         has_next = True
         route = routes.get_next()
-        for j, hop in enumerate(route.hops):
-            node_alias = data_manager.data_man.lnd.get_node_alias(
-                hop.pub_key
-            )
-            text = f"{j:<5}:        {node_alias}"
-            console_output(f'T{thread_n}: {text}')
+        if route:
+            for j, hop in enumerate(route.hops):
+                node_alias = data_manager.data_man.lnd.get_node_alias(
+                    hop.pub_key
+                )
+                text = f"{j:<5}:        {node_alias}"
+                console_output(f'T{thread_n}: {text}')
         try:
             response = data_manager.data_man.lnd.send_payment(
                 payment_request, route
