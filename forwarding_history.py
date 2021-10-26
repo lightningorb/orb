@@ -1,6 +1,8 @@
 import data_manager
 from ui_actions import console_output
 from threading import Thread
+from collections import defaultdict
+import arrow
 
 def get_forwarding_history():
     from store import model
@@ -72,3 +74,28 @@ def view_forwarding_history():
         content=Label(text=text),
         size_hint=(None, None), size=(500, 400))
     popup.open()
+
+
+def graph_fees_earned():
+    from kivy.uix.popup import Popup
+    from kivy_garden.graph import Graph, MeshLinePlot
+    fh = get_forwarding_history()
+    buckets = defaultdict(int)
+    for f in fh:
+        date = int(arrow.get(f.timestamp).replace(hour=0, minute=0, second=0).timestamp())
+        buckets[date] += f.fee
+    max_fee = max(buckets.values())
+    x_min = 0
+    x_max = len(buckets)
+    graph = Graph(xlabel='X', ylabel='Y', x_ticks_minor=5, x_ticks_major=25, y_ticks_major=10_000, y_grid_label=True, x_grid_label=True, padding=5,x_grid=True, y_grid=True, xmin=x_min, xmax=x_max, ymin=0, ymax=max_fee)
+    plot = MeshLinePlot(color=[1, 0, 0, 1])
+    plot.points = [(k, v) for k,v in enumerate(buckets.values())]
+    graph.add_plot(plot)
+    popup = Popup(
+        title='fees earned',
+        content=graph,
+        size_hint=(1, 1),
+        background_color = (.6, .6, .8, .9),
+        overlay_color = (0, 0, 0, 0))
+    popup.open()
+

@@ -13,6 +13,7 @@
 #:import prefs_col utils.prefs_col
 #:import download_forwarding_history forwarding_history.download_forwarding_history
 #:import view_forwarding_history forwarding_history.view_forwarding_history
+#:import graph_fees_earned forwarding_history.graph_fees_earned
 ########################################################################################
 # MAIN
 ########################################################################################
@@ -108,6 +109,10 @@
                         ContextMenuTextItem:
                             text: "View"
                             on_press: view_forwarding_history()
+                            on_release: app_menu.close_all()
+                        ContextMenuTextItem:
+                            text: "Fees earned"
+                            on_press: graph_fees_earned()
                             on_release: app_menu.close_all()
         AppMenuTextItem:
             text: "On-Chain"

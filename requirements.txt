@@ -10,3 +10,5 @@ kivymd
 kivy_garden.contextmenu
 pygments
 peewee
+arrow
+kivy_garden.graph
