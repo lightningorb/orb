@@ -1,12 +1,12 @@
+from popup_drop_shadow import PopupDropShadow
 from kivy.clock import Clock
-from kivy.uix.popup import Popup
 import data_manager
 import requests
 from decorators import guarded
 from ui_actions import console_output
 
 
-class SendCoins(Popup):
+class SendCoins(PopupDropShadow):
     def __init__(self, *args, **kwargs):
         super(SendCoins, self).__init__()
         self.schedule = Clock.schedule_interval(self.get_fees, 10)

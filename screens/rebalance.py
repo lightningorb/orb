@@ -1,4 +1,4 @@
-from kivy.uix.popup import Popup
+from popup_drop_shadow import PopupDropShadow
 from kivy.clock import mainthread
 from threading import Thread
 
@@ -13,9 +13,9 @@ from ui_actions import console_output
 from channel_selector import get_low_inbound_channel
 from pay_logic import pay_thread, PaymentStatus
 
-class Rebalance(Popup):
+class Rebalance(PopupDropShadow):
     def __init__(self, **kwargs):
-        Popup.__init__(self, **kwargs)
+        PopupDropShadow.__init__(self, **kwargs)
         self.output = Output(None)
         self.output.lnd = data_manager.data_man.lnd
         lnd = data_manager.data_man.lnd

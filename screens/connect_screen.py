@@ -1,8 +1,8 @@
-from kivy.uix.popup import Popup
+from popup_drop_shadow import PopupDropShadow
 from kivy.uix.screenmanager import Screen
 from decorators import guarded
 
-class ConnectScreen(Popup):
+class ConnectScreen(PopupDropShadow):
 	@guarded
 	def connect(self, address):
 		from data_manager import data_man

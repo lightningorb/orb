@@ -1,4 +1,4 @@
-from kivy.uix.popup import Popup
+from popup_drop_shadow import PopupDropShadow
 from kivy.clock import mainthread
 from threading import Thread
 
@@ -21,9 +21,9 @@ class PaymentUIOption:
     auto_first_hop = 0
     user_selected_first_hop = 1
 
-class PayScreen(Popup):
+class PayScreen(PopupDropShadow):
     def __init__(self, **kwargs):
-        Popup.__init__(self, **kwargs)
+        PopupDropShadow.__init__(self, **kwargs)
         self.output = Output(None)
         self.output.lnd = data_manager.data_man.lnd
         lnd = data_manager.data_man.lnd
@@ -31,14 +31,13 @@ class PayScreen(Popup):
         self.chan_id = None
 
         @mainthread
-        def delayed():
-            channels = lnd.get_channels()
+        def delayed(channels):
             for c in channels:
                 self.ids.spinner_id.values.append(
                     f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}"
                 )
 
-        delayed()
+        threading.Thread(target=lambda: delayed(lnd.get_channels())).start()
 
     def first_hop_spinner_click(self, chan):
         self.chan_id = int(chan.split(":")[0])

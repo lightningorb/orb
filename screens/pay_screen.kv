@@ -12,12 +12,6 @@
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
-    canvas.before:
-        BorderImage:
-            source: 'images/shadow_inverted.png'
-            border: 0,0,0,0
-            pos: self.x - 10, self.y - 70
-            size: self.width + 80, self.height + 100
     BoxLayout:
         orientation: 'vertical'
         Splitter:
@@ -59,10 +53,18 @@
             on_text: root.first_hop_spinner_click(spinner_id.text)
         Splitter:
             horizontal: True
-        Button:
+        MDRaisedButton:
             text: 'Pay'
-            font_name: 'DejaVuSans'
             font_size: '12sp'
             on_release: root.pay() 
             size_hint_y: None
+            size_hint_x: 1
             height: 60
+#            EffectWidget:
+#                effects: [ew.HorizontalBlurEffect(size=2.0)]
+#                canvas.before:
+#                    Color:
+#                        rgba: 1, 1, 1, 0.5
+#                    Rectangle:
+#                        pos: [self.pos[0] + 5, self.pos[1] - 5]
+#                        size: self.size 

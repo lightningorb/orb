@@ -1,5 +1,5 @@
+from popup_drop_shadow import PopupDropShadow
 import io
-from kivy.uix.popup import Popup
 import data_manager
 from kivy.uix.image import Image
 from kivy.core.image import Image as CoreImage
@@ -12,7 +12,7 @@ except:
     pass
 
 
-class NewAddress(Popup):
+class NewAddress(PopupDropShadow):
     def __init__(self, *args, **kwargs):
         super(NewAddress, self).__init__()
         ad = data_manager.data_man.lnd.new_address().address

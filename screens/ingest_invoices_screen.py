@@ -2,7 +2,7 @@ from kivy.event import EventDispatcher
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
-from kivy.uix.popup import Popup
+from popup_drop_shadow import PopupDropShadow
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
@@ -20,7 +20,7 @@ class Invoice(BoxLayout):
     description = ObjectProperty("")
 
 
-class IngestInvoicesScreen(Popup):
+class IngestInvoicesScreen(PopupDropShadow):
     count = ObjectProperty(None)
 
     def __init__(self, **kwargs):
