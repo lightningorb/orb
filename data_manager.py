@@ -34,6 +34,10 @@ class DataManager:
             self.lnd = mock_lnd()
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
+        from store import model
+        self.db = model.get_db('fowarding_events')
+        self.db.connect()
+        model.create_tables()
 
     @property
     def cert_path(self):

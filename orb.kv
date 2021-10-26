@@ -11,7 +11,8 @@
 #:import CloseChannel screens.close_channel.CloseChannel
 #:import Rebalance screens.rebalance.Rebalance
 #:import prefs_col utils.prefs_col
-
+#:import download_forwarding_history forwarding_history.download_forwarding_history
+#:import view_forwarding_history forwarding_history.view_forwarding_history
 ########################################################################################
 # MAIN
 ########################################################################################
@@ -97,6 +98,17 @@
                     text: "Ingest Invoices"
                     on_press: IngestInvoicesScreen().open()
                     on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Forwarding History"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Download"
+                            on_press: download_forwarding_history()
+                            on_release: app_menu.close_all()
+                        ContextMenuTextItem:
+                            text: "View"
+                            on_press: view_forwarding_history()
+                            on_release: app_menu.close_all()
         AppMenuTextItem:
             text: "On-Chain"
             ContextMenu:

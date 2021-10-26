@@ -251,6 +251,15 @@ class Lnd(LndBase):
         request = ln.ChannelEventSubscription()
         return self.stub.SubscribeChannelEvents(request)
 
+    def get_forwarding_history(self, start_time=None, end_time=None, index_offset=0, num_max_events=100):
+        request = ln.ForwardingHistoryRequest(
+            start_time=start_time,
+            end_time=end_time,
+            index_offset=index_offset,
+            num_max_events=num_max_events,
+        )
+        return self.stub.ForwardingHistory(request)
+
     # def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
     #     secret = secrets.token_bytes(32)
     #     hashed_secret = sha256(secret).hexdigest()
