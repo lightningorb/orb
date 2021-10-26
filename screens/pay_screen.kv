@@ -12,6 +12,12 @@
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
+    canvas.before:
+        BorderImage:
+            source: 'images/shadow_inverted.png'
+            border: 0,0,0,0
+            pos: self.x - 10, self.y - 70
+            size: self.width + 80, self.height + 100
     BoxLayout:
         orientation: 'vertical'
         Splitter:
