@@ -9,3 +9,4 @@ munch
 kivymd
 kivy_garden.contextmenu
 pygments
+peewee
