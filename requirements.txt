@@ -12,3 +12,4 @@ pygments
 peewee
 arrow
 kivy_garden.graph
+humanize

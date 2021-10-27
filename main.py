@@ -6,6 +6,7 @@ import kivy.weakmethod
 import kivy.core.text.text_sdl2
 import kivy.core.window.window_sdl2
 import kivy.graphics.cgl_backend
+import kivy.graphics.buffer
 import kivymd.icon_definitions
 from kivy.uix.widget import Widget
 from kivy.uix.scatter import Scatter

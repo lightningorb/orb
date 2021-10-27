@@ -16,12 +16,12 @@ def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats):
         more_than_half_outbound = (actual_available_outbound / chan.capacity) > 0.5
         good_candidate = enough_available_outbound and more_than_half_outbound
         if good_candidate:
-            if chan.chan_id in [*avoid.keys()]:
-                avoid[chan.chan_id] += 1
-                if avoid[chan.chan_id] > 15:
-                    del avoid[chan.chan_id]
-                else:
-                    continue
+            # if chan.chan_id in [*avoid.keys()]:
+            #     avoid[chan.chan_id] += 1
+            #     if avoid[chan.chan_id] > 15:
+            #         del avoid[chan.chan_id]
+            #     else:
+            #         continue
             chans.append(chan)
     if chans:
         return choice(chans).chan_id

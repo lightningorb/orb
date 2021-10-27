@@ -88,9 +88,10 @@ class HUD2(BorderedLabel):
 
             cbal = lnd.channel_balance()
             hud += f"Local Balance: S{int(cbal.local_balance.sat):,}\n"
+            hud += f"Unset. Local B.: S{int(cbal.unsettled_local_balance.sat):,}\n"
             hud += f"Remote Balance: S{int(cbal.remote_balance.sat):,}\n"
 
-            total = tot + int(cbal.local_balance.sat)
+            total = tot + int(cbal.local_balance.sat + cbal.unsettled_local_balance.sat)
 
             hud += f"Total Balance: S{total:,}"
             update_gui(hud)

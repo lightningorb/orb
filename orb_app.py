@@ -31,6 +31,7 @@ class OrbApp(MDApp):
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
         # self.theme_cls.primary_palette = "Red"
+        # self.icon = 'myicon.png'
         self.main_layout = MainLayout()
         audio_manager.set_volume()
         return self.main_layout
