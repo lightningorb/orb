@@ -1,3 +1,5 @@
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 import data_manager
 from ui_actions import console_output
 from threading import Thread
@@ -75,6 +77,14 @@ def view_forwarding_history():
         size_hint=(None, None), size=(500, 400))
     popup.open()
 
+def sma(data, n=3):
+    ret = []
+    for i in range(len(data)):
+        if i >= n:
+            ret.append(sum(data[i-n:i])/n)
+        else:
+            ret.append(float('nan'))
+    return ret
 
 def graph_fees_earned():
     from kivy.uix.popup import Popup
@@ -84,16 +94,15 @@ def graph_fees_earned():
     for f in fh:
         date = int(arrow.get(f.timestamp).replace(hour=0, minute=0, second=0).timestamp())
         buckets[date] += f.fee
-    max_fee = max(buckets.values())
-    x_min = 0
-    x_max = len(buckets)
-    graph = Graph(xlabel='X', ylabel='Y', x_ticks_minor=5, x_ticks_major=25, y_ticks_major=10_000, y_grid_label=True, x_grid_label=True, padding=5,x_grid=True, y_grid=True, xmin=x_min, xmax=x_max, ymin=0, ymax=max_fee)
-    plot = MeshLinePlot(color=[1, 0, 0, 1])
-    plot.points = [(k, v) for k,v in enumerate(buckets.values())]
-    graph.add_plot(plot)
+    graph = Graph(size_hint=[1,0.9], xlabel='Day', ylabel='Sats', x_ticks_major=5, y_ticks_major=10_000, y_ticks_minor=1000, y_grid_label=True, x_grid_label=True, padding=5, x_grid=True, y_grid=True, xmin=0, xmax=len(buckets), ymin=0, ymax=max(buckets.values()))
+    graph.add_plot(MeshLinePlot(color=[1, 0.5, 0.5, 1], points=[(k, v) for k,v in enumerate(buckets.values())]))
+    graph.add_plot(MeshLinePlot(color=[0.5, 0.5, 1, 1], points=[(k, v) for k,v in enumerate(sma(list(buckets.values()), 7))]))
+    bl = BoxLayout(orientation='vertical')
+    bl.add_widget(graph)
+    bl.add_widget(Label(size_hint=(1, 0.1), text=f'Total routing fees earned: {round((sum(buckets.values())/1e8), 8)} BTC ({sum(buckets.values()):,} sats)'))
     popup = Popup(
         title='fees earned',
-        content=graph,
+        content=bl,
         size_hint=(1, 1),
         background_color = (.6, .6, .8, .9),
         overlay_color = (0, 0, 0, 0))
