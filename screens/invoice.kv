@@ -19,9 +19,10 @@
             size: self.size
     BoxLayout:
         orientation: 'horizontal'
+        height: 40
         Label:
             text: 'Raw: '
-            height: 80
+            height: 40
             width: 200
             size_hint_y: None
             size_hint_x: None
@@ -30,16 +31,17 @@
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 80
+            height: 40
             text: root.destination[:10] + '...'
             halign: "left"
             valign: "middle"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
+        height: 40
         Label:
             text: 'Amount: '
-            height: 80
+            height: 40
             width: 200
             size_hint_y: None
             size_hint_x: None
@@ -48,16 +50,17 @@
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 80
+            height: 40
             text: f'S{int(root.num_satoshis):,}'
             halign: "left"
             valign: "middle"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
+        height: 40
         Label:
-            text: 'Timestamp: '
-            height: 80
+            text: 'Expires in: '
+            height: 40
             width: 200
             size_hint_y: None
             size_hint_x: None
@@ -65,17 +68,18 @@
             halign: "left"
             text_size: self.size
         Label:
+            id: expiry_label
             size_hint_y: None
-            height: 80
-            text: datetime.fromtimestamp(int(root.timestamp)).strftime('%Y-%m-%d %H:%M:%S')
+            height: 40
             valign: "middle"
             halign: "left"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
+        height: 40
         Label:
             text: 'Description: '
-            height: 80
+            height: 40
             width: 200
             size_hint_y: None
             size_hint_x: None
@@ -84,7 +88,7 @@
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 80
+            height: 40
             text: root.description[:50]
             valign: "middle"
             halign: "left"
