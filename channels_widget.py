@@ -1,5 +1,6 @@
 from kivy.properties import ObjectProperty
 from kivy.uix.scatter import Scatter
+from kivy.uix.scatterlayout import ScatterLayout
 from traceback import print_exc
 from kivy.graphics.transformation import Matrix
 
@@ -11,7 +12,7 @@ import data_manager
 from utils import pref
 from prefs import is_mock
 
-class ChannelsWidget(Scatter):
+class ChannelsWidget(ScatterLayout):
     attribute_editor = ObjectProperty(None)
 
     def __init__(self, *args, **kwargs):
