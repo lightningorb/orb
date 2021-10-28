@@ -13,7 +13,7 @@ git clone https://<github_username>@github.com/bc31164b-cfd5-4a63-8144-875100622
 git config --global credential.helper store
 cd orb
 pip3 install -r requirements.txt
-sudo apt-get intall -y xclip xsel # Linux users only
+sudo apt-get install -y xclip xsel # Linux users only
 python3 main.py
 ```
 
@@ -46,7 +46,7 @@ sudo ufw allow 8080
 
 ## cert and macaroon
 
-Encode your macaroon to hex, so you can paste it into the application:
+Encode your macaroon to hex, by running this command in your node's terminal:
 
 ```
 python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
@@ -58,7 +58,7 @@ Next cat your cert:
 cat ~/.lnd/tls.cert
 ```
 
-And paste that into orb.
+And paste those into orb.
 
 Next change the protocol from mock to grpc.
 
