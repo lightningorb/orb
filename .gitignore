@@ -7,3 +7,6 @@ tmp.py
 orb.json
 __pycache__
 .idea
+build
+dist
+orb.spec

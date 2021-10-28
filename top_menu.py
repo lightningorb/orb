@@ -8,6 +8,7 @@ from kivy.uix.actionbar import ActionButton
 from kivy.uix.actionbar import ActionGroup
 from kivy.app import App
 from kivy_garden.contextmenu import ContextMenuTextItem
+from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
 from kivy_garden.contextmenu import AppMenuTextItem
 from decorators import guarded
@@ -68,5 +69,8 @@ class TopMenu(AppMenu):
         cm.add_widget(ContextMenuTextItem(text="Run", on_release=cbs.run))
         cm.add_widget(ContextMenuTextItem(text="Install", on_release=cbs.install))
         cm.add_widget(ContextMenuTextItem(text="Delete", on_release=cbs.delete))
+        cm.add_widget(ContextMenuDivider())
+        cm.add_widget(ContextMenuTextItem(text="Clear Input", on_release=cbs.clear_input))
+        cm.add_widget(ContextMenuTextItem(text="Clear Output", on_release=cbs.clear_output))
         menu.add_widget(cm)
         cm._on_visible(False)

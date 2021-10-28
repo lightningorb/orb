@@ -50,7 +50,6 @@ class ConsoleSplitter(Splitter):
 
     def on_touch_move(self, touch):
         if self.pressed:
-            print(touch)
             self.input.height = self.input_pressed_height + (self.pressed_pos[1] - touch.pos[1])
             self.output.height = self.output_pressed_height - (self.pressed_pos[1] - touch.pos[1])
             self.input.size_hint = (None, None)
@@ -142,8 +141,7 @@ class ConsoleInput(CodeInput):
         try:
             exec(text)
             sys.stdout = old_stdout
-            message = mystdout.getvalue()
-            self.output += message.strip() + "\n"
+            self.output += "\n" + mystdout.getvalue().strip() + "\n"
         except:
             exc = format_exc()
             if exc:
@@ -211,6 +209,12 @@ class ConsoleInput(CodeInput):
         app = App.get_running_app()
         app.root.ids.app_menu.close_all()
 
+    def clear_input(self, *args):
+        self.text = ''
+
+    def clear_output(self, *args):
+        self.output = ''
+
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         to_save = self.text
         if text:
@@ -218,7 +222,6 @@ class ConsoleInput(CodeInput):
         do_eval = keycode[1] == "enter" and self.selection_text
         data_manager.data_man.store.put("console_input", text=to_save)
         if do_eval:
-            self.output += str(self.selection_text)
             self.exec(self.selection_text)
             return True
         else:
