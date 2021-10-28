@@ -25,8 +25,8 @@ class FowardEvent(Model):
 	class Meta:
 		database = get_db('fowarding_events')
 
-def create_tables():
-	db = get_db('fowarding_events')
+def create_tables(name):
+	db = get_db(name)
 	try:
 		db.create_tables([FowardEvent])
 	except:

@@ -37,7 +37,7 @@ class DataManager:
         from store import model
         self.db = model.get_db('fowarding_events')
         self.db.connect()
-        model.create_tables()
+        model.create_tables('fowarding_events')
 
     @property
     def cert_path(self):
