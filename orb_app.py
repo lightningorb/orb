@@ -58,5 +58,5 @@ class OrbApp(MDApp):
             audio_manager.set_volume()
         if key == "tls_certificate":
             data_manager.DataManager.save_cert(value)
-        data_manager.data_man = data_manager.DataManager(config=self.config)
+        # data_manager.data_man = data_manager.DataManager(config=self.config)
         self.main_layout.do_layout()
