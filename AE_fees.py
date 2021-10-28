@@ -1,7 +1,8 @@
-from kivy.clock import Clock
+from kivy.clock import mainthread
 from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 
+from threading import Thread
 import data_manager
 from decorators import guarded
 
@@ -18,8 +19,8 @@ class AEFees(Widget):
     def on_channel(self, inst, channel):
         if channel:
 
-            def update(*args):
-                policy_to = data_manager.data_man.lnd.get_policy_to(channel.chan_id)
+            @mainthread
+            def update(policy_to):
                 self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
                 self.time_lock_delta = policy_to.time_lock_delta
                 self.min_htlc = policy_to.min_htlc
@@ -27,7 +28,11 @@ class AEFees(Widget):
                 self.last_update = policy_to.last_update
                 self.fee_base_msat = policy_to.fee_base_msat
 
-            Clock.schedule_once(update, 0.1)
+            def get_fees():
+                policy_to = data_manager.data_man.lnd.get_policy_to(channel.chan_id)
+                update(policy_to)
+
+            Thread(target=get_fees).start()
 
     @guarded
     def fee_rate_milli_msat_changed(self, val):
