@@ -20,7 +20,7 @@ class OrbApp(MDApp):
         currently not used.
         """
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if path != "orb.kv" and "tutes" not in path:
+            if path not in ["orb.kv", "context_menu.kv", "app_menu.kv"] and "tutes" not in path and 'dist' not in path:
                 Builder.load_file(path)
 
     def build(self):
