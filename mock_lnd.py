@@ -2,6 +2,7 @@ from collections import namedtuple
 from dataclasses import dataclass
 from typing import Any
 
+
 @dataclass
 class Channel:
 
@@ -15,6 +16,7 @@ class Channel:
     def ListFields(self):
         return []
 
+
 @dataclass
 class Policy:
     fee_rate_milli_msat: Any
@@ -27,7 +29,10 @@ class Policy:
 Info = namedtuple("Info", "alias")
 NodeInfo = namedtuple("NodeInfo", "alias")
 Balance = namedtuple("Balance", "total_balance confirmed_balance unconfirmed_balance")
-ChannelBalance = namedtuple("ChannelBalance", "local_balance remote_balance")
+ChannelBalance = namedtuple(
+    "ChannelBalance",
+    "local_balance remote_balance unsettled_local_balance unsettled_remote_balance",
+)
 CB = namedtuple("ChannelBalanceObj", "sat")
 FeeReport = namedtuple("FeeReport", "day_fee_sum week_fee_sum month_fee_sum")
 
@@ -101,11 +106,12 @@ class Lnd(object):
         return Balance(total_balance=0, confirmed_balance=0, unconfirmed_balance=0)
 
     def channel_balance(self):
-        return ChannelBalance(local_balance=CB(sat=0), remote_balance=CB(sat=0))
+        return ChannelBalance(
+            local_balance=CB(sat=10_000_000),
+            remote_balance=CB(sat=10_000_000),
+            unsettled_local_balance=CB(sat=0),
+            unsettled_remote_balance=CB(sat=0),
+        )
 
     def fee_report(self):
-        return FeeReport(
-            day_fee_sum=1000,
-            week_fee_sum=1000,
-            month_fee_sum=1000,
-        )
+        return FeeReport(day_fee_sum=1000, week_fee_sum=1000, month_fee_sum=1000)
