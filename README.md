@@ -64,6 +64,18 @@ Next change the protocol from mock to grpc.
 
 In orb now press 'refresh' to see your channels. If this doesn't work, you may need to restart the application to pick up the new config.
 
+# Resolution
+
+DPI, screen density and font scale can all be altered to match your preference.
+
+Examples:
+
+```
+KIVY_DPI=320 KIVY_METRICS_DENSITY=2 python3 main.py
+KIVY_DPI=240 KIVY_METRICS_DENSITY=1.5 python3 main.py
+KIVY_METRICS_FONTSCALE=1.2 python3 main.py
+```
+
 # Example scripts
 
 To write or execute scripts in Orb:
