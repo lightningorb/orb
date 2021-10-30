@@ -14,6 +14,8 @@
 #:import download_forwarding_history forwarding_history.download_forwarding_history
 #:import view_forwarding_history forwarding_history.view_forwarding_history
 #:import graph_fees_earned forwarding_history.graph_fees_earned
+#:import About screens.about.About
+#:import Rankings screens.rankings.Rankings
 ########################################################################################
 # MAIN
 ########################################################################################
@@ -92,12 +94,12 @@
                     on_press:  ConnectScreen().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
-                    text: "Console"
-                    on_press:  app.root.ids.sm.current = 'console'
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
                     text: "Ingest Invoices"
                     on_press: IngestInvoicesScreen().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Rankings"
+                    on_press: Rankings().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Forwarding History"
@@ -136,10 +138,20 @@
                     text: "Quit"
                     on_press: app_menu.close_all()
                     on_release: app.get_running_app().stop()
+                ContextMenuTextItem:
+                    text: "Console"
+                    on_press:  app.root.ids.sm.current = 'console'
+                    on_release: app_menu.close_all()
         AppMenuTextItem:
             text: "Scripts"
             id: scripts
-
+        AppMenuTextItem:
+            text: "Help"
+            ContextMenu:
+                ContextMenuTextItem:
+                    text: "About"
+                    on_press: app_menu.close_all()
+                    on_release: About().open()
 
 
 ########################################################################################

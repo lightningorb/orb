@@ -2,6 +2,7 @@ from routes import Routes
 from ui_actions import console_output
 import data_manager
 from traceback import print_exc
+import arrow
 
 class PaymentStatus:
     success = 0
@@ -64,6 +65,7 @@ def handle_error(inst, response, route, routes, pk=None):
             return f"Unknown error code {repr(code)}:"
 
 def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, outgoing_chan_id, last_hop_pubkey, max_paths):
+    from store import model
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * payment_request.num_satoshis / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
@@ -80,33 +82,66 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, o
     )
     has_next = False
     count = 0
+    payment = model.Payment(
+        amount=payment_request.num_satoshis,
+        dest=payment_request.destination,
+        fees=0,
+        succeeded=False,
+        timestamp=int(arrow.now().timestamp())
+    )
     while routes.has_next():
         if count > max_paths:
             return payment_request_raw, outgoing_chan_id, PaymentStatus.max_paths_exceeded
         count += 1
         has_next = True
         route = routes.get_next()
+        payment.save()
         if route:
+            hops = []
+            attempt = model.Attempt(payment=payment, weakest_link_pk='', code=0, succeeded=False)
+            attempt.save()
             for j, hop in enumerate(route.hops):
                 node_alias = data_manager.data_man.lnd.get_node_alias(
                     hop.pub_key
                 )
                 text = f"{j:<5}:        {node_alias}"
                 console_output(f'T{thread_n}: {text}')
-        try:
-            response = data_manager.data_man.lnd.send_payment(
-                payment_request, route
-            )
-        except:
-            console_output(f'T{thread_n}: {str(print_exc())}')
-            console_output(f"T{thread_n}: exception - removing invoice")
-            return payment_request_raw, outgoing_chan_id, PaymentStatus.exception
-        is_successful = response and response.failure.code == 0
-        if is_successful:
-            console_output(f"T{thread_n}: SUCCESS")
-            return payment_request_raw, outgoing_chan_id, PaymentStatus.success
-        else:
-            handle_error(inst, response, route, routes)
+                # no actual need for hops for now
+                # p = model.Hop(
+                #     pk=hop.pub_key,
+                #     succeeded=False,
+                #     attempt=attempt
+                # )
+                # p.save()
+            try:
+                response = data_manager.data_man.lnd.send_payment(
+                    payment_request, route
+                )
+            except:
+                console_output(f'T{thread_n}: {str(print_exc())}')
+                console_output(f"T{thread_n}: exception - removing invoice")
+                return payment_request_raw, outgoing_chan_id, PaymentStatus.exception
+            is_successful = response and response.failure.code == 0
+            if is_successful:
+                console_output(f"T{thread_n}: SUCCESS")
+                attempt.succeeded = True
+                payment.succeeded = True
+                payment.fees = route.total_fees
+                for hop in attempt.hops:
+                    hop.succeeded = True
+                    hop.save()
+                attempt.save()
+                payment.save()
+                return payment_request_raw, outgoing_chan_id, PaymentStatus.success
+            else:
+                attempt.code = response.failure.code if response else -1000
+                attempt.weakest_link_pk = (
+                    get_failure_source_pubkey(response, route)
+                    if response
+                    else route.hops[-1].pub_key
+                )
+                attempt.save()
+                handle_error(inst, response, route, routes)
     if not has_next:
         console_output(f"T{thread_n}: No routes found!")
         return payment_request_raw, outgoing_chan_id, PaymentStatus.no_routes

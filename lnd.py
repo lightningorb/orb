@@ -4,6 +4,7 @@ import os
 from functools import lru_cache
 from traceback import print_exc
 from lnd_base import LndBase
+from store.db_cache import aliases_cache
 
 try:
     import grpc
@@ -64,7 +65,7 @@ class Lnd(LndBase):
         request = ln.SignMessageRequest(msg=message.encode())
         return self.stub.SignMessage(request)
 
-    @lru_cache(maxsize=None)
+    @aliases_cache
     def get_node_alias(self, pub_key):
         return self.stub.GetNodeInfo(
             ln.NodeInfoRequest(pub_key=pub_key, include_channels=False)
@@ -105,16 +106,12 @@ class Lnd(LndBase):
         return self.stub.ListInvoices(request)
 
     def decode_payment_request(self, payment_request):
-        request = ln.PayReqString(
-            pay_req=payment_request,
-        )
+        request = ln.PayReqString(pay_req=payment_request)
         return self.stub.DecodePayReq(request)
 
     def get_channels(self, active_only=False, use_cache=True):
         return self.stub.ListChannels(
-            ln.ListChannelsRequest(
-                active_only=active_only,
-            )
+            ln.ListChannelsRequest(active_only=active_only)
         ).channels
 
     @lru_cache(maxsize=None)
@@ -215,9 +212,8 @@ class Lnd(LndBase):
 
     def close_channel(self, channel_point, force, sat_per_vbyte):
         request = ln.CloseChannelRequest(
-            channel_point=channel_point,
-            force=force,
-            sat_per_vbyte=sat_per_vbyte)
+            channel_point=channel_point, force=force, sat_per_vbyte=sat_per_vbyte
+        )
         return self.stub.CloseChannel(request)
 
     def new_address(self):
@@ -251,7 +247,9 @@ class Lnd(LndBase):
         request = ln.ChannelEventSubscription()
         return self.stub.SubscribeChannelEvents(request)
 
-    def get_forwarding_history(self, start_time=None, end_time=None, index_offset=0, num_max_events=100):
+    def get_forwarding_history(
+        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
+    ):
         request = ln.ForwardingHistoryRequest(
             start_time=start_time,
             end_time=end_time,

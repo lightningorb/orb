@@ -159,13 +159,24 @@ class Lnd(LndBase):
 
     def get_htlc_events(self):
         url = f"{self.fqdn}/v2/router/htlcevents"
-        return requests.get(url, headers=self.headers, verify=self.cert_path, stream=True)
+        return requests.get(
+            url, headers=self.headers, verify=self.cert_path, stream=True
+        )
 
     def get_channel_events(self):
         pass
 
-    def get_forwarding_history(self, start_time=None, end_time=None, index_offset=0, num_max_events=100):
-        data = dict(start_time=start_time, end_time=end_time, index_offset=index_offset, num_max_events=num_max_events)
+    def get_forwarding_history(
+        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
+    ):
+        data = dict(
+            start_time=start_time,
+            end_time=end_time,
+            index_offset=index_offset,
+            num_max_events=num_max_events,
+        )
         url = f"{self.fqdn}/v1/switch"
-        r = requests.post(url, headers=self.headers, verify=self.cert_path, data=json.dumps(data))
+        r = requests.post(
+            url, headers=self.headers, verify=self.cert_path, data=json.dumps(data)
+        )
         return Munch.fromDict(r.json())

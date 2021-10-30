@@ -14,7 +14,9 @@ from channel_selector import get_low_inbound_channel
 from pay_logic import pay_thread, PaymentStatus
 
 avoid = Counter()
-pk_ignore = set(['021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'])
+LOOP = '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
+GAMMA = '02769a851d7d11eaeaef899b2ed8c34fd387828fa13f6fe27928de2b9fa75a0cd8'
+pk_ignore = set([LOOP, GAMMA])
 chan_ignore = set([])
 
 class PaymentUIOption:
