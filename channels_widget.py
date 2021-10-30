@@ -11,6 +11,8 @@ from node import Node
 import data_manager
 from utils import pref
 from prefs import is_mock
+from autobalance import Autobalance
+
 
 class ChannelsWidget(ScatterLayout):
     attribute_editor = ObjectProperty(None)
@@ -23,6 +25,7 @@ class ChannelsWidget(ScatterLayout):
         if not is_mock():
             self.htlcs_thread.start()
 
+        self.autobalance = Autobalance()
         self.channels_thread = ChannelsThread(inst=self)
         self.channels_thread.daemon = True
         if not is_mock():
@@ -39,8 +42,11 @@ class ChannelsWidget(ScatterLayout):
             if not is_mock():
                 self.add_channel(channel=c, caps=caps)
         if not is_mock():
-            self.node = Node(text=self.info.alias, attribute_editor=self.attribute_editor)
+            self.node = Node(
+                text=self.info.alias, attribute_editor=self.attribute_editor
+            )
             self.ids.relative_layout.add_widget(self.node)
+            self.ids.relative_layout.add_widget(self.autobalance)
             self.bind(pos=self.update_rect, size=self.update_rect)
 
     def add_channel(self, channel, caps=None):
@@ -69,7 +75,10 @@ class ChannelsWidget(ScatterLayout):
 
     def update_rect(self, *args):
         if self.node:
-            self.node.pos = (-(int(pref('display.node_width')) / 2), -(int(pref('display.node_height')) / 2))
+            self.node.pos = (
+                -(int(pref('display.node_width')) / 2),
+                -(int(pref('display.node_height')) / 2),
+            )
         for i, cn in enumerate(
             sorted(
                 self.cn.values(),

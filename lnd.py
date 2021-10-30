@@ -311,3 +311,9 @@ class Lnd(LndBase):
     def fee_report(self):
         request = ln.FeeReportRequest()
         return self.stub.FeeReport(request)
+
+    def cancel_invoice(self, payment_hash):
+        payment_hash_bytes = self.hex_string_to_bytes(payment_hash)
+        return self.invoices_stub.CancelInvoice(
+            invoices.CancelInvoiceMsg(payment_hash=payment_hash_bytes)
+        )

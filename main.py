@@ -5,6 +5,7 @@ Config.set('graphics', 'window_state', 'maximized')
 from orb_app import OrbApp
 from kivy.app import App
 
+from autobalance import *
 from attribute_editor import *
 from channel_widget import *
 from screens.close_channel import *

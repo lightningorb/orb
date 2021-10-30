@@ -14,11 +14,17 @@ def set_conf_defaults(config):
     config.set("display", "channels_background_color", '(.2, .2, .3, 1)')
     config.set("display", "1m_color", '[100 / 255, 245 / 255, 100 / 255, 1]')
     config.set("display", "node_background_color", '[80 / 255, 80 / 255, 80 / 255, 1]')
-    config.set("display", "node_selected_background_color", '[150 / 255, 150 / 255, 150 / 255, 1]')
+    config.set(
+        "display",
+        "node_selected_background_color",
+        '[150 / 255, 150 / 255, 150 / 255, 1]',
+    )
     config.set("display", "node_width", 70)
     config.set("display", "node_height", 100)
     config.set("display", "node_alias_font_size", '80sp')
     config.add_section("audio")
     config.set("audio", "volume", 0.2)
+    config.add_section("autobalance")
+    config.set("autobalance", "enable", 0)
     config.add_section("debug")
     config.set("debug", "layouts", 0)
