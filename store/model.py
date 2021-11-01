@@ -2,6 +2,7 @@ from kivy.app import App
 from peewee import *
 import os
 from functools import lru_cache
+import arrow
 
 
 @lru_cache(None)
@@ -13,7 +14,7 @@ def get_db(name):
 
 
 class FowardEvent(Model):
-    timestamp = TimestampField()
+    timestamp = IntegerField()
     chan_id_in = IntegerField()
     chan_id_out = IntegerField()
     amt_in = IntegerField()
@@ -24,12 +25,18 @@ class FowardEvent(Model):
     amt_out_msat = IntegerField()
     timestamp_ns = IntegerField()
 
+    def __str__(self):
+        return (
+            f'{self.chan_id_in} -> {self.chan_id_out} on'
+            f' {arrow.get(self.timestamp).format()} ({self.timestamp})'
+        )
+
     class Meta:
-        database = get_db('fowarding_events')
+        database = get_db('forwarding_events_v2')
 
 
 def create_fowarding_tables():
-    db = get_db('fowarding_events')
+    db = get_db('forwarding_events_v2')
     try:
         db.create_tables([FowardEvent])
     except:
