@@ -10,6 +10,7 @@ from kivy.uix.boxlayout import BoxLayout
 from threading import Thread
 import humanize
 import arrow
+from datetime import timedelta
 
 from decorators import guarded
 from traceback import print_exc
@@ -30,10 +31,14 @@ class Invoice(BoxLayout):
         self.schedule = Clock.schedule_interval(self.update, 1)
 
     def update(self, *args):
-        self.ids.expiry_label.text = humanize.precisedelta(
-            arrow.get(self.timestamp + self.expiry) - arrow.now(),
-            minimum_unit="seconds",
-        )
+        zero = timedelta(hours=0, minutes=0, seconds=0)
+        delta = arrow.get(self.timestamp + self.expiry) - arrow.now()
+        if delta < zero:
+            self.ids.expiry_label.text = 'expired'
+        else:
+            self.ids.expiry_label.text = humanize.precisedelta(
+                delta, minimum_unit="seconds"
+            )
 
     def dismiss(self):
         Clock.unschedule(self.schedule)
