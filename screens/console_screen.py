@@ -23,6 +23,7 @@ from kivy.properties import ObjectProperty
 import ui_actions
 from traceback import format_exc
 
+
 class ConsoleSplitter(Splitter):
 
     input = ObjectProperty(None)
@@ -50,8 +51,12 @@ class ConsoleSplitter(Splitter):
 
     def on_touch_move(self, touch):
         if self.pressed:
-            self.input.height = self.input_pressed_height + (self.pressed_pos[1] - touch.pos[1])
-            self.output.height = self.output_pressed_height - (self.pressed_pos[1] - touch.pos[1])
+            self.input.height = self.input_pressed_height + (
+                self.pressed_pos[1] - touch.pos[1]
+            )
+            self.output.height = self.output_pressed_height - (
+                self.pressed_pos[1] - touch.pos[1]
+            )
             self.input.size_hint = (None, None)
             self.output.size_hint = (None, None)
             return True
@@ -69,13 +74,11 @@ class ConsoleScreen(Screen):
             # when 'output' changes on the console_input
             # then update 'output' on the console_output
             self.ids.console_input.bind(output=self.ids.console_output.setter("output"))
-            try:
-                # retrieve the code stored in the prefs, and set it
-                # in the console input
-                code = data_manager.data_man.store.get("console_input").get("text", "")
-                self.ids.console_input.text = code
-            except:
-                pass
+            # retrieve the code stored in the prefs, and set it
+            # in the console input
+            self.ids.console_input.text = data_manager.data_man.store.get(
+                "console_input"
+            ).get("text", "")
             app = App.get_running_app()
             app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
 
@@ -216,18 +219,19 @@ class ConsoleInput(CodeInput):
         self.output = ''
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
-        to_save = self.text
-        if text:
-            to_save += text
-        do_eval = keycode[1] == "enter" and self.selection_text
-        data_manager.data_man.store.put("console_input", text=to_save)
-        if do_eval:
-            self.exec(self.selection_text)
-            return True
-        else:
-            return super(ConsoleInput, self).keyboard_on_key_down(
-                window, keycode, text, modifiers
-            )
+        if text != '\u0135':
+            print('self.text', self.text)
+            print('text', text)
+            to_save = self.text + (text or '')
+            print('to_save', to_save)
+            do_eval = keycode[1] == "enter" and self.selection_text
+            data_manager.data_man.store.put("console_input", text=to_save)
+            if do_eval:
+                self.exec(self.selection_text)
+                return True
+        return super(ConsoleInput, self).keyboard_on_key_down(
+            window, keycode, text, modifiers
+        )
 
 
 class ConsoleOutput(TextInput):
