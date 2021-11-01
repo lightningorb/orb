@@ -317,3 +317,8 @@ class Lnd(LndBase):
         return self.invoices_stub.CancelInvoice(
             invoices.CancelInvoiceMsg(payment_hash=payment_hash_bytes)
         )
+
+    def get_pending_channels(self):
+        request = ln.PendingChannelsRequest()
+        response = self.stub.PendingChannels(request)
+        return response
