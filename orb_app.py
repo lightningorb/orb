@@ -7,6 +7,7 @@ from pathlib import Path
 from monkey_patch import do_monkey_patching
 from conf_defaults import set_conf_defaults
 from audio_manager import audio_manager
+from decorators import guarded
 
 do_monkey_patching()
 
@@ -20,7 +21,11 @@ class OrbApp(MDApp):
         currently not used.
         """
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if path not in ["orb.kv", "context_menu.kv", "app_menu.kv"] and "tutes" not in path and 'dist' not in path:
+            if (
+                path not in ["orb.kv", "context_menu.kv", "app_menu.kv"]
+                and "tutes" not in path
+                and 'dist' not in path
+            ):
                 Builder.load_file(path)
 
     def build(self):
@@ -60,3 +65,7 @@ class OrbApp(MDApp):
             data_manager.DataManager.save_cert(value)
         # data_manager.data_man = data_manager.DataManager(config=self.config)
         self.main_layout.do_layout()
+
+    @guarded
+    def run(self, *args):
+        super(OrbApp, self).run(*args)

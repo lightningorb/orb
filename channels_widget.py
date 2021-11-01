@@ -12,11 +12,13 @@ import data_manager
 from utils import pref
 from prefs import is_mock
 from autobalance import Autobalance
+from decorators import guarded
 
 
 class ChannelsWidget(ScatterLayout):
     attribute_editor = ObjectProperty(None)
 
+    @guarded
     def __init__(self, *args, **kwargs):
         super(ChannelsWidget, self).__init__(*args, **kwargs)
 
@@ -65,6 +67,7 @@ class ChannelsWidget(ScatterLayout):
         max_cap = max([int(c.capacity) for c in channels])
         return {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}
 
+    @guarded
     def get_channels(self):
         channels = sorted(
             self.lnd.get_channels(),
