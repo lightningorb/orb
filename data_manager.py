@@ -9,6 +9,7 @@ class DataManager:
         self.init(config=config)
 
     def init(self, config):
+        self.menu_visible = False
         if config["lnd"]["protocol"] == "grpc":
             try:
                 from lnd import Lnd as grpc_lnd

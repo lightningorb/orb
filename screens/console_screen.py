@@ -118,23 +118,13 @@ class ConsoleInput(CodeInput):
 
     def __init__(self, *args, **kwargs):
         super(ConsoleInput, self).__init__(lexer=CythonLexer(), *args, **kwargs)
-        self.tapped = 0
-        self.double_tapped = False
 
     def on_touch_down(self, touch):
-        """
-        Sadly, the context menu has focus issues with a TextInput underneath it,
-        so to fix this issue, the console's TextInput needs to be enabled by
-        double-tapping it.
-        """
+        import data_manager
+
         if self.collide_point(*touch.pos):
-            if time() - self.tapped < 0.3:
-                self.double_tapped = True
-            self.tapped = time()
-            if self.double_tapped:
-                return super(ConsoleInput, self).on_touch_down(touch)
-            return False
-        self.double_tapped = False
+            if data_manager.menu_visible:
+                return False
         return super(ConsoleInput, self).on_touch_down(touch)
 
     def exec(self, text):
@@ -220,10 +210,7 @@ class ConsoleInput(CodeInput):
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         if text != '\u0135':
-            print('self.text', self.text)
-            print('text', text)
             to_save = self.text + (text or '')
-            print('to_save', to_save)
             do_eval = keycode[1] == "enter" and self.selection_text
             data_manager.data_man.store.put("console_input", text=to_save)
             if do_eval:
@@ -236,3 +223,11 @@ class ConsoleInput(CodeInput):
 
 class ConsoleOutput(TextInput):
     output = StringProperty("")
+
+    def on_touch_down(self, touch):
+        import data_manager
+
+        if self.collide_point(*touch.pos):
+            if data_manager.menu_visible:
+                return False
+        return super(ConsoleOutput, self).on_touch_down(touch)

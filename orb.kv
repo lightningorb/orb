@@ -24,6 +24,7 @@
 
 <MainLayout>:
     id: main_layout
+    menu_visible: any([view_context_menu.visible, scripts_context_menu.visible, app_context_menu.visible, lightning_context_menu.visible, help_context_menu.visible, onchain_context_menu.visible])
     orientation: 'vertical'
     canvas.before:
         Color:
@@ -62,9 +63,12 @@
 
         AppMenuTextItem:
             text: "View"
+            ContextMenu:
+                id: view_context_menu
         AppMenuTextItem:
             text: "Lightning"
             ContextMenu:
+                id: lightning_context_menu
                 ContextMenuTextItem:
                     text: "Channels"
                     on_release: app_menu.close_all()
@@ -119,6 +123,7 @@
         AppMenuTextItem:
             text: "On-Chain"
             ContextMenu:
+                id: onchain_context_menu
                 ContextMenuTextItem:
                     text: "New Address"
                     on_press: app_menu.close_all()
@@ -130,6 +135,7 @@
         AppMenuTextItem:
             text: "App"
             ContextMenu:
+                id: app_context_menu
                 ContextMenuTextItem:
                     text: "Settings"
                     on_press: app_menu.close_all()
@@ -145,9 +151,12 @@
         AppMenuTextItem:
             text: "Scripts"
             id: scripts
+            ContextMenu:
+                id: scripts_context_menu
         AppMenuTextItem:
             text: "Help"
             ContextMenu:
+                id: help_context_menu
                 ContextMenuTextItem:
                     text: "About"
                     on_press: app_menu.close_all()
