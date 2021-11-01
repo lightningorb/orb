@@ -3,6 +3,7 @@ import data_manager
 
 from io import StringIO
 
+from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
@@ -29,6 +30,24 @@ class ConsoleSplitter(Splitter):
         self.input_pressed_height = 0
         self.output_pressed_height = 0
 
+        def load_config(*args):
+            import data_manager
+
+            input_height = data_manager.data_man.store.get('console', {}).get(
+                'input_height', None
+            )
+            output_height = data_manager.data_man.store.get('console', {}).get(
+                'output_height', None
+            )
+
+            if input_height and output_height:
+                self.input.height = input_height
+                self.output.height = output_height
+                self.input.size_hint = (1, None)
+                self.output.size_hint = (1, None)
+
+        Clock.schedule_once(load_config, 1)
+
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.pressed = True
@@ -43,6 +62,8 @@ class ConsoleSplitter(Splitter):
         return super(ConsoleSplitter, self).on_touch_down(touch)
 
     def on_touch_move(self, touch):
+        import data_manager
+
         if self.pressed:
             self.input.height = self.input_pressed_height + (
                 self.pressed_pos[1] - touch.pos[1]
@@ -50,8 +71,13 @@ class ConsoleSplitter(Splitter):
             self.output.height = self.output_pressed_height - (
                 self.pressed_pos[1] - touch.pos[1]
             )
-            self.input.size_hint = (None, None)
-            self.output.size_hint = (None, None)
+            data_manager.data_man.store.put(
+                'console',
+                input_height=self.input.height,
+                output_height=self.output.height,
+            )
+            self.input.size_hint = (1, None)
+            self.output.size_hint = (1, None)
             return True
         return super(ConsoleSplitter, self).on_touch_move(touch)
 
