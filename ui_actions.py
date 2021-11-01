@@ -11,11 +11,13 @@ import data_manager
 
 mutex = Lock()
 
+
 def console_output(text):
     mutex.acquire()
     try:
-	    app = App.get_running_app()
-	    console = app.root.ids.sm.get_screen("console")
-	    console.print(text)
+        app = App.get_running_app()
+        if app.root:
+            console = app.root.ids.sm.get_screen("console")
+            console.print(text)
     finally:
         mutex.release()
