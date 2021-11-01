@@ -12,6 +12,8 @@ class Channel:
     remote_balance: Any
     chan_id: Any
     pending_htlcs: Any
+    total_satoshis_sent: Any
+    total_satoshis_received: Any
 
     def ListFields(self):
         return []
@@ -24,6 +26,7 @@ class Policy:
     max_htlc_msat: Any = 1000000
     time_lock_delta: Any = 44
     last_update: Any = '0'
+    fee_base_msat: Any = 1000
 
 
 Info = namedtuple("Info", "alias")
@@ -47,6 +50,8 @@ class Lnd(object):
                 remote_balance=250000,
                 remote_pubkey="a",
                 chan_id="5",
+                total_satoshis_sent=50000,
+                total_satoshis_received=50000,
             ),
             Channel(
                 capacity=1000000,
@@ -55,6 +60,8 @@ class Lnd(object):
                 remote_balance=400000,
                 remote_pubkey="b",
                 chan_id="5",
+                total_satoshis_sent=50000,
+                total_satoshis_received=50000,
             ),
             Channel(
                 capacity=1000000,
@@ -63,6 +70,8 @@ class Lnd(object):
                 remote_balance=500000,
                 remote_pubkey="c",
                 chan_id="5",
+                total_satoshis_sent=50000,
+                total_satoshis_received=50000,
             ),
             Channel(
                 capacity=1000000,
@@ -71,6 +80,8 @@ class Lnd(object):
                 remote_balance=500000,
                 remote_pubkey="d",
                 chan_id="5",
+                total_satoshis_sent=50000,
+                total_satoshis_received=50000,
             ),
             Channel(
                 capacity=1000000,
@@ -79,6 +90,8 @@ class Lnd(object):
                 remote_balance=500000,
                 remote_pubkey="e",
                 chan_id="5",
+                total_satoshis_sent=50000,
+                total_satoshis_received=50000,
             ),
             Channel(
                 capacity=1000000,
@@ -87,6 +100,8 @@ class Lnd(object):
                 remote_balance=500000,
                 remote_pubkey="f",
                 chan_id="5",
+                total_satoshis_sent=50000,
+                total_satoshis_received=50000,
             ),
         ]
 
@@ -97,10 +112,10 @@ class Lnd(object):
         return x
 
     def get_policy_to(self, x):
-        return Policy(fee_rate_milli_msat=1000)
+        return Policy(fee_rate_milli_msat=1000, fee_base_msat=1000)
 
     def get_policy_from(self, x):
-        return Policy(fee_rate_milli_msat=1000)
+        return Policy(fee_rate_milli_msat=1000, fee_base_msat=1000)
 
     def get_balance(self):
         return Balance(total_balance=0, confirmed_balance=0, unconfirmed_balance=0)
