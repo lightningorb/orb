@@ -13,6 +13,7 @@ mutex = Lock()
 
 
 def console_output(text):
+    print(text)
     mutex.acquire()
     try:
         app = App.get_running_app()
