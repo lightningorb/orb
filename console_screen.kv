@@ -7,15 +7,16 @@
     disabled: False
     multiline: True
     size_hint_y: 1
-    background_color: (150 / 255, 155 / 255, 160 / 255, 1) if self.focus else (140 / 255, 145 / 255, 150 / 255, 1)
+    background_color: (14/255,14/255,15/255,255/255) if self.focus else (13/255,13/255,14/255,255/255)
 
 <ConsoleOutput>:
     id: console_output
     text: root.output
     #disabled: 1
+    foreground_color: (0.9, 0.9, 0.9, 1)
     multiline: True
     size_hint_y: 1
-    background_color: (150 / 255, 155 / 255, 160 / 255, 1)
+    background_color: (14/255,14/255,15/255,255/255) if self.focus else (13/255,13/255,14/255,255/255)
 
 <ConsoleSplitter@Splitter>:
     horizontal: True

@@ -3,24 +3,17 @@ import data_manager
 
 from io import StringIO
 
-from kivy.uix.actionbar import ContextualActionView
 from kivy.uix.button import Button
-from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
-from kivy.properties import BooleanProperty
 from kivy.uix.popup import Popup
-from kivy.uix.label import Label
 from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.app import App
-from time import time
 from kivy.uix.codeinput import CodeInput
 from pygments.lexers import CythonLexer
 from kivy.uix.splitter import Splitter
 from kivy.properties import ObjectProperty
-
-import ui_actions
 from traceback import format_exc
 
 
@@ -117,7 +110,9 @@ class ConsoleInput(CodeInput):
     output = StringProperty("")
 
     def __init__(self, *args, **kwargs):
-        super(ConsoleInput, self).__init__(lexer=CythonLexer(), *args, **kwargs)
+        super(ConsoleInput, self).__init__(
+            style_name='monokai', lexer=CythonLexer(), *args, **kwargs
+        )
 
     def on_touch_down(self, touch):
         import data_manager
