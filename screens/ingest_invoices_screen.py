@@ -1,3 +1,4 @@
+from kivy.clock import Clock
 from kivy.clock import mainthread
 from kivy.event import EventDispatcher
 from kivy.uix.widget import Widget
@@ -25,7 +26,17 @@ class Invoice(BoxLayout):
 
     def __init__(self, *args, **kwargs):
         super(Invoice, self).__init__(*args, **kwargs)
-        self.ids.expiry_label.text = humanize.precisedelta(arrow.get(self.timestamp + self.expiry) - arrow.get(self.timestamp), minimum_unit="seconds")
+
+        self.schedule = Clock.schedule_interval(self.update, 1)
+
+    def update(self, *args):
+        self.ids.expiry_label.text = humanize.precisedelta(
+            arrow.get(self.timestamp + self.expiry) - arrow.now(),
+            minimum_unit="seconds",
+        )
+
+    def dismiss(self):
+        Clock.unschedule(self.schedule)
 
 
 class IngestInvoicesScreen(PopupDropShadow):
@@ -37,6 +48,11 @@ class IngestInvoicesScreen(PopupDropShadow):
         self.ids.scroll_view.clear_widgets()
         for inv in self.load():
             self.ids.scroll_view.add_widget(Invoice(**inv))
+
+    def dismiss(self, *args):
+        for invoices in self.ids.scroll_view.children:
+            invoices.dismiss()
+        return super(IngestInvoicesScreen, self).dismiss(*args)
 
     @guarded
     def clear_store(self):
@@ -53,7 +69,6 @@ class IngestInvoicesScreen(PopupDropShadow):
         return invoices
 
     def do_ingest(self, text):
-
         @mainthread
         def add_invoice_widget(inv):
             self.ids.scroll_view.add_widget(inv)
