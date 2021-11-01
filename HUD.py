@@ -88,6 +88,11 @@ class HUD2(BorderedLabel):
             tot = int(bal.total_balance)
             conf = int(bal.confirmed_balance)
             unconf = int(bal.unconfirmed_balance)
+            pending_channels = lnd.get_pending_channels()
+            pending_open = sum(
+                channel.channel.local_balance
+                for channel in pending_channels.pending_open_channels
+            )
 
             hud = f"Chain Balance: S{tot:,}\n"
             if tot != conf:
@@ -104,8 +109,13 @@ class HUD2(BorderedLabel):
                 )
             hud += f"Remote Balance: S{int(cbal.remote_balance.sat):,}\n"
 
+            if pending_open:
+                hud += f'Pending Open: S{pending_open:,}\n'
+
             total = tot + int(
-                cbal.local_balance.sat + cbal.unsettled_remote_balance.sat
+                cbal.local_balance.sat
+                + cbal.unsettled_remote_balance.sat
+                + pending_open
             )
 
             hud += f"Total Balance: S{total:,}"
