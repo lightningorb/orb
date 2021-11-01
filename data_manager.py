@@ -36,7 +36,7 @@ class DataManager:
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
         from store import model
 
-        model.get_db('fowarding_events').connect()
+        model.get_db('forwarding_events_v2').connect()
         model.get_db('path_finding').connect()
         model.get_db('node_rank').connect()
         model.get_db('aliases').connect()
