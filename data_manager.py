@@ -39,11 +39,9 @@ class DataManager:
 
         model.get_db('forwarding_events_v2').connect()
         model.get_db('path_finding').connect()
-        model.get_db('node_rank').connect()
         model.get_db('aliases').connect()
         model.create_path_finding_tables()
         model.create_fowarding_tables()
-        model.create_node_rank_tables()
         model.create_aliases_tables()
 
     @property

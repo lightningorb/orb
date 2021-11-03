@@ -1,4 +1,6 @@
 from collections import defaultdict
+import json
+from ui_actions import console_output
 
 
 def get_payments():
@@ -34,6 +36,51 @@ def print_logs():
                 )
 
 
+def export(path):
+    payments = []
+    hops = []
+    for r in get_payments().iterator():
+        if not r.succeeded:
+            continue
+        attempts = []
+        for a in r.attempts:
+            hops = []
+            for h in a.hops:
+                data = h.__data__
+                del data['id']
+                del data['attempt']
+                hops.append(dict(data=data))
+            data = a.__data__
+            del data['id']
+            del data['payment']
+            attempts.append(dict(data=data, hops=hops))
+        data = r.__data__
+        del data['id']
+        payments.append(dict(data=data, attempts=attempts))
+    with open(path, 'w') as f:
+        f.write(json.dumps(payments, indent=4))
+    console_output(f'exported to: {path}')
+
+
+def ingest(path):
+    from store import model
+
+    console_output(f'Ingesting {path}')
+
+    with open(path, 'r') as f:
+        payments = json.loads(f.read())
+        for p in payments:
+            payment = model.Payment(**p['data'])
+            payment.save()
+            for a in p['attempts']:
+                attempt = model.Attempt(**a['data'], payment=payment)
+                attempt.save()
+                for h in a['hops']:
+                    hop = model.Hop(**h['data'], attempt=attempt)
+                    hop.save()
+    console_output('Ingestion done. Re-open the Rankings window.')
+
+
 def count_successes_failures():
     import data_manager
 
@@ -61,3 +108,7 @@ def count_successes_failures():
         key=lambda x: x[1],
         reverse=True,
     )
+
+
+def ingest_db(path):
+    pass

@@ -1,9 +1,100 @@
-########################################################################################
-# CONNECT
-########################################################################################
+#:import dp kivy.metrics.dp
+#:import RankingsFileChooser screens.rankings.RankingsFileChooser
+#:import App kivy.app.App
+#:import os os
+
+
+<RankingsFileChooser>:
+    title: 'Import DB'
+    size_hint: [.7,.7]
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        FileChooserIconView:
+            size_hint: [1,1]
+            id: filechooser
+            path: App.get_running_app().user_data_dir
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: None, None
+            height: dp(30)
+            MDRaisedButton:
+                text: 'Ingest'
+                size_hint_x: None
+                width: 30
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
+            MDRaisedButton:
+                text: 'Cancel'
+                size_hint_x: None
+                width: 30
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.dismiss()
+
+
+<RankingsExportPath>:
+    title: 'Export Rankings DB'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: None, None
+    width: dp(700)
+    height: dp(200)
+    BoxLayout:
+        orientation: 'vertical'
+        MDTextField:
+            id: path
+            text: os.path.join(App.get_running_app().user_data_dir, 'path_finding.json')
+            helper_text: 'Export path'
+            helper_text_mode: "persistent"
+        Splitter:
+            horizontal: True
+            height: dp(50)
+            size_hint_y: None
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: None, None
+            height: dp(30)
+            MDRaisedButton:
+                text: 'Export'
+                size_hint_x: None
+                width: dp(30)
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.selected_path = path.text; root.dismiss()
+            MDRaisedButton:
+                text: 'Cancel'
+                size_hint_x: None
+                width: dp(30)
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.dismiss()
 
 <Rankings>:
     title: ''
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [.9, .9]
+    BoxLayout:
+        id: box_layout
+        orientation: 'vertical'
+        ActionBar:
+            pos_hint: {'top':1}
+            ActionView:
+                use_separator: False
+                ActionGroup:
+                    text: 'File' 
+                    mode: 'spinner'
+                    ActionButton:
+                        text: 'Export DB'
+                        on_release: root.export()
+                    ActionButton:
+                        text: 'Ingest DB'
+                        on_release: root.ingest()
+                ActionPrevious:
+                    title: 'Rankings'
+                    app_icon: ''
+                    with_previous: False
+

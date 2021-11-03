@@ -107,12 +107,12 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, o
                 text = f"{j:<5}:        {node_alias}"
                 console_output(f'T{thread_n}: {text}')
                 # no actual need for hops for now
-                # p = model.Hop(
-                #     pk=hop.pub_key,
-                #     succeeded=False,
-                #     attempt=attempt
-                # )
-                # p.save()
+                p = model.Hop(
+                    pk=hop.pub_key,
+                    succeeded=False,
+                    attempt=attempt
+                )
+                p.save()
             try:
                 response = data_manager.data_man.lnd.send_payment(
                     payment_request, route

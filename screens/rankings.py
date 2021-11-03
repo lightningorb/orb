@@ -1,3 +1,4 @@
+from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.metrics import dp
 from popup_drop_shadow import PopupDropShadow
@@ -6,10 +7,23 @@ from decorators import guarded
 from kivymd.uix.datatables import MDDataTable
 
 
+class RankingsFileChooser(PopupDropShadow):
+
+    selected_path = StringProperty('')
+
+
+class RankingsExportPath(PopupDropShadow):
+
+    selected_path = StringProperty('')
+
+
 class Rankings(PopupDropShadow):
     @guarded
     def __init__(self, *args):
         super(Rankings, self).__init__(*args)
+
+    def open(self, *args):
+        super(Rankings, self).open(*args)
         from store.node_rank import count_successes_failures
 
         row_data = count_successes_failures()
@@ -29,9 +43,9 @@ class Rankings(PopupDropShadow):
                 sorted_order="ASC",
                 elevation=2,
             )
-            self.add_widget(self.data_tables)
+            self.ids.box_layout.add_widget(self.data_tables)
         else:
-            self.add_widget(
+            self.ids.box_layout.add_widget(
                 Label(
                     text=(
                         'This feature ranks nodes by how predictable\n'
@@ -45,3 +59,27 @@ class Rankings(PopupDropShadow):
     @guarded
     def sort_on_signal(self, data):
         return zip(*sorted(enumerate(data), key=lambda l: l[1][1]))
+
+    @guarded
+    def ingest(self):
+        dialog = RankingsFileChooser()
+        dialog.open()
+
+        def do_ingest(widget, path):
+            from store import node_rank
+
+            node_rank.ingest(path)
+
+        dialog.bind(selected_path=do_ingest)
+
+    @guarded
+    def export(self):
+        dialog = RankingsExportPath()
+        dialog.open()
+
+        def do_export(widget, path):
+            from store import node_rank
+
+            node_rank.export(path)
+
+        dialog.bind(selected_path=do_export)

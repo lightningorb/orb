@@ -4,6 +4,8 @@ import os
 from functools import lru_cache
 import arrow
 
+path_finding_db_name = 'path_finding'
+
 
 @lru_cache(None)
 def get_db(name):
@@ -48,10 +50,10 @@ class Payment(Model):
     dest = CharField()
     fees = IntegerField()
     succeeded = BooleanField()
-    timestamp = TimestampField()
+    timestamp = IntegerField()
 
     class Meta:
-        database = get_db('path_finding')
+        database = get_db(path_finding_db_name)
 
 
 class Attempt(Model):
@@ -61,7 +63,7 @@ class Attempt(Model):
     payment = ForeignKeyField(Payment, backref='attempts')
 
     class Meta:
-        database = get_db('path_finding')
+        database = get_db(path_finding_db_name)
 
 
 class Hop(Model):
@@ -70,31 +72,13 @@ class Hop(Model):
     attempt = ForeignKeyField(Attempt, backref='hops')
 
     class Meta:
-        database = get_db('path_finding')
+        database = get_db(path_finding_db_name)
 
 
 def create_path_finding_tables():
-    db = get_db('path_finding')
+    db = get_db(path_finding_db_name)
     try:
         db.create_tables([Payment, Attempt, Hop])
-    except:
-        pass
-
-
-class Node(Model):
-    pk = CharField()
-    successes = IntegerField()
-    failures = IntegerField()
-    rank = IntegerField()
-
-    class Meta:
-        database = get_db('node_rank')
-
-
-def create_node_rank_tables():
-    db = get_db('node_rank')
-    try:
-        db.create_tables([Node])
     except:
         pass
 
