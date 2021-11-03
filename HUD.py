@@ -8,7 +8,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-from decorators import guarded
+from decorators import guarded, silent
 import data_manager
 import threading
 import requests
@@ -45,7 +45,7 @@ class HUD1(BorderedLabel):
         Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
-    @guarded
+    @silent
     def get_lnd_data(self, *args):
         @mainthread
         def update_gui(text):
@@ -75,7 +75,7 @@ class HUD2(BorderedLabel):
         Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
-    @guarded
+    @silent
     def get_lnd_data(self, *args):
         @mainthread
         def update_gui(text):
@@ -162,9 +162,9 @@ class HUD4(FloatLayout, Hideable):
             self.line.points = points
         self.show()
 
-    @guarded
+    @silent
     def update_rect(self, *args):
-        @guarded
+        @silent
         def func():
             # this probably shouldn't be in update_rect
             d = requests.get(
@@ -189,7 +189,7 @@ class HUD4(FloatLayout, Hideable):
         threading.Thread(target=func).start()
 
     def update_price(self, *args):
-        @guarded
+        @silent
         def func():
             rate = int(
                 requests.get(
@@ -215,7 +215,7 @@ class HUD5(BorderedLabel):
             self.hud = text
             self.show()
 
-        @guarded
+        @silent
         def func():
             fees = requests.get("https://mempool.space/api/v1/fees/recommended").json()
             text = f"""\
