@@ -1,5 +1,6 @@
 from collections import namedtuple
 from dataclasses import dataclass
+from munch import Munch
 from typing import Any
 
 
@@ -130,3 +131,24 @@ class Lnd(object):
 
     def fee_report(self):
         return FeeReport(day_fee_sum=1000, week_fee_sum=1000, month_fee_sum=1000)
+
+    def get_pending_channels(self):
+        m = Munch.fromDict(
+            dict(
+                pending_open_channels=[
+                    dict(
+                        channel=Channel(
+                            capacity=1000000,
+                            pending_htlcs=[],
+                            local_balance=500000,
+                            remote_balance=500000,
+                            remote_pubkey="f",
+                            chan_id="5",
+                            total_satoshis_sent=50000,
+                            total_satoshis_received=50000,
+                        )
+                    )
+                ]
+            )
+        )
+        return m
