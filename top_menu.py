@@ -23,18 +23,37 @@ class TopMenu(AppMenu):
         for widget in self.script_widgets:
             menu.submenu.remove_widget(widget)
 
+        def add_to_tree(d, c, t, p):
+            if len(c[d:]) > 1:
+                if not t.get(c[d]):
+                    widget = ContextMenuTextItem(text=c[d])
+                    t[c[d]] = widget
+                    widget.add_widget(ContextMenu())
+                    p.add_widget(widget)
+                    widget.submenu._on_visible(False)
+                    if d == 0:
+                        self.script_widgets.append(widget)
+                else:
+                    widget = t[c[d]]
+                add_to_tree(d + 1, c, t[c[d]], widget.submenu)
+            else:
+                tm = self
+
+                def run(self, *args):
+                    app = App.get_running_app()
+                    app.root.ids.app_menu.close_all()
+                    tm.exec(scripts[self.full_name])
+                    return True
+
+                widget = ContextMenuTextItem(text=c[d], on_release=run)
+                widget.full_name = '>'.join(c)
+                p.add_widget(widget)
+                self.script_widgets.append(widget)
+
+        tree = {}
         for script in scripts:
-            tm = self
-
-            def run(self, *args):
-                app = App.get_running_app()
-                app.root.ids.app_menu.close_all()
-                tm.exec(scripts[self.text])
-                return True
-
-            widget = ContextMenuTextItem(text=script, on_release=run)
-            self.script_widgets.append(widget)
-            menu.submenu.add_widget(widget)
+            components = script.split('>')
+            add_to_tree(d=0, c=components, t=tree, p=menu.submenu)
         menu.submenu._on_visible(False)
 
     def exec(self, text):

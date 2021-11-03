@@ -189,7 +189,10 @@ class ConsoleInput(CodeInput):
 
         def do_install(_, *args):
             sc = data_manager.data_man.store.get("scripts", {})
-            sc[inst.ids.script_name.text] = self.text
+            script_name = '>'.join(
+                x.strip() for x in inst.ids.script_name.text.split('>')
+            )
+            sc[script_name] = self.text
             data_manager.data_man.store.put("scripts", **sc)
             app = App.get_running_app()
             app.root.ids.app_menu.populate_scripts()
@@ -230,6 +233,23 @@ class ConsoleInput(CodeInput):
         self.output = ''
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
+        meta = 'meta' in modifiers
+        direction = (
+            keycode[1]
+            if keycode and keycode[1] in ('left', 'right', 'up', 'down')
+            else False
+        )
+        if meta and direction:
+            if direction == 'left':
+                line = self.text.split('\n')[self.cursor_row]
+                for i, c in enumerate(line, 1):
+                    if c not in (' ', '\t'):
+                        self._cursor = (i, self._cursor[1])
+                        break
+            elif direction == 'right':
+                line = self.text.split('\n')[self.cursor_row]
+                self._cursor = (len(line) - 1, self._cursor[1])
+
         if text != '\u0135':
             to_save = self.text + (text or '')
             do_eval = keycode[1] == "enter" and self.selection_text
