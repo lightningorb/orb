@@ -158,6 +158,13 @@
       "key":"node_alias_font_size"
    },
    {
+      "type":"bool",
+      "title":"Round central node",
+      "desc":"Whether the central node should be round or rectangular",
+      "section":"display",
+      "key":"round_central_node"
+   },
+   {
       "type":"title",
       "title":"Audio"
    },

@@ -45,7 +45,9 @@ class ChannelsWidget(ScatterLayout):
                 self.add_channel(channel=c, caps=caps)
         if not is_mock():
             self.node = Node(
-                text=self.info.alias, attribute_editor=self.attribute_editor
+                text=self.info.alias,
+                attribute_editor=self.attribute_editor,
+                round=pref('display.round_central_node'),
             )
             self.ids.relative_layout.add_widget(self.node)
             self.ids.relative_layout.add_widget(self.autobalance)
@@ -78,10 +80,7 @@ class ChannelsWidget(ScatterLayout):
 
     def update_rect(self, *args):
         if self.node:
-            self.node.pos = (
-                -(int(pref('display.node_width')) / 2),
-                -(int(pref('display.node_height')) / 2),
-            )
+            self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
         for i, cn in enumerate(
             sorted(
                 self.cn.values(),

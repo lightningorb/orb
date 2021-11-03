@@ -3,23 +3,23 @@
 <Node@Button>
     background_color: (0, 0, 0, 0)
     size_hint: None, None
-    size: (pref('display.node_width')+2, pref('display.node_height')+2)
+    size: (root.width_pref+2, root.height_pref+2)
     background_normal: ''
     font_size: pref('display.node_alias_font_size')
     canvas.before:
         Color: 
             rgba: (0.3,0.3,0.9,1)
         RoundedRectangle:
-            size: (pref('display.node_width')+2, pref('display.node_height')+2)
+            size: (root.width_pref+2, root.height_pref+2)
             pos: [self.pos[0]-1, self.pos[1]-1]
-            radius: [8]
+            radius: [(8, 50)[bool(root.round)]]
         Color: 
             rgba: root.col
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: [8]
-            size: (pref('display.node_width'), pref('display.node_height'))
+            radius: [(8, 50)[bool(root.round)]]
+            size: (root.width_pref, root.height_pref)
         PushMatrix
         Scale:
             origin: self.center

@@ -22,6 +22,7 @@ def set_conf_defaults(config):
     config.set("display", "node_width", 70)
     config.set("display", "node_height", 100)
     config.set("display", "node_alias_font_size", '80sp')
+    config.set("display", "round_central_node", False)
     config.add_section("audio")
     config.set("audio", "volume", 0.2)
     config.add_section("autobalance")
