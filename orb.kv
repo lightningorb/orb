@@ -16,6 +16,7 @@
 #:import graph_fees_earned forwarding_history.graph_fees_earned
 #:import About screens.about.About
 #:import Rankings screens.rankings.Rankings
+#:import FeeSpy fee_spy.FeeSpy
 ########################################################################################
 # MAIN
 ########################################################################################
@@ -100,6 +101,10 @@
                 ContextMenuTextItem:
                     text: "Ingest Invoices"
                     on_press: IngestInvoicesScreen().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Fee Spy"
+                    on_press: FeeSpy().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Rankings"

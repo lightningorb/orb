@@ -34,7 +34,7 @@ class Autobalance(Widget):
         self.output = Output(None)
         self.output.lnd = data_manager.data_man.lnd
         with self.canvas:
-            Color(0.1, 0.1, 0.2, (1 if pref('autobalance.enable') else 0))
+            Color(0.1, 0.1, 0.2, 0),  # (1 if pref('autobalance.enable') else 0))
             self.circle = Line(pos=self.pos, circle=(0, 0, self.radius))
         self.bind(radius=self.update_rect)
         Clock.schedule_interval(
@@ -109,7 +109,7 @@ class Autobalance(Widget):
         _, _, status = pay_thread(
             inst=self,
             thread_n=0,
-            fee_rate=int(1000),
+            fee_rate=int(100),
             payment_request=payment_request,
             payment_request_raw=None,
             outgoing_chan_id=outbound_channel,

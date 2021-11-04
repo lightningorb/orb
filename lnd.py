@@ -322,3 +322,7 @@ class Lnd(LndBase):
         request = ln.PendingChannelsRequest()
         response = self.stub.PendingChannels(request)
         return response
+
+    def subscribe_channel_graph(self):
+        request = ln.GraphTopologySubscription()
+        return self.stub.SubscribeChannelGraph(request)
