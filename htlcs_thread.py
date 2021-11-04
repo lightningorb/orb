@@ -44,7 +44,7 @@ class HTLCsThread(threading.Thread):
                             self.inst.cn[cid].l.anim_htlc(htlc)
             except:
                 print("Exception getting HTLCs - let's sleep")
-                print_exc()
+                # print_exc()
                 sleep(10)
 
     def stop(self):

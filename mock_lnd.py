@@ -45,69 +45,20 @@ class Lnd(object):
     def get_channels(self):
         return [
             Channel(
-                capacity=1000000,
+                capacity=100_000_000,
                 pending_htlcs=[],
-                local_balance=750000,
-                remote_balance=250000,
-                remote_pubkey="a",
-                chan_id="5",
+                local_balance=50_000_000,
+                remote_balance=50_000_000,
+                remote_pubkey=f'peer_{cid}',
+                chan_id=cid,
                 total_satoshis_sent=50000,
                 total_satoshis_received=50000,
-            ),
-            Channel(
-                capacity=1000000,
-                pending_htlcs=[],
-                local_balance=600000,
-                remote_balance=400000,
-                remote_pubkey="b",
-                chan_id="5",
-                total_satoshis_sent=50000,
-                total_satoshis_received=50000,
-            ),
-            Channel(
-                capacity=1000000,
-                pending_htlcs=[],
-                local_balance=500000,
-                remote_balance=500000,
-                remote_pubkey="c",
-                chan_id="5",
-                total_satoshis_sent=50000,
-                total_satoshis_received=50000,
-            ),
-            Channel(
-                capacity=1000000,
-                pending_htlcs=[],
-                local_balance=500000,
-                remote_balance=500000,
-                remote_pubkey="d",
-                chan_id="5",
-                total_satoshis_sent=50000,
-                total_satoshis_received=50000,
-            ),
-            Channel(
-                capacity=1000000,
-                pending_htlcs=[],
-                local_balance=500000,
-                remote_balance=500000,
-                remote_pubkey="e",
-                chan_id="5",
-                total_satoshis_sent=50000,
-                total_satoshis_received=50000,
-            ),
-            Channel(
-                capacity=1000000,
-                pending_htlcs=[],
-                local_balance=500000,
-                remote_balance=500000,
-                remote_pubkey="f",
-                chan_id="5",
-                total_satoshis_sent=50000,
-                total_satoshis_received=50000,
-            ),
+            )
+            for cid in range(20)
         ]
 
     def get_info(self):
-        return Info(alias="foobar")
+        return Info(alias="mock node")
 
     def get_node_alias(self, x):
         return x

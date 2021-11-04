@@ -29,7 +29,7 @@ class ChannelsThread(threading.Thread):
                             self.inst.remove_channel(e.open_channel)
             except:
                 print("Exception getting Channels - let's sleep")
-                print_exc()
+                # print_exc()
                 sleep(10)
             sleep(10)
 

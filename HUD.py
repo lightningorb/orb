@@ -52,6 +52,7 @@ class HUD1(BorderedLabel):
             self.hud = text
             self.show()
 
+        @silent
         def func():
             lnd = data_manager.data_man.lnd
             fr = lnd.fee_report()
@@ -82,6 +83,7 @@ class HUD2(BorderedLabel):
             self.hud = text
             self.show()
 
+        @silent
         def func():
             lnd = data_manager.data_man.lnd
             bal = lnd.get_balance()

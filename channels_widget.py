@@ -41,17 +41,15 @@ class ChannelsWidget(ScatterLayout):
         caps = self.get_caps(channels)
         self.info = self.lnd.get_info()
         for c in channels:
-            if not is_mock():
-                self.add_channel(channel=c, caps=caps)
-        if not is_mock():
-            self.node = Node(
-                text=self.info.alias,
-                attribute_editor=self.attribute_editor,
-                round=pref('display.round_central_node'),
-            )
-            self.ids.relative_layout.add_widget(self.node)
-            self.ids.relative_layout.add_widget(self.autobalance)
-            self.bind(pos=self.update_rect, size=self.update_rect)
+            self.add_channel(channel=c, caps=caps)
+        self.node = Node(
+            text=self.info.alias,
+            attribute_editor=self.attribute_editor,
+            round=pref('display.round_central_node'),
+        )
+        self.ids.relative_layout.add_widget(self.node)
+        self.ids.relative_layout.add_widget(self.autobalance)
+        self.bind(pos=self.update_rect, size=self.update_rect)
 
     def add_channel(self, channel, caps=None):
         if not caps:
