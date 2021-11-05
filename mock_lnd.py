@@ -2,6 +2,10 @@ from collections import namedtuple
 from dataclasses import dataclass
 from munch import Munch
 from typing import Any
+from time import sleep
+from random import choice
+
+M = lambda **kwargs: Munch.fromDict(dict(**kwargs))
 
 
 @dataclass
@@ -103,3 +107,17 @@ class Lnd(object):
             )
         )
         return m
+
+    def subscribe_channel_graph(self):
+        while True:
+            cid = choice([x for x in range(5)])
+            yield M(
+                channel_updates=[
+                    M(
+                        advertising_node=f'peer_{cid}',
+                        chan_id=cid,
+                        routing_policy=M(fee_rate_milli_msat=10),
+                    )
+                ]
+            )
+            sleep(1)
