@@ -10,18 +10,21 @@ from kivymd.uix.datatables import MDDataTable
 from kivy.properties import ListProperty
 from threading import Thread
 from decorators import guarded
+from kivy.properties import NumericProperty
 
 
 class FeeSpy(Popup):
 
     data = ListProperty([])
+    num_nodes = NumericProperty(0)
+    num_channels = NumericProperty(0)
 
     def __init__(self, *args, **kwargs):
         super(FeeSpy, self).__init__(*args, **kwargs)
 
         self.bind(data=self.set_table)
         self.data_tables = None
-        self.data = [['asdf', 'qwer', 'sdfgh'], ['asdfasdf', 'qwerqwer', 'sdfgh']]
+        self.data = []
 
     @mainthread
     def set_table(self, *args):
@@ -40,6 +43,7 @@ class FeeSpy(Popup):
             sorted_on="Fee Changes",
             sorted_order="ASC",
             elevation=2,
+            height=self.ids.box_layout.height,
         )
         self.ids.box_layout.add_widget(self.data_tables)
 
@@ -54,6 +58,12 @@ class FeeSpy(Popup):
 
         updates = {}
         node_updates = {}
+
+        @mainthread
+        def update_ui():
+            self.ids.num_nodes_tracking.text = (
+                f"tracking {len(node_updates)} nodes, {len(updates)} channels"
+            )
 
         def func():
 
@@ -78,6 +88,7 @@ class FeeSpy(Popup):
                     else:
                         node_updates[pk]['total'] += updates[cid]['total']
                         node_updates[pk]['updates'] += 1
+                    node_updates[pk]['total'] = round(node_updates[pk]['total'], 2)
 
                 to_print = [
                     [
@@ -94,9 +105,9 @@ class FeeSpy(Popup):
                 if to_print != self.data:
                     self.data = to_print
 
-                print(json.dumps(to_print, indent=4))
-                print(f"tracking {len(updates)} channels")
-                print(f"tracking {len(node_updates)} nodes")
+                self.num_nodes = len(node_updates)
+                self.num_channels = len(updates)
+                # update_ui()
 
         t = Thread(target=func)
         t.start()

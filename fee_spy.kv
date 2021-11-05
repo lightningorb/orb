@@ -1,6 +1,21 @@
+#:import dp kivy.metrics.dp
+
 <FeeSpy>:
     title: 'fee spy'
     size_hint: .9, .9
     BoxLayout:
-        id: box_layout
         orientation: 'vertical'
+        size_hint: 1, 1
+        BoxLayout:
+            id: box_layout
+            size_hint: 1, 0.9
+            orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            height: dp(30)
+            Label:
+                id: num_nodes_tracking
+                text: str(root.num_nodes) + ' nodes ' + str(root.num_channels) + ' channels'
+                size_hint:  [1, 0.5]
+                height: dp(30)
