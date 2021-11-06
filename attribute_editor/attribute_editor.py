@@ -1,8 +1,7 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 
-from AE_channel import AEChannel
-from AE_fees import AEFees
+from attribute_editor.AE_channel import AEChannel
 
 
 class AttributeEditor(BoxLayout):

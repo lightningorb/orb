@@ -1,10 +1,12 @@
-from kivy.uix.widget import Widget
-from kivy.graphics.context_instructions import Color
-from kivy.graphics.vertex_instructions import RoundedRectangle, Line
-from kivy.properties import NumericProperty
+from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
-from audio_manager import audio_manager
-from segment import Segment
+from kivy.properties import NumericProperty
+from kivy.graphics.vertex_instructions import RoundedRectangle
+from kivy.graphics.context_instructions import Color
+
+from kivy.uix.widget import Widget
+from audio.audio_manager import audio_manager
+from channels.segment import Segment
 
 try:
     from numpy.linalg import norm
@@ -12,9 +14,8 @@ try:
 except:
     pass
 
-from HUD import *
-from fee_widget import FeeWidget
-from lerp import *
+from channels.fee_widget import FeeWidget
+from lerp import lerp_2d
 from kivy.animation import Animation
 from colors import *
 

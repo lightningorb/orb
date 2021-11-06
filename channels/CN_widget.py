@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.properties import ObjectProperty
 import math
 from kivy.uix.widget import Widget
-from channel_widget import ChannelWidget
+from channels.channel_widget import ChannelWidget
 from node import Node
 import data_manager
 from sent_received_widget import SentReceivedWidget

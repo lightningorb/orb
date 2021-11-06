@@ -3,18 +3,10 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 import data_manager
 import time
-#from plyer import notification
-#from plyer.platforms.macosx.notification import OSXNotification
 
 
 class MailScreen(Screen):
     def on_enter(self):
-        @mainthread
-        def run():
-            print("notif")
-            #OSXNotification().notify(title="Test", message="123")
-
-        run()
         self.ids.inbox.clear_widgets()
         for invoice in data_manager.data_man.lnd.list_invoices().invoices:
             if not invoice.settled:

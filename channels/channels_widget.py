@@ -1,12 +1,10 @@
 from kivy.properties import ObjectProperty
-from kivy.uix.scatter import Scatter
 from kivy.uix.scatterlayout import ScatterLayout
-from traceback import print_exc
 from kivy.graphics.transformation import Matrix
 
 from htlcs_thread import HTLCsThread
-from channels_thread import ChannelsThread
-from CN_widget import CNWidget
+from channels.channels_thread import ChannelsThread
+from channels.CN_widget import CNWidget
 from node import Node
 import data_manager
 from utils import pref
@@ -76,7 +74,7 @@ class ChannelsWidget(ScatterLayout):
         )
         return channels
 
-    def update_rect(self, *args):
+    def update_rect(self, *_):
         if self.node:
             self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
         for i, cn in enumerate(

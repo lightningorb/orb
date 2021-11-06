@@ -3,10 +3,8 @@ from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.graphics.vertex_instructions import Ellipse
-from kivy.graphics import InstructionGroup
 from lerp import lerp_2d
 from math import ceil
-from colors import *
 from utils import prefs_col
 
 

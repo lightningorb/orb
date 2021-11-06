@@ -1,9 +1,7 @@
-from ui_actions import console_output
 from munch import Munch
 import json
 import threading
 from time import sleep
-from traceback import print_exc
 
 import data_manager
 from htlc import Htlc

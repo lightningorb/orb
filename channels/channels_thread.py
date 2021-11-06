@@ -1,7 +1,5 @@
-from ui_actions import console_output
 import threading
 from time import sleep
-from traceback import print_exc
 
 import data_manager
 

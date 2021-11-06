@@ -1,12 +1,11 @@
 from kivymd.app import MDApp
 from main_layout import MainLayout
 import data_manager
-import json
 from kivy.lang import Builder
 from pathlib import Path
 from monkey_patch import do_monkey_patching
 from conf_defaults import set_conf_defaults
-from audio_manager import audio_manager
+from audio.audio_manager import audio_manager
 from decorators import guarded
 
 do_monkey_patching()
