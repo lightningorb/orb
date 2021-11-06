@@ -31,5 +31,6 @@ class SendCoins(PopupDropShadow):
         lnd = data_manager.data_man.lnd
         amount = int(amount)
         sat_per_vbyte = int(sat_per_vbyte)
-        # console_output(f"{addr} {amount} {sat_per_vbyte}")
-        lnd.send_coins(addr, amount, sat_per_vbyte)
+        console_output(f"sending: {addr} {amount} {sat_per_vbyte}")
+        out = lnd.send_coins(addr, amount, sat_per_vbyte)
+        console_output(out)

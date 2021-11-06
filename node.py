@@ -45,7 +45,7 @@ class Node(Button):
         import data_manager
 
         if self.collide_point(*touch.pos):
-            if data_manager.menu_visible:
+            if data_manager.data_man.menu_visible:
                 return False
         return super(Node, self).on_touch_down(touch)
 
