@@ -9,12 +9,12 @@ from orb.store.db_cache import aliases_cache
 try:
     import grpc
 
-    from grpc_generated import router_pb2 as lnrouter
-    from grpc_generated import router_pb2_grpc as lnrouterrpc
-    from grpc_generated import lightning_pb2 as ln
-    from orb.grpc_generated import lightning_pb2_grpc as lnrpc
-    from grpc_generated import invoices_pb2 as invoices
-    from grpc_generated import invoices_pb2_grpc as invoicesrpc
+    from orb.lnd.grpc_generated import router_pb2 as lnrouter
+    from orb.lnd.grpc_generated import router_pb2_grpc as lnrouterrpc
+    from orb.lnd.grpc_generated import lightning_pb2 as ln
+    from orb.lnd.grpc_generated import lightning_pb2_grpc as lnrpc
+    from orb.lnd.grpc_generated import invoices_pb2 as invoices
+    from orb.lnd.grpc_generated import invoices_pb2_grpc as invoicesrpc
 except:
     print_exc()
 

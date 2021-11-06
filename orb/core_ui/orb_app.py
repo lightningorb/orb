@@ -47,7 +47,7 @@ class OrbApp(MDApp):
         """
         Configuration screen for the app.
         """
-        settings.add_json_panel("Orb", self.config, filename="settings.json")
+        settings.add_json_panel("Orb", self.config, filename="orb/misc/settings.json")
 
     def on_config_change(self, config, section, key, value):
         """

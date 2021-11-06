@@ -1,4 +1,7 @@
 from kivy.config import Config
+import sys
+
+sys.path.append('orb/lnd')
 
 Config.set('graphics', 'window_state', 'maximized')
 
