@@ -1,0 +1,51 @@
+
+########################################################################################
+# STATUS LINE IO
+########################################################################################
+
+<StatusLineInput>
+    id: input
+    multiline: False
+    on_text_validate: root.got_input(self.text)
+    text: ''
+    foreground_color: 1, 1, 1, 1
+    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
+
+<StatusLineOutput>
+    text: root.output
+    multiline: False
+    foreground_color: 1, 1, 1, 1
+    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
+
+
+########################################################################################
+# STATUS LINE
+########################################################################################
+
+<StatusLine>
+    id: status_line
+    height: 50
+    size_hint_y: None
+    orientation: 'horizontal'
+    canvas.before:
+        Color:
+            rgba: 55 / 255, 55 / 255, 55 / 255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    MDRaisedButton:
+        text: 'se'
+        size_hint_x: None
+        width: 30
+        size_hint_y: 1
+        md_bg_color: 0.3,0.3,0.3,1
+        on_release: app.root.ids.sm.current = 'console'
+    StatusLineInput:
+        id: line_input
+    Button:
+        disabled: 1
+        width: 2
+        size_hint_x: None
+    StatusLineOutput:
+        id: line_output
+

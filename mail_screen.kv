@@ -1,0 +1,14 @@
+<MailScreen>:
+    name: 'mail'
+    ScrollView:
+        size_hint: 0.5, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        do_scroll_x: False
+        GridLayout:
+            id: inbox
+            cols: 1
+            padding: 50
+            spacing: 50
+            size_hint_y: None
+            height: self.minimum_height
+
