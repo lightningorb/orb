@@ -2,29 +2,29 @@ from kivy.config import Config
 
 Config.set('graphics', 'window_state', 'maximized')
 
-from orb_app import OrbApp
+from orb.core_ui.orb_app import OrbApp
 
-from autobalance import Autobalance
-from attribute_editor.attribute_editor import AttributeEditor
-from channels.channels_widget import ChannelsWidget
-from screens.close_channel import CloseChannel
-from screens.rebalance import Rebalance
-from screens.channels_screen import ChannelsScreen
-from screens.pay_screen import PayScreen
-from screens.mail_screen import MailScreen
-from screens.open_channel_screen import OpenChannelScreen
-from screens.connect_screen import ConnectScreen
-from screens.ingest_invoices_screen import IngestInvoicesScreen
-from screens.console_screen import ConsoleScreen
-from screens.send_coins import SendCoins
-from screens.about import About
-from screens.rankings import Rankings
-from HUD import HUD
-from fee_spy import FeeSpy
+from orb.dialogs.autobalance import Autobalance
+from orb.attribute_editor.attribute_editor import AttributeEditor
+from orb.channels.channels_widget import ChannelsWidget
+from orb.screens.close_channel import CloseChannel
+from orb.screens.rebalance import Rebalance
+from orb.screens.channels_screen import ChannelsScreen
+from orb.screens.pay_screen import PayScreen
+from orb.screens.mail_screen import MailScreen
+from orb.screens.open_channel_screen import OpenChannelScreen
+from orb.screens.connect_screen import ConnectScreen
+from orb.screens.ingest_invoices_screen import IngestInvoicesScreen
+from orb.screens.console_screen import ConsoleScreen
+from orb.screens.send_coins import SendCoins
+from orb.screens.about import About
+from orb.screens.rankings import Rankings
+from orb.widgets.HUD import HUD
+from orb.dialogs.fee_spy import FeeSpy
 
-from main_layout import MainLayout
-from status_line.status_line import StatusLine
-from top_menu import TopMenu
+from orb.core_ui.main_layout import MainLayout
+from orb.status_line.status_line import StatusLine
+from orb.core_ui.top_menu import TopMenu
 
 keep = lambda _: _
 

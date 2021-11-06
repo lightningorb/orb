@@ -12,7 +12,7 @@ class DataManager:
         self.menu_visible = False
         if config["lnd"]["protocol"] == "grpc":
             try:
-                from lnd import Lnd as grpc_lnd
+                from orb.lnd.lnd import Lnd as grpc_lnd
 
                 self.lnd = grpc_lnd(
                     config["lnd"]["tls_certificate"],
@@ -22,20 +22,20 @@ class DataManager:
                 )
             except:
                 print(print_exc())
-                from mock_lnd import Lnd as mock_lnd
+                from orb.lnd.mock_lnd import Lnd as mock_lnd
 
                 self.lnd = mock_lnd()
         elif config["lnd"]["protocol"] == "rest":
-            from lnd_rest import Lnd as rest_lnd
+            from orb.lnd.lnd_rest import Lnd as rest_lnd
 
             self.lnd = rest_lnd()
         elif config["lnd"]["protocol"] == "mock":
-            from mock_lnd import Lnd as mock_lnd
+            from orb.lnd.mock_lnd import Lnd as mock_lnd
 
             self.lnd = mock_lnd()
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
-        from store import model
+        from orb.store import model
 
         model.get_db('forwarding_events_v2').connect()
         model.get_db('path_finding').connect()

@@ -1,0 +1,46 @@
+#:import prefs_col orb.misc.utils.prefs_col
+
+
+<ChannelsWidget>:
+    size_hint: 2, 2
+    pos: [-self.width/4, -self.height/4]
+    canvas:
+        Color:
+            rgba: 0, 1, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
+        Rectangle:
+            size: self.size
+    RelativeLayout:
+        id: relative_layout
+        size: [0, 0]
+        pos: [root.size[0]/2, root.size[1]/2]
+        size_hint: None, None
+        canvas:
+            Color:
+                rgba: 1, 0, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+<ChannelsScreen>:
+    name: 'channels'
+    BoxLayout:
+        id: box_layout
+        orientation: 'horizontal'
+        canvas:
+            Color:
+                rgba: prefs_col('display.channels_background_color')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        RelativeLayout:
+            id: cw_layout
+            size_hint_x: 0.8
+        AttributeEditor:
+            id: attribute_editor
+            size_hint_x: 0.2
+    HUD:
+        id: hud
+
+<ChannelWidget>:
+
+<FeeWidget>:
