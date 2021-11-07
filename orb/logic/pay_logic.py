@@ -4,6 +4,7 @@ import data_manager
 from traceback import print_exc
 import arrow
 
+
 class PaymentStatus:
     success = 0
     exception = 1
@@ -12,6 +13,9 @@ class PaymentStatus:
     error = 4
     none = 5
     max_paths_exceeded = 6
+    inflight = 7
+    already_paid = 8
+
 
 def get_failure_source_pubkey(response, route):
     if response.failure.failure_source_index == 0:
@@ -21,6 +25,7 @@ def get_failure_source_pubkey(response, route):
             response.failure.failure_source_index - 1
         ].pub_key
     return failure_source_pubkey
+
 
 def handle_error(inst, response, route, routes, pk=None):
     if response:
@@ -64,8 +69,18 @@ def handle_error(inst, response, route, routes, pk=None):
         if pk == failure_source_pubkey:
             return f"Unknown error code {repr(code)}:"
 
-def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, outgoing_chan_id, last_hop_pubkey, max_paths):
+
+def pay_thread(
+    inst,
+    thread_n,
+    fee_rate,
+    payment_request,
+    outgoing_chan_id,
+    last_hop_pubkey,
+    max_paths,
+):
     from orb.store import model
+
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * payment_request.num_satoshis / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
@@ -87,40 +102,46 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, o
         dest=payment_request.destination,
         fees=0,
         succeeded=False,
-        timestamp=int(arrow.now().timestamp())
+        timestamp=int(arrow.now().timestamp()),
     )
     while routes.has_next():
         if count > max_paths:
-            return payment_request_raw, outgoing_chan_id, PaymentStatus.max_paths_exceeded
+            return PaymentStatus.max_paths_exceeded
         count += 1
         has_next = True
         route = routes.get_next()
         payment.save()
         if route:
-            hops = []
-            attempt = model.Attempt(payment=payment, weakest_link_pk='', code=0, succeeded=False)
+            attempt = model.Attempt(
+                payment=payment, weakest_link_pk='', code=0, succeeded=False
+            )
             attempt.save()
             for j, hop in enumerate(route.hops):
-                node_alias = data_manager.data_man.lnd.get_node_alias(
-                    hop.pub_key
-                )
+                node_alias = data_manager.data_man.lnd.get_node_alias(hop.pub_key)
                 text = f"{j:<5}:        {node_alias}"
                 console_output(f'T{thread_n}: {text}')
                 # no actual need for hops for now
-                p = model.Hop(
-                    pk=hop.pub_key,
-                    succeeded=False,
-                    attempt=attempt
-                )
+                p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
                 p.save()
             try:
                 response = data_manager.data_man.lnd.send_payment(
                     payment_request, route
                 )
-            except:
-                console_output(f'T{thread_n}: {str(print_exc())}')
-                console_output(f"T{thread_n}: exception - removing invoice")
-                return payment_request_raw, outgoing_chan_id, PaymentStatus.exception
+            except Exception as e:
+                code = e.args[0].code.name
+                details = e.args[0].details
+                # 'attempted value exceeds paymentamount'
+                if (
+                    code == 'UNKNOWN'
+                    and details == 'attempted value exceeds paymentamount'
+                ):
+                    console_output(f'T{thread_n}: INVOICE CURRENTLY INFLIGHT')
+                    return PaymentStatus.inflight
+                if code == 'ALREADY_EXISTS' and details == 'invoice is already paid':
+                    console_output(f'T{thread_n}: INVOICE IS ALREADY PAID')
+                    return PaymentStatus.already_paid
+                console_output(f"T{thread_n}: exception.. not sure what's up")
+                return PaymentStatus.exception
             is_successful = response and response.failure.code == 0
             if is_successful:
                 console_output(f"T{thread_n}: SUCCESS")
@@ -132,7 +153,7 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, o
                     hop.save()
                 attempt.save()
                 payment.save()
-                return payment_request_raw, outgoing_chan_id, PaymentStatus.success
+                return PaymentStatus.success
             else:
                 attempt.code = response.failure.code if response else -1000
                 attempt.weakest_link_pk = (
@@ -144,5 +165,5 @@ def pay_thread(inst, thread_n, fee_rate, payment_request, payment_request_raw, o
                 handle_error(inst, response, route, routes)
     if not has_next:
         console_output(f"T{thread_n}: No routes found!")
-        return payment_request_raw, outgoing_chan_id, PaymentStatus.no_routes
-    return payment_request_raw, outgoing_chan_id, PaymentStatus.none
+        return PaymentStatus.no_routes
+    return PaymentStatus.none

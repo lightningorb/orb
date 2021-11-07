@@ -1,8 +1,9 @@
-from kivy.app import App
-from peewee import *
 import os
 from functools import lru_cache
 import arrow
+from peewee import *
+from kivy.app import App
+from playhouse.hybrid import hybrid_property
 
 path_finding_db_name = 'path_finding'
 
@@ -95,5 +96,37 @@ def create_aliases_tables():
     db = get_db('aliases')
     try:
         db.create_tables([Alias])
+    except:
+        pass
+
+
+class Invoice(Model):
+    raw = CharField()
+    destination = CharField()
+    num_satoshis = IntegerField()
+    timestamp = IntegerField()
+    expiry = IntegerField()
+    description = CharField()
+    paid = BooleanField(default=False)
+    # in_flight = BooleanField(default=False)
+
+    @hybrid_property
+    def expired(self):
+        """
+                                               |
+        ------|---------|-----------------------------------
+              ts       ts + e
+        """
+        exp = (self.timestamp + self.expiry) < arrow.now().timestamp()
+        return exp
+
+    class Meta:
+        database = get_db('invoices')
+
+
+def create_invoices_tables():
+    db = get_db('invoices')
+    try:
+        db.create_tables([Invoice])
     except:
         pass

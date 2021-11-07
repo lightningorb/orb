@@ -104,12 +104,11 @@ class Autobalance(Widget):
             memo='rebalance', amount=num_sats
         )
 
-        _, _, status = pay_thread(
+        status = pay_thread(
             inst=self,
             thread_n=0,
             fee_rate=int(100),
             payment_request=payment_request,
-            payment_request_raw=None,
             outgoing_chan_id=outbound_channel,
             last_hop_pubkey=inbound_pubkey,
             max_paths=100,

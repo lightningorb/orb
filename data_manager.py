@@ -40,9 +40,11 @@ class DataManager:
         model.get_db('forwarding_events_v2').connect()
         model.get_db('path_finding').connect()
         model.get_db('aliases').connect()
+        model.get_db('invoices').connect()
         model.create_path_finding_tables()
         model.create_fowarding_tables()
         model.create_aliases_tables()
+        model.create_invoices_tables()
 
     @property
     def cert_path(self):

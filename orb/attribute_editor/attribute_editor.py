@@ -2,6 +2,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 
 from orb.attribute_editor.AE_channel import AEChannel
+from orb.attribute_editor.AE_fees import AEFees
 
 
 class AttributeEditor(BoxLayout):

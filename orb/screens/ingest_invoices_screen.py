@@ -1,6 +1,6 @@
 from kivy.clock import Clock
 from kivy.clock import mainthread
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, NumericProperty, BooleanProperty
 from orb.components.popup_drop_shadow import PopupDropShadow
 from kivy.uix.boxlayout import BoxLayout
 from threading import Thread
@@ -8,7 +8,6 @@ import humanize
 import arrow
 from datetime import timedelta
 
-from orb.misc.decorators import guarded
 from traceback import print_exc
 import data_manager
 
@@ -20,6 +19,8 @@ class Invoice(BoxLayout):
     timestamp = ObjectProperty(0)
     expiry = ObjectProperty(0)
     description = ObjectProperty("")
+    paid = BooleanProperty(False)
+    id = NumericProperty(0)
 
     def __init__(self, *args, **kwargs):
         super(Invoice, self).__init__(*args, **kwargs)
@@ -45,27 +46,23 @@ class IngestInvoicesScreen(PopupDropShadow):
 
     def __init__(self, **kwargs):
         super(IngestInvoicesScreen, self).__init__(**kwargs)
-        self.store = data_manager.data_man.store
         self.ids.scroll_view.clear_widgets()
         for inv in self.load():
-            self.ids.scroll_view.add_widget(Invoice(**inv))
+            self.ids.scroll_view.add_widget(Invoice(**inv.__data__))
 
     def dismiss(self, *args):
         for invoices in self.ids.scroll_view.children:
             invoices.dismiss()
         return super(IngestInvoicesScreen, self).dismiss(*args)
 
-    @guarded
-    def clear_store(self):
-        self.store.delete("ingested_invoice")
-        self.ids.scroll_view.clear_widgets()
-        self.count.text = '0'
-
     def load(self):
-        try:
-            invoices = self.store.get("ingested_invoice")["invoices"]
-        except:
-            invoices = []
+        from orb.store import model
+
+        invoices = (
+            model.Invoice()
+            .select()
+            .where(model.Invoice.expired == False and model.Invoice.paid == False)
+        )
         self.count.text = f"Invoices: {len(invoices)}"
         return invoices
 
@@ -79,13 +76,18 @@ class IngestInvoicesScreen(PopupDropShadow):
             self.ids.invoices.text = "\n".join(not_ingested)
 
         def func():
+            from orb.store import model
+
             invs = self.load()
             not_ingested = []
             for line in text.split("\n"):
+                line = line.strip()
                 if line:
                     try:
                         req = data_manager.data_man.lnd.decode_payment_request(line)
-                        data = dict(
+                        if model.Invoice().select().where(model.Invoice.raw == line):
+                            raise Exception('Already ingested')
+                        invoice = model.Invoice(
                             raw=line,
                             destination=req.destination,
                             num_satoshis=req.num_satoshis,
@@ -93,13 +95,12 @@ class IngestInvoicesScreen(PopupDropShadow):
                             expiry=req.expiry,
                             description=req.description,
                         )
-                        invs.append(data)
-                        add_invoice_widget(Invoice(**data))
+                        invoice.save()
+                        add_invoice_widget(Invoice(**invoice.__data__))
                     except:
                         print(f"Problem decoding: {line}")
                         print_exc()
                         not_ingested.append(line)
-            self.store.put("ingested_invoice", invoices=invs)
             self.count.text = str(len(self.load()))
             update(not_ingested)
 

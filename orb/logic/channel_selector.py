@@ -1,11 +1,6 @@
 from random import choice
 
-LNBIG = [
-    '777338228286160896',
-    '772393724494086144',
-    '772380530381488129',
-    '777338228285833217',
-]
+LNBIG = [777338228286160896, 772393724494086144, 772380530381488129, 777338228285833217]
 
 
 def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=0.5):
@@ -15,6 +10,7 @@ def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=
     chans = []
     channels = lnd.get_channels(active_only=True)
     for chan in channels:
+        threshold_ratio = ratio
         if chan.remote_pubkey in pk_ignore:
             continue
         if chan.chan_id in chan_ignore:
@@ -27,12 +23,16 @@ def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=
         enough_available_outbound = num_sats < actual_available_outbound
 
         if chan.chan_id in LNBIG:
-            ratio = 0.1
+            print("LN BIG!!!!!!!!!")
+            threshold_ratio = 0.1
 
         # check whether the available balance is above a certain ratio, e.g
         # a ratio of 1 would hardly ever pick the channel while a ratio
         # of 0 would always pick the channel
-        more_than_half_outbound = (actual_available_outbound / chan.capacity) > ratio
+        print(
+            "OUTBOUND RATIO ", chan.chan_id, (actual_available_outbound / chan.capacity)
+        )
+        more_than_half_outbound = (actual_available_outbound / chan.capacity) > threshold_ratio
         good_candidate = enough_available_outbound and more_than_half_outbound
         if good_candidate:
             chans.append(chan)
