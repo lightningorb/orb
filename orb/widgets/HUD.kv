@@ -75,9 +75,18 @@
         Line:
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
+        Color:
+            rgba: 1, 1, 1, 1
+        PushMatrix
+        Translate:
+            xyz: self.pos[0], self.pos[1], 0
+        Line:
+            points: root.line_points
+    canvas.after:
+        PopMatrix
     Label:
         id: rate
-        pos: [root.pos[0], root.pos[1] + root.height - self.texture_size[1]-30]
+        pos: [0, root.height - self.texture_size[1]-30]
         font_size: '10sp'
         size_hint: [None, None]
         markup: True

@@ -2,6 +2,7 @@ from kivy.clock import mainthread
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.floatlayout import FloatLayout
+from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -148,11 +149,10 @@ class HUD4(FloatLayout, Hideable):
     BTC Price HUD
     """
 
+    line_points = ListProperty([])
+
     def __init__(self, *args, **kwargs):
         FloatLayout.__init__(self, *args, **kwargs)
-        with self.canvas.before:
-            Color(1, 1, 1, 1)
-            self.line = Line(points=[0, 0, 0, 0], width=1)
         self.bind(pos=self.update_rect, size=self.update_rect)
         Clock.schedule_interval(self.update_price, 60)
         Clock.schedule_once(self.update_price, 1)
@@ -161,7 +161,7 @@ class HUD4(FloatLayout, Hideable):
     def update_gui(self, text, points):
         self.ids.rate.text = text
         if points:
-            self.line.points = points
+            self.line_points = points
         self.show()
 
     @silent
@@ -176,8 +176,7 @@ class HUD4(FloatLayout, Hideable):
             for i, key in enumerate(d):
                 g.append(i / len(d) * self.size[0])
                 g.append(
-                    self.pos[1]
-                    + ((d[key] - min_price) / (max_price - min_price)) * self.size[1]
+                    ((d[key] - min_price) / (max_price - min_price)) * self.size[1]
                 )
             rate = str(
                 int(
