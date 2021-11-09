@@ -193,6 +193,7 @@ class Lnd(LndBase):
         decode_hex = codecs.getdecoder("hex_codec")
         return decode_hex(hex_string)[0]
 
+    @lru_cache(maxsize=None)
     def decode_request(self, req: str):
         request = ln.PayReqString(pay_req=req)
         response = self.stub.DecodePayReq(request)
