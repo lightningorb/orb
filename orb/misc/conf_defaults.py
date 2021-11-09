@@ -9,6 +9,7 @@ def set_conf_defaults(config):
     config.set("lnd", "macaroon_admin", "")
     config.add_section("display")
     config.set("display", "channel_length", 600)
+    config.set("display", "inverted_channels", 1)
     config.set("display", "show_sent_received", 0)
     config.set("display", "channel_opacity", 0.8)
     config.set("display", "channels_background_color", '(.2, .2, .3, 1)')

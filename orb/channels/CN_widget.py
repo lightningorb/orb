@@ -17,11 +17,7 @@ class CNWidget(Widget):
         self.attribute_editor = attribute_editor
         lnd = data_manager.data_man.lnd
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
-        self.b = Node(
-            text="",
-            channel=c,
-            attribute_editor=attribute_editor,
-        )
+        self.b = Node(text="", channel=c, attribute_editor=attribute_editor)
         self.show_sent_received = (
             App.get_running_app().config["display"]["show_sent_received"] == "1"
         )
@@ -36,8 +32,13 @@ class CNWidget(Widget):
         self.radius = int(App.get_running_app().config["display"]["channel_length"])
         x = math.sin(i / n * 3.14378 * 2) * self.radius
         y = math.cos(i / n * 3.14378 * 2) * self.radius
-        points = [0, 0, x, y]
-        pos = (x - (pref('display.node_width') / 2), y - (pref('display.node_height') / 2))
+        points = (
+            [x, y, 0, 0] if bool(pref('display.inverted_channels')) else [0, 0, x, y]
+        )
+        pos = (
+            x - (pref('display.node_width') / 2),
+            y - (pref('display.node_height') / 2),
+        )
         if self.l.points == [0, 0, 0, 0]:
             self.l.points = points
             self.b.pos = pos

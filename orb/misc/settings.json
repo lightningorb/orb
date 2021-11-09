@@ -63,17 +63,6 @@
    },
    {
       "type":"title",
-      "title":"Autobalance"
-   },
-   {
-      "type":"bool",
-      "title":"enable",
-      "desc":"Enable autobalance (alpha - use at own risk)",
-      "section":"autobalance",
-      "key":"enable"
-   },
-   {
-      "type":"title",
       "title":"Debug"
    },
    {
@@ -86,6 +75,13 @@
    {
       "type":"title",
       "title":"Display"
+   },
+   {
+      "type":"bool",
+      "title":"inverted channels",
+      "desc":"Display local balance adjacent to node, rather than adjacent to peer",
+      "section":"display",
+      "key":"inverted_channels"
    },
    {
       "type":"numeric",
