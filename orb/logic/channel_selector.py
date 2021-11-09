@@ -23,16 +23,14 @@ def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=
         enough_available_outbound = num_sats < actual_available_outbound
 
         if chan.chan_id in LNBIG:
-            print("LN BIG!!!!!!!!!")
             threshold_ratio = 0.1
 
         # check whether the available balance is above a certain ratio, e.g
         # a ratio of 1 would hardly ever pick the channel while a ratio
         # of 0 would always pick the channel
-        print(
-            "OUTBOUND RATIO ", chan.chan_id, (actual_available_outbound / chan.capacity)
-        )
-        more_than_half_outbound = (actual_available_outbound / chan.capacity) > threshold_ratio
+        more_than_half_outbound = (
+            actual_available_outbound / chan.capacity
+        ) > threshold_ratio
         good_candidate = enough_available_outbound and more_than_half_outbound
         if good_candidate:
             chans.append(chan)

@@ -9,22 +9,23 @@ except:
 
 class Htlc:
     def __init__(self, lnd, htlc):
+        channels = lnd.get_channels()
         if getattr(htlc, "incoming_channel_id") != 0:
+            ic = next(
+                iter(c for c in channels if c.chan_id == htlc.incoming_channel_id)
+            )
             self.incoming_channel = lnd.get_alias_from_channel_id(
                 htlc.incoming_channel_id
             )
             self.incoming_channel_id = htlc.incoming_channel_id
-            self.incoming_channel_capacity = lnd.get_channel_capacity(
-                htlc.incoming_channel_id
-            )
-            self.incoming_channel_remote_balance = lnd.get_channel_remote_balance(
-                htlc.incoming_channel_id
-            )
-            self.incoming_channel_local_balance = lnd.get_channel_local_balance(
-                htlc.incoming_channel_id
-            )
-            self.incoming_channel_pending_htlcs = lnd.get_channel_pending_htlcs(
-                htlc.incoming_channel_id
+            self.incoming_channel_capacity = ic.capacity
+            self.incoming_channel_remote_balance = ic.remote_balance
+            self.incoming_channel_local_balance = ic.local_balance
+            self.incoming_channel_pending_htlcs = dict(
+                pending_in=sum(int(p.amount) for p in ic.pending_htlcs if p.incoming),
+                pending_out=sum(
+                    int(p.amount) for p in ic.pending_htlcs if not p.incoming
+                ),
             )
         else:
             self.incoming_channel = lnd.get_own_alias()
@@ -33,17 +34,17 @@ class Htlc:
                 htlc.outgoing_channel_id
             )
             self.outgoing_channel_id = htlc.outgoing_channel_id
-            self.outgoing_channel_capacity = lnd.get_channel_capacity(
-                htlc.outgoing_channel_id
+            oc = next(
+                iter(c for c in channels if c.chan_id == htlc.outgoing_channel_id)
             )
-            self.outgoing_channel_remote_balance = lnd.get_channel_remote_balance(
-                htlc.outgoing_channel_id
-            )
-            self.outgoing_channel_local_balance = lnd.get_channel_local_balance(
-                htlc.outgoing_channel_id
-            )
-            self.outgoing_channel_pending_htlcs = lnd.get_channel_pending_htlcs(
-                htlc.outgoing_channel_id
+            self.outgoing_channel_capacity = oc.capacity
+            self.outgoing_channel_remote_balance = oc.remote_balance
+            self.outgoing_channel_local_balance = oc.local_balance
+            self.outgoing_channel_pending_htlcs = dict(
+                pending_in=sum(int(p.amount) for p in oc.pending_htlcs if p.incoming),
+                pending_out=sum(
+                    int(p.amount) for p in oc.pending_htlcs if not p.incoming
+                ),
             )
         else:
             self.outgoing_channel = lnd.get_own_alias()

@@ -295,6 +295,11 @@ class Lnd(LndBase):
     #         if response.status == 0:
     #             print("Unknown Error")
 
+    def get_channel(self, chan_id):
+        for channel in self.get_channels():
+            if chan_id == channel.chan_id:
+                return channel
+
     def get_channel_remote_balance(self, chan_id):
         for channel in self.get_channels():
             if chan_id == channel.chan_id:
