@@ -79,7 +79,7 @@
    {
       "type":"bool",
       "title":"inverted channels",
-      "desc":"Display local balance adjacent to node, rather than adjacent to peer",
+      "desc":"Display local balance adjacent to peer, rather than adjacent to node",
       "section":"display",
       "key":"inverted_channels"
    },

@@ -7,6 +7,7 @@ from orb.widgets.node import Node
 import data_manager
 from orb.widgets.sent_received_widget import SentReceivedWidget
 from orb.misc.utils import pref
+from orb.misc.prefs import inverted_channels
 
 
 class CNWidget(Widget):
@@ -32,9 +33,7 @@ class CNWidget(Widget):
         self.radius = int(App.get_running_app().config["display"]["channel_length"])
         x = math.sin(i / n * 3.14378 * 2) * self.radius
         y = math.cos(i / n * 3.14378 * 2) * self.radius
-        points = (
-            [x, y, 0, 0] if bool(pref('display.inverted_channels')) else [0, 0, x, y]
-        )
+        points = [x, y, 0, 0] if inverted_channels() else [0, 0, x, y]
         pos = (
             x - (pref('display.node_width') / 2),
             y - (pref('display.node_height') / 2),

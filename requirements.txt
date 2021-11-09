@@ -4,7 +4,6 @@ kivy
 qrcode
 grpcio
 yachalk
-numpy
 munch
 kivymd
 kivy_garden.contextmenu

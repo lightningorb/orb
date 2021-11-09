@@ -1,20 +1,29 @@
 from orb.misc.utils import *
 
+
 def is_mock():
-	return pref('lnd.protocol') == 'mock'
+    return pref('lnd.protocol') == 'mock'
+
 
 def hostname():
-	app = App.get_running_app()
-	return app.config['lnd']['hostname']
+    app = App.get_running_app()
+    return app.config['lnd']['hostname']
+
 
 def grpc_port():
-	app = App.get_running_app()
-	return app.config['lnd']['grpc_port']
+    app = App.get_running_app()
+    return app.config['lnd']['grpc_port']
+
 
 def macaroon():
-	app = App.get_running_app()
-	return app.config['lnd']['macaroon_admin']
+    app = App.get_running_app()
+    return app.config['lnd']['macaroon_admin']
+
 
 def cert():
-	app = App.get_running_app()
-	return app.config['lnd']['tls_certificate'].encode()
+    app = App.get_running_app()
+    return app.config['lnd']['tls_certificate'].encode()
+
+
+def inverted_channels():
+    return bool(pref('display.inverted_channels'))

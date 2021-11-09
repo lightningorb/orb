@@ -8,16 +8,11 @@ from kivy.uix.widget import Widget
 from orb.audio.audio_manager import audio_manager
 from orb.channels.segment import Segment
 
-try:
-    from numpy.linalg import norm
-    import numpy as np
-except:
-    pass
-
 from orb.channels.fee_widget import FeeWidget
 from orb.misc.lerp import lerp_2d
 from kivy.animation import Animation
 from orb.misc.colors import *
+from orb.misc.prefs import inverted_channels
 
 
 class ChannelWidget(Widget):
@@ -49,7 +44,7 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.line_local = Segment(
-                amount=int(self.channel.local_balance )- int(self.pending_out),
+                amount=int(self.channel.local_balance) - int(self.pending_out),
                 points=[0, 0, 0, 0],
                 width=self.width,
                 cap="none",
@@ -114,16 +109,18 @@ class ChannelWidget(Widget):
         self.line_remote.update_rect()
 
     def anim_outgoing(self, s=10):
-        anim = Animation(pos=self.c, size=(0, 0), duration=0)
-        anim += Animation(pos=self.c, size=(0, 0), duration=0.4)
+        start, end = (self.b, self.c) if inverted_channels else (self.c, self.b)
+        anim = Animation(pos=start, size=(0, 0), duration=0)
+        anim += Animation(pos=start, size=(0, 0), duration=0.4)
         anim += Animation(size=(s, s), duration=0)
-        anim += Animation(pos=self.b, duration=0.4)
+        anim += Animation(pos=end, duration=0.4)
         anim += Animation(pos=(-1000, -1000), duration=0)
         anim.start(self.anim_rect)
 
     def anim_incoming(self, s=10):
-        anim = Animation(pos=self.b, size=(s, s), duration=0)
-        anim += Animation(pos=self.c, duration=0.4)
+        start, end = (self.c, self.b) if inverted_channels else (self.c, self.b)
+        anim = Animation(pos=self.start, size=(s, s), duration=0)
+        anim += Animation(pos=self.end, duration=0.4)
         anim += Animation(size=(0, 0), duration=0.1)
         anim += Animation(pos=(-1000, -1000), duration=0.1)
         anim.start(self.anim_rect)
@@ -136,7 +133,10 @@ class ChannelWidget(Widget):
         forward = htlc.event_type == "FORWARD"
         settle = htlc.event_outcome == "settle_event"
         fail = htlc.event_outcome == "link_fail_event"
-        outgoing = hasattr(htlc, 'outgoing_channel_id') and htlc.outgoing_channel_id == self.channel.chan_id
+        outgoing = (
+            hasattr(htlc, 'outgoing_channel_id')
+            and htlc.outgoing_channel_id == self.channel.chan_id
+        )
         incoming = forward and htlc.incoming_channel_id == self.channel.chan_id
 
         if incoming:
@@ -174,10 +174,7 @@ class ChannelWidget(Widget):
 
         self.update_rect()
 
-        cols = {
-            "forward_fail_event": RED,
-            "link_fail_event": RED,
-        }
+        cols = {"forward_fail_event": RED, "link_fail_event": RED}
         col = cols.get(htlc.event_outcome, WHITE)
         (Animation(rgba=col, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
             self.line_remote.color
