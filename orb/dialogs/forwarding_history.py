@@ -29,7 +29,7 @@ def download_forwarding_history():
         console_output(last)
         lnd = data_manager.data_man.lnd
         i = 0
-        start_time = int(last.timestamp_ns / 1000) if last else None
+        start_time = int(last.timestamp) if last else None
         while True:
             console_output(f'fetching events {i} -> {i + 100}')
             fwd = lnd.get_forwarding_history(
