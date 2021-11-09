@@ -166,4 +166,5 @@ def pay_thread(
     if not has_next:
         console_output(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes
+    console_output('No more routes found.')
     return PaymentStatus.none

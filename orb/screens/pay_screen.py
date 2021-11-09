@@ -119,6 +119,10 @@ class PayScreen(PopupDropShadow):
                         status == PaymentStatus.no_routes
                         or status == PaymentStatus.max_paths_exceeded
                     ):
+                        if status == PaymentStatus.no_routes:
+                            console_output('no routes found')
+                        if status == PaymentStatus.max_paths_exceeded:
+                            console_output('max paths exceeded')
                         if auto:
                             console_output(f"adding {chan_id} to avoid list")
                             avoid[chan_id] += 1
