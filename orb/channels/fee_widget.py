@@ -5,12 +5,8 @@ from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.uix.widget import Widget
+from orb.misc.utils import Vector
 from threading import Thread
-
-try:
-    import numpy as np
-except:
-    pass
 
 
 class FeeWidget(Widget):
@@ -42,32 +38,22 @@ class FeeWidget(Widget):
 
         Thread(target=update).start()
 
-        try:
-            np
-            with self.canvas.before:
-                Color(0.5, 1, 0.5, 1)
-                self.circle_1 = Line(circle=(150, 150, 50))
-                self.circle_2 = Line(circle=(150, 150, 50))
-                self.line = Line(points=[0, 0, 0, 0])
-        except:
-            pass
+        with self.canvas.before:
+            Color(0.5, 1, 0.5, 1)
+            self.circle_1 = Line(circle=(150, 150, 50))
+            self.circle_2 = Line(circle=(150, 150, 50))
+            self.line = Line(points=[0, 0, 0, 0])
 
     def update_rect(self, *args):
-        try:
-            v = np.array(self.b) - np.array(self.a)
-            d = np.linalg.norm(v)
-            if d:
-                ub = v / d
-                orth = np.random.randn(2)
-                orth -= orth.dot(ub) * ub
-                orth = orth / np.linalg.norm(orth)
-                handle_a = self.c + orth * self.to_fee_norm
-                handle_b = self.c + orth * -self.to_fee_norm
-                self.circle_1.circle = (handle_a[0], handle_a[1], 5)
-                self.circle_2.circle = (handle_b[0], handle_b[1], 5)
-                self.line.points = (handle_a[0], handle_a[1], handle_b[0], handle_b[1])
-        except:
-            pass
+        A = Vector(*self.a)
+        B = Vector(*self.c)
+        AB = B - A
+        AB_perp_normed = AB.perp().normalized()
+        P1 = B + AB_perp_normed * self.to_fee_norm
+        P2 = B - AB_perp_normed * self.to_fee_norm
+        self.circle_1.circle = (P1.x, P1.y, 5)
+        self.circle_2.circle = (P2.x, P2.y, 5)
+        self.line.points = (P1.x, P1.y, P2.x, P2.y)
 
     def set_points(self, a, b, c):
         self.a = a

@@ -3,13 +3,15 @@ from orb.misc.utils import pref
 
 ios = platform == 'ios'
 
+
 class AudioManager:
     def __init__(self):
         if not ios:
             from kivy.core.audio import SoundLoader
-            self.send_settle = SoundLoader.load("audio/send_settle.wav")
-            self.forward_settle = SoundLoader.load("audio/forward_settle.wav")
-            self.link_fail_event = SoundLoader.load("audio/link_fail_event.wav")
+
+            self.send_settle = SoundLoader.load("orb/audio/send_settle.wav")
+            self.forward_settle = SoundLoader.load("orb/audio/forward_settle.wav")
+            self.link_fail_event = SoundLoader.load("orb/audio/link_fail_event.wav")
             self.samples = [self.send_settle, self.forward_settle, self.link_fail_event]
 
     def set_volume(self):
