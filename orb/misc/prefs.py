@@ -5,6 +5,10 @@ def is_mock():
     return pref('lnd.protocol') == 'mock'
 
 
+def is_rest():
+    return pref('lnd.protocol') == 'rest'
+
+
 def hostname():
     app = App.get_running_app()
     return app.config['lnd']['hostname']

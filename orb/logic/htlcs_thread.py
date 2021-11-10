@@ -1,10 +1,13 @@
-from munch import Munch
 import json
 import threading
 from time import sleep
+from traceback import print_exc
+
+from munch import Munch
 
 import data_manager
 from orb.logic.htlc import Htlc
+from orb.misc.prefs import is_rest
 
 
 class HTLCsThread(threading.Thread):
@@ -14,7 +17,7 @@ class HTLCsThread(threading.Thread):
         self.inst = inst
 
     def run(self):
-        rest = False
+        rest = is_rest()
         while not self.stopped():
             try:
                 lnd = data_manager.data_man.lnd

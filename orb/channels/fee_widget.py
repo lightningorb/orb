@@ -31,18 +31,18 @@ class FeeWidget(Widget):
                 )
                 self.from_fee = self.policy_from.fee_rate_milli_msat
 
+        with self.canvas.before:
+            Color(0.5, 1, 0.5, 1)
+            self.circle_1 = Line(circle=(150, 150, 50))
+            self.circle_2 = Line(circle=(150, 150, 50))
+            self.line = Line(points=[0, 0, 0, 0])
+
         self.bind(a=self.update_rect)
         self.bind(b=self.update_rect)
         self.bind(c=self.update_rect)
         self.bind(to_fee_norm=self.update_rect)
 
         Thread(target=update).start()
-
-        with self.canvas.before:
-            Color(0.5, 1, 0.5, 1)
-            self.circle_1 = Line(circle=(150, 150, 50))
-            self.circle_2 = Line(circle=(150, 150, 50))
-            self.line = Line(points=[0, 0, 0, 0])
 
     def update_rect(self, *args):
         A = Vector(*self.a)

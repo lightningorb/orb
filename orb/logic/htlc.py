@@ -6,6 +6,7 @@ try:
 except:
     pass
 
+from orb.misc.prefs import is_rest
 
 class Htlc:
     def __init__(self, lnd, htlc):
@@ -35,17 +36,18 @@ class Htlc:
             )
             self.outgoing_channel_id = htlc.outgoing_channel_id
             oc = next(
-                iter(c for c in channels if c.chan_id == htlc.outgoing_channel_id)
+                iter(c for c in channels if c.chan_id == htlc.outgoing_channel_id), None
             )
-            self.outgoing_channel_capacity = oc.capacity
-            self.outgoing_channel_remote_balance = oc.remote_balance
-            self.outgoing_channel_local_balance = oc.local_balance
-            self.outgoing_channel_pending_htlcs = dict(
-                pending_in=sum(int(p.amount) for p in oc.pending_htlcs if p.incoming),
-                pending_out=sum(
-                    int(p.amount) for p in oc.pending_htlcs if not p.incoming
-                ),
-            )
+            if oc:
+                self.outgoing_channel_capacity = oc.capacity
+                self.outgoing_channel_remote_balance = oc.remote_balance
+                self.outgoing_channel_local_balance = oc.local_balance
+                self.outgoing_channel_pending_htlcs = dict(
+                    pending_in=sum(int(p.amount) for p in oc.pending_htlcs if p.incoming),
+                    pending_out=sum(
+                        int(p.amount) for p in oc.pending_htlcs if not p.incoming
+                    ),
+                )
         else:
             self.outgoing_channel = lnd.get_own_alias()
 
@@ -57,9 +59,11 @@ class Htlc:
         else:
             self.event_type = htlc.event_type
 
-        # self.event_outcome = "forward_event"
-
-        # return
+        if is_rest():
+            # RESTFUL HTLCs not fully implemented, so just pretend
+            # these are forward_events for now
+            self.event_outcome = "forward_event"
+            return
         self.event_outcome = self.get_enum_name_from_value(
             htlc.DESCRIPTOR.fields_by_name.items(), htlc.ListFields()[-1][0].number
         )

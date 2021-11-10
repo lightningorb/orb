@@ -116,9 +116,9 @@ class HUD2(BorderedLabel):
                 hud += f'Pending Open: S{pending_open:,}\n'
 
             total = tot + int(
-                cbal.local_balance.sat
-                + cbal.unsettled_remote_balance.sat
-                + pending_open
+                int(cbal.local_balance.sat)
+                + int(cbal.unsettled_remote_balance.sat)
+                + int(pending_open)
             )
 
             hud += f"Total Balance: S{total:,}"
