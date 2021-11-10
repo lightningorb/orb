@@ -39,25 +39,14 @@ class Vector:
         return self.dot(self) ** 0.5
 
     def normalized(self):
-        norm = self.norm()
+        norm = self.norm() or 1
         return Vector(self.x / norm, self.y / norm)
 
     def perp(self):
-        return Vector(1, -self.x / self.y)
+        return Vector(1, -self.x / (self.y or 1))
 
     def __mul__(self, scalar):
         return Vector(self.x * scalar, self.y * scalar)
 
     def __str__(self):
         return f'({self.x}, {self.y})'
-
-
-# A = Vector(0, 0)
-# B = Vector(0, 30)
-
-# AB = B - A
-# AB_perp_normed = AB.perp().normalized()
-# P1 = B + AB_perp_normed * 3
-# P2 = B - AB_perp_normed * 3
-
-# print(f'Point{P1}, and Point{P2}')
