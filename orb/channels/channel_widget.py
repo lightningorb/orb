@@ -119,8 +119,8 @@ class ChannelWidget(Widget):
 
     def anim_incoming(self, s=10):
         start, end = (self.c, self.b) if inverted_channels else (self.c, self.b)
-        anim = Animation(pos=self.start, size=(s, s), duration=0)
-        anim += Animation(pos=self.end, duration=0.4)
+        anim = Animation(pos=start, size=(s, s), duration=0)
+        anim += Animation(pos=end, duration=0.4)
         anim += Animation(size=(0, 0), duration=0.1)
         anim += Animation(pos=(-1000, -1000), duration=0.1)
         anim.start(self.anim_rect)

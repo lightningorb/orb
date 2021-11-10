@@ -209,8 +209,10 @@ class Lnd(LndBase):
         return response
 
     def close_channel(self, channel_point, force, sat_per_vbyte):
+        tx, output = channel_point.split(":")
+        cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
         request = ln.CloseChannelRequest(
-            channel_point=channel_point, force=force, sat_per_vbyte=sat_per_vbyte
+            channel_point=cp, force=force, sat_per_vbyte=sat_per_vbyte
         )
         return self.stub.CloseChannel(request)
 
