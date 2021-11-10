@@ -4,7 +4,13 @@ from kivy.app import App
 def prefs_col(name):
     app = App.get_running_app()
     section, key = name.split('.')
-    return eval(app.config[section][key])
+    col = app.config[section][key]
+    if '#' in col:
+        if len(col) == 7:
+            col += 'ff'
+        r, g, b, a = list(int(col[i : i + 2], base=16) / 255 for i in range(1, 8, 2))
+        return r, g, b, a
+    return eval(col)
 
 
 def pref(name):
