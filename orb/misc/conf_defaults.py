@@ -12,14 +12,10 @@ def set_conf_defaults(config):
     config.set("display", "inverted_channels", 1)
     config.set("display", "show_sent_received", 0)
     config.set("display", "channel_opacity", 0.8)
-    config.set("display", "channels_background_color", '(.2, .2, .3, 1)')
-    config.set("display", "1m_color", '[100 / 255, 245 / 255, 100 / 255, 1]')
-    config.set("display", "node_background_color", '[80 / 255, 80 / 255, 80 / 255, 1]')
-    config.set(
-        "display",
-        "node_selected_background_color",
-        '[150 / 255, 150 / 255, 150 / 255, 1]',
-    )
+    config.set("display", "channels_background_color", '#000003')
+    config.set("display", "1m_color", '#5df75b')
+    config.set("display", "node_background_color", '#505050')
+    config.set("display", "node_selected_background_color", '#969696')
     config.set("display", "node_width", 70)
     config.set("display", "node_height", 100)
     config.set("display", "node_alias_font_size", '80sp')
