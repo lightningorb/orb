@@ -107,54 +107,42 @@ class Lnd(LndBase):
         outgoing_chan_id,
         fee_limit_msat,
     ):
-        if fee_limit_msat:
-            fee_limit = {"fixed_msat": int(fee_limit_msat)}
-        else:
-            fee_limit = None
         if last_hop_pubkey:
             last_hop_pubkey = base64.b16decode(last_hop_pubkey, True)
         url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}"
+        exit()
         r = requests.get(
             url,
             headers=self.headers,
             verify=self.cert_path,
             data=json.dumps(
                 {
-                    "amt": amount,
+                    "use_mission_control": True,
                     "last_hop_pubkey": last_hop_pubkey,
                     "fee_limit.fixed_msat": fee_limit_msat,
                     "ignored_nodes": [x["from"] for x in ignored_pairs],
-                    "outgoing_chan_id": outgoing_chan_id,
+                    "outgoing_chan_id": int(outgoing_chan_id),
                 }
             ),
         )
         obj = r.json()
         return Munch.fromDict(obj).routes
-        # request = ln.QueryRoutesRequest(
-        #     pub_key=pub_key,
-        #     last_hop_pubkey=last_hop_pubkey,
-        #     outgoing_chan_id=outgoing_chan_id,
-        #     amt=amount,
-        #     ignored_pairs=ignored_pairs,
-        #     fee_limit=fee_limit,
-        #     ignored_nodes=ignored_nodes,
-        #     use_mission_control=True,
-        # )
-        # try:
-        #     response = self.stub.QueryRoutes(request)
-        #     return response.routes
-        # except:
-        #     return None
 
     def send_payment(self, payment_request, route):
         last_hop = route.hops[-1]
-        last_hop.mpp_record.payment_addr = payment_request.payment_addr
-        last_hop.mpp_record.total_amt_msat = payment_request.num_msat
-        request = lnrouter.SendToRouteRequest(route=route)
-        request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
-        result = []
-        res = self.router_stub.SendToRouteV2(request)
-        return res
+        last_hop.mpp_record = Munch.fromDict(
+            dict(
+                payment_addr=payment_request.payment_addr,
+                total_amt_msat=payment_request.num_msat,
+            )
+        )
+        url = f"{self.fqdn}/v2/router/route/send"
+        pbytes = self.hex_string_to_bytes(payment_request.payment_hash)
+        data = {'payment_hash': base64.b64encode(pbytes).decode(), 'route': route}
+        r = requests.post(
+            url, data=json.dumps(data), headers=self.headers, verify=self.cert_path
+        )
+        return Munch.fromDict(r.json())
 
     def get_htlc_events(self):
         url = f"{self.fqdn}/v2/router/htlcevents"
@@ -179,3 +167,34 @@ class Lnd(LndBase):
             url, headers=self.headers, verify=self.cert_path, data=json.dumps(data)
         )
         return Munch.fromDict(r.json())
+
+    def get_pending_channels(self):
+        url = f"{self.fqdn}/v1/channels/pending"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        return Munch.fromDict(r.json())
+
+    def router_send(
+        self,
+        pub_key,
+        amount,
+        payment_request,
+        last_hop_pubkey,
+        outgoing_chan_id,
+        fee_limit_msat,
+        payment_request_raw,
+    ):
+        url = f'{self.fqdn}/v2/router/send'
+        data = {
+            'payment_request': payment_request_raw,
+            'timeout_seconds': 120,
+            'fee_limit_msat': int(fee_limit_msat),
+            'outgoing_chan_id': outgoing_chan_id,
+        }
+        r = requests.post(
+            url,
+            headers=self.headers,
+            verify=self.cert_path,
+            stream=True,
+            data=json.dumps(data),
+        )
+        return r

@@ -66,7 +66,7 @@ class Rebalance(PopupDropShadow):
                     ratio=0.5,
                 )
 
-            payment_request = data_manager.data_man.lnd.generate_invoice(
+            raw, payment_request = data_manager.data_man.lnd.generate_invoice(
                 memo='rebalance', amount=amount
             )
             status = pay_thread(
@@ -74,6 +74,7 @@ class Rebalance(PopupDropShadow):
                 thread_n=0,
                 fee_rate=int(self.ids.fee_rate.text),
                 payment_request=payment_request,
+                payment_request_raw=raw,
                 outgoing_chan_id=self.chan_id,
                 last_hop_pubkey=self.last_hop_pubkey,
                 max_paths=int(self.ids.max_paths.text),

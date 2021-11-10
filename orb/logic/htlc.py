@@ -13,21 +13,22 @@ class Htlc:
         channels = lnd.get_channels()
         if getattr(htlc, "incoming_channel_id") != 0:
             ic = next(
-                iter(c for c in channels if c.chan_id == htlc.incoming_channel_id)
+                iter(c for c in channels if c.chan_id == htlc.incoming_channel_id), None
             )
-            self.incoming_channel = lnd.get_alias_from_channel_id(
-                htlc.incoming_channel_id
-            )
-            self.incoming_channel_id = htlc.incoming_channel_id
-            self.incoming_channel_capacity = ic.capacity
-            self.incoming_channel_remote_balance = ic.remote_balance
-            self.incoming_channel_local_balance = ic.local_balance
-            self.incoming_channel_pending_htlcs = dict(
-                pending_in=sum(int(p.amount) for p in ic.pending_htlcs if p.incoming),
-                pending_out=sum(
-                    int(p.amount) for p in ic.pending_htlcs if not p.incoming
-                ),
-            )
+            if ic:
+                self.incoming_channel = lnd.get_alias_from_channel_id(
+                    htlc.incoming_channel_id
+                )
+                self.incoming_channel_id = htlc.incoming_channel_id
+                self.incoming_channel_capacity = ic.capacity
+                self.incoming_channel_remote_balance = ic.remote_balance
+                self.incoming_channel_local_balance = ic.local_balance
+                self.incoming_channel_pending_htlcs = dict(
+                    pending_in=sum(int(p.amount) for p in ic.pending_htlcs if p.incoming),
+                    pending_out=sum(
+                        int(p.amount) for p in ic.pending_htlcs if not p.incoming
+                    ),
+                )
         else:
             self.incoming_channel = lnd.get_own_alias()
         if getattr(htlc, "outgoing_channel_id") != 0:

@@ -91,7 +91,9 @@ class Lnd(LndBase):
     def generate_invoice(self, memo, amount):
         invoice_request = ln.Invoice(memo=memo, value=amount, expiry=60)
         add_invoice_response = self.stub.AddInvoice(invoice_request)
-        return self.decode_payment_request(add_invoice_response.payment_request)
+        return add_invoice_response.payment_request, self.decode_payment_request(
+            add_invoice_response.payment_request
+        )
 
     def cancel_invoice(self, payment_hash):
         payment_hash_bytes = self.hex_string_to_bytes(payment_hash)
@@ -187,11 +189,6 @@ class Lnd(LndBase):
         result = []
         res = self.router_stub.SendToRouteV2(request)
         return res
-
-    @staticmethod
-    def hex_string_to_bytes(hex_string):
-        decode_hex = codecs.getdecoder("hex_codec")
-        return decode_hex(hex_string)[0]
 
     @lru_cache(maxsize=None)
     def decode_request(self, req: str):

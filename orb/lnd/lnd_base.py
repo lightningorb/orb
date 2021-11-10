@@ -1,3 +1,6 @@
+import codecs
+
+
 class LndBase:
     def get_alias_from_channel_id(self, chan_id):
         for channel in self.get_channels():
@@ -29,3 +32,8 @@ class LndBase:
                     int(p.amount) for p in channel.pending_htlcs if not p.incoming
                 )
                 return dict(pending_in=pending_in, pending_out=pending_out)
+
+    @staticmethod
+    def hex_string_to_bytes(hex_string):
+        decode_hex = codecs.getdecoder("hex_codec")
+        return decode_hex(hex_string)[0]

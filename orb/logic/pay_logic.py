@@ -1,8 +1,11 @@
+import json
+from traceback import print_exc
+
+import arrow
+
 from orb.logic.routes import Routes
 from orb.misc.ui_actions import console_output
 import data_manager
-from traceback import print_exc
-import arrow
 
 
 class PaymentStatus:
@@ -78,11 +81,38 @@ def pay_thread(
     outgoing_chan_id,
     last_hop_pubkey,
     max_paths,
+    payment_request_raw,
+):
+    from orb.misc.prefs import is_rest
+
+    func = pay_thread_rest if is_rest() else pay_thread_grpc
+
+    return func(
+        inst=inst,
+        thread_n=thread_n,
+        fee_rate=fee_rate,
+        payment_request=payment_request,
+        outgoing_chan_id=outgoing_chan_id,
+        last_hop_pubkey=last_hop_pubkey,
+        max_paths=max_paths,
+        payment_request_raw=payment_request_raw,
+    )
+
+
+def pay_thread_grpc(
+    inst,
+    thread_n,
+    fee_rate,
+    payment_request,
+    outgoing_chan_id,
+    last_hop_pubkey,
+    max_paths,
+    payment_request_raw,
 ):
     from orb.store import model
 
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
-    fee_limit_sat = fee_rate * payment_request.num_satoshis / 1_000_000
+    fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
     console_output(f'fee_limit_sat: {fee_limit_sat}')
     console_output(f'fee_limit_msat: {fee_limit_msat}')
@@ -98,7 +128,7 @@ def pay_thread(
     has_next = False
     count = 0
     payment = model.Payment(
-        amount=payment_request.num_satoshis,
+        amount=int(payment_request.num_satoshis),
         dest=payment_request.destination,
         fees=0,
         succeeded=False,
@@ -128,6 +158,7 @@ def pay_thread(
                     payment_request, route
                 )
             except Exception as e:
+                print(e)
                 code = e.args[0].code.name
                 details = e.args[0].details
                 # 'attempted value exceeds paymentamount'
@@ -142,7 +173,9 @@ def pay_thread(
                     return PaymentStatus.already_paid
                 console_output(f"T{thread_n}: exception.. not sure what's up")
                 return PaymentStatus.exception
-            is_successful = response and response.failure.code == 0
+            is_successful = response and (
+                response.failure is None or response.failure.code == 0
+            )
             if is_successful:
                 console_output(f"T{thread_n}: SUCCESS")
                 attempt.succeeded = True
@@ -167,4 +200,44 @@ def pay_thread(
         console_output(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes
     console_output('No more routes found.')
+    return PaymentStatus.none
+
+
+def pay_thread_rest(
+    inst,
+    thread_n,
+    fee_rate,
+    payment_request,
+    outgoing_chan_id,
+    last_hop_pubkey,
+    max_paths,
+    payment_request_raw,
+):
+    print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
+    fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
+    fee_limit_msat = fee_limit_sat * 1_000
+    console_output(f'fee_limit_sat: {fee_limit_sat}')
+    console_output(f'fee_limit_msat: {fee_limit_msat}')
+    from data_manager import data_man
+
+    r = data_man.lnd.router_send(
+        pub_key=payment_request.destination,
+        amount=payment_request.num_satoshis,
+        payment_request=payment_request,
+        last_hop_pubkey=last_hop_pubkey,
+        outgoing_chan_id=outgoing_chan_id,
+        fee_limit_msat=fee_limit_msat,
+        payment_request_raw=payment_request_raw,
+    )
+
+    for raw_response in r.iter_lines():
+        json_response = json.loads(raw_response)
+        print(json_response)
+        # console_output(raw_response)
+        if 'result' in json_response:
+            if json_response['result']['status'] == 'SUCCEEDED':
+                return PaymentStatus.success
+        elif 'error' in json_response:
+            if json_response['error']['message'] == 'invoice is already paid':
+                return PaymentStatus.already_paid
     return PaymentStatus.none

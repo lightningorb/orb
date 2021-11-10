@@ -29,7 +29,7 @@ class Invoice(BoxLayout):
 
     def update(self, *args):
         zero = timedelta(hours=0, minutes=0, seconds=0)
-        delta = arrow.get(self.timestamp + self.expiry) - arrow.now()
+        delta = arrow.get(int(self.timestamp) + int(self.expiry)) - arrow.now()
         if delta < zero:
             self.ids.expiry_label.text = 'expired'
         else:

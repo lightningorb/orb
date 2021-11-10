@@ -100,7 +100,7 @@ class Autobalance(Widget):
 
         self.is_rebalancing = False
 
-        payment_request = data_man.lnd.generate_invoice(
+        raw, payment_request = data_man.lnd.generate_invoice(
             memo='rebalance', amount=num_sats
         )
 
@@ -109,6 +109,7 @@ class Autobalance(Widget):
             thread_n=0,
             fee_rate=int(100),
             payment_request=payment_request,
+            payment_request_raw=raw,
             outgoing_chan_id=outbound_channel,
             last_hop_pubkey=inbound_pubkey,
             max_paths=100,

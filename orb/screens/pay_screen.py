@@ -105,6 +105,7 @@ class PayScreen(PopupDropShadow):
                         outgoing_chan_id=chan_id,
                         last_hop_pubkey=None,
                         max_paths=int(self.ids.max_paths.text),
+                        payment_request_raw=invoice.raw,
                     )
                     if chan_id in chan_ignore:
                         with lock:
