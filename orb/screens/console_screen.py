@@ -1,7 +1,9 @@
 import sys
-import data_manager
-
+from traceback import format_exc
 from io import StringIO
+from threading import Thread
+
+from pygments.lexers import CythonLexer
 
 from kivy.clock import Clock
 from kivy.uix.button import Button
@@ -12,10 +14,10 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.app import App
 from kivy.uix.codeinput import CodeInput
-from pygments.lexers import CythonLexer
 from kivy.uix.splitter import Splitter
 from kivy.properties import ObjectProperty
-from traceback import format_exc
+
+import data_manager
 
 
 class ConsoleSplitter(Splitter):
@@ -105,6 +107,7 @@ class ConsoleScreen(Screen):
 
     @mainthread
     def print(self, text):
+
         if text:
             text = str(text)
             app = App.get_running_app()
@@ -117,6 +120,7 @@ class ConsoleScreen(Screen):
             last_line = next(iter([x for x in text.split("\n") if x][::-1]), None)
             if last_line:
                 app.root.ids.status_line.ids.line_output.output = last_line
+                app.root.ids.status_line.ids.line_output.cursor = (0, 0)
 
 
 class InstallScript(Popup):
