@@ -4,6 +4,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
+from orb.misc.prefs import is_rest
 
 
 class AEChannel(GridLayout):
@@ -12,6 +13,48 @@ class AEChannel(GridLayout):
     def __init__(self, *args, **kwargs):
         super(AEChannel, self).__init__(*args, **kwargs)
         self.add_widget(Label(text="         "))
+
+        if is_rest():
+            self.populate_rest()
+        else:
+            self.populate_grpc()
+
+    def populate_rest(self):
+        c = self.channel
+        for field in c:
+            if type(c[field]) is bool:
+                widget = BoxLayout(
+                    orientation="horizontal", height=100, size_hint_y=None
+                )
+                widget.add_widget(Label(text=field))
+                widget.add_widget(MDCheckbox(active=c[field]))
+                self.add_widget(widget)
+            elif type(c[field]) is Munch:
+                self.add_widget(Label(text="         "))
+                self.add_widget(Label(text=field))
+                try:
+                    for f in c[field]:
+                        widget = MDTextField(
+                            helper_text=f,
+                            helper_text_mode="persistent",
+                            text=str(c[field][f]),
+                        )
+                        self.add_widget(widget)
+                        widget.cursor = (0, 0)
+                except:
+                    pass
+            elif type(c[field]) in [int, str]:
+                val = c[field]
+                if type(c[field]) is int:
+                    val = str(int(c[field]))
+                widget = MDTextField(
+                    helper_text=field, helper_text_mode="persistent", text=val
+                )
+                self.add_widget(widget)
+                widget.readonly = True
+        self.add_widget(Label(text="         "))
+
+    def populate_grpc(self):
         for field in self.channel.ListFields():
             if field[0].type == 8:
                 widget = BoxLayout(

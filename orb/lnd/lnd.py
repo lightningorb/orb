@@ -1,5 +1,4 @@
 import base64
-import codecs
 import os
 from functools import lru_cache
 from traceback import print_exc

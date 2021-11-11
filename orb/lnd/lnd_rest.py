@@ -1,3 +1,4 @@
+from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from functools import lru_cache
 import base64, json, requests
@@ -46,7 +47,6 @@ class Lnd(LndBase):
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return Munch.fromDict(r.json())
 
-    @lru_cache(maxsize=None)
     def get_edge(self, channel_id):
         url = f"{self.fqdn}/v1/graph/edge/{channel_id}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
@@ -76,7 +76,7 @@ class Lnd(LndBase):
     def get_own_pubkey(self):
         return self.get_info().identity_pubkey
 
-    @lru_cache(maxsize=None)
+    @aliases_cache
     def get_node_alias(self, pub_key):
         url = f"{self.fqdn}/v1/graph/node/{pub_key}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
@@ -198,3 +198,14 @@ class Lnd(LndBase):
             data=json.dumps(data),
         )
         return r
+
+    def update_channel_policy(self, channel, *args, **kwargs):
+        tx, output = channel.channel_point.split(":")
+        url = f'{self.fqdn}/v1/chanpolicy'
+        kwargs.update(dict(chan_point=dict(funding_txid_str=tx, output_index=output)))
+        kwargs['global'] = False
+        kwargs['base_fee_msat'] = str(kwargs['base_fee_msat'])
+        r = requests.post(
+            url, headers=self.headers, verify=self.cert_path, data=json.dumps(kwargs)
+        )
+        return Munch.fromDict(r.json())
