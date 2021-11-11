@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
 from orb.misc.prefs import is_rest
+from munch import Munch
 
 
 class AEChannel(GridLayout):

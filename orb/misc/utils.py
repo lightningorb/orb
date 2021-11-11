@@ -1,3 +1,4 @@
+import math
 from kivy.app import App
 
 
@@ -28,15 +29,24 @@ class hashabledict(dict):
 
 
 class Vector:
-    def __init__(self, x, y):
+    def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
+
+    def __str__(self):
+        return f'Vector({self.x}, {self.y})'
 
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
 
     def __add__(self, other):
         return Vector(self.x + other.x, self.y + other.y)
+
+    def dist(self, other):
+        return math.sqrt(math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2))
+
+    def mid(self, other):
+        return Vector((self.x + other.x) / 2, (self.y + other.y) / 2)
 
     def dot(self, other):
         return self.x * other.x + self.y * other.y
@@ -56,3 +66,10 @@ class Vector:
 
     def __str__(self):
         return f'({self.x}, {self.y})'
+
+
+def closest_point_on_line(p1, p2, p3):
+    dx, dy = p2.x - p1.x, p2.y - p1.y
+    det = dx * dx + dy * dy
+    a = (dy * (p3.y - p1.y) + dx * (p3.x - p1.x)) / det
+    return Vector(p1.x + a * dx, p1.y + a * dy)
