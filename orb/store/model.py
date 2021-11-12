@@ -3,7 +3,7 @@ from functools import lru_cache
 import arrow
 from peewee import *
 from kivy.app import App
-from playhouse.hybrid import hybrid_property
+from playhouse.hybrid import hybrid_property, hybrid_method
 
 path_finding_db_name = 'path_finding'
 
@@ -108,17 +108,15 @@ class Invoice(Model):
     expiry = IntegerField()
     description = CharField()
     paid = BooleanField(default=False)
-    # in_flight = BooleanField(default=False)
 
-    @hybrid_property
+    @hybrid_method
     def expired(self):
         """
                                                |
         ------|---------|-----------------------------------
               ts       ts + e
         """
-        exp = (self.timestamp + self.expiry) < arrow.now().timestamp()
-        return exp
+        return (self.timestamp + self.expiry) < arrow.now().timestamp()
 
     class Meta:
         database = get_db('invoices')

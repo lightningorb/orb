@@ -61,7 +61,7 @@ class IngestInvoicesScreen(PopupDropShadow):
         invoices = (
             model.Invoice()
             .select()
-            .where(model.Invoice.expired == False and model.Invoice.paid == False)
+            .where(model.Invoice.expired() == False, model.Invoice.paid == False)
         )
         self.count.text = f"Invoices: {len(invoices)}"
         return invoices
