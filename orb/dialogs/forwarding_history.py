@@ -118,7 +118,7 @@ def sma(data, n=3):
 
 def graph_fees_earned():
     from kivy.uix.popup import Popup
-    from kivy_garden.graph import Graph, MeshLinePlot
+    from kivy_garden.graph import Graph, MeshLinePlot, SmoothLinePlot
 
     fh = get_forwarding_history()
     buckets = defaultdict(int)
@@ -145,13 +145,13 @@ def graph_fees_earned():
         ymax=max(buckets.values()),
     )
     graph.add_plot(
-        MeshLinePlot(
+        SmoothLinePlot(
             color=[1, 0.5, 0.5, 1],
             points=[(k, v) for k, v in enumerate(buckets.values())],
         )
     )
     graph.add_plot(
-        MeshLinePlot(
+        SmoothLinePlot(
             color=[0.5, 0.5, 1, 1],
             points=[(k, v) for k, v in enumerate(sma(list(buckets.values()), 7))],
         )
@@ -170,7 +170,7 @@ def graph_fees_earned():
     popup = Popup(
         title='fees earned',
         content=bl,
-        size_hint=(1, 1),
+        size_hint=(0.9, 0.9),
         background_color=(0.6, 0.6, 0.8, 0.9),
         overlay_color=(0, 0, 0, 0),
     )

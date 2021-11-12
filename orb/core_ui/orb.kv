@@ -119,8 +119,8 @@
                             on_release: app_menu.close_all()
                         ContextMenuTextItem:
                             text: "View"
-                            on_press: view_forwarding_history()
-                            on_release: app_menu.close_all()
+                            # on_press: ()
+                            on_release: (view_forwarding_history(), app_menu.close_all())
                         ContextMenuTextItem:
                             text: "Fees earned"
                             on_press: graph_fees_earned()

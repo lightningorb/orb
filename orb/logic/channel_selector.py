@@ -22,7 +22,7 @@ def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=
         # check whether the amount of sats remaining is enough for the payment
         enough_available_outbound = int(num_sats) < actual_available_outbound
 
-        if chan.chan_id in LNBIG:
+        if int(chan.chan_id) in LNBIG:
             threshold_ratio = 0.1
 
         # check whether the available balance is above a certain ratio, e.g

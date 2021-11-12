@@ -48,6 +48,9 @@ class ChannelsWidget(ScatterLayout):
         self.ids.relative_layout.add_widget(self.node)
         self.ids.relative_layout.add_widget(self.autobalance)
         self.bind(pos=self.update_rect, size=self.update_rect)
+        self.apply_transform(
+            Matrix().scale(0.8, 0.8, 0.8), anchor=(self.size[0] / 2, self.size[1] / 2)
+        )
 
     def add_channel(self, channel, caps=None):
         if not caps:
@@ -55,6 +58,7 @@ class ChannelsWidget(ScatterLayout):
         cn = CNWidget(c=channel, caps=caps, attribute_editor=self.attribute_editor)
         self.cn[channel.chan_id] = cn
         self.ids.relative_layout.add_widget(cn)
+        self.update_rect()
 
     def remove_channel(self, channel, caps=None):
         pass

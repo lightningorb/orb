@@ -3,9 +3,15 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivymd.uix.selectioncontrol import MDCheckbox
+from kivy.uix.checkbox import CheckBox
 from kivymd.uix.textfield import MDTextField
 from orb.misc.prefs import is_rest
 from munch import Munch
+
+
+class MyMDCheckbox(MDCheckbox):
+    def on_touch_down(self, *args):
+        return False
 
 
 class AEChannel(GridLayout):
@@ -29,6 +35,7 @@ class AEChannel(GridLayout):
                 )
                 widget.add_widget(Label(text=field))
                 widget.add_widget(MDCheckbox(active=c[field]))
+                widget.readonly = True
                 self.add_widget(widget)
             elif type(c[field]) is Munch:
                 self.add_widget(Label(text="         "))
@@ -42,6 +49,7 @@ class AEChannel(GridLayout):
                         )
                         self.add_widget(widget)
                         widget.cursor = (0, 0)
+                        widget.readonly = True
                 except:
                     pass
             elif type(c[field]) in [int, str]:
@@ -75,6 +83,7 @@ class AEChannel(GridLayout):
                             text=str(getattr(field[1], f.name)),
                         )
                         self.add_widget(widget)
+                        widget.readonly = True
                 except:
                     pass
             else:
@@ -83,5 +92,6 @@ class AEChannel(GridLayout):
                     helper_text_mode="persistent",
                     text=str(field[1]),
                 )
+                widget.readonly = True
                 self.add_widget(widget)
         self.add_widget(Label(text="         "))
