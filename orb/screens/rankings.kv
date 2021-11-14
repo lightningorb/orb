@@ -93,6 +93,12 @@
                     ActionButton:
                         text: 'Ingest DB'
                         on_release: root.ingest()
+                ActionGroup:
+                    text: 'Edit' 
+                    mode: 'spinner'
+                    ActionButton:
+                        text: 'Copy PKs'
+                        on_release: root.copy_pks()
                 ActionPrevious:
                     title: 'Rankings'
                     app_icon: ''

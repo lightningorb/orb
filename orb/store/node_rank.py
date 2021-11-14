@@ -87,6 +87,7 @@ def count_successes_failures():
     lnd = data_manager.data_man.lnd
     payments = get_payments()
     nodes = defaultdict(lambda: dict(successes=0, failures=0))
+    remote_pubkeys = set([x.remote_pubkey for x in lnd.get_channels()])
     for r in payments.iterator():
         if not r.succeeded:
             continue
@@ -96,18 +97,28 @@ def count_successes_failures():
                     nodes[hop.pk]['successes'] += 1
             elif a.code == 15:
                 nodes[a.weakest_link_pk]['failures'] += 1
-    return sorted(
+
+    rank_without_direct_peers = {
+        pk: nodes[pk] for pk in nodes if pk not in remote_pubkeys
+    }
+
+    sorted_by_successes = sorted(
         [
             [
-                lnd.get_node_alias(node),
-                nodes[node]["successes"],
-                nodes[node]["failures"],
+                f'{lnd.get_node_alias(node)} {node[:10]}',
+                rank_without_direct_peers[node]["successes"],
+                rank_without_direct_peers[node]["failures"],
+                node,
             ]
-            for node in nodes
+            for node in rank_without_direct_peers
         ],
         key=lambda x: x[1],
         reverse=True,
     )
+
+    pks = {x[0]: x[-1] for x in sorted_by_successes}
+    sorted_by_successes = [x[:-1] for x in sorted_by_successes]
+    return pks, sorted_by_successes
 
 
 def ingest_db(path):
