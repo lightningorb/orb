@@ -1,0 +1,60 @@
+#:import dp kivy.metrics.dp 
+
+
+<BatchOpenScreen>:
+    title: 'Batch Open'
+    size: (dp(800), dp(500))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    MDTabs:
+        id: tabs
+        on_tab_switch: root.on_tab_switch(*args)
+        Tab:
+            title: 'ingest'
+            BoxLayout:
+                orientation: 'vertical'
+                MDTextField:
+                    id: pubkeys
+                    text: ''
+                    helper_text: 'Pubkey [, amount]'
+                    helper_text_mode: "persistent"
+                    size_hint_y: 1
+                    multiline: True
+                BoxLayout:
+                    orientation: 'horizontal'
+                    height: dp(60)
+                    size_hint_y: None
+                    MDTextField:
+                        id: amount
+                        text: '100_000_000'
+                        helper_text: 'Total amount in sats'
+                        helper_text_mode: "persistent"
+                        height: dp(60)
+                        width: dp(200)
+                        size_hint: (None, None)
+                    MDRaisedButton:
+                        text: 'Calculate Amounts'
+                        on_release: root.calculate(pubkeys.text, amount.text)
+                        size_hint_x: None
+                        width: dp(100)
+                        height: dp(40)
+                        md_bg_color: 0.3,0.3,0.3,1
+        Tab:
+            title: 'open'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: (1, 1)
+                BoxLayout:
+                    id: table_layout
+                    orientation: 'vertical'
+                    size_hint: (1, 1)
+                MDRaisedButton:
+                    text: 'Open (untested)'
+                    on_release: root.batch_open()
+                    size_hint: (None, None)
+                    width: dp(100)
+                    height: dp(40)
+                    md_bg_color: 0.3,0.3,0.3,1
+
+<Tab>

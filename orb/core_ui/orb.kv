@@ -8,6 +8,7 @@
 #:import PayScreen orb.screens.pay_screen.PayScreen
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
+#:import BatchOpenScreen orb.screens.batch_open_screen.BatchOpenScreen
 #:import CloseChannel orb.screens.close_channel.CloseChannel
 #:import Rebalance orb.screens.rebalance.Rebalance
 #:import prefs_col orb.misc.utils.prefs_col
@@ -89,6 +90,10 @@
                 ContextMenuTextItem:
                     text: "Open Channel"
                     on_press:  OpenChannelScreen().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Batch Open"
+                    on_press:  BatchOpenScreen().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Close Channel"

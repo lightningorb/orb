@@ -10,6 +10,7 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from orb.misc.decorators import silent
+from orb.misc import mempool
 import data_manager
 import threading
 import requests
@@ -218,7 +219,7 @@ class HUD5(BorderedLabel):
 
         @silent
         def func():
-            fees = requests.get("https://mempool.space/api/v1/fees/recommended").json()
+            fees = mempool.get_fees()
             text = f"""\
 Low priority: {fees["hourFee"]} sat/vB
 Medium priority: {fees["halfHourFee"]} sat/vB

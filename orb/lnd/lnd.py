@@ -330,3 +330,24 @@ class Lnd(LndBase):
     def subscribe_channel_graph(self):
         request = ln.GraphTopologySubscription()
         return self.stub.SubscribeChannelGraph(request)
+
+    def batch_open(self, pubkeys, amounts, sat_per_vbyte):
+        chans = []
+        for pk, amount in zip(pubkeys, amounts):
+            chan = dict(
+                node_pubkey=pk,
+                local_funding_amount=int(amount),
+                push_sat=0,
+                private=False,
+                min_htlc_msat=1000,
+            )
+        request = lnrpc.BatchOpenChannelRequest(
+            sat_per_vbyte=sat_per_vbyte,
+            spend_unconfirmed=False,
+            channels=chans,
+            # target_conf=<int32>,
+            # min_confs=<int32>,
+            # label=<string>,
+        )
+        response = self.stub.BatchOpenChannel(request)
+        print(response)
