@@ -1,9 +1,12 @@
+import sys
 import base64
 import os
 from functools import lru_cache
 from traceback import print_exc
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
+
+sys.path.append('orb/lnd/grpc_generate')
 
 try:
     import grpc
@@ -334,14 +337,22 @@ class Lnd(LndBase):
     def batch_open(self, pubkeys, amounts, sat_per_vbyte):
         chans = []
         for pk, amount in zip(pubkeys, amounts):
-            chan = dict(
-                node_pubkey=pk,
-                local_funding_amount=int(amount),
-                push_sat=0,
-                private=False,
-                min_htlc_msat=1000,
-            )
-        request = lnrpc.BatchOpenChannelRequest(
+            info = self.get_node_info(pk)
+            for address in info.node.addresses:
+                try:
+                    self.connect(f'{pk}@{address.addr}')
+                except:
+                    pass
+
+        chan = dict(
+            node_pubkey=base64.b16decode(pk, True),
+            local_funding_amount=int(amount),
+            push_sat=0,
+            private=False,
+            min_htlc_msat=1000,
+        )
+        chans.append(chan)
+        request = ln.BatchOpenChannelRequest(
             sat_per_vbyte=sat_per_vbyte,
             spend_unconfirmed=False,
             channels=chans,
