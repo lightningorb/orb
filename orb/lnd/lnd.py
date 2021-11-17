@@ -335,30 +335,20 @@ class Lnd(LndBase):
         return self.stub.SubscribeChannelGraph(request)
 
     def batch_open(self, pubkeys, amounts, sat_per_vbyte):
-        chans = []
-        for pk, amount in zip(pubkeys, amounts):
-            info = self.get_node_info(pk)
-            for address in info.node.addresses:
-                try:
-                    self.connect(f'{pk}@{address.addr}')
-                except:
-                    pass
-
-        chan = dict(
-            node_pubkey=base64.b16decode(pk, True),
-            local_funding_amount=int(amount),
-            push_sat=0,
-            private=False,
-            min_htlc_msat=1000,
+        chans = [
+            dict(
+                node_pubkey=base64.b16decode(pk, True),
+                local_funding_amount=int(amount),
+                push_sat=0,
+                private=False,
+                min_htlc_msat=1000,
+            )
+            for pk, amount in zip(pubkeys, amounts)
+        ]
+        response = self.stub.BatchOpenChannel(
+            ln.BatchOpenChannelRequest(
+                sat_per_vbyte=sat_per_vbyte, spend_unconfirmed=False, channels=chans
+            )
         )
-        chans.append(chan)
-        request = ln.BatchOpenChannelRequest(
-            sat_per_vbyte=sat_per_vbyte,
-            spend_unconfirmed=False,
-            channels=chans,
-            # target_conf=<int32>,
-            # min_confs=<int32>,
-            # label=<string>,
-        )
-        response = self.stub.BatchOpenChannel(request)
         print(response)
+        return response

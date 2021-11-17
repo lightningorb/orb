@@ -40,8 +40,35 @@
                         width: dp(100)
                         height: dp(40)
                         md_bg_color: 0.3,0.3,0.3,1
+                    MDRaisedButton:
+                        text: 'Ingest'
+                        on_release: root.ingest(pubkeys.text)
+                        size_hint_x: None
+                        width: dp(100)
+                        height: dp(40)
+                        md_bg_color: 0.3,0.3,0.3,1
         Tab:
-            title: 'open'
+            title: 'connect'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: (1, 1)
+                MDTextField:
+                    id: connect
+                    text: ''
+                    helper_text: 'Connection Status'
+                    helper_text_mode: "persistent"
+                    size_hint_y: 1
+                    multiline: True
+                    size_hint: (1, 1)
+                MDRaisedButton:
+                    text: 'Connect'
+                    on_release: root.batch_connect()
+                    size_hint: (None, None)
+                    width: dp(100)
+                    height: dp(40)
+                    md_bg_color: 0.3,0.3,0.3,1
+        Tab:
+            title: 'confirm'
             BoxLayout:
                 orientation: 'vertical'
                 size_hint: (1, 1)
@@ -49,8 +76,21 @@
                     id: table_layout
                     orientation: 'vertical'
                     size_hint: (1, 1)
+        Tab:
+            title: 'open'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: (1, 1)
+                MDTextField:
+                    id: open_status
+                    text: ''
+                    helper_text: 'Open Status'
+                    helper_text_mode: "persistent"
+                    size_hint_y: 1
+                    multiline: True
+                    size_hint: (1, 1)
                 MDRaisedButton:
-                    text: 'Open (untested)'
+                    text: 'Open'
                     on_release: root.batch_open()
                     size_hint: (None, None)
                     width: dp(100)
