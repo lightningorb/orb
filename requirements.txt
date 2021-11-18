@@ -12,3 +12,5 @@ peewee
 arrow
 kivy_garden.graph
 humanize
+currency-symbols
+forex-python

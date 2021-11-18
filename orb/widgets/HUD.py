@@ -13,8 +13,9 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
-from orb.misc.decorators import silent
+from orb.misc.decorators import silent, guarded
 from orb.misc import mempool
+from orb.misc.forex import forex
 
 import data_manager
 
@@ -50,20 +51,21 @@ class HUD1(BorderedLabel):
         Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
-    @silent
+    @guarded
     def get_lnd_data(self, *args):
         @mainthread
         def update_gui(text):
             self.hud = text
             self.show()
 
-        @silent
+        @guarded
         def func():
             lnd = data_manager.data_man.lnd
             fr = lnd.fee_report()
             update_gui(
-                f"Day: S{int(fr.day_fee_sum):,}\nWeek S{int(fr.week_fee_sum):,}\nMonth:"
-                f" S{int(fr.month_fee_sum):,}"
+                f"Day: {forex(fr.day_fee_sum)}\nWeek"
+                f" {forex(fr.week_fee_sum)}\nMonth:"
+                f" {forex(fr.month_fee_sum)}"
             )
 
         threading.Thread(target=func).start()
@@ -81,14 +83,14 @@ class HUD2(BorderedLabel):
         Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
-    @silent
+    @guarded
     def get_lnd_data(self, *args):
         @mainthread
         def update_gui(text):
             self.hud = text
             self.show()
 
-        @silent
+        @guarded
         def func():
             lnd = data_manager.data_man.lnd
             bal = lnd.get_balance()
@@ -101,23 +103,21 @@ class HUD2(BorderedLabel):
                 for channel in pending_channels.pending_open_channels
             )
 
-            hud = f"Chain Balance: S{tot:,}\n"
+            hud = f"Chain Balance: {forex(tot)}\n"
             if tot != conf:
-                hud += f"Conf. Chain Balance: S{conf:,}\n"
-                hud += f"Unconf. Chain Balance: S{unconf:,}\n"
+                hud += f"Conf. Chain Balance: {conf}\n"
+                hud += f"Unconf. Chain Balance: {unconf}\n"
 
             cbal = lnd.channel_balance()
-            hud += f"Local Balance: S{int(cbal.local_balance.sat):,}\n"
+            hud += f"Local Balance: {forex(cbal.local_balance.sat)}\n"
             if cbal.unsettled_local_balance.sat:
-                hud += f"Unset. Local B.: S{int(cbal.unsettled_local_balance.sat):,}\n"
+                hud += f"Unset. Local B.: {forex(cbal.unsettled_local_balance.sat)}\n"
             if cbal.unsettled_remote_balance.sat:
-                hud += (
-                    f"Unset. Remote B.: S{int(cbal.unsettled_remote_balance.sat):,}\n"
-                )
-            hud += f"Remote Balance: S{int(cbal.remote_balance.sat):,}\n"
+                hud += f"Unset. Remote B.: {forex(cbal.unsettled_remote_balance.sat)}\n"
+            hud += f"Remote Balance: {forex(cbal.remote_balance.sat)}\n"
 
             if pending_open:
-                hud += f'Pending Open: S{pending_open:,}\n'
+                hud += f'Pending Open: {forex(pending_open)}\n'
 
             total = tot + int(
                 int(cbal.local_balance.sat)
@@ -125,7 +125,7 @@ class HUD2(BorderedLabel):
                 + int(pending_open)
             )
 
-            hud += f"Total Balance: S{total:,}"
+            hud += f"Total Balance: {forex(total)}"
             update_gui(hud)
 
         threading.Thread(target=func).start()

@@ -161,6 +161,20 @@
       "key":"round_central_node"
    },
    {
+      "type":"options",
+      "title":"Display Currency",
+      "desc":"Display currency (in relevant components)",
+      "section":"display",
+      "key":"currency",
+      "options":[
+         "BTC",
+         "SAT",
+         "PHP",
+         "EUR",
+         "USD"
+      ]
+   },
+   {
       "type":"title",
       "title":"Audio"
    },

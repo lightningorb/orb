@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
 from orb.misc.ui_actions import console_output
+from orb.misc.forex import forex
 
 import data_manager
 
@@ -92,9 +93,9 @@ def view_forwarding_history():
     text = f"""
     Satoshis:
 
-    total fees: s{total_fee:,}
-    total out: s{total_out:,} 
-    total in: s{total_in:,}
+    total fees: {forex(total_fee)}
+    total out: s{forex(total_out)} 
+    total in: s{forex(total_in)}
 
     last event:
     {arrow.get(last_event).format('YYYY-MM-DD HH:mm:ss')}
