@@ -1,10 +1,13 @@
+from collections import defaultdict
+from threading import Thread
+import arrow
+
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-import data_manager
+
 from orb.misc.ui_actions import console_output
-from threading import Thread
-from collections import defaultdict
-import arrow
+
+import data_manager
 
 
 def get_forwarding_history():

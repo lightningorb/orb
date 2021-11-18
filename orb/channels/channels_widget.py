@@ -6,12 +6,12 @@ from orb.logic.htlcs_thread import HTLCsThread
 from orb.channels.channels_thread import ChannelsThread
 from orb.channels.CN_widget import CNWidget
 from orb.widgets.node import Node
-import data_manager
 from orb.misc.utils import pref
 from orb.misc.prefs import is_mock
 from orb.dialogs.autobalance import Autobalance
 from orb.misc.decorators import guarded
 
+import data_manager
 
 class ChannelsWidget(ScatterLayout):
     attribute_editor = ObjectProperty(None)

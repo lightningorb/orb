@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
+
 from orb.channels.channels_widget import ChannelsWidget
 from orb.misc.decorators import guarded
 

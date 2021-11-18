@@ -1,8 +1,9 @@
+import data_manager
+import time
+
 from kivy.clock import mainthread
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
-import data_manager
-import time
 
 
 class MailScreen(Screen):

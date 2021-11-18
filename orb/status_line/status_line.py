@@ -1,9 +1,11 @@
+from io import StringIO
+import sys
+
 from kivy.clock import mainthread
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
-from io import StringIO
-import sys
+
 
 class StatusLine(BoxLayout):
     def __init__(self, *args, **kwargs):

@@ -1,9 +1,11 @@
+from threading import Thread
+
 from kivy.animation import Animation
 from kivy.properties import ListProperty, ObjectProperty, BooleanProperty
 from kivy.uix.button import Button
-import data_manager
-from threading import Thread
+
 from orb.misc.utils import prefs_col, pref
+import data_manager
 
 
 class Node(Button):

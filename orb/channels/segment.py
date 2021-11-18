@@ -1,10 +1,12 @@
+from math import ceil
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.graphics.vertex_instructions import Ellipse
+
 from orb.misc.lerp import lerp_2d
-from math import ceil
 from orb.misc.utils import prefs_col
 
 

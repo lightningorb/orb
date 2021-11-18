@@ -1,7 +1,8 @@
-from orb.components.popup_drop_shadow import PopupDropShadow
 from kivy.clock import Clock
 import data_manager
 import requests
+
+from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 from orb.misc.ui_actions import console_output
 

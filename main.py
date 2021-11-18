@@ -24,6 +24,7 @@ from orb.screens.about import About
 from orb.screens.rankings import Rankings
 from orb.widgets.HUD import HUD
 from orb.dialogs.fee_spy import FeeSpy
+from orb.attribute_editor.AE_fees import AEFees
 
 from orb.core_ui.main_layout import MainLayout
 from orb.status_line.status_line import StatusLine
@@ -52,6 +53,7 @@ keep(StatusLine)
 keep(TopMenu)
 keep(HUD)
 keep(MailScreen)
+keep(AEFees)
 
 if __name__ == "__main__":
     OrbApp().run()

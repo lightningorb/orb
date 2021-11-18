@@ -1,10 +1,11 @@
+from threading import Thread
+
 from kivy.clock import mainthread
 from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 
-from threading import Thread
-import data_manager
 from orb.misc.decorators import guarded
+import data_manager
 
 
 class AEFees(Widget):

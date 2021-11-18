@@ -1,12 +1,15 @@
-from kivymd.app import MDApp
-from orb.core_ui.main_layout import MainLayout
-import data_manager
-from kivy.lang import Builder
 from pathlib import Path
+
+from kivymd.app import MDApp
+from kivy.lang import Builder
+
 from orb.misc.monkey_patch import do_monkey_patching
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
+from orb.core_ui.main_layout import MainLayout
+
+import data_manager
 
 do_monkey_patching()
 

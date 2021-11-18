@@ -1,12 +1,15 @@
-from traceback import format_exc
 import sys
+from traceback import format_exc
 from io import StringIO
-from orb.misc.ui_actions import console_output
+
 from kivy_garden.contextmenu import AppMenu
 from kivy.app import App
 from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
+
+from orb.misc.ui_actions import console_output
+
 import data_manager
 
 

@@ -1,14 +1,16 @@
+import math
+
 from kivy.app import App
 from kivy.properties import ObjectProperty
-import math
 from kivy.uix.widget import Widget
+
 from orb.channels.channel_widget import ChannelWidget
 from orb.widgets.node import Node
-import data_manager
 from orb.widgets.sent_received_widget import SentReceivedWidget
 from orb.misc.utils import pref
 from orb.misc.prefs import inverted_channels
 
+import data_manager
 
 class CNWidget(Widget):
     attribute_editor = ObjectProperty(None)

@@ -1,5 +1,7 @@
-from kivy.uix.popup import Popup
 import data_manager
+
+from kivy.uix.popup import Popup
+
 from orb.misc.ui_actions import console_output
 from orb.misc.decorators import guarded
 

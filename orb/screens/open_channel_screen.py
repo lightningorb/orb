@@ -1,7 +1,9 @@
 from orb.components.popup_drop_shadow import PopupDropShadow
-import data_manager
 from orb.misc.ui_actions import console_output
 from orb.misc.decorators import guarded
+
+import data_manager
+
 
 class OpenChannelScreen(PopupDropShadow):
     @guarded

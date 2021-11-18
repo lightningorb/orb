@@ -1,11 +1,13 @@
+from threading import Thread
+
 from kivy.clock import mainthread
 from kivy.uix.popup import Popup
 from kivy.metrics import dp
 from kivymd.uix.datatables import MDDataTable
 from kivy.properties import ListProperty
-from threading import Thread
-from orb.misc.decorators import guarded
 from kivy.properties import NumericProperty
+
+from orb.misc.decorators import guarded
 
 
 class FeeSpy(Popup):

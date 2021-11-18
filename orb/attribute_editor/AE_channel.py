@@ -1,12 +1,13 @@
+from munch import Munch
+
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivymd.uix.selectioncontrol import MDCheckbox
-from kivy.uix.checkbox import CheckBox
 from kivymd.uix.textfield import MDTextField
+
 from orb.misc.prefs import is_rest
-from munch import Munch
 
 
 class MyMDCheckbox(MDCheckbox):

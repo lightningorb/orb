@@ -1,14 +1,15 @@
-from kivy.clock import Clock
-from kivy.clock import mainthread
-from kivy.properties import ObjectProperty, NumericProperty, BooleanProperty
-from orb.components.popup_drop_shadow import PopupDropShadow
-from kivy.uix.boxlayout import BoxLayout
-from threading import Thread
 import humanize
 import arrow
 from datetime import timedelta
-
 from traceback import print_exc
+from threading import Thread
+
+from kivy.clock import Clock
+from kivy.clock import mainthread
+from kivy.properties import ObjectProperty, NumericProperty, BooleanProperty
+from kivy.uix.boxlayout import BoxLayout
+
+from orb.components.popup_drop_shadow import PopupDropShadow
 import data_manager
 
 

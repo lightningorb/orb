@@ -1,18 +1,21 @@
-from orb.components.popup_drop_shadow import PopupDropShadow
-from kivy.clock import mainthread
 from threading import Thread
-
 from queue import Queue
 from time import sleep
 import threading
-import data_manager
 from collections import Counter
 from random import choice
+
+from kivy.clock import mainthread
+
 from orb.misc.output import *
 from orb.misc.ui_actions import console_output
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.misc.utils import hashabledict
+from orb.components.popup_drop_shadow import PopupDropShadow
+
+import data_manager
+
 
 avoid = Counter()
 LOOP = '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'

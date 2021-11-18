@@ -1,3 +1,6 @@
+import threading
+import requests
+
 from kivy.clock import mainthread
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
@@ -9,11 +12,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+
 from orb.misc.decorators import silent
 from orb.misc import mempool
+
 import data_manager
-import threading
-import requests
 
 
 class Bordered(Widget):

@@ -1,4 +1,5 @@
-import data_manager
+from threading import Thread
+
 from kivy.uix.label import Label
 from kivy.graphics.context_instructions import Color
 from kivy.properties import ObjectProperty
@@ -7,11 +8,11 @@ from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
 from kivy.animation import Animation
 from kivy.uix.widget import Widget
-from orb.misc.utils import Vector, closest_point_on_line
-from threading import Thread
 
+from orb.misc.utils import Vector, closest_point_on_line
 from orb.misc.ui_actions import console_output
 
+import data_manager
 
 class FeeWidgetLabel(Label):
     def show(self):

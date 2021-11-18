@@ -1,7 +1,10 @@
-from orb.components.popup_drop_shadow import PopupDropShadow
 import io
 import data_manager
+
 from kivy.core.image import Image as CoreImage
+
+from orb.components.popup_drop_shadow import PopupDropShadow
+
 
 try:
     import qrcode
