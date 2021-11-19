@@ -33,6 +33,26 @@ class FowardEvent(Model):
     amt_out_msat = IntegerField()
     timestamp_ns = IntegerField()
 
+    @hybrid_method
+    def this_week(self):
+        return (self.timestamp + 3600 * 24 * 7) > arrow.now().timestamp()
+
+    @hybrid_method
+    def this_month(self):
+        return (self.timestamp + 3600 * 24 * 30) > arrow.now().timestamp()
+
+    @hybrid_method
+    def today(self):
+        """
+           + --------------- + -----------------------> greater than
+          ts                delta               now
+          |                  |                   |
+          v                  v                   v
+        -------------------------------------------------
+
+        """
+        return (self.timestamp + 3600 * 24) > arrow.now().timestamp()
+
     def __str__(self):
         return (
             f'{self.chan_id_in} -> {self.chan_id_out} on'
