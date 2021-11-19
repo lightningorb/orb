@@ -1,11 +1,14 @@
 import json
 from traceback import print_exc
+import threading
 
 import arrow
 
 from orb.logic.routes import Routes
 from orb.misc.ui_actions import console_output
 import data_manager
+
+lock = threading.Lock()
 
 
 class PaymentStatus:
@@ -140,19 +143,22 @@ def pay_thread_grpc(
         count += 1
         has_next = True
         route = routes.get_next()
-        payment.save()
+        with lock:
+            payment.save()
         if route:
             attempt = model.Attempt(
                 payment=payment, weakest_link_pk='', code=0, succeeded=False
             )
-            attempt.save()
+            with lock:
+                attempt.save()
             for j, hop in enumerate(route.hops):
                 node_alias = data_manager.data_man.lnd.get_node_alias(hop.pub_key)
                 text = f"{j:<5}:        {node_alias}"
                 console_output(f'T{thread_n}: {text}')
                 # no actual need for hops for now
                 p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
-                p.save()
+                with lock:
+                    p.save()
             try:
                 response = data_manager.data_man.lnd.send_payment(
                     payment_request, route
@@ -183,9 +189,11 @@ def pay_thread_grpc(
                 payment.fees = route.total_fees
                 for hop in attempt.hops:
                     hop.succeeded = True
-                    hop.save()
-                attempt.save()
-                payment.save()
+                    with lock:
+                        hop.save()
+                with lock:
+                    attempt.save()
+                    payment.save()
                 return PaymentStatus.success
             else:
                 attempt.code = response.failure.code if response else -1000
@@ -194,7 +202,8 @@ def pay_thread_grpc(
                     if response
                     else route.hops[-1].pub_key
                 )
-                attempt.save()
+                with lock:
+                    attempt.save()
                 handle_error(inst, response, route, routes)
     if not has_next:
         console_output(f"T{thread_n}: No routes found!")
