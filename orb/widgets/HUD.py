@@ -105,8 +105,8 @@ class HUD2(BorderedLabel):
 
             hud = f"Chain Balance: {forex(tot)}\n"
             if tot != conf:
-                hud += f"Conf. Chain Balance: {conf}\n"
-                hud += f"Unconf. Chain Balance: {unconf}\n"
+                hud += f"Conf. Chain Balance: {forex(conf)}\n"
+                hud += f"Unconf. Chain Balance: {forex(unconf)}\n"
 
             cbal = lnd.channel_balance()
             hud += f"Local Balance: {forex(cbal.local_balance.sat)}\n"
@@ -117,10 +117,11 @@ class HUD2(BorderedLabel):
             hud += f"Remote Balance: {forex(cbal.remote_balance.sat)}\n"
 
             if pending_open:
-                hud += f'Pending Open: {forex(pending_open)}\n'
+                hud += f"Pending Open: {forex(pending_open)}\n"
 
             total = tot + int(
                 int(cbal.local_balance.sat)
+                + int(cbal.remote_balance.sat)
                 + int(cbal.unsettled_remote_balance.sat)
                 + int(pending_open)
             )
@@ -175,7 +176,7 @@ class HUD4(FloatLayout, Hideable):
             # this probably shouldn't be in update_rect
             d = requests.get(
                 "https://api.coindesk.com/v1/bpi/historical/close.json"
-            ).json()['bpi']
+            ).json()["bpi"]
             min_price, max_price, g = min(d.values()), max(d.values()), []
             for i, key in enumerate(d):
                 g.append(i / len(d) * self.size[0])
@@ -186,10 +187,10 @@ class HUD4(FloatLayout, Hideable):
                 int(
                     requests.get(
                         "https://api.coindesk.com/v1/bpi/currentprice.json"
-                    ).json()['bpi']['USD']['rate_float']
+                    ).json()["bpi"]["USD"]["rate_float"]
                 )
             )
-            self.update_gui(f'${rate}', g)
+            self.update_gui(f"${rate}", g)
 
         threading.Thread(target=func).start()
 
@@ -199,9 +200,9 @@ class HUD4(FloatLayout, Hideable):
             rate = int(
                 requests.get(
                     "https://api.coindesk.com/v1/bpi/currentprice.json"
-                ).json()['bpi']['USD']['rate_float']
+                ).json()["bpi"]["USD"]["rate_float"]
             )
-            self.update_gui(f'${rate}', None)
+            self.update_gui(f"${rate}", None)
 
         threading.Thread(target=func).start()
 
