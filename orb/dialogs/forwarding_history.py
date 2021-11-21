@@ -23,19 +23,19 @@ def download_forwarding_history():
     def func():
         from orb.store import model
 
-        console_output('downloading forwarding history')
+        console_output("downloading forwarding history")
         last = (
             model.FowardEvent.select()
             .order_by(model.FowardEvent.timestamp_ns.desc())
             .first()
         )
-        console_output('last event:')
+        console_output("last event:")
         console_output(last)
         lnd = data_manager.data_man.lnd
         i = 0
         start_time = int(last.timestamp) if last else None
         while True:
-            console_output(f'fetching events {i} -> {i + 100}')
+            console_output(f"fetching events {i} -> {i + 100}")
             fwd = lnd.get_forwarding_history(
                 start_time=start_time, index_offset=i, num_max_events=100
             )
@@ -62,7 +62,7 @@ def download_forwarding_history():
             i += 100
             if not fwd.forwarding_events:
                 break
-        console_output('downloaded forwarding history')
+        console_output("downloaded forwarding history")
 
     Thread(target=func).start()
 
@@ -91,18 +91,16 @@ def view_forwarding_history():
         last_event = f.timestamp
 
     text = f"""
-    Satoshis:
-
     total fees: {forex(total_fee)}
-    total out: s{forex(total_out)} 
-    total in: s{forex(total_in)}
+    total out: {forex(total_out)} 
+    total in: {forex(total_in)}
 
     last event:
     {arrow.get(last_event).format('YYYY-MM-DD HH:mm:ss')}
     """
 
     popup = Popup(
-        title='Total Routing',
+        title="Total Routing",
         content=Label(text=text),
         size_hint=(None, None),
         size=(500, 500),
@@ -116,7 +114,7 @@ def sma(data, n=3):
         if i >= n:
             ret.append(sum(data[i - n : i]) / n)
         else:
-            ret.append(float('nan'))
+            ret.append(float("nan"))
     return ret
 
 
@@ -133,8 +131,8 @@ def graph_fees_earned():
         buckets[date] += f.fee
     graph = Graph(
         size_hint=[1, 0.9],
-        xlabel='Day',
-        ylabel='Sats',
+        xlabel="Day",
+        ylabel="Sats",
         x_ticks_major=5,
         y_ticks_major=10_000,
         y_ticks_minor=1000,
@@ -160,19 +158,19 @@ def graph_fees_earned():
             points=[(k, v) for k, v in enumerate(sma(list(buckets.values()), 7))],
         )
     )
-    bl = BoxLayout(orientation='vertical')
+    bl = BoxLayout(orientation="vertical")
     bl.add_widget(graph)
     bl.add_widget(
         Label(
             size_hint=(1, 0.1),
             text=(
-                f'Total routing fees earned: {round((sum(buckets.values())/1e8), 8)}'
-                f' BTC ({sum(buckets.values()):,} sats)'
+                f"Total routing fees earned: {round((sum(buckets.values())/1e8), 8)}"
+                f" BTC ({sum(buckets.values()):,} sats)"
             ),
         )
     )
     popup = Popup(
-        title='fees earned',
+        title="fees earned",
         content=bl,
         size_hint=(0.9, 0.9),
         background_color=(0.6, 0.6, 0.8, 0.9),
