@@ -117,8 +117,8 @@ def pay_thread_grpc(
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
-    console_output(f'fee_limit_sat: {fee_limit_sat}')
-    console_output(f'fee_limit_msat: {fee_limit_msat}')
+    console_output(f"fee_limit_sat: {fee_limit_sat}")
+    console_output(f"fee_limit_msat: {fee_limit_msat}")
     routes = Routes(
         lnd=data_manager.data_man.lnd,
         pub_key=payment_request.destination,
@@ -147,17 +147,16 @@ def pay_thread_grpc(
             payment.save()
         if route:
             attempt = model.Attempt(
-                payment=payment, weakest_link_pk='', code=0, succeeded=False
+                payment=payment, weakest_link_pk="", code=0, succeeded=False
             )
             with lock:
                 attempt.save()
-            for j, hop in enumerate(route.hops):
-                node_alias = data_manager.data_man.lnd.get_node_alias(hop.pub_key)
-                text = f"{j:<5}:        {node_alias}"
-                console_output(f'T{thread_n}: {text}')
-                # no actual need for hops for now
-                p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
-                with lock:
+                for j, hop in enumerate(route.hops):
+                    node_alias = data_manager.data_man.lnd.get_node_alias(hop.pub_key)
+                    text = f"{j:<5}:        {node_alias}"
+                    console_output(f"T{thread_n}: {text}")
+                    # no actual need for hops for now
+                    p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
                     p.save()
             try:
                 response = data_manager.data_man.lnd.send_payment(
@@ -169,13 +168,13 @@ def pay_thread_grpc(
                 details = e.args[0].details
                 # 'attempted value exceeds paymentamount'
                 if (
-                    code == 'UNKNOWN'
-                    and details == 'attempted value exceeds paymentamount'
+                    code == "UNKNOWN"
+                    and details == "attempted value exceeds paymentamount"
                 ):
-                    console_output(f'T{thread_n}: INVOICE CURRENTLY INFLIGHT')
+                    console_output(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
                     return PaymentStatus.inflight
-                if code == 'ALREADY_EXISTS' and details == 'invoice is already paid':
-                    console_output(f'T{thread_n}: INVOICE IS ALREADY PAID')
+                if code == "ALREADY_EXISTS" and details == "invoice is already paid":
+                    console_output(f"T{thread_n}: INVOICE IS ALREADY PAID")
                     return PaymentStatus.already_paid
                 console_output(f"T{thread_n}: exception.. not sure what's up")
                 return PaymentStatus.exception
@@ -187,11 +186,10 @@ def pay_thread_grpc(
                 attempt.succeeded = True
                 payment.succeeded = True
                 payment.fees = route.total_fees
-                for hop in attempt.hops:
-                    hop.succeeded = True
-                    with lock:
-                        hop.save()
                 with lock:
+                    for hop in attempt.hops:
+                        hop.succeeded = True
+                        hop.save()
                     attempt.save()
                     payment.save()
                 return PaymentStatus.success
@@ -208,7 +206,7 @@ def pay_thread_grpc(
     if not has_next:
         console_output(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes
-    console_output('No more routes found.')
+    console_output("No more routes found.")
     return PaymentStatus.none
 
 
@@ -225,8 +223,8 @@ def pay_thread_rest(
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
-    console_output(f'fee_limit_sat: {fee_limit_sat}')
-    console_output(f'fee_limit_msat: {fee_limit_msat}')
+    console_output(f"fee_limit_sat: {fee_limit_sat}")
+    console_output(f"fee_limit_msat: {fee_limit_msat}")
     from data_manager import data_man
 
     r = data_man.lnd.router_send(
@@ -243,10 +241,10 @@ def pay_thread_rest(
         json_response = json.loads(raw_response)
         print(json_response)
         # console_output(raw_response)
-        if 'result' in json_response:
-            if json_response['result']['status'] == 'SUCCEEDED':
+        if "result" in json_response:
+            if json_response["result"]["status"] == "SUCCEEDED":
                 return PaymentStatus.success
-        elif 'error' in json_response:
-            if json_response['error']['message'] == 'invoice is already paid':
+        elif "error" in json_response:
+            if json_response["error"]["message"] == "invoice is already paid":
                 return PaymentStatus.already_paid
     return PaymentStatus.none

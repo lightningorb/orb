@@ -1,15 +1,43 @@
 try:
     from grpc_generated import router_pb2 as lnrouter
     from grpc_generated import lightning_pb2 as lnrpc
-    from orb.lnd.lnd import Lnd
-    import datetime
 except:
     pass
 
+
+import datetime
+from peewee import *
+
+from playhouse.sqlite_ext import *
+
+from orb.store.db_meta import htlcs_db_name, get_db
 from orb.misc.prefs import is_rest
 
-class Htlc:
+
+class Htlc(Model):
+    incoming_channel = CharField(default="")
+    incoming_channel_id = IntegerField(default=0)
+    incoming_channel_capacity = IntegerField(default=0)
+    incoming_channel_local_balance = IntegerField(default=0)
+    incoming_channel_remote_balance = IntegerField(default=0)
+    incoming_channel_pending_htlcs = JSONField(
+        default={"pending_in": 0, "pending_out": 0}
+    )
+    outgoing_channel = CharField(default="")
+    outgoing_channel_id = IntegerField(default=0)
+    outgoing_channel_capacity = IntegerField(default=0)
+    outgoing_channel_local_balance = IntegerField(default=0)
+    outgoing_channel_remote_balance = IntegerField(default=0)
+    outgoing_channel_pending_htlcs = JSONField(
+        default={"pending_in": 0, "pending_out": 0}
+    )
+    timestamp = IntegerField()
+    event_type = CharField()
+    event_outcome = CharField()
+    event_outcome_info = JSONField(default={"pending_in": 0, "pending_out": 0})
+
     def __init__(self, lnd, htlc):
+        super(Htlc, self).__init__()
         channels = lnd.get_channels()
         if getattr(htlc, "incoming_channel_id") != 0:
             ic = next(
@@ -24,7 +52,9 @@ class Htlc:
                 self.incoming_channel_remote_balance = ic.remote_balance
                 self.incoming_channel_local_balance = ic.local_balance
                 self.incoming_channel_pending_htlcs = dict(
-                    pending_in=sum(int(p.amount) for p in ic.pending_htlcs if p.incoming),
+                    pending_in=sum(
+                        int(p.amount) for p in ic.pending_htlcs if p.incoming
+                    ),
                     pending_out=sum(
                         int(p.amount) for p in ic.pending_htlcs if not p.incoming
                     ),
@@ -44,7 +74,9 @@ class Htlc:
                 self.outgoing_channel_remote_balance = oc.remote_balance
                 self.outgoing_channel_local_balance = oc.local_balance
                 self.outgoing_channel_pending_htlcs = dict(
-                    pending_in=sum(int(p.amount) for p in oc.pending_htlcs if p.incoming),
+                    pending_in=sum(
+                        int(p.amount) for p in oc.pending_htlcs if p.incoming
+                    ),
                     pending_out=sum(
                         int(p.amount) for p in oc.pending_htlcs if not p.incoming
                     ),
@@ -104,3 +136,15 @@ class Htlc:
                 if f1 == v2:
                     event_outcome_info[f2] = v1
         return event_outcome_info
+
+    class Meta:
+        database = get_db(htlcs_db_name)
+
+
+def create_htlcs_tables():
+    print("CREATING HTLC TABLE")
+    db = get_db(htlcs_db_name)
+    try:
+        db.create_tables([Htlc])
+    except:
+        pass

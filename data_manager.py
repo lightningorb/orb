@@ -3,6 +3,8 @@ from kivy.storage.jsonstore import JsonStore
 import os
 from traceback import print_exc
 
+from orb.store.db_meta import *
+
 
 class DataManager:
     def __init__(self, config):
@@ -35,16 +37,20 @@ class DataManager:
             self.lnd = mock_lnd()
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
-        from orb.store import model
+        from orb.store import db_create_tables
+        from orb.logic.htlc import create_htlcs_tables
 
-        model.get_db('forwarding_events_v2').connect()
-        model.get_db('path_finding').connect()
-        model.get_db('aliases').connect()
-        model.get_db('invoices').connect()
-        model.create_path_finding_tables()
-        model.create_fowarding_tables()
-        model.create_aliases_tables()
-        model.create_invoices_tables()
+        get_db(forwarding_events_db_name).connect()
+        get_db(path_finding_db_name).connect()
+        get_db(aliases_db_name).connect()
+        get_db(invoices_db_name).connect()
+        get_db(htlcs_db_name).connect()
+
+        db_create_tables.create_path_finding_tables()
+        db_create_tables.create_fowarding_tables()
+        db_create_tables.create_aliases_tables()
+        db_create_tables.create_invoices_tables()
+        create_htlcs_tables()
 
     @property
     def cert_path(self):

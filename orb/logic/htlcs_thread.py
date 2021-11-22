@@ -2,12 +2,14 @@ import json
 import threading
 from time import sleep
 from traceback import print_exc
+from threading import Lock
 
 from munch import Munch
 
 import data_manager
-from orb.logic.htlc import Htlc
 from orb.misc.prefs import is_rest
+
+db_lock = Lock()
 
 
 class HTLCsThread(threading.Thread):
@@ -17,6 +19,8 @@ class HTLCsThread(threading.Thread):
         self.inst = inst
 
     def run(self):
+        from orb.logic.htlc import Htlc
+
         rest = is_rest()
         while not self.stopped():
             try:
@@ -31,7 +35,8 @@ class HTLCsThread(threading.Thread):
                     if rest:
                         e = Munch.fromDict(json.loads(e)["result"])
                     htlc = Htlc(lnd, e)
-                    # console_output(str(htlc.__dict__))
+                    with db_lock:
+                        htlc.save()
                     for cid in self.inst.cn:
                         chans = [
                             e.outgoing_channel_id

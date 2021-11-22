@@ -1,5 +1,4 @@
 import os
-from functools import lru_cache
 import arrow
 from peewee import *
 
@@ -7,18 +6,7 @@ from playhouse.hybrid import hybrid_property, hybrid_method
 
 from kivy.app import App
 
-
-path_finding_db_name = 'path_finding'
-aliases_db_name = 'aliases'
-invoices_db_name = 'invoices'
-forwarding_events_db_name = 'forwarding_events_v2'
-
-
-@lru_cache(None)
-def get_db(name):
-    user_data_dir = App.get_running_app().user_data_dir
-    path = os.path.join(user_data_dir, f'{name}.db')
-    return SqliteDatabase(path)
+from orb.store.db_meta import *
 
 
 class FowardEvent(Model):
@@ -55,20 +43,12 @@ class FowardEvent(Model):
 
     def __str__(self):
         return (
-            f'{self.chan_id_in} -> {self.chan_id_out} on'
-            f' {arrow.get(self.timestamp).format()} ({self.timestamp})'
+            f"{self.chan_id_in} -> {self.chan_id_out} on"
+            f" {arrow.get(self.timestamp).format()} ({self.timestamp})"
         )
 
     class Meta:
         database = get_db(forwarding_events_db_name)
-
-
-def create_fowarding_tables():
-    db = get_db(forwarding_events_db_name)
-    try:
-        db.create_tables([FowardEvent])
-    except:
-        pass
 
 
 class Payment(Model):
@@ -86,7 +66,7 @@ class Attempt(Model):
     code = IntegerField()
     weakest_link_pk = CharField()
     succeeded = BooleanField()
-    payment = ForeignKeyField(Payment, backref='attempts')
+    payment = ForeignKeyField(Payment, backref="attempts")
 
     class Meta:
         database = get_db(path_finding_db_name)
@@ -95,18 +75,10 @@ class Attempt(Model):
 class Hop(Model):
     pk = CharField()
     succeeded = BooleanField()
-    attempt = ForeignKeyField(Attempt, backref='hops')
+    attempt = ForeignKeyField(Attempt, backref="hops")
 
     class Meta:
         database = get_db(path_finding_db_name)
-
-
-def create_path_finding_tables():
-    db = get_db(path_finding_db_name)
-    try:
-        db.create_tables([Payment, Attempt, Hop])
-    except:
-        pass
 
 
 class Alias(Model):
@@ -115,14 +87,6 @@ class Alias(Model):
 
     class Meta:
         database = get_db(aliases_db_name)
-
-
-def create_aliases_tables():
-    db = get_db(aliases_db_name)
-    try:
-        db.create_tables([Alias])
-    except:
-        pass
 
 
 class Invoice(Model):
@@ -145,11 +109,3 @@ class Invoice(Model):
 
     class Meta:
         database = get_db(invoices_db_name)
-
-
-def create_invoices_tables():
-    db = get_db(invoices_db_name)
-    try:
-        db.create_tables([Invoice])
-    except:
-        pass
