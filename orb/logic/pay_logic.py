@@ -1,11 +1,11 @@
 import json
-from traceback import print_exc
 import threading
-
 import arrow
 
 from orb.logic.routes import Routes
 from orb.misc.ui_actions import console_output
+from orb.misc.forex import forex
+
 import data_manager
 
 lock = threading.Lock()
@@ -182,7 +182,9 @@ def pay_thread_grpc(
                 response.failure is None or response.failure.code == 0
             )
             if is_successful:
-                console_output(f"T{thread_n}: SUCCESS")
+                console_output(
+                    f"T{thread_n}: SUCCESS: {forex(response.route.total_amt)} (fees: {forex(response.route.total_fees)})"
+                )
                 attempt.succeeded = True
                 payment.succeeded = True
                 payment.fees = route.total_fees
