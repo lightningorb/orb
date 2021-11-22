@@ -35,11 +35,11 @@ class ConsoleSplitter(Splitter):
         def load_config(*args):
             import data_manager
 
-            input_height = data_manager.data_man.store.get('console', {}).get(
-                'input_height', None
+            input_height = data_manager.data_man.store.get("console", {}).get(
+                "input_height", None
             )
-            output_height = data_manager.data_man.store.get('console', {}).get(
-                'output_height', None
+            output_height = data_manager.data_man.store.get("console", {}).get(
+                "output_height", None
             )
 
             if input_height and output_height:
@@ -74,7 +74,7 @@ class ConsoleSplitter(Splitter):
                 self.pressed_pos[1] - touch.pos[1]
             )
             data_manager.data_man.store.put(
-                'console',
+                "console",
                 input_height=self.input.height,
                 output_height=self.output.height,
             )
@@ -113,7 +113,7 @@ class ConsoleScreen(Screen):
             app = App.get_running_app()
             console = app.root.ids.sm.get_screen("console")
             lines = console.ids.console_output.output.split("\n")
-            if len(lines) > 100:
+            if len(lines) > 30:
                 lines = lines[1:]
             out = "\n".join(lines)
             console.ids.console_output.output = out + "\n" + str(text)
@@ -141,7 +141,7 @@ class ConsoleInput(CodeInput):
 
     def __init__(self, *args, **kwargs):
         super(ConsoleInput, self).__init__(
-            style_name='monokai', lexer=CythonLexer(), *args, **kwargs
+            style_name="monokai", lexer=CythonLexer(), *args, **kwargs
         )
 
     def on_touch_down(self, touch):
@@ -173,7 +173,7 @@ class ConsoleInput(CodeInput):
 
         def do_load(button, *args):
             sc = data_manager.data_man.store.get("scripts", {})
-            self.text = sc.get(button.text, '')
+            self.text = sc.get(button.text, "")
             inst.dismiss()
 
         sc = data_manager.data_man.store.get("scripts", {})
@@ -193,8 +193,8 @@ class ConsoleInput(CodeInput):
 
         def do_install(_, *args):
             sc = data_manager.data_man.store.get("scripts", {})
-            script_name = '>'.join(
-                x.strip() for x in inst.ids.script_name.text.split('>')
+            script_name = ">".join(
+                x.strip() for x in inst.ids.script_name.text.split(">")
             )
             sc[script_name] = self.text
             data_manager.data_man.store.put("scripts", **sc)
@@ -231,31 +231,31 @@ class ConsoleInput(CodeInput):
         app.root.ids.app_menu.close_all()
 
     def clear_input(self, *args):
-        self.text = ''
+        self.text = ""
 
     def clear_output(self, *args):
-        self.output = ''
+        self.output = ""
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
-        meta = 'meta' in modifiers
+        meta = "meta" in modifiers
         direction = (
             keycode[1]
-            if keycode and keycode[1] in ('left', 'right', 'up', 'down')
+            if keycode and keycode[1] in ("left", "right", "up", "down")
             else False
         )
         if meta and direction:
-            if direction == 'left':
-                line = self.text.split('\n')[self.cursor_row]
+            if direction == "left":
+                line = self.text.split("\n")[self.cursor_row]
                 for i, c in enumerate(line, 1):
-                    if c not in (' ', '\t'):
+                    if c not in (" ", "\t"):
                         self._cursor = (i, self._cursor[1])
                         break
-            elif direction == 'right':
-                line = self.text.split('\n')[self.cursor_row]
+            elif direction == "right":
+                line = self.text.split("\n")[self.cursor_row]
                 self._cursor = (len(line) - 1, self._cursor[1])
 
-        if text != '\u0135':
-            to_save = self.text + (text or '')
+        if text != "\u0135":
+            to_save = self.text + (text or "")
             do_eval = keycode[1] == "enter" and self.selection_text
             data_manager.data_man.store.put("console_input", text=to_save)
             if do_eval:
