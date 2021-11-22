@@ -25,10 +25,7 @@ class HTLCsThread(threading.Thread):
         while not self.stopped():
             try:
                 lnd = data_manager.data_man.lnd
-                it = lnd.get_htlc_events()
-                if rest:
-                    it = it.iter_lines()
-                for e in it:
+                for e in lnd.get_htlc_events():
                     if self.stopped():
                         return
                     self.inst.update_rect()

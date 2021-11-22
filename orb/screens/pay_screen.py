@@ -17,7 +17,6 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 import data_manager
 
 
-avoid = Counter()
 LOOP = '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
 GAMMA = '02769a851d7d11eaeaef899b2ed8c34fd387828fa13f6fe27928de2b9fa75a0cd8'
 DIVER = '03aa49c1e98ff4f216d886c09da9961c516aca22812c108af1b187896ded89807e'
@@ -87,7 +86,6 @@ class PayScreen(PopupDropShadow):
                     with lock:
                         chan_id = get_low_inbound_channel(
                             lnd=data_manager.data_man.lnd,
-                            avoid=avoid,
                             pk_ignore=pk_ignore,
                             chan_ignore=chan_ignore,
                             num_sats=payment_request.num_satoshis,
@@ -128,12 +126,8 @@ class PayScreen(PopupDropShadow):
                             console_output('no routes found')
                         if status == PaymentStatus.max_paths_exceeded:
                             console_output('max paths exceeded')
-                        if auto:
-                            console_output(f"adding {chan_id} to avoid list")
-                            avoid[chan_id] += 1
                 sleep(5)
 
-        avoid.clear()
         for i in range(int(self.ids.num_threads.text)):
             self.thread = threading.Thread(target=thread_function, args=(i,))
             self.thread.daemon = True

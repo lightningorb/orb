@@ -3,7 +3,7 @@ from random import choice
 LNBIG = [777338228286160896, 772393724494086144, 772380530381488129, 777338228285833217]
 
 
-def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=0.5):
+def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
     """
     Pick a channel for sending out sats.
     """
@@ -38,7 +38,7 @@ def get_low_inbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=
         return choice(chans).chan_id
 
 
-def get_low_outbound_channel(lnd, avoid, pk_ignore, chan_ignore, num_sats, ratio=0.5):
+def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
     chans = []
     channels = lnd.get_channels(active_only=True)
     for chan in channels:

@@ -138,7 +138,7 @@ class Lnd(LndBase):
         )
         url = f"{self.fqdn}/v2/router/route/send"
         pbytes = self.hex_string_to_bytes(payment_request.payment_hash)
-        data = {'payment_hash': base64.b64encode(pbytes).decode(), 'route': route}
+        data = {"payment_hash": base64.b64encode(pbytes).decode(), "route": route}
         r = requests.post(
             url, data=json.dumps(data), headers=self.headers, verify=self.cert_path
         )
@@ -148,7 +148,7 @@ class Lnd(LndBase):
         url = f"{self.fqdn}/v2/router/htlcevents"
         return requests.get(
             url, headers=self.headers, verify=self.cert_path, stream=True
-        )
+        ).iter_lines()
 
     def get_channel_events(self):
         pass
@@ -183,12 +183,12 @@ class Lnd(LndBase):
         fee_limit_msat,
         payment_request_raw,
     ):
-        url = f'{self.fqdn}/v2/router/send'
+        url = f"{self.fqdn}/v2/router/send"
         data = {
-            'payment_request': payment_request_raw,
-            'timeout_seconds': 120,
-            'fee_limit_msat': int(fee_limit_msat),
-            'outgoing_chan_id': outgoing_chan_id,
+            "payment_request": payment_request_raw,
+            "timeout_seconds": 120,
+            "fee_limit_msat": int(fee_limit_msat),
+            "outgoing_chan_id": outgoing_chan_id,
         }
         r = requests.post(
             url,
@@ -201,10 +201,10 @@ class Lnd(LndBase):
 
     def update_channel_policy(self, channel, *args, **kwargs):
         tx, output = channel.channel_point.split(":")
-        url = f'{self.fqdn}/v1/chanpolicy'
+        url = f"{self.fqdn}/v1/chanpolicy"
         kwargs.update(dict(chan_point=dict(funding_txid_str=tx, output_index=output)))
-        kwargs['global'] = False
-        kwargs['base_fee_msat'] = str(kwargs['base_fee_msat'])
+        kwargs["global"] = False
+        kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
         r = requests.post(
             url, headers=self.headers, verify=self.cert_path, data=json.dumps(kwargs)
         )
