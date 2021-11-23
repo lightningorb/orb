@@ -2,15 +2,24 @@ import threading
 from time import sleep
 
 import data_manager
+from orb.logic.thread_manager import thread_manager
 
 
 class ChannelsThread(threading.Thread):
-    def __init__(self, inst, *args, **kwargs):
+    def __init__(self, inst, name, *args, **kwargs):
         super(ChannelsThread, self).__init__(*args, **kwargs)
         self._stop_event = threading.Event()
         self.inst = inst
+        self.name = name
+        thread_manager.add_thread(self)
 
     def run(self):
+        try:
+            self.__run()
+        except:
+            self.stop()
+
+    def __run(self):
         while not self.stopped():
             try:
                 lnd = data_manager.data_man.lnd

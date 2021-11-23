@@ -13,6 +13,7 @@ from orb.misc.decorators import guarded
 
 import data_manager
 
+
 class ChannelsWidget(ScatterLayout):
     attribute_editor = ObjectProperty(None)
 
@@ -20,13 +21,13 @@ class ChannelsWidget(ScatterLayout):
     def __init__(self, *args, **kwargs):
         super(ChannelsWidget, self).__init__(*args, **kwargs)
 
-        self.htlcs_thread = HTLCsThread(inst=self)
+        self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
         self.htlcs_thread.daemon = True
         if not is_mock():
             self.htlcs_thread.start()
 
         self.autobalance = Autobalance()
-        self.channels_thread = ChannelsThread(inst=self)
+        self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
         self.channels_thread.daemon = True
         if not is_mock():
             self.channels_thread.start()

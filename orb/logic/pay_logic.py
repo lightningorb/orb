@@ -78,6 +78,7 @@ def handle_error(inst, response, route, routes, pk=None):
 
 def pay_thread(
     inst,
+    stopped,
     thread_n,
     fee_rate,
     payment_request,
@@ -92,6 +93,7 @@ def pay_thread(
 
     return func(
         inst=inst,
+        stopped=stopped,
         thread_n=thread_n,
         fee_rate=fee_rate,
         payment_request=payment_request,
@@ -104,6 +106,7 @@ def pay_thread(
 
 def pay_thread_grpc(
     inst,
+    stopped,
     thread_n,
     fee_rate,
     payment_request,
@@ -137,7 +140,7 @@ def pay_thread_grpc(
         succeeded=False,
         timestamp=int(arrow.now().timestamp()),
     )
-    while routes.has_next():
+    while routes.has_next() and not stopped():
         if count > max_paths:
             return PaymentStatus.max_paths_exceeded
         count += 1
@@ -214,6 +217,7 @@ def pay_thread_grpc(
 
 def pay_thread_rest(
     inst,
+    stopped,
     thread_n,
     fee_rate,
     payment_request,

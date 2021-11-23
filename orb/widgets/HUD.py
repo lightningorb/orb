@@ -9,13 +9,16 @@ from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
+from kivy.properties import StringProperty
 from kivy.clock import Clock
 
 from orb.misc.decorators import silent, guarded
 from orb.misc import mempool
 from orb.misc.forex import forex
+from orb.logic.thread_manager import thread_manager
 
 import data_manager
 
@@ -231,3 +234,19 @@ High priority: {fees["fastestFee"]} sat/vB"""
             update_gui(text)
 
         threading.Thread(target=func).start()
+
+
+class ThreadWidget(Widget):
+    thread = ObjectProperty(None, allownone=True)
+
+
+class HUD6(GridLayout, Hideable):
+    def __init__(self, *args, **kwargs):
+        GridLayout.__init__(self, *args, cols=5, **kwargs)
+        thread_manager.bind(threads=self.update_rect)
+        self.show()
+
+    def update_rect(self, *args):
+        self.clear_widgets()
+        for t in thread_manager.threads:
+            self.add_widget(ThreadWidget(thread=t))

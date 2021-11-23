@@ -1,11 +1,13 @@
+from traceback import print_exc
 import threading
 
 from kivy.clock import mainthread
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.output import *
-from orb.logic.pay_logic import pay_thread
+from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.channel_selector import get_low_inbound_channel
+from orb.logic.thread_manager import thread_manager
 from orb.logic.channel_selector import get_low_outbound_channel
 import data_manager
 
@@ -43,44 +45,74 @@ class Rebalance(PopupDropShadow):
         self.last_hop_pubkey = self.alias_to_pk[alias]
 
     def rebalance(self):
-        def thread_function():
-            amount = int(self.ids.amount.text)
+        class RebalanceThread(threading.Thread):
+            def __init__(self, inst, name, thread_n, *args, **kwargs):
+                super(RebalanceThread, self).__init__(*args, **kwargs)
+                self._stop_event = threading.Event()
+                self.name = name
+                self.inst = inst
+                self.thread_n = thread_n
+                thread_manager.add_thread(self)
 
-            if not self.chan_id:
-                self.chan_id = get_low_inbound_channel(
-                    lnd=self.lnd,
-                    avoid=[],
-                    pk_ignore=[],
-                    chan_ignore=[],
-                    num_sats=amount,
-                    ratio=0.5,
+            def run(self):
+                try:
+                    self.__run()
+                except:
+                    print_exc()
+                finally:
+                    self.stop()
+
+            def __run(self):
+                amount = int(self.inst.ids.amount.text)
+
+                if not self.inst.chan_id:
+                    self.inst.chan_id = get_low_inbound_channel(
+                        lnd=self.inst.lnd,
+                        pk_ignore=[],
+                        chan_ignore=[],
+                        num_sats=amount,
+                        ratio=0.5,
+                    )
+
+                if not self.inst.last_hop_pubkey:
+                    _, self.inst.last_hop_pubkey = get_low_outbound_channel(
+                        lnd=self.inst.lnd,
+                        pk_ignore=[],
+                        chan_ignore=[],
+                        num_sats=amount,
+                        ratio=0.5,
+                    )
+
+                raw, payment_request = data_manager.data_man.lnd.generate_invoice(
+                    memo="rebalance", amount=amount
+                )
+                status = pay_thread(
+                    inst=self.inst,
+                    stopped=self.stopped,
+                    thread_n=0,
+                    fee_rate=int(self.inst.ids.fee_rate.text),
+                    payment_request=payment_request,
+                    payment_request_raw=raw,
+                    outgoing_chan_id=self.inst.chan_id,
+                    last_hop_pubkey=self.inst.last_hop_pubkey,
+                    max_paths=int(self.inst.ids.max_paths.text),
                 )
 
-            if not self.last_hop_pubkey:
-                _, self.last_hop_pubkey = get_low_outbound_channel(
-                    lnd=self.lnd,
-                    avoid=[],
-                    pk_ignore=[],
-                    chan_ignore=[],
-                    num_sats=amount,
-                    ratio=0.5,
-                )
+                if not status == PaymentStatus.success:
+                    try:
+                        data_manager.data_man.lnd.cancel_invoice(
+                            payment_request.payment_hash
+                        )
+                    except:
+                        print("Exception while cancelling invoice")
 
-            raw, payment_request = data_manager.data_man.lnd.generate_invoice(
-                memo='rebalance', amount=amount
-            )
-            status = pay_thread(
-                inst=self,
-                thread_n=0,
-                fee_rate=int(self.ids.fee_rate.text),
-                payment_request=payment_request,
-                payment_request_raw=raw,
-                outgoing_chan_id=self.chan_id,
-                last_hop_pubkey=self.last_hop_pubkey,
-                max_paths=int(self.ids.max_paths.text),
-            )
+            def stop(self):
+                self._stop_event.set()
 
-        self.thread = threading.Thread(target=thread_function)
+            def stopped(self):
+                return self._stop_event.is_set()
+
+        self.thread = RebalanceThread(inst=self, name="RebalanceThread", thread_n=0)
         self.thread.daemon = True
         self.thread.start()
 

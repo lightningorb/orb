@@ -1,6 +1,4 @@
-########################################################################################
-# HUD
-########################################################################################
+#:import dp kivy.metrics.dp
 
 <BorderedLabel>:
     canvas.before:
@@ -52,6 +50,32 @@
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
+<HUD6>:
+    size_hint: [None, None]
+    size: [300, (int(len(self.children) / 6) + 1) * dp(30)]
+    padding: dp(10)
+    spacing: dp(10)
+    canvas.before:
+        Color:
+            rgba: .3, .3, .4, root.alpha * 0.3
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: .6, .6, .8, root.alpha
+        Line:
+            points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
+            width: 1
+
 <HUD4>:
     size_hint: [None, None]
     size: [300, 150]
@@ -92,6 +116,16 @@
         markup: True
         size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
+<ThreadWidget>:
+    Button:
+        id: name
+        font_size: '13sp'
+        size: dp(10), dp(10)
+        text: root.thread.name[0]
+        background_color: 0,0,0,0
+        pos: root.pos
+        on_release: root.thread.stop()
+
 <HUD>:
     size_hint: [1, 1]
     orientation: 'vertical'
@@ -101,6 +135,7 @@
         Rectangle:
             pos: self.pos
             size: self.size
+    HUD6
     HUD5
     HUD4
     HUD1

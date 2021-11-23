@@ -8,17 +8,26 @@ from munch import Munch
 
 import data_manager
 from orb.misc.prefs import is_rest
+from orb.logic.thread_manager import thread_manager
 
 db_lock = Lock()
 
 
 class HTLCsThread(threading.Thread):
-    def __init__(self, inst, *args, **kwargs):
+    def __init__(self, inst, name, *args, **kwargs):
         super(HTLCsThread, self).__init__(*args, **kwargs)
         self._stop_event = threading.Event()
         self.inst = inst
+        self.name = name
+        thread_manager.add_thread(self)
 
     def run(self):
+        try:
+            self.__run()
+        except:
+            self.stop()
+
+    def __run(self):
         from orb.logic.htlc import Htlc
 
         rest = is_rest()
