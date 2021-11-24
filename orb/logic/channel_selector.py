@@ -1,16 +1,14 @@
 from random import choice
+import data_manager
 
-LNBIG = [777338228286160896, 772393724494086144, 772380530381488129, 777338228285833217]
 
-
-def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
+def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
     """
     Pick a channel for sending out sats.
     """
     chans = []
     channels = lnd.get_channels(active_only=True)
     for chan in channels:
-        threshold_ratio = ratio
         if chan.remote_pubkey in pk_ignore:
             continue
         if chan.chan_id in chan_ignore:
@@ -22,8 +20,11 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
         # check whether the amount of sats remaining is enough for the payment
         enough_available_outbound = int(num_sats) < actual_available_outbound
 
-        if int(chan.chan_id) in LNBIG:
-            threshold_ratio = 0.1
+        threshold_ratio = float(
+            data_manager.data_man.store.get("balanced_ratio", {}).get(
+                str(chan.chan_id), "0.5"
+            )
+        )
 
         # check whether the available balance is above a certain ratio, e.g
         # a ratio of 1 would hardly ever pick the channel while a ratio
@@ -49,7 +50,14 @@ def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
         pending_in = sum(int(p.amount) for p in chan.pending_htlcs if p.incoming)
         actual_available_inbound = int(chan.remote_balance) - pending_in
         enough_available_inbound = int(num_sats) < actual_available_inbound
-        more_than_half_inbound = (actual_available_inbound / int(chan.capacity)) > ratio
+        threshold_ratio = float(
+            data_manager.data_man.store.get("balanced_ratio", {}).get(
+                str(chan.chan_id), "0.5"
+            )
+        )
+        more_than_half_inbound = (
+            actual_available_inbound / int(chan.capacity)
+        ) > threshold_ratio
         good_candidate = enough_available_inbound and more_than_half_inbound
         if good_candidate:
             chans.append(chan)

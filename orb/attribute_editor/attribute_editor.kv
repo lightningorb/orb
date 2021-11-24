@@ -71,6 +71,11 @@
         on_active: root.pay_through_channel(self.active)
     Label:
         text: "_________"
+    MDTextField:
+        text: data_manager.data_man.store.get('balanced_ratio', {}).get(str(root.channel.chan_id), '0.5')
+        helper_text: 'balanced ratio (local / capacity)'
+        helper_text_mode: "persistent"
+        on_text_validate: root.on_balanced_ratio(self.text)
 
 
 <AttributeEditor>

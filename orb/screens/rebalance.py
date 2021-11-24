@@ -71,7 +71,6 @@ class Rebalance(PopupDropShadow):
                         pk_ignore=[],
                         chan_ignore=[],
                         num_sats=amount,
-                        ratio=0.5,
                     )
 
                 if not self.inst.last_hop_pubkey:
@@ -80,7 +79,6 @@ class Rebalance(PopupDropShadow):
                         pk_ignore=[],
                         chan_ignore=[],
                         num_sats=amount,
-                        ratio=0.5,
                     )
 
                 raw, payment_request = data_manager.data_man.lnd.generate_invoice(
