@@ -2,8 +2,8 @@
 
 
 <ChannelsWidget>:
-    size_hint: 2, 2
-    pos: [-self.width/4, -self.height/4]
+    size_hint: 3, 3
+    pos: [-self.width/10, -self.height/10]
     canvas:
         Color:
             rgba: 0, 1, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
@@ -12,7 +12,7 @@
     RelativeLayout:
         id: relative_layout
         size: [0, 0]
-        pos: [root.size[0]/1.5, root.size[1]/1.6]
+        pos: [root.size[0]/2, root.size[1]/2]
         size_hint: None, None
         canvas:
             Color:

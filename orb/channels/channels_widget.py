@@ -44,13 +44,13 @@ class ChannelsWidget(ScatterLayout):
         self.node = Node(
             text=self.info.alias,
             attribute_editor=self.attribute_editor,
-            round=pref('display.round_central_node'),
+            round=pref("display.round_central_node"),
         )
         self.ids.relative_layout.add_widget(self.node)
         self.ids.relative_layout.add_widget(self.autobalance)
         self.bind(pos=self.update_rect, size=self.update_rect)
         self.apply_transform(
-            Matrix().scale(0.8, 0.8, 0.8), anchor=(self.size[0] / 2, self.size[1] / 2)
+            Matrix().scale(0.5, 0.5, 0.5), anchor=(self.size[0] / 2, self.size[1] / 2)
         )
 
     def add_channel(self, channel, caps=None):
