@@ -19,7 +19,7 @@ def get_forwarding_history():
     )  # .where(model.FowardEvent.chan_id_in == '772380530381488129')
 
 
-def download_forwarding_history():
+def download_forwarding_history(*args, **kwargs):
     def func():
         from orb.store import model
 

@@ -1,9 +1,9 @@
 from kivy.config import Config
 import sys
 
-sys.path.append('orb/lnd')
+sys.path.append("orb/lnd")
 
-Config.set('graphics', 'window_state', 'maximized')
+Config.set("graphics", "window_state", "maximized")
 
 from orb.core_ui.orb_app import OrbApp
 
@@ -29,6 +29,7 @@ from orb.attribute_editor.AE_fees import AEFees
 from orb.core_ui.main_layout import MainLayout
 from orb.status_line.status_line import StatusLine
 from orb.core_ui.top_menu import TopMenu
+from orb.logic.cron import cron
 
 keep = lambda _: _
 
@@ -54,6 +55,7 @@ keep(TopMenu)
 keep(HUD)
 keep(MailScreen)
 keep(AEFees)
+keep(cron)
 
 if __name__ == "__main__":
     OrbApp().run()

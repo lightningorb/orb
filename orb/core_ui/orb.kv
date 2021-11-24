@@ -12,7 +12,6 @@
 #:import CloseChannel orb.screens.close_channel.CloseChannel
 #:import Rebalance orb.screens.rebalance.Rebalance
 #:import prefs_col orb.misc.utils.prefs_col
-#:import download_forwarding_history orb.dialogs.forwarding_history.download_forwarding_history
 #:import view_forwarding_history orb.dialogs.forwarding_history.view_forwarding_history
 #:import graph_fees_earned orb.dialogs.forwarding_history.graph_fees_earned
 #:import About orb.screens.about.About
@@ -118,10 +117,6 @@
                 ContextMenuTextItem:
                     text: "Forwarding History"
                     ContextMenu:
-                        ContextMenuTextItem:
-                            text: "Download"
-                            on_press: download_forwarding_history()
-                            on_release: app_menu.close_all()
                         ContextMenuTextItem:
                             text: "View"
                             # on_press: ()
