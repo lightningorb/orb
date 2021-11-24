@@ -65,6 +65,15 @@ class PayScreen(PopupDropShadow):
         )
         return invoices
 
+    def get_ignored_pks(self):
+        return [
+            k
+            for k, v in data_manager.data_man.store.get(
+                "pay_through_channel", {}
+            ).items()
+            if not v
+        ]
+
     def pay(self):
         class PayThread(threading.Thread):
             def __init__(self, inst, name, thread_n, *args, **kwargs):
@@ -109,7 +118,7 @@ class PayScreen(PopupDropShadow):
                         with lock:
                             chan_id = get_low_inbound_channel(
                                 lnd=data_manager.data_man.lnd,
-                                pk_ignore=pk_ignore,
+                                pk_ignore=self.inst.get_ignored_pks(),
                                 chan_ignore=chan_ignore,
                                 num_sats=payment_request.num_satoshis,
                             )

@@ -9,6 +9,8 @@ from kivymd.uix.textfield import MDTextField
 
 from orb.misc.prefs import is_rest
 
+import data_manager
+
 
 class MyMDCheckbox(MDCheckbox):
     def on_touch_down(self, *args):
@@ -96,3 +98,8 @@ class AEChannel(GridLayout):
                 widget.readonly = True
                 self.add_widget(widget)
         self.add_widget(Label(text="         "))
+
+    def pay_through_channel(self, active):
+        vals = data_manager.data_man.store.get("pay_through_channel", {})
+        vals[str(self.channel.chan_id)] = active
+        data_manager.data_man.store.put("pay_through_channel", **vals)
