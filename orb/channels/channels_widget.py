@@ -10,6 +10,7 @@ from orb.misc.utils import pref
 from orb.misc.prefs import is_mock
 from orb.dialogs.autobalance import Autobalance
 from orb.misc.decorators import guarded
+from orb.widgets.chord_widget import ChordWidget
 
 import data_manager
 
@@ -37,6 +38,7 @@ class ChannelsWidget(ScatterLayout):
         self.node = None
         self.lnd = data_manager.data_man.lnd
         channels = self.get_channels()
+        self.chord_widget = ChordWidget(channels)
         caps = self.get_caps(channels)
         self.info = self.lnd.get_info()
         for c in channels:
@@ -48,6 +50,7 @@ class ChannelsWidget(ScatterLayout):
         )
         self.ids.relative_layout.add_widget(self.node)
         self.ids.relative_layout.add_widget(self.autobalance)
+        self.ids.relative_layout.add_widget(self.chord_widget)
         self.bind(pos=self.update_rect, size=self.update_rect)
         self.apply_transform(
             Matrix().scale(0.5, 0.5, 0.5), anchor=(self.size[0] / 2, self.size[1] / 2)
