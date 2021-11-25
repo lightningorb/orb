@@ -1,9 +1,10 @@
+#:import prefs_col orb.misc.utils.prefs_col
 #:import dp kivy.metrics.dp
 
 <BorderedLabel>:
     canvas.before:
         Color:
-            rgba: .3, .3, .4, root.alpha * 0.1
+            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
         Rectangle:
             size: self.size
             pos: self.pos
@@ -57,7 +58,7 @@
     spacing: dp(10)
     canvas.before:
         Color:
-            rgba: .3, .3, .4, root.alpha * 0.1
+            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
         Rectangle:
             size: self.size
             pos: self.pos
@@ -81,7 +82,7 @@
     size: [300, 150]
     canvas.before:
         Color:
-            rgba: .3, .3, .4, root.alpha * 0.1
+            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
         Rectangle:
             size: self.size
             pos: self.pos

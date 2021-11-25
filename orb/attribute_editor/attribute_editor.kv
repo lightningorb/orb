@@ -1,3 +1,4 @@
+#:import prefs_col orb.misc.utils.prefs_col
 #:import dp kivy.metrics.dp
 #:import data_manager data_manager
 
@@ -49,7 +50,7 @@
     height: dp(2500)
     canvas.before:
         Color:
-            rgba: .3, .3, .4, .1
+            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,0.7])]
         Rectangle:
             size: self.size
             pos: self.pos
