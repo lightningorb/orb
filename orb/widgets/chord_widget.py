@@ -1,10 +1,18 @@
 import math
 from collections import defaultdict
+
+import bezier
+from colour import Color as Colour
+
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
-from colour import Color as Colour
+from kivy.graphics import Mesh
+from kivy.graphics.tesselator import Tesselator
+
+from orb.misc.Vector import Vector
+from orb.misc.lerp import lerp_vec
 
 
 class ChordWidget(Widget):
@@ -15,8 +23,6 @@ class ChordWidget(Widget):
         self.radius = 950
 
         matrix = self.get_matrix()
-
-        return
 
         with self.canvas:
             offset = 0
@@ -35,24 +41,55 @@ class ChordWidget(Widget):
                 offset += sec_w
 
             for chan, col in zip(channels, cols):
-                if chan.chan_id == 781558153871622145:
-                    Color(rgb=col.rgb)
-                    out_chans = [x[1] for x in matrix if x[0] == chan.chan_id]
-                    self.draw_channel_chords(chan, out_chans, col, chan_pos, matrix)
+                if chan.chan_id in [781558153871622145, 781395426128953345]:
+                    c = col.rgb
+                    Color(rgba=(c[0], c[1], c[2], 0.5))
+                    self.draw_channel_chords(chan.chan_id, col, chan_pos, matrix)
 
-    def draw_channel_chords(self, chan, out_chans, col, chan_pos, matrix):
-        offset = chan_pos[chan.chan_id]
-
+    def draw_channel_chords(self, out_chan, col, chan_pos, matrix):
         def offset_to_pos(offset):
             x = math.sin(offset / 360 * 3.14378 * 2) * self.radius
             y = math.cos(offset / 360 * 3.14378 * 2) * self.radius
             return (x, y)
 
-        for out_chan in out_chans:
-            if out_chan in chan_pos:
-                x, y = offset_to_pos(offset)
-                x1, y1 = offset_to_pos(chan_pos[out_chan])
-                Line(points=[x, y, x1, y1])
+        in_chans = [x[1] for x in matrix if x[0] == out_chan and x[0] in chan_pos]
+
+        def get_line_points(out_chan_deg, in_chan_deg, inverted=False):
+            x, y = offset_to_pos(out_chan_deg)
+            x1, y1 = offset_to_pos(in_chan_deg)
+            a, b = Vector(x, y), Vector(x1, y1)
+
+            dot = a.normalized().dot(b.normalized())
+            b_mid_x, b_mid_y = lerp_vec(Vector(0, 0), a.mid(b), max(0, dot))
+            curve1 = bezier.Curve(
+                [
+                    [x, b_mid_x, x1],
+                    [y, b_mid_y, y1],
+                ],
+                degree=2,
+            )
+            points = []
+            step = 100
+            for f in range(step):
+                e = curve1.evaluate(f / step)
+                if not inverted:
+                    points.extend([float(e[0]), float(e[1])])
+                else:
+                    points.extend([float(e[1]), float(e[0])])
+            return points if not inverted else points[::-1]
+
+        for in_chan in in_chans:
+            out_chan_deg, in_chan_deg = chan_pos[out_chan], chan_pos[in_chan]
+            indices = []
+            tess = Tesselator()
+            points1 = get_line_points(out_chan_deg - 1, in_chan_deg + 1)
+            points2 = get_line_points(out_chan_deg + 1, in_chan_deg - 1, inverted=True)
+            tess.add_contour(points1 + points2)
+            if not tess.tesselate():
+                print("Tesselator didn't work :(")
+            else:
+                for vertices, indices in tess.meshes:
+                    Mesh(vertices=vertices, indices=indices, mode="triangle_fan")
 
     def get_matrix(self):
         matrix = defaultdict(int)

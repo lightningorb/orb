@@ -9,7 +9,8 @@ from kivy.graphics.vertex_instructions import Line
 from kivy.animation import Animation
 from kivy.uix.widget import Widget
 
-from orb.misc.utils import Vector, closest_point_on_line
+from orb.misc.utils import closest_point_on_line
+from orb.misc.Vector import Vector
 from orb.misc.ui_actions import console_output
 
 import data_manager
