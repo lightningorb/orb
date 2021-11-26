@@ -104,6 +104,11 @@ class AEChannel(GridLayout):
         vals[str(self.channel.chan_id)] = active
         data_manager.data_man.store.put("pay_through_channel", **vals)
 
+    def show_to_chords(self, active):
+        vals = data_manager.data_man.store.get("show_to_chords", {})
+        vals[str(self.channel.chan_id)] = active
+        data_manager.data_man.store.put("show_to_chords", **vals)
+
     def on_balanced_ratio(self, ratio):
         vals = data_manager.data_man.store.get("balanced_ratio", {})
         vals[str(self.channel.chan_id)] = ratio

@@ -14,6 +14,7 @@ from kivy.graphics.tesselator import Tesselator
 
 from orb.misc.Vector import Vector
 from orb.misc.lerp import lerp_vec
+import data_manager
 
 
 class ChordWidget(Widget):
@@ -51,7 +52,10 @@ class ChordWidget(Widget):
                 offset += sec_w
 
             for chan, col in zip(channels, cols):
-                if chan.chan_id in [781395426128953345, 781558153871622145]:
+                show = data_manager.data_man.store.get("show_to_chords", {}).get(
+                    str(chan.chan_id), False
+                )
+                if show:
                     c = col.rgb
                     Color(rgba=(c[0], c[1], c[2], 0.5))
                     self.draw_channel_chords(
@@ -73,7 +77,7 @@ class ChordWidget(Widget):
             y = math.cos(offset / 360 * 3.14378 * 2) * self.radius
             return (x, y)
 
-        in_chans = [x[1] for x in matrix if x[0] == out_chan and x[0] in chan_pos]
+        in_chans = [x[1] for x in matrix if x[0] == out_chan and x[1] in chan_pos]
 
         def sort_by_pos(a, b):
             a = (chan_pos[a] - chan_pos[out_chan]) % 360

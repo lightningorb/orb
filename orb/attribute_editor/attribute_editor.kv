@@ -72,6 +72,14 @@
         on_active: root.pay_through_channel(self.active)
     Label:
         text: "_________"
+    Label:
+        text: 'Show to Chords:'
+    MDSwitch:
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        active: data_manager.data_man.store.get('show_to_chords', {}).get(str(root.channel.chan_id), False)
+        on_active: root.show_to_chords(self.active)
+    Label:
+        text: "_________"
     MDTextField:
         text: data_manager.data_man.store.get('balanced_ratio', {}).get(str(root.channel.chan_id), '0.5')
         helper_text: 'balanced ratio (local / capacity)'
