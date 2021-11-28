@@ -224,3 +224,85 @@ You can run the script by either selecting the code (e.g with ctrl-a) and hittin
 You can install a script via `view > install`. Name the script, and it will then appear in the `script` menu.
 
 Please note that this internal API is currently subject to change.
+
+# Building for IOS
+
+The guides for building & running a Kivy app on IOS are actually pretty good, and the steps are 'somewhat' predictable.
+
+Please make sure you have a recent version of XCode installed. Successful builds have taken place with:
+
+IOS 11.6 (20G165)
+XCODE 13.0 (13A233)
+
+https://kivy.org/doc/stable/guide/packaging-ios.html
+
+```
+brew install autoconf automake libtool pkg-config
+brew link libtool
+pip3 install kivy-ios
+toolchain build kivy
+```
+
+When building the toolchain, if you get an error along the lines of:
+
+```
+xcrun: error: SDK "iphonesimulator" cannot be located
+```
+
+Then you may need to set the correct location for the XCode's SDK:
+
+```
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
+```
+
+If you succeeded id building kivy with the IOS toolchain, then install all the requirements via toolchain:
+
+```
+toolchain pip3 install simple-chalk
+toolchain pip3 install qrcode
+toolchain pip3 install yachalk
+toolchain pip3 install munch
+toolchain pip3 install kivymd
+toolchain pip3 install kivy_garden.contextmenu
+toolchain pip3 install pygments
+toolchain pip3 install peewee
+toolchain pip3 install arrow
+toolchain pip3 install kivy_garden.graph
+toolchain pip3 install humanize
+toolchain pip3 install currency-symbols
+toolchain pip3 install forex-python
+toolchain pip3 install colour
+```
+
+
+You can now create the project:
+```
+toolchain create orb orb
+```
+
+Now assuming this codebase is cloned in `~/dev/orb`
+
+```
+toolchain create Touchtracer ~/dev/orb
+```
+
+Please note this creates the xcode project in `./orb-ios`.
+
+You can now open the IOS project with:
+
+```
+open orb-ios/orb.xcodeproj
+```
+
+You'll need to update the project after each `git pull`.
+
+```
+toolchain update touchtracer-ios
+```
+
+In the XCode project, under 'signing capabilities' make sure to set your team, and a unique identifier.
+
+Under 'Build Phases' you will also need to add the 'AVFAudio.framework' library, and set its status to 'optional'.
+
+You can now build & launch Kivy on your target IOS device.
+
