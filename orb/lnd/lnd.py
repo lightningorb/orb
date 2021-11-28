@@ -6,7 +6,7 @@ from traceback import print_exc
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
 
-sys.path.append('orb/lnd/grpc_generate')
+sys.path.append("orb/lnd/grpc_generate")
 
 try:
     import grpc
@@ -186,6 +186,10 @@ class Lnd(LndBase):
         last_hop = route.hops[-1]
         last_hop.mpp_record.payment_addr = payment_request.payment_addr
         last_hop.mpp_record.total_amt_msat = payment_request.num_msat
+        print("=" * 100)
+        print("DEBUG LAST HOP")
+        print(last_hop)
+        print("=" * 100)
         request = lnrouter.SendToRouteRequest(route=route)
         request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
         result = []
