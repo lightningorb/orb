@@ -10,6 +10,7 @@ from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.thread_manager import thread_manager
 from orb.logic.channel_selector import get_low_outbound_channel
 import data_manager
+from orb.misc.ui_actions import console_output
 
 
 class Rebalance(PopupDropShadow):
@@ -43,6 +44,7 @@ class Rebalance(PopupDropShadow):
 
     def last_hop_spinner_click(self, alias):
         self.last_hop_pubkey = self.alias_to_pk[alias]
+        console_output(f"Settting last hop pubkey to: {self.last_hop_pubkey}")
 
     def rebalance(self):
         class RebalanceThread(threading.Thread):
@@ -73,12 +75,17 @@ class Rebalance(PopupDropShadow):
                         num_sats=amount,
                     )
 
+                if self.inst.last_hop_pubkey:
+                    console_output(f"Last hop pubkey is: {self.inst.last_hop_pubkey}")
                 if not self.inst.last_hop_pubkey:
                     _, self.inst.last_hop_pubkey = get_low_outbound_channel(
                         lnd=self.inst.lnd,
                         pk_ignore=[],
                         chan_ignore=[],
                         num_sats=amount,
+                    )
+                    console_output(
+                        f"Last hop pubkey not set, so selected one: {self.inst.last_hop_pubkey}"
                     )
 
                 raw, payment_request = data_manager.data_man.lnd.generate_invoice(
