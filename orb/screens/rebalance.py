@@ -25,7 +25,7 @@ class Rebalance(PopupDropShadow):
 
         @mainthread
         def delayed():
-            channels = self.lnd.get_channels()
+            channels = data_manager.data_man.channels
             for c in channels:
                 self.ids.spinner_out_id.values.append(
                     f"{c.chan_id}: {self.lnd.get_node_alias(c.remote_pubkey)}"

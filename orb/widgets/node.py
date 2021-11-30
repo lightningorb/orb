@@ -18,7 +18,7 @@ class Node(Button):
 
     def __init__(self, *args, **kwargs):
         super(Node, self).__init__(*args, **kwargs)
-        self.col = prefs_col('display.node_background_color')
+        self.col = prefs_col("display.node_background_color")
         lnd = data_manager.data_man.lnd
         if self.channel:
             Thread(
@@ -31,14 +31,14 @@ class Node(Button):
         Animation(pos=pos, duration=1).start(self)
 
     def on_release(self):
-        self.col = prefs_col('display.node_selected_background_color')
+        self.col = prefs_col("display.node_selected_background_color")
         ae = self.attribute_editor
         ae.selection = self.text
         if self.channel:
             ae.channel = self.channel
 
     def on_press(self):
-        self.col = prefs_col('display.node_selected_background_color')
+        self.col = prefs_col("display.node_selected_background_color")
 
     def on_touch_down(self, touch):
         import data_manager
@@ -50,8 +50,8 @@ class Node(Button):
 
     @property
     def width_pref(self):
-        return pref('display.node_height') if self.round else pref('display.node_width')
+        return pref("display.node_height") if self.round else pref("display.node_width")
 
     @property
     def height_pref(self):
-        return pref('display.node_height')
+        return pref("display.node_height")

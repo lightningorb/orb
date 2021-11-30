@@ -46,7 +46,7 @@ class PayScreen(PopupDropShadow):
                     f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}"
                 )
 
-        threading.Thread(target=lambda: delayed(lnd.get_channels())).start()
+        threading.Thread(target=lambda: delayed(data_manager.data_man.channels)).start()
 
     def first_hop_spinner_click(self, chan):
         self.chan_id = int(chan.split(":")[0])

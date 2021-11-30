@@ -28,6 +28,7 @@ class ChannelsWidget(ScatterLayout):
             self.htlcs_thread.start()
 
         self.autobalance = Autobalance()
+        self.channels = data_manager.data_man.channels
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
         self.channels_thread.daemon = True
         if not is_mock():
@@ -37,11 +38,10 @@ class ChannelsWidget(ScatterLayout):
         self.radius = 600
         self.node = None
         self.lnd = data_manager.data_man.lnd
-        channels = self.get_channels()
-        self.chord_widget = ChordWidget(channels)
-        caps = self.get_caps(channels)
+        self.chord_widget = ChordWidget(self.channels)
+        caps = self.get_caps(self.channels)
         self.info = self.lnd.get_info()
-        for c in channels:
+        for c in self.channels:
             self.add_channel(channel=c, caps=caps)
         self.node = Node(
             text=self.info.alias,
@@ -58,7 +58,7 @@ class ChannelsWidget(ScatterLayout):
 
     def add_channel(self, channel, caps=None):
         if not caps:
-            caps = self.get_caps(self.get_channels())
+            caps = self.get_caps(self.channels)
         cn = CNWidget(c=channel, caps=caps, attribute_editor=self.attribute_editor)
         self.cn[channel.chan_id] = cn
         self.ids.relative_layout.add_widget(cn)
@@ -73,18 +73,10 @@ class ChannelsWidget(ScatterLayout):
         max_cap = max([int(c.capacity) for c in channels])
         return {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}
 
-    @guarded
-    def get_channels(self):
-        channels = sorted(
-            self.lnd.get_channels(),
-            key=lambda x: int(x.local_balance) / int(x.capacity),
-            reverse=True,
-        )
-        return channels
-
     def update_rect(self, *_):
         if self.node:
             self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
+        self.channels.sort_channels()
         for i, cn in enumerate(
             sorted(
                 self.cn.values(),

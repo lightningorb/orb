@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from munch import Munch
 from typing import Any
 from time import sleep
-from random import choice
+from random import choice, randrange, random
 
 M = lambda **kwargs: Munch.fromDict(dict(**kwargs))
 
@@ -30,7 +30,7 @@ class Policy:
     min_htlc: Any = 1
     max_htlc_msat: Any = 1000000
     time_lock_delta: Any = 44
-    last_update: Any = '0'
+    last_update: Any = "0"
     fee_base_msat: Any = 1000
 
 
@@ -47,19 +47,23 @@ FeeReport = namedtuple("FeeReport", "day_fee_sum week_fee_sum month_fee_sum")
 
 class Lnd(object):
     def get_channels(self):
-        return [
-            Channel(
-                capacity=100_000_000,
+        channels = []
+        for cid in range(30):
+            capacity = choice([3e6, 5e6, 10e6])
+            f = random()
+            sent = randrange(1e6, 10e8)
+            c = Channel(
+                capacity=capacity,
                 pending_htlcs=[],
-                local_balance=50_000_000,
-                remote_balance=50_000_000,
-                remote_pubkey=f'peer_{cid}',
+                local_balance=int(capacity * f),
+                remote_balance=int(capacity * (1 - f)),
+                remote_pubkey=f"peer_{cid}",
                 chan_id=cid,
-                total_satoshis_sent=50000,
-                total_satoshis_received=50000,
+                total_satoshis_sent=sent,
+                total_satoshis_received=sent,
             )
-            for cid in range(20)
-        ]
+            channels.append(c)
+        return channels
 
     def get_info(self):
         return Info(alias="mock node")
@@ -114,10 +118,18 @@ class Lnd(object):
             yield M(
                 channel_updates=[
                     M(
-                        advertising_node=f'peer_{cid}',
+                        advertising_node=f"peer_{cid}",
                         chan_id=cid,
                         routing_policy=M(fee_rate_milli_msat=10),
                     )
                 ]
             )
             sleep(1)
+
+    def get_forwarding_history(
+        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
+    ):
+        class ForwardHistory:
+            forwarding_events = []
+
+        return ForwardHistory()

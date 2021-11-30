@@ -5,6 +5,7 @@ from functools import lru_cache
 from traceback import print_exc
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
+from orb.misc.channel import Channel
 
 sys.path.append("orb/lnd/grpc_generate")
 
@@ -114,17 +115,12 @@ class Lnd(LndBase):
         return self.stub.DecodePayReq(request)
 
     def get_channels(self, active_only=False, use_cache=True):
-        return self.stub.ListChannels(
-            ln.ListChannelsRequest(active_only=active_only)
-        ).channels
-
-    @lru_cache(maxsize=None)
-    def get_max_channel_capacity(self):
-        max_channel_capacity = 0
-        for channel in self.get_channels(active_only=False):
-            if channel.capacity > max_channel_capacity:
-                max_channel_capacity = channel.capacity
-        return max_channel_capacity
+        return [
+            Channel(c)
+            for c in self.stub.ListChannels(
+                ln.ListChannelsRequest(active_only=active_only)
+            ).channels
+        ]
 
     def get_route(
         self,
@@ -264,58 +260,6 @@ class Lnd(LndBase):
         )
         return self.stub.ForwardingHistory(request)
 
-    # def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
-    #     secret = secrets.token_bytes(32)
-    #     hashed_secret = sha256(secret).hexdigest()
-    #     custom_records = [
-    #         (5482373484, secret),
-    #     ]
-    #     msg = str(msg)
-    #     if len(msg) > 0:
-    #         custom_records.append((34349334, bytes.fromhex(msg.encode("utf-8").hex())))
-    #     for response in self.router_stub.SendPaymentV2(
-    #         lnr.SendPaymentRequest(
-    #             dest=bytes.fromhex(target_pubkey),
-    #             dest_custom_records=custom_records,
-    #             fee_limit_sat=fee_limit,
-    #             timeout_seconds=timeout,
-    #             amt=amount,
-    #             payment_hash=bytes.fromhex(hashed_secret),
-    #         )
-    #     ):
-    #         if response.status == 1:
-    #             print("In-flight")
-    #         if response.status == 2:
-    #             print("Succeeded")
-    #         if response.status == 3:
-    #             if response.failure_reason == 1:
-    #                 print("Failure - Timeout")
-    #             elif response.failure_reason == 2:
-    #                 print("Failure - No Route")
-    #             elif response.failure_reason == 3:
-    #                 print("Failure - Error")
-    #             elif response.failure_reason == 4:
-    #                 print("Failure - Incorrect Payment Details")
-    #             elif response.failure_reason == 5:
-    #                 print("Failure Insufficient Balance")
-    #         if response.status == 0:
-    #             print("Unknown Error")
-
-    def get_channel(self, chan_id):
-        for channel in self.get_channels():
-            if chan_id == channel.chan_id:
-                return channel
-
-    def get_channel_remote_balance(self, chan_id):
-        for channel in self.get_channels():
-            if chan_id == channel.chan_id:
-                return channel.remote_balance
-
-    def get_channel_local_balance(self, chan_id):
-        for channel in self.get_channels():
-            if chan_id == channel.chan_id:
-                return channel.local_balance
-
     def get_own_alias(self):
         return self.get_info().alias
 
@@ -349,10 +293,8 @@ class Lnd(LndBase):
             )
             for pk, amount in zip(pubkeys, amounts)
         ]
-        response = self.stub.BatchOpenChannel(
+        return self.stub.BatchOpenChannel(
             ln.BatchOpenChannelRequest(
                 sat_per_vbyte=sat_per_vbyte, spend_unconfirmed=False, channels=chans
             )
         )
-        print(response)
-        return response

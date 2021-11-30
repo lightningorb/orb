@@ -4,13 +4,11 @@ import os
 from traceback import print_exc
 
 from orb.store.db_meta import *
+from orb.misc.channels import Channels
 
 
 class DataManager:
     def __init__(self, config):
-        self.init(config=config)
-
-    def init(self, config):
         self.menu_visible = False
         if config["lnd"]["protocol"] == "grpc":
             try:
@@ -35,6 +33,9 @@ class DataManager:
             from orb.lnd.mock_lnd import Lnd as mock_lnd
 
             self.lnd = mock_lnd()
+
+        self.channels = Channels(self.lnd)
+
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(os.path.join(user_data_dir, "orb.json"))
         from orb.store import db_create_tables

@@ -105,6 +105,7 @@ class ConsoleScreen(Screen):
 
         delayed()
 
+    @mainthread
     def print(self, text):
 
         if text:

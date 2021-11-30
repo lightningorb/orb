@@ -1,18 +1,23 @@
 import math
 from collections import defaultdict
 from functools import cmp_to_key
+from threading import Thread
 
 import bezier
 from colour import Color as Colour
 
+from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.graphics import Mesh
 from kivy.graphics.tesselator import Tesselator
+from kivy.app import App
+from kivy.clock import mainthread
 
 from orb.misc.Vector import Vector
+from orb.misc.prefs import is_mock
 from orb.misc.lerp import lerp_vec
 import data_manager
 
@@ -20,27 +25,27 @@ import data_manager
 class ChordWidget(Widget):
     def __init__(self, channels, *args, **kwargs):
         super(ChordWidget, self).__init__(*args, **kwargs)
-
         self.channels = channels
-        self.radius = 950
+        Clock.schedule_once(lambda _: Thread(target=self.update_rect).start(), 1)
+        channels.bind(channels=self.update_rect)
+
+    @mainthread
+    def update_rect(self, *args, **kwargs):
+        self.radius = (
+            int(App.get_running_app().config["display"]["channel_length"]) * 0.95
+        )
 
         matrix = self.get_matrix()
-        # from random import shuffle, randrange
-
-        # r = [*(range(19))]
-        # shuffle(r)
-        # matrix = {}
-        # for i in r:
-        #     matrix[(10, i)] = randrange(1000, 5000)
 
         with self.canvas:
+            self.canvas.clear()
             offset = 0
-            sec_w = 360 / len(channels)
-            sec_w2 = 360 / len(channels) / 2.5
-            cols = [*Colour("red").range_to("blue", len(channels))]
+            sec_w = 360 / len(self.channels)
+            sec_w2 = sec_w / 2.5
+            cols = [*Colour("red").range_to("blue", len(self.channels))]
             chan_pos = {}
             chan_cols = {}
-            for chan, col in zip(channels, cols):
+            for chan, col in zip(self.channels, cols):
                 Color(rgb=col.rgb)
                 chan_cols[chan.chan_id] = col.rgb
                 self.chord = Line(
@@ -51,13 +56,11 @@ class ChordWidget(Widget):
                 chan_pos[chan.chan_id] = offset
                 offset += sec_w
 
-            for chan, col in zip(channels, cols):
+            for chan, col in zip(self.channels, cols):
                 show = data_manager.data_man.store.get("show_to_chords", {}).get(
                     str(chan.chan_id), False
                 )
                 if show:
-                    c = col.rgb
-                    Color(rgba=(c[0], c[1], c[2], 0.5))
                     self.draw_channel_chords(
                         chan.chan_id,
                         col,
@@ -82,12 +85,7 @@ class ChordWidget(Widget):
         def sort_by_pos(a, b):
             a = (chan_pos[a] - chan_pos[out_chan]) % 360
             b = (chan_pos[b] - chan_pos[out_chan]) % 360
-            if a == b:
-                return 0
-            if a < b:
-                return 1
-            else:
-                return -1
+            return ((-1, 1)[a < b], 0)[a == b]
 
         in_chans.sort(key=cmp_to_key(sort_by_pos))
 
@@ -136,24 +134,28 @@ class ChordWidget(Widget):
                     Mesh(vertices=vertices, indices=indices, mode="triangle_fan")
 
     def get_matrix(self):
-        matrix = defaultdict(int)
-        from orb.store import model
 
-        chan_ids = [c.chan_id for c in self.channels]
-        for c in self.channels:
-            hist = (
-                model.FowardEvent()
-                .select()
-                .where(model.FowardEvent.chan_id_out == c.chan_id)
-            )
-            for h in hist:
-                matrix[(h.chan_id_out, h.chan_id_in)] += h.amt_out
+        if is_mock():
+            from random import shuffle, randrange
 
-        return matrix
+            r = [*(range(19))]
+            shuffle(r)
+            matrix = {}
+            for i in r:
+                matrix[(10, i)] = max(0, randrange(-5000, 5000))
+            return matrix
 
-    def print_matrix(self, chan_ids, matrix):
-        for ci in chan_ids:
-            for cj in chan_ids:
-                if ci != cj:
-                    print(f"{matrix[(ci, cj)]:<10}", end="")
-            print("")
+        else:
+            matrix = defaultdict(int)
+            from orb.store import model
+
+            for c in self.channels:
+                hist = (
+                    model.FowardEvent()
+                    .select()
+                    .where(model.FowardEvent.chan_id_out == c.chan_id)
+                )
+                for h in hist:
+                    matrix[(h.chan_id_out, h.chan_id_in)] += h.amt_out
+
+            return matrix

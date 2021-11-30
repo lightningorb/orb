@@ -124,7 +124,7 @@ class HUD2(BorderedLabel):
 
             total = tot + int(
                 int(cbal.local_balance.sat)
-                + int(cbal.remote_balance.sat)
+                # + int(cbal.remote_balance.sat)
                 + int(cbal.unsettled_remote_balance.sat)
                 + int(pending_open)
             )

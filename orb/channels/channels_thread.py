@@ -31,9 +31,20 @@ class ChannelsThread(threading.Thread):
                         print(e)
                         # console_output(str(e))
                         if e.open_channel.chan_id:
+                            self.inst.channels.channels.append(e.open_channel)
                             self.inst.add_channel(e.open_channel)
                         if e.closed_channel.chan_id:
-                            self.inst.remove_channel(e.open_channel)
+                            to_remove = next(
+                                iter(
+                                    x
+                                    for x in self.inst.channels.channels
+                                    if x.chan_id == e.closed_channel.chan_id
+                                ),
+                                None,
+                            )
+                            if to_remove:
+                                self.inst.channels.channels.remove(to_remove)
+                                self.inst.remove_channel(e.closed_channel)
             except:
                 print("Exception getting Channels - let's sleep")
                 # print_exc()

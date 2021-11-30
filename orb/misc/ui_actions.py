@@ -3,6 +3,7 @@ from threading import Lock
 
 mutex = Lock()
 
+
 def console_output(text):
     print(text)
     mutex.acquire()
@@ -13,3 +14,7 @@ def console_output(text):
             console.print(text)
     finally:
         mutex.release()
+
+
+def next_chord():
+    pass

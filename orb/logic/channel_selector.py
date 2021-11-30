@@ -7,6 +7,8 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
     Pick a channel for sending out sats.
     """
     chans = []
+    # TODO: switch this to data_manager.data_man.channels
+    # but make sure they can be filtered for active channels only
     channels = lnd.get_channels(active_only=True)
     for chan in channels:
         if chan.remote_pubkey in pk_ignore:
@@ -41,6 +43,8 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
 
 def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
     chans = []
+    # TODO: switch this to data_manager.data_man.channels
+    # but make sure they can be filtered for active channels only
     channels = lnd.get_channels(active_only=True)
     for chan in channels:
         if chan.remote_pubkey in pk_ignore:
