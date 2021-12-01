@@ -16,5 +16,5 @@ def console_output(text):
         mutex.release()
 
 
-def next_chord():
+def toggle_chords():
     pass

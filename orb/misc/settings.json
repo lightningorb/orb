@@ -184,5 +184,30 @@
       "desc":"Audio volume",
       "section":"audio",
       "key":"volume"
+   },
+   {
+      "type":"title",
+      "title":"Keyboard Shortcuts"
+   },
+   {
+      "type":"string",
+      "title":"Show / Hide Chords",
+      "desc":"Toggle visibility of liquidity Chords",
+      "section":"shortcuts",
+      "key":"toggle_chords"
+   },
+   {
+      "type":"string",
+      "title":"Next Chord",
+      "desc":"Only display the liquidity Chords for the next node",
+      "section":"shortcuts",
+      "key":"next_chord"
+   },
+   {
+      "type":"string",
+      "title":"Prev Chord",
+      "desc":"Only display the liquidity Chords for the previous node",
+      "section":"shortcuts",
+      "key":"prev_chord"
    }
 ]

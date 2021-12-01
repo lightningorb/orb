@@ -107,8 +107,24 @@ def patch_kv_settings():
     Settings.add_kivy_panel = add_kivy_panel
 
 
+def patch_text_input():
+    from kivy.uix.textinput import TextInput
+    import data_manager
+
+    def on_focus(_, inst, value):
+        if value:
+            data_manager.data_man.disable_shortcuts = True
+            print("User focused", inst)
+        else:
+            data_manager.data_man.disable_shortcuts = False
+            print("User defocused", inst)
+
+    TextInput.on_focus = on_focus
+
+
 def do_monkey_patching():
     patch_store()
     patch_settings()
     patch_kv_settings()
     patch_datatables()
+    patch_text_input()

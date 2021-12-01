@@ -28,9 +28,21 @@ class ChordWidget(Widget):
         self.channels = channels
         Clock.schedule_once(lambda _: Thread(target=self.update_rect).start(), 1)
         channels.bind(channels=self.update_rect)
+        data_manager.data_man.bind(show_chords=self.update_rect)
+        data_manager.data_man.bind(show_chord=self.show_chord)
+
+    def show_chord(self, inst, chord):
+        chord %= len(self.channels)
+        show = {str(c.chan_id): i == chord for i, c in enumerate(self.channels)}
+        data_manager.data_man.store.put("show_to_chords", **show)
+        self.update_rect()
 
     @mainthread
     def update_rect(self, *args, **kwargs):
+        self.canvas.clear()
+
+        if not data_manager.data_man.show_chords:
+            return
         self.radius = (
             int(App.get_running_app().config["display"]["channel_length"]) * 0.95
         )
@@ -109,7 +121,17 @@ class ChordWidget(Widget):
                 points.extend([float(e[int(inverted)]), float(e[int(not inverted)])])
             return points if not inverted else points[::-1]
 
-        total_liq = sum(matrix[(out_chan, in_chan)] for in_chan in in_chans)
+        use_total_liq = False
+        if use_total_liq:
+            chan_ids = [x.chan_id for x in self.channels]
+            total_liq = sum(
+                matrix[(x, y)]
+                for x in chan_ids
+                for y in chan_ids
+                if x != y and (x, y) in matrix
+            )
+        else:
+            total_liq = sum(matrix[(out_chan, in_chan)] for in_chan in in_chans)
 
         local_offset = offset - sec_w2
         dist = (offset + sec_w2) - local_offset
@@ -142,13 +164,16 @@ class ChordWidget(Widget):
             shuffle(r)
             matrix = {}
             for i in r:
-                matrix[(10, i)] = max(0, randrange(-5000, 5000))
+                for j in r:
+                    if i != j:
+                        matrix[(i, j)] = max(0, randrange(-5000, 5000))
             return matrix
 
         else:
             matrix = defaultdict(int)
             from orb.store import model
 
+            chan_ids = set([x.chan_id for x in self.channels])
             for c in self.channels:
                 hist = (
                     model.FowardEvent()
@@ -156,6 +181,7 @@ class ChordWidget(Widget):
                     .where(model.FowardEvent.chan_id_out == c.chan_id)
                 )
                 for h in hist:
-                    matrix[(h.chan_id_out, h.chan_id_in)] += h.amt_out
+                    if h.chan_id_out in chan_ids and h.chan_id_in in chan_ids:
+                        matrix[(h.chan_id_out, h.chan_id_in)] += h.amt_out
 
             return matrix

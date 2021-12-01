@@ -1,15 +1,25 @@
-from kivy.app import App
-from kivy.storage.jsonstore import JsonStore
 import os
 from traceback import print_exc
+
+from kivy.app import App
+from kivy.storage.jsonstore import JsonStore
+from kivy.properties import BooleanProperty
+from kivy.properties import NumericProperty
+from kivy.event import EventDispatcher
 
 from orb.store.db_meta import *
 from orb.misc.channels import Channels
 
 
-class DataManager:
-    def __init__(self, config):
+class DataManager(EventDispatcher):
+
+    show_chords = BooleanProperty(False)
+    show_chord = NumericProperty(0)
+
+    def __init__(self, config, *args, **kwargs):
+        super(DataManager, self).__init__(*args, **kwargs)
         self.menu_visible = False
+        self.disable_shortcuts = False
         if config["lnd"]["protocol"] == "grpc":
             try:
                 from orb.lnd.lnd import Lnd as grpc_lnd

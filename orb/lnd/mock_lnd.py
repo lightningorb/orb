@@ -19,6 +19,10 @@ class Channel:
     pending_htlcs: Any
     total_satoshis_sent: Any
     total_satoshis_received: Any
+    initiator: Any
+    commit_fee: Any
+    unsettled_balance: Any
+    channel_point: Any
 
     def ListFields(self):
         return []
@@ -61,6 +65,10 @@ class Lnd(object):
                 chan_id=cid,
                 total_satoshis_sent=sent,
                 total_satoshis_received=sent,
+                initiator=False,
+                commit_fee=5,
+                unsettled_balance=0,
+                channel_point="123:0",
             )
             channels.append(c)
         return channels
@@ -105,6 +113,10 @@ class Lnd(object):
                             chan_id="5",
                             total_satoshis_sent=50000,
                             total_satoshis_received=50000,
+                            initiator=False,
+                            commit_fee=5,
+                            unsettled_balance=0,
+                            channel_point="123:0",
                         )
                     )
                 ]

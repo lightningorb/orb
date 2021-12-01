@@ -3,6 +3,7 @@ from kivy.clock import mainthread
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window, Keyboard
+import data_manager
 
 
 class MainLayout(BoxLayout):
@@ -17,6 +18,7 @@ class MainLayout(BoxLayout):
             on_key_down=self._keyboard_on_key_down, on_key_up=self._keyboard_released
         )
         self.super = []
+        self.shift = False
 
         @mainthread
         def delayed():
@@ -26,25 +28,28 @@ class MainLayout(BoxLayout):
         delayed()
 
     def on_menu_visible(self, *args):
-        import data_manager
-
         data_manager.menu_visible = self.menu_visible
 
-    def _keyboard_released(self, *args):
-        self.super = []
+    def _keyboard_released(self, window=None, key=None):
+        if data_manager.data_man.disable_shortcuts:
+            return
+        if key:
+            code, key = key
+            if key == "shift":
+                self.shift = False
 
-    def _keyboard_on_key_down(self, window, keycode, text, super):
-        if "lctrl" in self.super and keycode[1] == "s":
-            print("saved")
-            self.super = []
+    def _keyboard_on_key_down(self, window, key, text, super):
+        if data_manager.data_man.disable_shortcuts:
+            return
+        code, key = key
+        if key == "shift":
+            self.shift = True
             return False
-        elif "lctrl" not in self.super and keycode[1] in ["lctrl"]:
-            self.super.append(keycode[1])
+        if self.shift and key == "c":
+            data_manager.data_man.show_chords = not data_manager.data_man.show_chords
             return False
-        elif keycode[1] == "]":
-            print("next liq")
-        elif keycode[1] == "[":
-            print("prev liq")
-        else:
-            print(keycode)
-            return False
+        if key == "j":
+            data_manager.data_man.show_chord += 1
+        if key == "k":
+            data_manager.data_man.show_chord -= 1
+        return False
