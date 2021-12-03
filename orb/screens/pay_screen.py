@@ -100,8 +100,9 @@ class PayScreen(PopupDropShadow):
 
                 while not self.stopped():
                     with invoices_lock:
-                        invoices = self.inst.load()
+                        invoices = list(set(self.inst.load()) - self.inst.inflight)
                         invoice = choice(invoices) if invoices else None
+                        self.inst.inflight.add(invoice)
                     if not invoices:
                         console_output("no more usable invoices")
                         return
@@ -125,8 +126,6 @@ class PayScreen(PopupDropShadow):
                         sleep(60)
                     print(f"CHAN: {chan_id}")
                     if chan_id:
-                        with invoices_lock:
-                            self.inst.inflight.add(invoice)
                         status = pay_thread(
                             inst=self.inst,
                             stopped=self.stopped,
@@ -150,6 +149,7 @@ class PayScreen(PopupDropShadow):
                             with invoices_lock:
                                 invoice.paid = True
                                 invoice.save()
+                                self.inst.inflight.remove(invoice)
                         elif (
                             status == PaymentStatus.no_routes
                             or status == PaymentStatus.max_paths_exceeded
@@ -158,6 +158,12 @@ class PayScreen(PopupDropShadow):
                                 console_output("no routes found")
                             if status == PaymentStatus.max_paths_exceeded:
                                 console_output("max paths exceeded")
+                            with invoices_lock:
+                                self.inst.inflight.remove(invoice)
+                        else:
+                            with invoices_lock:
+                                self.inst.inflight.remove(invoice)
+
                     sleep(5)
 
             def stop(self):
