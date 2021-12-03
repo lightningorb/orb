@@ -56,7 +56,7 @@ class ChannelWidget(Widget):
             self.line_remote = Segment(
                 points=[0, 0, 0, 0], width=self.width, cap="none", color=BLUE
             )
-            Color(0.5, 1, 0.5, 1)
+            self.anim_col = Color(0.5, 1, 0.5, 1)
             self.anim_rect = RoundedRectangle(
                 pos=[-1000, -1000], size=[0, 0], radius=[5]
             )
@@ -110,20 +110,24 @@ class ChannelWidget(Widget):
 
     def anim_outgoing(self, s=10):
         start, end = (self.b, self.c) if inverted_channels else (self.c, self.b)
-        anim = Animation(pos=start, size=(0, 0), duration=0)
-        anim += Animation(pos=start, size=(0, 0), duration=0.4)
-        anim += Animation(size=(s, s), duration=0)
-        anim += Animation(pos=end, duration=0.4)
-        anim += Animation(pos=(-1000, -1000), duration=0)
+        anim = Animation(pos=start, size=(s, s), duration=0)
+        anim += Animation(pos=end, size=(s, s), duration=0.4)
+        anim += Animation(pos=end, size=(1, 1), duration=0)
         anim.start(self.anim_rect)
+        anim = Animation(rgba=[0.5, 1, 0.5, 1], duration=0)
+        anim += Animation(rgba=[0.5, 1, 0.5, 1], duration=0.4)
+        anim += Animation(rgba=[0.5, 1, 0.5, 0], duration=0)
+        anim.start(self.anim_col)
 
     def anim_incoming(self, s=10):
         start, end = (self.c, self.b) if inverted_channels else (self.c, self.b)
         anim = Animation(pos=start, size=(s, s), duration=0)
-        anim += Animation(pos=end, duration=0.4)
-        anim += Animation(size=(0, 0), duration=0.1)
-        anim += Animation(pos=(-1000, -1000), duration=0.1)
+        anim += Animation(pos=end, size=(s, s), duration=0.4)
         anim.start(self.anim_rect)
+        anim = Animation(rgba=[0.5, 1, 0.5, 1], duration=0)
+        anim += Animation(rgba=[0.5, 1, 0.5, 1], duration=0.4)
+        anim += Animation(rgba=[0.5, 1, 0.5, 0], duration=0)
+        anim.start(self.anim_col)
 
     def anim_to_pos(self, points):
         Animation(points=points, duration=1).start(self)
@@ -134,7 +138,7 @@ class ChannelWidget(Widget):
         settle = htlc.event_outcome == "settle_event"
         fail = htlc.event_outcome == "link_fail_event"
         outgoing = (
-            hasattr(htlc, 'outgoing_channel_id')
+            hasattr(htlc, "outgoing_channel_id")
             and htlc.outgoing_channel_id == self.channel.chan_id
         )
         incoming = forward and htlc.incoming_channel_id == self.channel.chan_id
