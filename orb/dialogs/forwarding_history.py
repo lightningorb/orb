@@ -158,6 +158,12 @@ def graph_fees_earned():
             points=[(k, v) for k, v in enumerate(sma(list(buckets.values()), 7))],
         )
     )
+    graph.add_plot(
+        SmoothLinePlot(
+            color=[0.5, 1, 0.5, 1],
+            points=[(k, v) for k, v in enumerate(sma(list(buckets.values()), 30))],
+        )
+    )
     bl = BoxLayout(orientation="vertical")
     bl.add_widget(graph)
     bl.add_widget(
