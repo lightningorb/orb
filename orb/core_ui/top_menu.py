@@ -48,13 +48,13 @@ class TopMenu(AppMenu):
                     return True
 
                 widget = ContextMenuTextItem(text=c[d], on_release=run)
-                widget.full_name = '>'.join(c)
+                widget.full_name = ">".join(c)
                 p.add_widget(widget)
                 self.script_widgets.append(widget)
 
         tree = {}
         for script in scripts:
-            components = script.split('>')
+            components = script.split(">")
             add_to_tree(d=0, c=components, t=tree, p=menu.submenu)
         menu.submenu._on_visible(False)
 
@@ -100,6 +100,10 @@ class TopMenu(AppMenu):
             ContextMenuDivider(),
             ContextMenuTextItem(text="Clear Input", on_release=cbs.clear_input),
             ContextMenuTextItem(text="Clear Output", on_release=cbs.clear_output),
+            ContextMenuDivider(),
+            ContextMenuTextItem(
+                text="Reset Split Size", on_release=cbs.reset_split_size
+            ),
         ]
         for w in self.view_widgets:
             menu.submenu.add_widget(w)
