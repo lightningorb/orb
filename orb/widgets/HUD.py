@@ -197,6 +197,7 @@ class HUD4(FloatLayout, Hideable):
 
         threading.Thread(target=func).start()
 
+    @silent
     def update_price(self, *args):
         @silent
         def func():
