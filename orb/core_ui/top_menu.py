@@ -19,7 +19,10 @@ class TopMenu(AppMenu):
     view_widgets = []
 
     def populate_scripts(self):
-        scripts = data_manager.data_man.store.get("scripts", [])
+        scripts = data_manager.data_man.store.get("scripts", {})
+        scripts = {
+            ">".join([x.strip() for x in k.split(">")]): v for k, v in scripts.items()
+        }
         menu = [x for x in self.children if x.text.lower() == "scripts"][0]
 
         for widget in self.script_widgets:

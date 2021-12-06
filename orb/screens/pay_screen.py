@@ -117,7 +117,9 @@ class PayScreen(PopupDropShadow):
                                 lnd=data_manager.data_man.lnd,
                                 pk_ignore=self.inst.get_ignored_pks(),
                                 chan_ignore=chan_ignore,
-                                num_sats=payment_request.num_satoshis,
+                                num_sats=payment_request.num_satoshis
+                                + payment_request.num_satoshis
+                                * 0.05,  # 5% for the fees
                             )
                             if chan_id:
                                 chan_ignore.add(chan_id)
