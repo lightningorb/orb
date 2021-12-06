@@ -23,7 +23,7 @@ class OrbApp(MDApp):
         currently not used.
         """
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if any(x in path for x in ["orb.kv", 'tutes', 'dist']):
+            if any(x in path for x in ["orb.kv", "tutes", "dist", "user"]):
                 continue
             Builder.load_file(path)
 
@@ -58,7 +58,7 @@ class OrbApp(MDApp):
         Currently we'd end up with multiple LND instances for example?
         Simply not an option.
         """
-        if f'{section}.{key}' == 'audio.volume':
+        if f"{section}.{key}" == "audio.volume":
             audio_manager.set_volume()
         if key == "tls_certificate":
             data_manager.DataManager.save_cert(value)
