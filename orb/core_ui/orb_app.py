@@ -31,11 +31,11 @@ class OrbApp(MDApp):
         """
         Main build method for the app.
         """
-        self.theme_cls.theme_style = "Dark"  # "Light"
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
-        # self.theme_cls.primary_palette = "Red"
-        # self.icon = 'myicon.png'
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
+        self.icon = "orb.png"
         self.main_layout = MainLayout()
         audio_manager.set_volume()
         return self.main_layout
@@ -60,9 +60,8 @@ class OrbApp(MDApp):
         """
         if f"{section}.{key}" == "audio.volume":
             audio_manager.set_volume()
-        if key == "tls_certificate":
+        elif key == "tls_certificate":
             data_manager.DataManager.save_cert(value)
-        # data_manager.data_man = data_manager.DataManager(config=self.config)
         self.main_layout.do_layout()
 
     @guarded

@@ -175,6 +175,16 @@
       ]
    },
    {
+      "type":"options",
+      "title":"Primary Palette",
+      "desc":"Primary UI Palette",
+      "section":"display",
+      "key":"primary_palette",
+      "options":[
+         "Red", "Pink", "Purple", "DeepPurple", "Indigo", "Blue", "LightBlue", "Cyan", "Teal", "Green", "LightGreen", "Lime", "Yellow", "Amber", "Orange", "DeepOrange", "Brown", "Gray", "BlueGray"
+      ]
+   },
+   {
       "type":"title",
       "title":"Audio"
    },
