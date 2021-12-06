@@ -54,7 +54,7 @@ class TopMenu(AppMenu):
 
         tree = {}
         for script in scripts:
-            components = script.split(">")
+            components = [x.strip() for x in script.split(">")]
             add_to_tree(d=0, c=components, t=tree, p=menu.submenu)
         menu.submenu._on_visible(False)
 
