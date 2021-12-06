@@ -32,17 +32,15 @@ class Segment(Widget):
         diff = n - len(self.e)
         for _ in range(abs(diff)):
             if diff > 0:
-                c = Color(*prefs_col('display.1m_color'))
+                c = Color(*prefs_col("display.1m_color"))
                 e = Ellipse(pos=[0, 0], size=[self.d, self.d])
                 self.e.append(e)
                 self.c.append(c)
                 self.canvas.add(c)
                 self.canvas.add(e)
             else:
-                e = self.e.pop()
-                c = self.e.pop()
-                self.canvas.remove(e)
-                self.canvas.remove(c)
+                self.canvas.remove(self.e.pop())
+                self.canvas.remove(self.c.pop())
         for i, e in enumerate(self.e):
             e.pos = lerp_2d(
                 [a[0] - self.r, a[1] - self.r],
