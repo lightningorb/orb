@@ -236,6 +236,13 @@ class ConsoleInput(CodeInput):
     def clear_output(self, *args):
         self.output = ""
 
+    def reset_split_size(self, *args):
+        import data_manager
+
+        data_manager.data_man.store.put(
+            "console", input_height=None, output_height=None
+        )
+
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         meta = "meta" in modifiers
         direction = (
