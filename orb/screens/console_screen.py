@@ -2,6 +2,7 @@ import sys
 from traceback import format_exc
 from io import StringIO
 from threading import Thread
+from collections import deque
 
 from pygments.lexers import CythonLexer
 
@@ -85,6 +86,9 @@ class ConsoleSplitter(Splitter):
 
 
 class ConsoleScreen(Screen):
+
+    lines = deque()
+
     def on_enter(self):
         """
         We have entered the console screen
@@ -106,21 +110,25 @@ class ConsoleScreen(Screen):
         delayed()
 
     @mainthread
-    def print(self, text):
+    def update_output(self, text, last_line):
+        self.ids.console_output.output = text
+        if last_line:
+            app = App.get_running_app()
+            app.root.ids.status_line.ids.line_output.output = last_line
+            app.root.ids.status_line.ids.line_output.cursor = (0, 0)
 
+    def print(self, text):
         if text:
             text = str(text)
-            app = App.get_running_app()
-            console = app.root.ids.sm.get_screen("console")
-            lines = console.ids.console_output.output.split("\n")
-            if len(lines) > 30:
-                lines = lines[1:]
-            out = "\n".join(lines)
-            console.ids.console_output.output = out + "\n" + str(text)
-            last_line = next(iter([x for x in text.split("\n") if x][::-1]), None)
-            if last_line:
-                app.root.ids.status_line.ids.line_output.output = last_line
-                app.root.ids.status_line.ids.line_output.cursor = (0, 0)
+            text_lines = text.split("\n")
+            if text_lines:
+                for line in text_lines:
+                    if line:
+                        self.lines.append(line)
+                for _ in range(max(0, len(self.lines) - 30)):
+                    self.lines.popleft()
+                last_line = text_lines[-1]
+                self.update_output("\n".join(self.lines), last_line)
 
 
 class InstallScript(Popup):
