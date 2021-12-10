@@ -5,7 +5,7 @@ import arrow
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
-from orb.misc.ui_actions import console_output
+
 from orb.misc.forex import forex
 
 import data_manager
@@ -23,19 +23,19 @@ def download_forwarding_history(*args, **kwargs):
     def func():
         from orb.store import model
 
-        console_output("downloading forwarding history")
+        print("downloading forwarding history")
         last = (
             model.FowardEvent.select()
             .order_by(model.FowardEvent.timestamp_ns.desc())
             .first()
         )
-        console_output("last event:")
-        console_output(last)
+        print("last event:")
+        print(last)
         lnd = data_manager.data_man.lnd
         i = 0
         start_time = int(last.timestamp) if last else None
         while True:
-            console_output(f"fetching events {i} -> {i + 100}")
+            print(f"fetching events {i} -> {i + 100}")
             fwd = lnd.get_forwarding_history(
                 start_time=start_time, index_offset=i, num_max_events=100
             )
@@ -62,7 +62,7 @@ def download_forwarding_history(*args, **kwargs):
             i += 100
             if not fwd.forwarding_events:
                 break
-        console_output("downloaded forwarding history")
+        print("downloaded forwarding history")
 
     Thread(target=func).start()
 
@@ -135,7 +135,6 @@ def graph_fees_earned():
         ylabel="Sats",
         x_ticks_major=5,
         y_ticks_major=10_000,
-        y_ticks_minor=1000,
         y_grid_label=True,
         x_grid_label=True,
         padding=5,

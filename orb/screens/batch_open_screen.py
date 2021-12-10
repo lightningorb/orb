@@ -7,7 +7,7 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.datatables import MDDataTable
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.misc.ui_actions import console_output
+
 from orb.misc.decorators import guarded
 from orb.misc import mempool
 
@@ -86,10 +86,10 @@ class BatchOpenScreen(PopupDropShadow):
                 sat_per_vbyte=mempool.get_fees("fastestFee") + 1,
             )
             self.ids.open_status.text = str(response)
-            console_output(str(response))
+            print(str(response))
         except Exception as e:
             self.ids.open_status.text = e.args[0].details
-            console_output(e.args[0].details)
+            print(e.args[0].details)
 
     @guarded
     def batch_connect(self):

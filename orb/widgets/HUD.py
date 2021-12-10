@@ -105,6 +105,10 @@ class HUD2(BorderedLabel):
                 channel.channel.local_balance
                 for channel in pending_channels.pending_open_channels
             )
+            pending_close = sum(
+                channel.limbo_balance
+                for channel in pending_channels.pending_force_closing_channels
+            )
 
             hud = f"Chain Balance: {forex(tot)}\n"
             if tot != conf:
@@ -251,3 +255,33 @@ class HUD6(GridLayout, Hideable):
         self.clear_widgets()
         for t in thread_manager.threads:
             self.add_widget(ThreadWidget(thread=t))
+
+
+class HUD7(BorderedLabel):
+    """
+    Connected HUD
+    """
+
+    def __init__(self, *args, **kwargs):
+        BorderedLabel.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.check_connection, 60)
+        Clock.schedule_once(self.check_connection, 1)
+
+    @guarded
+    def check_connection(self, *_):
+        @mainthread
+        def update_gui(text):
+            self.text = text
+            self.show()
+
+        @guarded
+        def func():
+            try:
+                requests.get(
+                    "https://api.coindesk.com/v1/bpi/currentprice.json", timeout=5
+                )
+                update_gui("connected")
+            except:
+                update_gui("offline")
+
+        threading.Thread(target=func).start()

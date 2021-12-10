@@ -3,7 +3,7 @@ import threading
 import arrow
 
 from orb.logic.routes import Routes
-from orb.misc.ui_actions import console_output
+
 from orb.misc.forex import forex
 
 import data_manager
@@ -41,37 +41,37 @@ def handle_error(inst, response, route, routes, pk=None):
         code = -1000
         failure_source_pubkey = route.hops[-1].pub_key
     if code == 15:
-        console_output("Temporary channel failure")
+        print("Temporary channel failure")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Temporary channel failure"
     elif code == 18:
-        console_output("Unknown next peer")
+        print("Unknown next peer")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Unknown next peer"
     elif code == 12:
-        console_output("Fee insufficient")
+        print("Fee insufficient")
         if pk == failure_source_pubkey:
             return "Fee insufficient"
     elif code == 14:
-        console_output("Channel disabled")
+        print("Channel disabled")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Channel disabled"
     elif code == 13:
-        console_output("Incorrect CLTV expiry")
+        print("Incorrect CLTV expiry")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Incorrect CLTV expiry"
     elif code == -1000:
-        console_output("Timeout")
+        print("Timeout")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Timeout"
     else:
-        console_output(f"Unknown error code {repr(code)}:")
-        console_output(repr(response))
+        print(f"Unknown error code {repr(code)}:")
+        print(repr(response))
         if pk == failure_source_pubkey:
             return f"Unknown error code {repr(code)}:"
 
@@ -120,8 +120,8 @@ def pay_thread_grpc(
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
-    console_output(f"fee_limit_sat: {fee_limit_sat}")
-    console_output(f"fee_limit_msat: {fee_limit_msat}")
+    print(f"fee_limit_sat: {fee_limit_sat}")
+    print(f"fee_limit_msat: {fee_limit_msat}")
     routes = Routes(
         lnd=data_manager.data_man.lnd,
         pub_key=payment_request.destination,
@@ -157,7 +157,7 @@ def pay_thread_grpc(
                 for j, hop in enumerate(route.hops):
                     node_alias = data_manager.data_man.lnd.get_node_alias(hop.pub_key)
                     text = f"{j:<5}:        {node_alias}"
-                    console_output(f"T{thread_n}: {text}")
+                    print(f"T{thread_n}: {text}")
                     # no actual need for hops for now
                     p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
                     p.save()
@@ -174,18 +174,18 @@ def pay_thread_grpc(
                     code == "UNKNOWN"
                     and details == "attempted value exceeds paymentamount"
                 ):
-                    console_output(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
+                    print(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
                     return PaymentStatus.inflight
                 if code == "ALREADY_EXISTS" and details == "invoice is already paid":
-                    console_output(f"T{thread_n}: INVOICE IS ALREADY PAID")
+                    print(f"T{thread_n}: INVOICE IS ALREADY PAID")
                     return PaymentStatus.already_paid
-                console_output(f"T{thread_n}: exception.. not sure what's up")
+                print(f"T{thread_n}: exception.. not sure what's up")
                 return PaymentStatus.exception
             is_successful = response and (
                 response.failure is None or response.failure.code == 0
             )
             if is_successful:
-                console_output(
+                print(
                     f"T{thread_n}: SUCCESS: {forex(response.route.total_amt)} (fees: {forex(response.route.total_fees)})"
                 )
                 attempt.succeeded = True
@@ -209,9 +209,9 @@ def pay_thread_grpc(
                     attempt.save()
                 handle_error(inst, response, route, routes)
     if not has_next:
-        console_output(f"T{thread_n}: No routes found!")
+        print(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes
-    console_output("No more routes found.")
+    print("No more routes found.")
     return PaymentStatus.none
 
 
@@ -229,8 +229,8 @@ def pay_thread_rest(
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
-    console_output(f"fee_limit_sat: {fee_limit_sat}")
-    console_output(f"fee_limit_msat: {fee_limit_msat}")
+    print(f"fee_limit_sat: {fee_limit_sat}")
+    print(f"fee_limit_msat: {fee_limit_msat}")
     from data_manager import data_man
 
     r = data_man.lnd.router_send(
@@ -246,7 +246,7 @@ def pay_thread_rest(
     for raw_response in r.iter_lines():
         json_response = json.loads(raw_response)
         print(json_response)
-        # console_output(raw_response)
+        # print(raw_response)
         if "result" in json_response:
             if json_response["result"]["status"] == "SUCCEEDED":
                 return PaymentStatus.success

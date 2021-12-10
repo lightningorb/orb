@@ -110,11 +110,12 @@ class Lnd(LndBase):
         )
         return self.stub.ListInvoices(request)
 
+    @lru_cache(None)
     def decode_payment_request(self, payment_request):
         request = ln.PayReqString(pay_req=payment_request)
         return self.stub.DecodePayReq(request)
 
-    def get_channels(self, active_only=False, use_cache=True):
+    def get_channels(self, active_only=False):
         return [
             Channel(c)
             for c in self.stub.ListChannels(
@@ -182,10 +183,6 @@ class Lnd(LndBase):
         last_hop = route.hops[-1]
         last_hop.mpp_record.payment_addr = payment_request.payment_addr
         last_hop.mpp_record.total_amt_msat = payment_request.num_msat
-        print("=" * 100)
-        print("DEBUG LAST HOP")
-        print(last_hop)
-        print("=" * 100)
         request = lnrouter.SendToRouteRequest(route=route)
         request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
         result = []
@@ -259,6 +256,16 @@ class Lnd(LndBase):
             num_max_events=num_max_events,
         )
         return self.stub.ForwardingHistory(request)
+
+    def list_payments(self, include_incomplete=True, index_offset=0, max_payments=100):
+        request = ln.ListPaymentsRequest(
+            include_incomplete=True,
+            index_offset=index_offset,
+            max_payments=max_payments,
+            reversed=True,
+        )
+        response = self.stub.ListPayments(request)
+        return response.payments
 
     def get_own_alias(self):
         return self.get_info().alias

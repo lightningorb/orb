@@ -29,7 +29,6 @@ class ChannelsThread(threading.Thread):
                         if self.stopped():
                             return
                         print(e)
-                        # console_output(str(e))
                         if e.open_channel.chan_id:
                             self.inst.channels.channels.append(e.open_channel)
                             self.inst.add_channel(e.open_channel)

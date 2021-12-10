@@ -1,5 +1,5 @@
 import functools
-from orb.misc.ui_actions import console_output
+
 from traceback import format_exc
 
 
@@ -9,7 +9,7 @@ def guarded(func):
         try:
             return func(*args, **kwargs)
         except:
-            console_output(format_exc())
+            print(format_exc())
 
     return wrapper_decorator
 

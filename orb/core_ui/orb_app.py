@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from kivymd.app import MDApp
@@ -8,6 +9,8 @@ from orb.misc.conf_defaults import set_conf_defaults
 from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
+from orb.misc.ui_actions import console_output
+
 
 import data_manager
 
@@ -27,6 +30,27 @@ class OrbApp(MDApp):
                 continue
             Builder.load_file(path)
 
+    def load_user_setup(self):
+        if os.path.exists("user/scripts/user_setup.py"):
+            from importlib import __import__
+
+            __import__("user.scripts.user_setup")
+
+    def on_start(self):
+        audio_manager.set_volume()
+        self.load_user_setup()
+
+        import sys
+
+        _write = sys.stdout.write
+
+        def write(*args):
+            content = " ".join(args)
+            _write(content)
+            console_output(content)
+
+        sys.stdout.write = write
+
     def build(self):
         """
         Main build method for the app.
@@ -37,7 +61,6 @@ class OrbApp(MDApp):
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
         self.icon = "orb.png"
         self.main_layout = MainLayout()
-        audio_manager.set_volume()
         return self.main_layout
 
     def build_config(self, config):

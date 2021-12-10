@@ -6,17 +6,16 @@ from kivymd.uix.datatables import MDDataTable
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
-from orb.misc.ui_actions import console_output
 
 
 class RankingsFileChooser(PopupDropShadow):
 
-    selected_path = StringProperty('')
+    selected_path = StringProperty("")
 
 
 class RankingsExportPath(PopupDropShadow):
 
-    selected_path = StringProperty('')
+    selected_path = StringProperty("")
 
 
 class Rankings(PopupDropShadow):
@@ -53,10 +52,10 @@ class Rankings(PopupDropShadow):
             self.ids.box_layout.add_widget(
                 Label(
                     text=(
-                        'This feature ranks nodes by how predictable\n'
-                        'they are at routing payments.\n'
-                        'No path-finding data available.\n'
-                        'Make payments, or circular rebalances.'
+                        "This feature ranks nodes by how predictable\n"
+                        "they are at routing payments.\n"
+                        "No path-finding data available.\n"
+                        "Make payments, or circular rebalances."
                     )
                 )
             )
@@ -90,8 +89,8 @@ class Rankings(PopupDropShadow):
         dialog.bind(selected_path=do_export)
 
     def copy_pks(self):
-        Clipboard.copy('\n'.join(self.checked_pks))
-        console_output(f'Copied {len(self.checked_pks)} pubkeys to clipboard')
+        Clipboard.copy("\n".join(self.checked_pks))
+        print(f"Copied {len(self.checked_pks)} pubkeys to clipboard")
 
     def on_check_press(self, _, row_data):
         pk = self.pks[row_data[0]]

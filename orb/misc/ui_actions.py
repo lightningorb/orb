@@ -5,11 +5,10 @@ mutex = Lock()
 
 
 def console_output(text):
-    print(text)
     mutex.acquire()
     try:
         app = App.get_running_app()
-        if app.root:
+        if app and app.root:
             console = app.root.ids.sm.get_screen("console")
             console.print(text)
     finally:

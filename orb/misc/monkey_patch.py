@@ -114,10 +114,8 @@ def patch_text_input():
     def on_focus(_, inst, value):
         if value:
             data_manager.data_man.disable_shortcuts = True
-            print("User focused", inst)
         else:
             data_manager.data_man.disable_shortcuts = False
-            print("User defocused", inst)
 
     TextInput.on_focus = on_focus
 

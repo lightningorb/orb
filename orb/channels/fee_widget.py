@@ -11,9 +11,10 @@ from kivy.uix.widget import Widget
 
 from orb.misc.utils import closest_point_on_line
 from orb.misc.Vector import Vector
-from orb.misc.ui_actions import console_output
+
 
 import data_manager
+
 
 class FeeWidgetLabel(Label):
     def show(self):
@@ -54,7 +55,7 @@ class FeeWidget(Widget):
             self.circle_2 = Line(circle=(150, 150, 50))
             self.line = Line(points=[0, 0, 0, 0])
 
-        self.label = FeeWidgetLabel(text='', color=(0.5, 1, 0.5, 0))
+        self.label = FeeWidgetLabel(text="", color=(0.5, 1, 0.5, 0))
         self.add_widget(self.label)
 
         self.bind(a=self.update_rect)
@@ -99,7 +100,7 @@ class FeeWidget(Widget):
             self.label.hide()
 
             def update_fees(*args):
-                console_output(f'Setting fees to: {self.to_fee / 1e6}')
+                print(f"Setting fees to: {self.to_fee / 1e6}")
                 data_man.lnd.update_channel_policy(
                     channel=self.channel,
                     fee_rate=self.to_fee / 1e6,

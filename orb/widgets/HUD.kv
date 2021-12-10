@@ -77,6 +77,33 @@
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
 
+
+<HUD7>:
+    size_hint: [None, None]
+    size: [200, (int(len(self.children) / 6) + 1) * dp(30)]
+    padding: dp(10), dp(10)
+    spacing: dp(10)
+    canvas.before:
+        Color:
+            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: .6, .6, .8, root.alpha
+        Line:
+            points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
+            width: 1
+        Line:
+            points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
+            width: 1
+
 <HUD4>:
     size_hint: [None, None]
     size: [300, 150]
@@ -141,4 +168,5 @@
     HUD4
     HUD1
     HUD2
+    HUD7
     HUD3

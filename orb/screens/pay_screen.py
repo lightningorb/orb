@@ -9,7 +9,7 @@ from traceback import print_exc
 from kivy.clock import mainthread
 
 from orb.misc.output import *
-from orb.misc.ui_actions import console_output
+
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.misc.utils import hashabledict
@@ -104,7 +104,7 @@ class PayScreen(PopupDropShadow):
                         invoice = choice(invoices) if invoices else None
                         self.inst.inflight.add(invoice)
                     if not invoices:
-                        console_output("no more usable invoices")
+                        print("no more usable invoices")
                         return
                     payment_request = data_manager.data_man.lnd.decode_request(
                         invoice.raw
@@ -124,7 +124,7 @@ class PayScreen(PopupDropShadow):
                             if chan_id:
                                 chan_ignore.add(chan_id)
                     if not chan_id:
-                        console_output("no more channels left to rebalance")
+                        print("no more channels left to rebalance")
                         sleep(60)
                     print(f"CHAN: {chan_id}")
                     if chan_id:
@@ -157,9 +157,9 @@ class PayScreen(PopupDropShadow):
                             or status == PaymentStatus.max_paths_exceeded
                         ):
                             if status == PaymentStatus.no_routes:
-                                console_output("no routes found")
+                                print("no routes found")
                             if status == PaymentStatus.max_paths_exceeded:
-                                console_output("max paths exceeded")
+                                print("max paths exceeded")
                             with invoices_lock:
                                 self.inst.inflight.remove(invoice)
                         else:

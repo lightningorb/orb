@@ -4,7 +4,6 @@ import requests
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
-from orb.misc.ui_actions import console_output
 
 
 class SendCoins(PopupDropShadow):
@@ -32,6 +31,6 @@ class SendCoins(PopupDropShadow):
         lnd = data_manager.data_man.lnd
         amount = int(amount)
         sat_per_vbyte = int(sat_per_vbyte)
-        console_output(f"sending: {addr} {amount} {sat_per_vbyte}")
+        print(f"sending: {addr} {amount} {sat_per_vbyte}")
         out = lnd.send_coins(addr, amount, sat_per_vbyte)
-        console_output(out)
+        print(out)

@@ -8,7 +8,6 @@ from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
 
-from orb.misc.ui_actions import console_output
 
 import data_manager
 
@@ -69,11 +68,11 @@ class TopMenu(AppMenu):
             exec(text)
             sys.stdout = old_stdout
             message = mystdout.getvalue()
-            console_output(message.strip() + "\n")
+            print(message.strip() + "\n")
         except:
             exc = format_exc()
             if exc:
-                console_output(exc)
+                print(exc)
 
     def add_channels_menu(self):
         app = App.get_running_app()
