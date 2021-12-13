@@ -52,9 +52,9 @@ FeeReport = namedtuple("FeeReport", "day_fee_sum week_fee_sum month_fee_sum")
 class Lnd(object):
     def get_channels(self):
         channels = []
-        for cid in range(30):
+        for cid in range(10):
             capacity = choice([3e6, 5e6, 10e6])
-            f = random()
+            f = 0.5
             sent = randrange(1e6, 10e8)
             c = Channel(
                 capacity=capacity,

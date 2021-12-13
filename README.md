@@ -241,6 +241,7 @@ brew install autoconf automake libtool pkg-config
 brew link libtool
 pip3 install kivy-ios
 toolchain build kivy
+toolchain build pillow
 ```
 
 When building the toolchain, if you get an error along the lines of:

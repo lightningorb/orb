@@ -14,6 +14,8 @@ from orb.dialogs.autobalance import Autobalance
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.screens.close_channel import CloseChannel
+from orb.screens.new_address_screen import NewAddress
+from orb.screens.batch_open_screen import BatchOpenScreen
 from orb.screens.rebalance import Rebalance
 from orb.screens.channels_screen import ChannelsScreen
 from orb.screens.pay_screen import PayScreen

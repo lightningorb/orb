@@ -96,8 +96,6 @@ class PayScreen(PopupDropShadow):
                 )
                 auto = payment_opt == PaymentUIOption.auto_first_hop
 
-                print(f"self.stopped() {self.stopped()}")
-
                 while not self.stopped():
                     with invoices_lock:
                         invoices = list(set(self.inst.load()) - self.inst.inflight)
@@ -109,7 +107,7 @@ class PayScreen(PopupDropShadow):
                     payment_request = data_manager.data_man.lnd.decode_request(
                         invoice.raw
                     )
-                    if payment_opt == PaymentUIOption.user_selected_first_hop:
+                    if not auto:
                         chan_id = self.inst.chan_id
                     else:
                         with lock:
@@ -165,6 +163,9 @@ class PayScreen(PopupDropShadow):
                         else:
                             with invoices_lock:
                                 self.inst.inflight.remove(invoice)
+
+                    if not auto:
+                        break
 
                     sleep(5)
 

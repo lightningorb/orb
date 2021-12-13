@@ -134,7 +134,7 @@ def graph_fees_earned():
         xlabel="Day",
         ylabel="Sats",
         x_ticks_major=5,
-        y_ticks_major=10_000,
+        y_ticks_major=30_000,
         y_grid_label=True,
         x_grid_label=True,
         padding=5,

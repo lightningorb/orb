@@ -1,8 +1,10 @@
 import os
+import sys
 from pathlib import Path
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
+from kivymd.effects import stiffscroll
 
 from orb.misc.monkey_patch import do_monkey_patching
 from orb.misc.conf_defaults import set_conf_defaults
@@ -15,26 +17,31 @@ from orb.misc.ui_actions import console_output
 import data_manager
 
 do_monkey_patching()
+is_dev = sys.argv[0] == "main.py"
 
 
 class OrbApp(MDApp):
     title = "Orb"
 
     def load_kvs(self):
-        """
-        This method enables splitting up .kv files,
-        currently not used.
-        """
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if any(x in path for x in ["orb.kv", "tutes", "dist", "user"]):
+            if any(x in path for x in ["tutes", "dist", "user"]):
+                continue
+            if is_dev and "orb.kv" in path:
                 continue
             Builder.load_file(path)
+        if not is_dev:
+            Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
+            Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
 
     def load_user_setup(self):
         if os.path.exists("user/scripts/user_setup.py"):
             from importlib import __import__
 
-            __import__("user.scripts.user_setup")
+            try:
+                __import__("user.scripts.user_setup")
+            except:
+                print("Unable to load user_setup.py")
 
     def on_start(self):
         audio_manager.set_volume()
