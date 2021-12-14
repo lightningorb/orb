@@ -5,6 +5,7 @@ from pathlib import Path
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivymd.effects import stiffscroll
+from kivy.utils import platform
 
 from orb.misc.monkey_patch import do_monkey_patching
 from orb.misc.conf_defaults import set_conf_defaults
@@ -13,6 +14,18 @@ from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.misc.ui_actions import console_output
 
+import grpc
+
+sys.path.append("orb/lnd/grpc_generate")
+sys.path.append("orb/lnd")
+
+
+from orb.lnd.grpc_generated import router_pb2 as lnrouter
+from orb.lnd.grpc_generated import router_pb2_grpc as lnrouterrpc
+from orb.lnd.grpc_generated import lightning_pb2 as ln
+from orb.lnd.grpc_generated import lightning_pb2_grpc as lnrpc
+from orb.lnd.grpc_generated import invoices_pb2 as invoices
+from orb.lnd.grpc_generated import invoices_pb2_grpc as invoicesrpc
 
 import data_manager
 
@@ -22,6 +35,20 @@ is_dev = sys.argv[0] == "main.py"
 
 class OrbApp(MDApp):
     title = "Orb"
+
+    def get_application_config(self, defaultpath=f"{os.getcwd()}/orb.ini"):
+        if platform == "android":
+            defaultpath = "/sdcard/.%(appname)s.ini"
+        elif platform == "ios":
+            defaultpath = "~/Documents/%(appname)s.ini"
+        elif platform == "win":
+            defaultpath = defaultpath.replace("/", "//")
+        path = os.path.expanduser(defaultpath) % {
+            "appname": self.name,
+            "appdir": self.directory,
+        }
+        print(path)
+        return path
 
     def load_kvs(self):
         for path in [str(x) for x in Path(".").rglob("*.kv")]:

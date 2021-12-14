@@ -8,6 +8,7 @@ from orb.store.db_cache import aliases_cache
 from orb.misc.channel import Channel
 
 sys.path.append("orb/lnd/grpc_generate")
+sys.path.append("orb/lnd")
 
 try:
     import grpc

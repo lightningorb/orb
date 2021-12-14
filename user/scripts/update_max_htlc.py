@@ -15,8 +15,9 @@ class UpdateMaxHTLC(Thread):
         print(f"Checking policies")
         for i, c in enumerate(lnd.get_channels()):
             policy = lnd.get_policy_to(c.chan_id)
-            max_htlc = int((policy.max_htlc_msat * 2) / 1000)
-            local = int(c.local_balance)
+            round = lamba x: int(int(x / 1000) * 10_00)
+            max_htlc = round(int((policy.max_htlc_msat) / 1000))
+            local = round(int(c.local_balance))
             needs_update = max_htlc != local
             if needs_update:
                 print(
@@ -27,7 +28,7 @@ class UpdateMaxHTLC(Thread):
                     time_lock_delta=int(policy.time_lock_delta),
                     fee_rate=int(policy.fee_rate_milli_msat) / 1e6,
                     base_fee_msat=int(policy.fee_base_msat),
-                    max_htlc_msat=int((c.local_balance * 1000) / 2),
+                    max_htlc_msat=int((c.local_balance * 1000)),
                 )
         print(f"Max HTLC updated")
 

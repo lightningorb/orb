@@ -1,6 +1,6 @@
 google-api-python-client
 simple-chalk
-kivy
+git+https://github.com/kivy/kivy.git
 qrcode
 grpcio
 yachalk
@@ -15,3 +15,5 @@ humanize
 currency-symbols
 forex-python
 colour
+bezier
+pygame

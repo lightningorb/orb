@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from grpc_generated import invoices_pb2 as invoices__pb2
-from grpc_generated import lightning_pb2 as lightning__pb2
+from orb.lnd.grpc_generated import invoices_pb2 as invoices__pb2
+from orb.lnd.grpc_generated import lightning_pb2 as lightning__pb2
 
 
 class InvoicesStub(object):
@@ -18,25 +18,25 @@ class InvoicesStub(object):
             channel: A grpc.Channel.
         """
         self.SubscribeSingleInvoice = channel.unary_stream(
-                '/invoicesrpc.Invoices/SubscribeSingleInvoice',
-                request_serializer=invoices__pb2.SubscribeSingleInvoiceRequest.SerializeToString,
-                response_deserializer=lightning__pb2.Invoice.FromString,
-                )
+            "/invoicesrpc.Invoices/SubscribeSingleInvoice",
+            request_serializer=invoices__pb2.SubscribeSingleInvoiceRequest.SerializeToString,
+            response_deserializer=lightning__pb2.Invoice.FromString,
+        )
         self.CancelInvoice = channel.unary_unary(
-                '/invoicesrpc.Invoices/CancelInvoice',
-                request_serializer=invoices__pb2.CancelInvoiceMsg.SerializeToString,
-                response_deserializer=invoices__pb2.CancelInvoiceResp.FromString,
-                )
+            "/invoicesrpc.Invoices/CancelInvoice",
+            request_serializer=invoices__pb2.CancelInvoiceMsg.SerializeToString,
+            response_deserializer=invoices__pb2.CancelInvoiceResp.FromString,
+        )
         self.AddHoldInvoice = channel.unary_unary(
-                '/invoicesrpc.Invoices/AddHoldInvoice',
-                request_serializer=invoices__pb2.AddHoldInvoiceRequest.SerializeToString,
-                response_deserializer=invoices__pb2.AddHoldInvoiceResp.FromString,
-                )
+            "/invoicesrpc.Invoices/AddHoldInvoice",
+            request_serializer=invoices__pb2.AddHoldInvoiceRequest.SerializeToString,
+            response_deserializer=invoices__pb2.AddHoldInvoiceResp.FromString,
+        )
         self.SettleInvoice = channel.unary_unary(
-                '/invoicesrpc.Invoices/SettleInvoice',
-                request_serializer=invoices__pb2.SettleInvoiceMsg.SerializeToString,
-                response_deserializer=invoices__pb2.SettleInvoiceResp.FromString,
-                )
+            "/invoicesrpc.Invoices/SettleInvoice",
+            request_serializer=invoices__pb2.SettleInvoiceMsg.SerializeToString,
+            response_deserializer=invoices__pb2.SettleInvoiceResp.FromString,
+        )
 
 
 class InvoicesServicer(object):
@@ -51,8 +51,8 @@ class InvoicesServicer(object):
         Initially the current invoice state is always sent out.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CancelInvoice(self, request, context):
         """
@@ -61,8 +61,8 @@ class InvoicesServicer(object):
         fail.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def AddHoldInvoice(self, request, context):
         """
@@ -70,8 +70,8 @@ class InvoicesServicer(object):
         supplied in the request.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def SettleInvoice(self, request, context):
         """
@@ -79,108 +79,157 @@ class InvoicesServicer(object):
         settled, this call will succeed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_InvoicesServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SubscribeSingleInvoice': grpc.unary_stream_rpc_method_handler(
-                    servicer.SubscribeSingleInvoice,
-                    request_deserializer=invoices__pb2.SubscribeSingleInvoiceRequest.FromString,
-                    response_serializer=lightning__pb2.Invoice.SerializeToString,
-            ),
-            'CancelInvoice': grpc.unary_unary_rpc_method_handler(
-                    servicer.CancelInvoice,
-                    request_deserializer=invoices__pb2.CancelInvoiceMsg.FromString,
-                    response_serializer=invoices__pb2.CancelInvoiceResp.SerializeToString,
-            ),
-            'AddHoldInvoice': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddHoldInvoice,
-                    request_deserializer=invoices__pb2.AddHoldInvoiceRequest.FromString,
-                    response_serializer=invoices__pb2.AddHoldInvoiceResp.SerializeToString,
-            ),
-            'SettleInvoice': grpc.unary_unary_rpc_method_handler(
-                    servicer.SettleInvoice,
-                    request_deserializer=invoices__pb2.SettleInvoiceMsg.FromString,
-                    response_serializer=invoices__pb2.SettleInvoiceResp.SerializeToString,
-            ),
+        "SubscribeSingleInvoice": grpc.unary_stream_rpc_method_handler(
+            servicer.SubscribeSingleInvoice,
+            request_deserializer=invoices__pb2.SubscribeSingleInvoiceRequest.FromString,
+            response_serializer=lightning__pb2.Invoice.SerializeToString,
+        ),
+        "CancelInvoice": grpc.unary_unary_rpc_method_handler(
+            servicer.CancelInvoice,
+            request_deserializer=invoices__pb2.CancelInvoiceMsg.FromString,
+            response_serializer=invoices__pb2.CancelInvoiceResp.SerializeToString,
+        ),
+        "AddHoldInvoice": grpc.unary_unary_rpc_method_handler(
+            servicer.AddHoldInvoice,
+            request_deserializer=invoices__pb2.AddHoldInvoiceRequest.FromString,
+            response_serializer=invoices__pb2.AddHoldInvoiceResp.SerializeToString,
+        ),
+        "SettleInvoice": grpc.unary_unary_rpc_method_handler(
+            servicer.SettleInvoice,
+            request_deserializer=invoices__pb2.SettleInvoiceMsg.FromString,
+            response_serializer=invoices__pb2.SettleInvoiceResp.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'invoicesrpc.Invoices', rpc_method_handlers)
+        "invoicesrpc.Invoices", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class Invoices(object):
     """Invoices is a service that can be used to create, accept, settle and cancel
     invoices.
     """
 
     @staticmethod
-    def SubscribeSingleInvoice(request,
+    def SubscribeSingleInvoice(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_stream(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/invoicesrpc.Invoices/SubscribeSingleInvoice',
+            "/invoicesrpc.Invoices/SubscribeSingleInvoice",
             invoices__pb2.SubscribeSingleInvoiceRequest.SerializeToString,
             lightning__pb2.Invoice.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CancelInvoice(request,
+    def CancelInvoice(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/invoicesrpc.Invoices/CancelInvoice',
+            "/invoicesrpc.Invoices/CancelInvoice",
             invoices__pb2.CancelInvoiceMsg.SerializeToString,
             invoices__pb2.CancelInvoiceResp.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def AddHoldInvoice(request,
+    def AddHoldInvoice(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/invoicesrpc.Invoices/AddHoldInvoice',
+            "/invoicesrpc.Invoices/AddHoldInvoice",
             invoices__pb2.AddHoldInvoiceRequest.SerializeToString,
             invoices__pb2.AddHoldInvoiceResp.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def SettleInvoice(request,
+    def SettleInvoice(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/invoicesrpc.Invoices/SettleInvoice',
+            "/invoicesrpc.Invoices/SettleInvoice",
             invoices__pb2.SettleInvoiceMsg.SerializeToString,
             invoices__pb2.SettleInvoiceResp.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
