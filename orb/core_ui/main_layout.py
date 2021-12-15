@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-15 11:27:34
 from kivy.properties import ObjectProperty
 from kivy.clock import mainthread
 from kivy.app import App
@@ -39,17 +44,22 @@ class MainLayout(BoxLayout):
                 self.shift = False
 
     def _keyboard_on_key_down(self, window, key, text, super):
-        if data_manager.data_man.disable_shortcuts:
+        data_man = data_manager.data_man
+        if data_man.disable_shortcuts:
             return
         code, key = key
         if key == "shift":
             self.shift = True
             return False
         if self.shift and key == "c":
-            data_manager.data_man.show_chords = not data_manager.data_man.show_chords
+            data_man.show_chords = not data_man.show_chords
             return False
         if key == "j":
-            data_manager.data_man.show_chord += 1
+            data_man.show_chord += 1
         if key == "k":
-            data_manager.data_man.show_chord -= 1
+            data_man.show_chord -= 1
+        if key == "i":
+            data_man.chords_direction = 0
+        if key == "o":
+            data_man.chords_direction = 1
         return False

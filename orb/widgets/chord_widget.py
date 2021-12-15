@@ -1,7 +1,14 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-15 11:52:27
+
 import math
 from collections import defaultdict
 from functools import cmp_to_key
 from threading import Thread
+from random import shuffle, randrange
 
 import bezier
 from colour import Color as Colour
@@ -22,6 +29,11 @@ from orb.misc.lerp import lerp_vec
 import data_manager
 
 
+class Direction:
+    routing_to = 0
+    routing_from = 1
+
+
 class ChordWidget(Widget):
     def __init__(self, channels, *args, **kwargs):
         super(ChordWidget, self).__init__(*args, **kwargs)
@@ -30,6 +42,7 @@ class ChordWidget(Widget):
         channels.bind(channels=self.update_rect)
         data_manager.data_man.bind(show_chords=self.update_rect)
         data_manager.data_man.bind(show_chord=self.show_chord)
+        data_manager.data_man.bind(chords_direction=self.update_rect)
 
     def show_chord(self, inst, chord):
         chord %= len(self.channels)
@@ -47,7 +60,7 @@ class ChordWidget(Widget):
             int(App.get_running_app().config["display"]["channel_length"]) * 0.95
         )
 
-        matrix = self.get_matrix()
+        matrix = self.get_matrix(direction=data_manager.data_man.chords_direction)
 
         with self.canvas:
             self.canvas.clear()
@@ -155,33 +168,46 @@ class ChordWidget(Widget):
                 for vertices, indices in tess.meshes:
                     Mesh(vertices=vertices, indices=indices, mode="triangle_fan")
 
-    def get_matrix(self):
+    def get_matrix(self, direction: Direction):
+        """
+        Compute the flow matrix for the channels.
+        """
 
         if is_mock():
-            from random import shuffle, randrange
-
+            # If we are in mock mode, then just generate random data.
             r = [*(range(19))]
             shuffle(r)
-            matrix = {}
-            for i in r:
-                for j in r:
-                    if i != j:
-                        matrix[(i, j)] = max(0, randrange(-5000, 5000))
-            return matrix
+            return {
+                (i, j): max(0, randrange(-5000, 5000)) for i in r for j in r if i != j
+            }
 
         else:
             matrix = defaultdict(int)
             from orb.store import model
 
+            dir_model = {
+                Direction.routing_to: model.FowardEvent.chan_id_out,
+                Direction.routing_from: model.FowardEvent.chan_id_in,
+            }
+
+            # get our channel ids, as our history can include old channels
             chan_ids = set([x.chan_id for x in self.channels])
             for c in self.channels:
+                # get forwarding history
                 hist = (
                     model.FowardEvent()
                     .select()
-                    .where(model.FowardEvent.chan_id_out == c.chan_id)
+                    .where(dir_model[direction] == c.chan_id)
                 )
                 for h in hist:
-                    if h.chan_id_out in chan_ids and h.chan_id_in in chan_ids:
-                        matrix[(h.chan_id_out, h.chan_id_in)] += h.amt_out
+                    # make sure we're not dealing with an old event
+                    event_was_on_existing_channels = (
+                        h.chan_id_out in chan_ids and h.chan_id_in in chan_ids
+                    )
+                    if event_was_on_existing_channels:
+                        if direction == Direction.routing_to:
+                            matrix[(h.chan_id_out, h.chan_id_in)] += h.amt_out
+                        elif direction == Direction.routing_from:
+                            matrix[(h.chan_id_in, h.chan_id_out)] += h.amt_in
 
             return matrix

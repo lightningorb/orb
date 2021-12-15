@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-01 08:23:35
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-15 11:15:01
+
 import os
 from traceback import print_exc
 
@@ -15,6 +21,7 @@ class DataManager(EventDispatcher):
 
     show_chords = BooleanProperty(False)
     show_chord = NumericProperty(0)
+    chords_direction = NumericProperty(0)
 
     def __init__(self, config, *args, **kwargs):
         super(DataManager, self).__init__(*args, **kwargs)
