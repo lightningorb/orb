@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:27:21
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-15 07:27:24
+
 import data_manager
 from time import sleep
 from kivy.clock import Clock
@@ -15,7 +21,7 @@ class UpdateMaxHTLC(Thread):
         print(f"Checking policies")
         for i, c in enumerate(lnd.get_channels()):
             policy = lnd.get_policy_to(c.chan_id)
-            round = lamba x: int(int(x / 1000) * 10_00)
+            round = lambda x: int(int(x / 1000) * 10_00)
             max_htlc = round(int((policy.max_htlc_msat) / 1000))
             local = round(int(c.local_balance))
             needs_update = max_htlc != local
