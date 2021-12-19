@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-19 04:40:58
 import threading
 
 from kivy.clock import mainthread
@@ -99,21 +104,22 @@ class BatchOpenScreen(PopupDropShadow):
         self.ids.connect.text = ""
 
         @mainthread
-        def print(x):
+        def display(x):
+            print(x)
             self.ids.connect.text += str(x) + "\n"
 
         def func(*args):
             for pk, amount in zip(pks, amounts):
                 info = data_man.lnd.get_node_info(pk)
-                print("-" * 50)
-                print(data_man.lnd.get_node_alias(pk))
-                print("-" * 50)
+                display("-" * 50)
+                display(data_man.lnd.get_node_alias(pk))
+                display("-" * 50)
                 for address in info.node.addresses:
-                    print(f"Connecting to: {pk}@{address.addr}")
+                    display(f"Connecting to: {pk}@{address.addr}")
                     try:
                         data_man.lnd.connect(f"{pk}@{address.addr}")
-                        print("Success.")
+                        display("Success.")
                     except Exception as e:
-                        print(e.args[0].details)
+                        display(e.args[0].details)
 
         threading.Thread(target=func).start()
