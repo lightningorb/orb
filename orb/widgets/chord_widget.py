@@ -14,7 +14,6 @@ import bezier
 from colour import Color as Colour
 
 from kivy.clock import Clock
-from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
@@ -23,9 +22,9 @@ from kivy.graphics.tesselator import Tesselator
 from kivy.app import App
 from kivy.clock import mainthread
 
-from orb.misc.Vector import Vector
+from orb.math.Vector import Vector
 from orb.misc.prefs import is_mock
-from orb.misc.lerp import lerp_vec
+from orb.math.lerp import lerp_vec
 import data_manager
 
 

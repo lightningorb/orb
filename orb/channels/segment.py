@@ -6,7 +6,7 @@ from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.graphics.vertex_instructions import Ellipse
 
-from orb.misc.lerp import lerp_2d
+from orb.math.lerp import lerp_2d
 from orb.misc.utils import prefs_col
 
 

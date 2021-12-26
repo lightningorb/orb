@@ -7,7 +7,7 @@
 from orb.misc.decorators import guarded
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.misc.normal_distribution import NormalDistribution
+from orb.math.normal_distribution import NormalDistribution
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -113,7 +113,6 @@ class FeeDistribution(PopupDropShadow):
         Performs the normal distribution calculations, and graphs the
         result in the dialog.
         """
-        from orb.store import model
 
         chan_routing_data = self.chan_routing_data[i]
         nd = NormalDistribution()

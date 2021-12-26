@@ -14,7 +14,7 @@ from orb.audio.audio_manager import audio_manager
 from orb.channels.segment import Segment
 
 from orb.channels.fee_widget import FeeWidget
-from orb.misc.lerp import lerp_2d
+from orb.math.lerp import lerp_2d
 from kivy.animation import Animation
 from orb.misc.colors import *
 from orb.misc.prefs import inverted_channels

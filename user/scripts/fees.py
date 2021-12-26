@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 02:03:23
+# @Last Modified time: 2021-12-27 04:04:35
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -19,7 +19,7 @@ import data_manager
 from kivy.clock import Clock
 from threading import Thread
 from orb.store import model
-from orb.misc.lerp import lerp
+from orb.math.lerp import lerp
 
 lnd = data_manager.data_man.lnd
 

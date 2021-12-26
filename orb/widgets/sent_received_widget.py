@@ -8,7 +8,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 
-from orb.misc.Vector import Vector
+from orb.math.Vector import Vector
 
 
 class SentReceivedWidget(Widget):

@@ -10,7 +10,7 @@ from kivy.animation import Animation
 from kivy.uix.widget import Widget
 
 from orb.misc.utils import closest_point_on_line
-from orb.misc.Vector import Vector
+from orb.math.Vector import Vector
 
 
 import data_manager

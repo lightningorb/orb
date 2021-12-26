@@ -1,6 +1,6 @@
 from kivy.app import App
 
-from orb.misc.Vector import Vector
+from orb.math.Vector import Vector
 
 
 def prefs_col(name):
