@@ -1,6 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-25 07:53:17
+
 import os
 import sys
 from pathlib import Path
+from traceback import print_exc
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -52,10 +59,11 @@ class OrbApp(MDApp):
 
     def load_kvs(self):
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if any(x in path for x in ["tutes", "dist", "user"]):
+            if any(x in path for x in ["tutes/", "dist/", "user/"]):
                 continue
             if is_dev and "orb.kv" in path:
                 continue
+            print(f"Loading: {path}")
             Builder.load_file(path)
         if not is_dev:
             Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
@@ -68,6 +76,7 @@ class OrbApp(MDApp):
             try:
                 __import__("user.scripts.user_setup")
             except:
+                print_exc()
                 print("Unable to load user_setup.py")
 
     def on_start(self):

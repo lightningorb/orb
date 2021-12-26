@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-24 08:34:24
 import sys
 from traceback import format_exc
 from io import StringIO
@@ -62,13 +67,8 @@ class TopMenu(AppMenu):
 
     def exec(self, text):
         lnd = data_manager.data_man.lnd
-        old_stdout = sys.stdout
-        sys.stdout = mystdout = StringIO()
         try:
             exec(text)
-            sys.stdout = old_stdout
-            message = mystdout.getvalue()
-            print(message.strip() + "\n")
         except:
             exc = format_exc()
             if exc:

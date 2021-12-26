@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-26 09:55:12
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-26 10:11:58
 """
 Get the total balance for the node.
 """

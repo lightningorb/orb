@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-19 08:37:05
+# @Last Modified time: 2021-12-24 15:30:40
 
 import data_manager
 from time import sleep
@@ -22,7 +22,7 @@ class UpdateMaxHTLC(Thread):
             policy = lnd.get_policy_to(c.chan_id)
             round = lambda x: int(int(x / 1_000) * 1_000)
             max_htlc = round(int(policy.max_htlc_msat / 1_000))
-            half_cap = round(int(c.capacity / 2))
+            half_cap = round(int(c.capacity * 0.5))
             needs_update = max_htlc != half_cap
             if needs_update:
                 print(

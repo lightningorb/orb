@@ -1,88 +1,28 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-24 08:34:04
+
 import sys
 from traceback import format_exc
 from io import StringIO
-from threading import Thread
 from collections import deque
 
 from pygments.lexers import CythonLexer
 
-from kivy.clock import Clock
-from kivy.uix.button import Button
-from kivy.properties import StringProperty
-from kivy.uix.popup import Popup
+from kivy.app import App
 from kivy.clock import mainthread
+from kivy.properties import StringProperty
+from kivy.uix.button import Button
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
-from kivy.app import App
 from kivy.uix.codeinput import CodeInput
-from kivy.uix.splitter import Splitter
-from kivy.properties import ObjectProperty
+
+from orb.screens.console.console_splitter import *
 
 import data_manager
-
-
-class ConsoleSplitter(Splitter):
-
-    input = ObjectProperty(None)
-    output = ObjectProperty(None)
-
-    def __init__(self, *args, **kwargs):
-        super(ConsoleSplitter, self).__init__(*args, **kwargs)
-        self.pressed = False
-        self.pressed_pos = (0, 0)
-        self.input_pressed_height = 0
-        self.output_pressed_height = 0
-
-        def load_config(*args):
-            import data_manager
-
-            input_height = data_manager.data_man.store.get("console", {}).get(
-                "input_height", None
-            )
-            output_height = data_manager.data_man.store.get("console", {}).get(
-                "output_height", None
-            )
-
-            if input_height and output_height:
-                self.input.height = input_height
-                self.output.height = output_height
-                self.input.size_hint = (1, None)
-                self.output.size_hint = (1, None)
-
-        Clock.schedule_once(load_config, 1)
-
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            self.pressed = True
-            self.pressed_pos = touch.pos
-            self.input_pressed_height = self.input.height
-            self.output_pressed_height = self.output.height
-        return super(ConsoleSplitter, self).on_touch_down(touch)
-
-    def on_touch_up(self, touch):
-        if self.collide_point(*touch.pos):
-            self.pressed = False
-        return super(ConsoleSplitter, self).on_touch_down(touch)
-
-    def on_touch_move(self, touch):
-        import data_manager
-
-        if self.pressed:
-            self.input.height = self.input_pressed_height + (
-                self.pressed_pos[1] - touch.pos[1]
-            )
-            self.output.height = self.output_pressed_height - (
-                self.pressed_pos[1] - touch.pos[1]
-            )
-            data_manager.data_man.store.put(
-                "console",
-                input_height=self.input.height,
-                output_height=self.output.height,
-            )
-            self.input.size_hint = (1, None)
-            self.output.size_hint = (1, None)
-            return True
-        return super(ConsoleSplitter, self).on_touch_move(touch)
 
 
 class ConsoleScreen(Screen):
@@ -118,8 +58,15 @@ class ConsoleScreen(Screen):
             app.root.ids.status_line.ids.line_output.cursor = (0, 0)
 
     def print(self, text):
+        """
+        Print to the console's output section.
+        Print the last line on the status line.
+        """
+        # make sure we have something to print
         if text:
+            # make sure it's a string
             text = str(text)
+            # split up the output into lines
             text_lines = text.split("\n")
             if text_lines:
                 for line in text_lines:
@@ -161,7 +108,6 @@ class ConsoleInput(CodeInput):
         return super(ConsoleInput, self).on_touch_down(touch)
 
     def exec(self, text):
-        lnd = data_manager.data_man.lnd
         old_stdout = sys.stdout
         sys.stdout = mystdout = StringIO()
         try:
@@ -173,13 +119,13 @@ class ConsoleInput(CodeInput):
             if exc:
                 self.output += exc
 
-    def run(self, *args):
+    def run(self, *_):
         self.exec(self.text)
 
-    def load(self, *args):
+    def load(self, *_):
         inst = LoadScript()
 
-        def do_load(button, *args):
+        def do_load(button, *_):
             sc = data_manager.data_man.store.get("scripts", {})
             self.text = sc.get(button.text, "")
             inst.dismiss()
@@ -195,11 +141,11 @@ class ConsoleInput(CodeInput):
         app = App.get_running_app()
         app.root.ids.app_menu.close_all()
 
-    def install(self, *args):
+    def install(self, *_):
         inst = InstallScript()
         inst.open()
 
-        def do_install(_, *args):
+        def do_install(_, *__):
             sc = data_manager.data_man.store.get("scripts", {})
             script_name = ">".join(
                 x.strip() for x in inst.ids.script_name.text.split(">")
@@ -214,7 +160,7 @@ class ConsoleInput(CodeInput):
         app = App.get_running_app()
         app.root.ids.app_menu.close_all()
 
-    def delete(self, *args):
+    def delete(self, *_):
         inst = LoadScript()
         try:
             sc = data_manager.data_man.store.get("scripts")

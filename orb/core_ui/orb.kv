@@ -14,6 +14,7 @@
 #:import prefs_col orb.misc.utils.prefs_col
 #:import view_forwarding_history orb.dialogs.forwarding_history.view_forwarding_history
 #:import graph_fees_earned orb.dialogs.forwarding_history.graph_fees_earned
+#:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
 #:import About orb.screens.about.About
 #:import Rankings orb.screens.rankings.Rankings
 #:import FeeSpy orb.dialogs.fee_spy.FeeSpy
@@ -119,11 +120,14 @@
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Total Routing"
-                            # on_press: ()
                             on_release: (view_forwarding_history(), app_menu.close_all())
                         ContextMenuTextItem:
-                            text: "Fees earned"
+                            text: "Fees Earned"
                             on_press: graph_fees_earned()
+                            on_release: app_menu.close_all()
+                        ContextMenuTextItem:
+                            text: "Fee Distribution"
+                            on_press: FeeDistribution().open()
                             on_release: app_menu.close_all()
         AppMenuTextItem:
             text: "On-Chain"

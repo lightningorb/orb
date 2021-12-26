@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-26 10:15:09
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-27 02:05:52
 try:
     from grpc_generated import router_pb2 as lnrouter
     from grpc_generated import lightning_pb2 as lnrpc
@@ -142,7 +147,6 @@ class Htlc(Model):
 
 
 def create_htlcs_tables():
-    print("CREATING HTLC TABLE")
     db = get_db(htlcs_db_name)
     try:
         db.create_tables([Htlc])

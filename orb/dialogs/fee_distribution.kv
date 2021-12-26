@@ -1,0 +1,30 @@
+#:import dp kivy.metrics.dp
+
+<FeeDistribution>:
+    title: "Fee Distribution"
+    size_hint: (.9, .9)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: alias
+            size_hint_y: None
+            height: dp(12)
+        BoxLayout:
+            orientation: 'horizontal'
+            BoxLayout:
+                id: bl
+                orientation: 'horizontal'
+            BoxLayout:
+                id: table
+                orientation: 'horizontal'
+
+        MDRaisedButton:
+            text: 'Next Channel'
+            on_release: root.next_channel()
+            size_hint_x: None
+            width: dp(100)
+            height: dp(40)
+            md_bg_color: 0.3,0.3,0.3,1

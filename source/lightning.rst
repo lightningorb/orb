@@ -1,5 +1,5 @@
-Lighting
-========
+Lightning
+=========
 
 .. toctree::
    :maxdepth: 3
@@ -17,3 +17,5 @@ Lighting
    rankings
    batch_open
    forwarding_history
+   fee_distribution
+   fees

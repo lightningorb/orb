@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-25 03:56:39
+
 from collections import defaultdict
 from threading import Thread
 import arrow
@@ -14,28 +20,22 @@ import data_manager
 def get_forwarding_history():
     from orb.store import model
 
-    return (
-        model.FowardEvent().select()
-    )  # .where(model.FowardEvent.chan_id_in == '772380530381488129')
+    return model.FowardEvent().select()
 
 
 def download_forwarding_history(*args, **kwargs):
     def func():
         from orb.store import model
 
-        print("downloading forwarding history")
         last = (
             model.FowardEvent.select()
             .order_by(model.FowardEvent.timestamp_ns.desc())
             .first()
         )
-        print("last event:")
-        print(last)
         lnd = data_manager.data_man.lnd
         i = 0
         start_time = int(last.timestamp) if last else None
         while True:
-            print(f"fetching events {i} -> {i + 100}")
             fwd = lnd.get_forwarding_history(
                 start_time=start_time, index_offset=i, num_max_events=100
             )
@@ -62,15 +62,8 @@ def download_forwarding_history(*args, **kwargs):
             i += 100
             if not fwd.forwarding_events:
                 break
-        print("downloaded forwarding history")
 
     Thread(target=func).start()
-
-
-def clear_forwarding_history():
-    from orb.store import model
-
-    model.FowardEvent.delete().execute()
 
 
 def view_forwarding_history():

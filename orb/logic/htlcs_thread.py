@@ -1,8 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-22 08:47:26
 import json
 import threading
 from time import sleep
 from traceback import print_exc
-from threading import Lock
+from threading import Lock, Thread
 
 from munch import Munch
 
@@ -53,7 +58,9 @@ class HTLCsThread(threading.Thread):
                             else None,
                         ]
                         if self.inst.cn[cid].l.channel.chan_id in chans:
-                            self.inst.cn[cid].l.anim_htlc(htlc)
+                            Thread(
+                                target=lambda *_: self.inst.cn[cid].l.anim_htlc(htlc)
+                            ).start()
             except:
                 print("Exception getting HTLCs - let's sleep")
                 print_exc()

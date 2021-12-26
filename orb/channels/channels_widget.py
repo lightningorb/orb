@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-22 04:20:14
+
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
@@ -29,6 +35,7 @@ class ChannelsWidget(ScatterLayout):
 
         self.autobalance = Autobalance()
         self.channels = data_manager.data_man.channels
+        self.channels.get()
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
         self.channels_thread.daemon = True
         if not is_mock():

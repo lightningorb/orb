@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-25 14:07:45
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.properties import NumericProperty
@@ -172,9 +177,10 @@ class ChannelWidget(Widget):
                 self.channel.remote_balance = htlc.incoming_channel_remote_balance
         elif fail:
             if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
-                print("FAIL!")
-                print(htlc.__dict__)
-                audio_manager.play_link_fail_event()
+                if htlc.incoming_channel_id and htlc.outgoing_channel_id:
+                    print("FAIL!")
+                    print(htlc.__dict__)
+                    audio_manager.play_link_fail_event()
 
         self.update_rect()
 
