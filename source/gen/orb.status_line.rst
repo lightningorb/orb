@@ -1,6 +1,11 @@
 orb.status\_line package
 ========================
 
+.. automodule:: orb.status_line
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -8,11 +13,3 @@ Submodules
    :maxdepth: 4
 
    orb.status_line.status_line
-
-Module contents
----------------
-
-.. automodule:: orb.status_line
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,11 @@
 orb.store package
 =================
 
+.. automodule:: orb.store
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -12,11 +17,3 @@ Submodules
    orb.store.db_meta
    orb.store.model
    orb.store.node_rank
-
-Module contents
----------------
-
-.. automodule:: orb.store
-   :members:
-   :undoc-members:
-   :show-inheritance:

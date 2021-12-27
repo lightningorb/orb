@@ -37,7 +37,7 @@ from orb.lnd.grpc_generated import invoices_pb2_grpc as invoicesrpc
 import data_manager
 
 do_monkey_patching()
-is_dev = sys.argv[0] == "main.py"
+is_dev = "main.py" in sys.argv[0]
 
 
 class OrbApp(MDApp):

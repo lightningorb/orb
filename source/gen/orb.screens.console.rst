@@ -1,6 +1,11 @@
 orb.screens.console package
 ===========================
 
+.. automodule:: orb.screens.console
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -9,11 +14,3 @@ Submodules
 
    orb.screens.console.console_screen
    orb.screens.console.console_splitter
-
-Module contents
----------------
-
-.. automodule:: orb.screens.console
-   :members:
-   :undoc-members:
-   :show-inheritance:

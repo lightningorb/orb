@@ -1,6 +1,11 @@
 orb.scripts package
 ===================
 
+.. automodule:: orb.scripts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -9,11 +14,3 @@ Submodules
 
    orb.scripts.fee_spy
    orb.scripts.test_connection
-
-Module contents
----------------
-
-.. automodule:: orb.scripts
-   :members:
-   :undoc-members:
-   :show-inheritance:

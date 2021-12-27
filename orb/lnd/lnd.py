@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-27 16:57:31
 import sys
 import base64
 import os
@@ -93,7 +98,7 @@ class Lnd(LndBase):
         return self.get_info().identity_pubkey
 
     def generate_invoice(self, memo, amount):
-        invoice_request = ln.Invoice(memo=memo, value=amount, expiry=60)
+        invoice_request = ln.Invoice(memo=memo, value=amount, expiry=3600)
         add_invoice_response = self.stub.AddInvoice(invoice_request)
         return add_invoice_response.payment_request, self.decode_payment_request(
             add_invoice_response.payment_request

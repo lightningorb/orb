@@ -1,6 +1,11 @@
 orb.channels package
 ====================
 
+.. automodule:: orb.channels
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -13,11 +18,3 @@ Submodules
    orb.channels.channels_widget
    orb.channels.fee_widget
    orb.channels.segment
-
-Module contents
----------------
-
-.. automodule:: orb.channels
-   :members:
-   :undoc-members:
-   :show-inheritance:

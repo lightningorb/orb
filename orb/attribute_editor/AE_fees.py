@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-28 02:59:59
+
 from threading import Thread
 
 from kivy.clock import mainthread
@@ -9,15 +15,30 @@ import data_manager
 
 
 class AEFees(Widget):
+    """
+    This class displays and modifies fees on Channels in the
+    :py:mod:`orb.attribute_editor.attribute_editor` class.
+    """
+
+    #: The channel an ObjectProperty
     channel = ObjectProperty(None)
+    #: the fee_rate_milli_msat as a NumericProperty
     fee_rate_milli_msat = NumericProperty(0)
+    #: the time_lock_delta as a NumericProperty
     time_lock_delta = NumericProperty(0)
+    #: the min_htlc as a NumericProperty
     min_htlc = NumericProperty(0)
+    #: the max_htlc_msat as a NumericProperty
     max_htlc_msat = NumericProperty(0)
+    #: the fee_base_msat as a NumericProperty
     fee_base_msat = NumericProperty(0)
+    #: the last_update as a NumericProperty
     last_update = NumericProperty(0)
 
     def on_channel(self, inst, channel):
+        """
+        Invoked whenever a channel is selected.
+        """
         if channel:
 
             @mainthread
@@ -37,6 +58,9 @@ class AEFees(Widget):
 
     @guarded
     def fee_rate_milli_msat_changed(self, val):
+        """
+        Invoked whenever the fee rate is changed.
+        """
         val = int(val)
         if val != self.fee_rate_milli_msat:
             data_manager.data_man.lnd.update_channel_policy(
@@ -49,6 +73,9 @@ class AEFees(Widget):
 
     @guarded
     def fee_base_msat_changed(self, val):
+        """
+        Invoked whenever the fee base rate is changed.
+        """
         val = int(val)
         if val != self.fee_base_msat:
             data_manager.data_man.lnd.update_channel_policy(
@@ -61,6 +88,9 @@ class AEFees(Widget):
 
     @guarded
     def min_htlc_changed(self, val):
+        """
+        Invoked whenever the min HTLC is changed.
+        """
         val = int(val)
         if val != self.min_htlc:
             data_manager.data_man.lnd.update_channel_policy(
@@ -75,6 +105,9 @@ class AEFees(Widget):
 
     @guarded
     def max_htlc_msat_changed(self, val):
+        """
+        Invoked whenever the max HTLC is changed.
+        """
         val = int(val)
         if val != self.max_htlc_msat:
             data_manager.data_man.lnd.update_channel_policy(
@@ -88,6 +121,9 @@ class AEFees(Widget):
 
     @guarded
     def time_lock_delta_changed(self, val):
+        """
+        Invoked whenever timelock delta is changed.
+        """
         val = int(val)
         if val != self.time_lock_delta:
             data_manager.data_man.lnd.update_channel_policy(

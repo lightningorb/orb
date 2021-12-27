@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 10:18:41
+# @Last Modified time: 2021-12-27 11:42:51
 
 from kivy.clock import Clock
 from kivy.properties import ListProperty
@@ -17,7 +17,9 @@ class ThreadManager(EventDispatcher):
     on whether they're still running.
 
     Use this class if you want your threads to be visible, and manageable
-    from within the UI.
+    from within the UI. Make sure to use the stoppable thread pattern.
+
+    :py:module:`MyModule.constants`
     """
 
     threads = ListProperty([])

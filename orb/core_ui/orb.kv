@@ -18,6 +18,8 @@
 #:import About orb.screens.about.About
 #:import Rankings orb.screens.rankings.Rankings
 #:import FeeSpy orb.dialogs.fee_spy.FeeSpy
+
+#: import webbrowser webbrowser
 ########################################################################################
 # MAIN
 ########################################################################################
@@ -170,3 +172,9 @@
                     text: "About"
                     on_press: app_menu.close_all()
                     on_release: About().open()
+                ContextMenuTextItem:
+                    text: "Links"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Terminal"
+                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + data_manager.data_man.lnd.get_info().identity_pubkey)

@@ -1,6 +1,11 @@
 orb.components package
 ======================
 
+.. automodule:: orb.components
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -8,11 +13,3 @@ Submodules
    :maxdepth: 4
 
    orb.components.popup_drop_shadow
-
-Module contents
----------------
-
-.. automodule:: orb.components
-   :members:
-   :undoc-members:
-   :show-inheritance:

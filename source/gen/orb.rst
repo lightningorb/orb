@@ -1,6 +1,11 @@
 orb package
 ===========
 
+.. automodule:: orb
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -22,11 +27,3 @@ Subpackages
    orb.status_line
    orb.store
    orb.widgets
-
-Module contents
----------------
-
-.. automodule:: orb
-   :members:
-   :undoc-members:
-   :show-inheritance:

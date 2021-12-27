@@ -26,7 +26,19 @@ Imagining / picturing the state of your channels and their liquidity isn't easy.
 Reducing information overload
 -----------------------------
 
-Another issue lightning node operators face is information overload. Orb tries to display information about your node visually when it can.
+Another issue lightning node operators face is information overload. Orb tries to display information about your node visually whenever it can.
+
+Full node automation
+--------------------
+
+The decisions that need to be made for keeping a node balanced and profitable can be fully automated given the right ideas, and tools. Orb aims to completely take peer selection, fee setting, and rebalancing out of the operator's hands with a sophisticated set of semiand fully automated fee and rebalacing engines.
+
+Community Scripts
+-----------------
+
+Many excellent pieces of software shine due to the scripts written and shared by their users. Orb provides an easy and well-documented way for users to write and share scripts amongst themselves.
+
+This blurs the barrier between 'user' and 'developer' and means users can solve their own problems while sharing their solutions with one other.
 
 Security
 --------
@@ -42,14 +54,10 @@ Orb runs on OSX and Windows. This gives operators a familiar and mature environm
 
 Orb also runs all IOS and Android. As such operators can operate their nodes while on the move.
 
-Extensibility
--------------
-
-Orb aims to make writing and sharing scripts amongst users extremely easy. This blurs the barrier between 'user' and 'developer' and means users can solve their own problems while sharing their solutions with each other.
-
 
 .. toctree::
    :maxdepth: 3
+   :glob:
    :caption: Contents:
 
    installing

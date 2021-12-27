@@ -1,6 +1,11 @@
 orb.screens package
 ===================
 
+.. automodule:: orb.screens
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -28,11 +33,3 @@ Submodules
    orb.screens.rankings
    orb.screens.rebalance
    orb.screens.send_coins
-
-Module contents
----------------
-
-.. automodule:: orb.screens
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-28 04:45:35
+
 from threading import Lock
 from orb.misc.output import *
 from collections import Counter
@@ -48,23 +54,22 @@ class Autobalance(Widget):
 
         lnd = data_man.lnd
         num_sats = 100_000
-        # outbound_channel = get_low_inbound_channel(
+        outbound_channel = get_low_inbound_channel(
+            lnd=lnd, pk_ignore=pk_ignore, chan_ignore=chan_ignore, num_sats=num_sats
+        )
+        inbound_pubkey = (
+            "033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025"
+        )
+        # outbound_channel = 781406421302444032
+        # inbound_channel, inbound_pubkey = get_low_outbound_channel(
         #     lnd=lnd,
         #     pk_ignore=pk_ignore,
         #     chan_ignore=chan_ignore,
         #     num_sats=num_sats,
-        #     ratio=self.ratio,
+        #     ratio=1 - self.ratio,
         # )
-        outbound_channel = 781406421302444032
-        inbound_channel, inbound_pubkey = get_low_outbound_channel(
-            lnd=lnd,
-            pk_ignore=pk_ignore,
-            chan_ignore=chan_ignore,
-            num_sats=num_sats,
-            ratio=1 - self.ratio,
-        )
         print("out", outbound_channel)
-        print("in ", inbound_channel)
+        print("in ", inbound_pubkey)
 
         self.is_rebalancing = False
 
@@ -72,15 +77,19 @@ class Autobalance(Widget):
             memo="rebalance", amount=num_sats
         )
 
+        def stopped():
+            pass
+
         status = pay_thread(
             inst=self,
+            stopped=stopped,
             thread_n=0,
-            fee_rate=int(200),
+            fee_rate=int(400),
             payment_request=payment_request,
             payment_request_raw=raw,
             outgoing_chan_id=outbound_channel,
             last_hop_pubkey=inbound_pubkey,
-            max_paths=10,
+            max_paths=1000,
         )
         if not status == PaymentStatus.success:
             try:

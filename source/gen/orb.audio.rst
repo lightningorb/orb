@@ -1,6 +1,11 @@
 orb.audio package
 =================
 
+.. automodule:: orb.audio
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -8,11 +13,3 @@ Submodules
    :maxdepth: 4
 
    orb.audio.audio_manager
-
-Module contents
----------------
-
-.. automodule:: orb.audio
-   :members:
-   :undoc-members:
-   :show-inheritance:

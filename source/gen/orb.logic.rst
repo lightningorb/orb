@@ -1,6 +1,11 @@
 orb.logic package
 =================
 
+.. automodule:: orb.logic
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -15,11 +20,3 @@ Submodules
    orb.logic.pay_logic
    orb.logic.routes
    orb.logic.thread_manager
-
-Module contents
----------------
-
-.. automodule:: orb.logic
-   :members:
-   :undoc-members:
-   :show-inheritance:

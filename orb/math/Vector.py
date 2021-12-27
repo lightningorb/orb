@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 10:16:49
+# @Last Modified time: 2021-12-27 11:12:02
 
 import math
 
@@ -119,7 +119,7 @@ class Vector:
         >>> (v.x, v.y)
         (1, -1.0)
         """
-        return Vector(1, -self.x / self.y)
+        return Vector(1, -self.x / (self.y or 1))
 
 
 if __name__ == "__main__":

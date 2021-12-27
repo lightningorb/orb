@@ -1,6 +1,11 @@
 orb.widgets package
 ===================
 
+.. automodule:: orb.widgets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -11,11 +16,3 @@ Submodules
    orb.widgets.chord_widget
    orb.widgets.node
    orb.widgets.sent_received_widget
-
-Module contents
----------------
-
-.. automodule:: orb.widgets
-   :members:
-   :undoc-members:
-   :show-inheritance:

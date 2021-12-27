@@ -2,7 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-25 14:07:45
+# @Last Modified time: 2021-12-28 04:48:05
+
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.properties import NumericProperty
@@ -140,13 +141,20 @@ class ChannelWidget(Widget):
     def anim_htlc(self, htlc):
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
+        receive = htlc.event_type == "RECEIVE"
+        if receive:
+            pass
         settle = htlc.event_outcome == "settle_event"
         fail = htlc.event_outcome == "link_fail_event"
         outgoing = (
             hasattr(htlc, "outgoing_channel_id")
             and htlc.outgoing_channel_id == self.channel.chan_id
         )
-        incoming = forward and htlc.incoming_channel_id == self.channel.chan_id
+        incoming = (
+            forward or receive
+        ) and htlc.incoming_channel_id == self.channel.chan_id
+
+        # print(htlc.__dict__)
 
         if incoming:
             self.pending_in = htlc.incoming_channel_pending_htlcs["pending_in"]
@@ -157,6 +165,8 @@ class ChannelWidget(Widget):
 
         if send and outgoing:
             self.anim_outgoing()
+        elif receive:
+            self.anim_incoming()
         elif forward:
             if outgoing:
                 self.anim_outgoing()
@@ -167,8 +177,9 @@ class ChannelWidget(Widget):
             audio_manager.play_send_settle()
             self.channel.local_balance = htlc.outgoing_channel_local_balance
             self.channel.remote_balance = htlc.outgoing_channel_remote_balance
-        elif forward and settle:
-            audio_manager.play_forward_settle()
+        elif (forward or receive) and settle:
+            if forward:
+                audio_manager.play_forward_settle()
             if htlc.outgoing_channel_id == self.channel.chan_id:
                 self.channel.local_balance = htlc.outgoing_channel_local_balance
                 self.channel.remote_balance = htlc.outgoing_channel_remote_balance

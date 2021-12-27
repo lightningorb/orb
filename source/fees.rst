@@ -59,3 +59,22 @@ Now let's say we desperately don't want to fall below ``10% inbound``, we can si
 
 So whenever the ``ratio`` goes above ``90%`` we set our PPM to ``0``.
 
+
+Lowbound Fee Discovery
+......................
+
+Experimental.
+
+.. code:: yaml
+
+  - !Match
+    alias: Downward fee discovery
+    all:
+    - channel.local_balance >= 1_000_000
+    - channel.local_balance / channel.capacity >= 0.1
+    - channel.local_balance / channel.capacity <= 0.9
+    - self.meta.last_routed == None or (self.meta.last_routed and arrow.utcnow().dehumanize(self.meta.last_routed)
+      > arrow.utcnow().dehumanize('a day ago'))
+    any: []
+    fee_rate: min(self.policy_to.fee_rate_milli_msat * 0.9, 1000)
+    priority: 10

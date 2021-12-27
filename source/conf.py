@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 10:11:55
+# @Last Modified time: 2021-12-28 03:12:51
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -36,7 +36,12 @@ release = "0.1"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autosummary", "sphinx.ext.autodoc", "sphinx.ext.doctest"]
+extensions = [
+    "sphinx.ext.autosummary",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.coverage",
+]
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -54,12 +59,14 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 # html_theme = "alabaster"
-html_theme = "karma_sphinx_theme"
-
-# html_permalinks_icon = "<span>#</span>"
+# html_theme = "karma_sphinx_theme"
 # html_theme = "sphinxawesome_theme"
+html_theme = "python_docs_theme"
+html_permalinks_icon = "<span>#</span>"
+# html_permalinks_icon = "<span>#</span>"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+coverage_show_missing_items = True

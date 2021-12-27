@@ -1,6 +1,11 @@
 orb.lnd.grpc\_generated package
 ===============================
 
+.. automodule:: orb.lnd.grpc_generated
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -15,11 +20,3 @@ Submodules
    orb.lnd.grpc_generated.lightning_pb2_grpc
    orb.lnd.grpc_generated.router_pb2
    orb.lnd.grpc_generated.router_pb2_grpc
-
-Module contents
----------------
-
-.. automodule:: orb.lnd.grpc_generated
-   :members:
-   :undoc-members:
-   :show-inheritance:

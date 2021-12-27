@@ -1,6 +1,11 @@
 orb.misc package
 ================
 
+.. automodule:: orb.misc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -20,11 +25,3 @@ Submodules
    orb.misc.prefs
    orb.misc.ui_actions
    orb.misc.utils
-
-Module contents
----------------
-
-.. automodule:: orb.misc
-   :members:
-   :undoc-members:
-   :show-inheritance:

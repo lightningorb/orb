@@ -2,7 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-17 05:23:17
+# @Last Modified time: 2021-12-28 03:35:29
+
 from munch import Munch
 
 from kivy.properties import ObjectProperty
@@ -18,14 +19,41 @@ import data_manager
 
 
 class MyMDCheckbox(MDCheckbox):
+    """
+    Custom MDCheckbox implementation. The hopes is to disable clicking
+    which is a lot harder than it sounds.
+
+    :param MDCheckbox: The checkbox object.
+    :type MDCheckbox: MDCheckbox
+    """
+
     def on_touch_down(self, *args):
+        """
+        Invoked whenever the checkbox is clicked by the user.
+
+        :return: Whether to propagate events.
+        :rtype: bool
+        """
         return False
 
 
 class AEChannel(GridLayout):
+    """
+    The Attributes Editor can display anything (not just channels).
+    This is the class for displaying channels.
+
+    :param GridLayout: [description]
+    :type GridLayout: [type]
+    """
+
+    #: The channel being represented by this instance.
     channel = ObjectProperty(None)
 
     def __init__(self, *args, **kwargs):
+        """
+        Class constructor.
+        """        
+
         super(AEChannel, self).__init__(*args, **kwargs)
         self.add_widget(Label(text="         "))
 
@@ -35,6 +63,9 @@ class AEChannel(GridLayout):
             self.populate_grpc()
 
     def populate_rest(self):
+        """
+        Populate fields when using the REST API.
+        """
         c = self.channel
         for field in c:
             if type(c[field]) is bool:
@@ -72,6 +103,9 @@ class AEChannel(GridLayout):
         self.add_widget(Label(text="         "))
 
     def populate_grpc(self):
+        """
+        Populate fields when using the GRPC API.
+        """
         for field in self.channel.ListFields():
             if field[0].type == 8:
                 widget = BoxLayout(
@@ -104,12 +138,24 @@ class AEChannel(GridLayout):
                 self.add_widget(widget)
         self.add_widget(Label(text="         "))
 
-    def pay_through_channel(self, active):
+    def pay_through_channel(self, active: bool):
+        """
+        Callback for when the 'pay through channel' checkbox is ticked.
+
+        :param active: whether to activate or deactivate paying through channel.
+        :type active: bool
+        """
         vals = data_manager.data_man.store.get("pay_through_channel", {})
         vals[str(self.channel.chan_id)] = active
         data_manager.data_man.store.put("pay_through_channel", **vals)
 
-    def on_balanced_ratio(self, ratio):
+    def on_balanced_ratio(self, ratio: bool):
+        """
+        Callback for when the balance ratio field is modified.
+
+        :param ratio: the desired ratio, between 0 and 1
+        :type ratio: bool
+        """        
         vals = data_manager.data_man.store.get("balanced_ratio", {})
         vals[str(self.channel.chan_id)] = ratio
         data_manager.data_man.store.put("balanced_ratio", **vals)
