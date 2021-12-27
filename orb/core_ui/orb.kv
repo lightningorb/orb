@@ -178,3 +178,6 @@
                         ContextMenuTextItem:
                             text: "Terminal"
                             on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                        ContextMenuTextItem:
+                            text: "Amboss"
+                            on_release: webbrowser.open("https://amboss.space/node/" + data_manager.data_man.lnd.get_info().identity_pubkey)
