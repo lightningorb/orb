@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 09:55:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-26 10:11:58
+# @Last Modified time: 2021-12-28 05:57:55
 """
 Get the total balance for the node.
 """
@@ -56,8 +56,7 @@ def main():
         local
         + chain_total
         + commit
-        + pending_in
-        + pending_out
+        + ((pending_in + pending_out) / 2)
         + pending_open
         + pending_close
     )
