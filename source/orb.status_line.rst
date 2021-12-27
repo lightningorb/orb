@@ -4,13 +4,10 @@ orb.status\_line package
 Submodules
 ----------
 
-orb.status\_line.status\_line module
-------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.status_line.status_line
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.status_line.status_line
 
 Module contents
 ---------------

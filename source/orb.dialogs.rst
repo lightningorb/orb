@@ -4,29 +4,13 @@ orb.dialogs package
 Submodules
 ----------
 
-orb.dialogs.autobalance module
-------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.dialogs.autobalance
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.dialogs.fee\_spy module
----------------------------
-
-.. automodule:: orb.dialogs.fee_spy
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.dialogs.forwarding\_history module
---------------------------------------
-
-.. automodule:: orb.dialogs.forwarding_history
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.dialogs.autobalance
+   orb.dialogs.fee_distribution
+   orb.dialogs.fee_spy
+   orb.dialogs.forwarding_history
 
 Module contents
 ---------------

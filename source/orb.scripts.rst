@@ -4,21 +4,11 @@ orb.scripts package
 Submodules
 ----------
 
-orb.scripts.fee\_spy module
----------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.scripts.fee_spy
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.scripts.test\_connection module
------------------------------------
-
-.. automodule:: orb.scripts.test_connection
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.scripts.fee_spy
+   orb.scripts.test_connection
 
 Module contents
 ---------------

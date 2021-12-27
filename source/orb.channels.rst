@@ -4,53 +4,15 @@ orb.channels package
 Submodules
 ----------
 
-orb.channels.CN\_widget module
-------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.channels.CN_widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.channels.channel\_widget module
------------------------------------
-
-.. automodule:: orb.channels.channel_widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.channels.channels\_thread module
-------------------------------------
-
-.. automodule:: orb.channels.channels_thread
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.channels.channels\_widget module
-------------------------------------
-
-.. automodule:: orb.channels.channels_widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.channels.fee\_widget module
--------------------------------
-
-.. automodule:: orb.channels.fee_widget
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.channels.segment module
----------------------------
-
-.. automodule:: orb.channels.segment
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.channels.CN_widget
+   orb.channels.channel_widget
+   orb.channels.channels_thread
+   orb.channels.channels_widget
+   orb.channels.fee_widget
+   orb.channels.segment
 
 Module contents
 ---------------

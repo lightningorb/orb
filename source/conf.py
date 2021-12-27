@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-25 04:08:59
+# @Last Modified time: 2021-12-27 10:11:55
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -36,10 +36,7 @@ release = "0.1"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    "sphinx.ext.autosummary",
-    "sphinx.ext.autodoc",
-]
+extensions = ["sphinx.ext.autosummary", "sphinx.ext.autodoc", "sphinx.ext.doctest"]
 
 
 # Add any paths that contain templates here, relative to this directory.

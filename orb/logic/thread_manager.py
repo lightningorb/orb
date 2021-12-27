@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-27 10:18:41
+
 from kivy.clock import Clock
 from kivy.properties import ListProperty
 from kivy.event import EventDispatcher
@@ -6,6 +12,14 @@ from threading import Thread
 
 
 class ThreadManager(EventDispatcher):
+    """
+    The ThreadManager is used to register Threads, and regularly check
+    on whether they're still running.
+
+    Use this class if you want your threads to be visible, and manageable
+    from within the UI.
+    """
+
     threads = ListProperty([])
 
     def __init__(self, *args):

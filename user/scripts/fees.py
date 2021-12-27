@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 04:04:35
+# @Last Modified time: 2021-12-27 08:17:47
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -18,8 +18,10 @@ import arrow
 import data_manager
 from kivy.clock import Clock
 from threading import Thread
+
 from orb.store import model
 from orb.math.lerp import lerp
+from orb.logic.normalized_events import get_best_fee
 
 lnd = data_manager.data_man.lnd
 
@@ -55,8 +57,9 @@ class FeeMeta(Base):
 
 
 class Match(Base):
-    def __init__(self, rule, fee_rate, alias, priority=0):
-        self.rule = rule
+    def __init__(self, fee_rate, alias, all=None, any=None, priority=0):
+        self.all = all
+        self.any = any
         self.fee_rate = fee_rate
         self.alias = alias
         self.priority = priority
@@ -108,12 +111,39 @@ class Match(Base):
         )
 
     @property
+    def best_fee(self):
+        best = get_best_fee(self.channel) or 500
+        ratio = self.channel.local_balance / self.channel.capacity
+        global_ratio = 0.3
+        max_fee = self.max_fee
+        if not max_fee:
+            if best > 1000:
+                max_fee = best + 1000
+            else:
+                max_fee = 1000
+        if ratio < global_ratio:
+            best = lerp(0, best, min(ratio / global_ratio, 1))
+        else:
+            best = lerp(best, max_fee, (ratio - global_ratio) / (1 - global_ratio))
+        return best
+
+    @property
     def policy_to(self):
         return lnd.get_policy_to(self.channel.chan_id)
 
     def eval(self):
         channel = self.channel
-        return eval(self.rule)
+        if self.all:
+            for a in self.all:
+                if not eval(a):
+                    return False
+            return True
+        if self.any:
+            for a in self.any:
+                if eval(a):
+                    return True
+            return False
+        return False
 
     def eval_fee_rate(self):
         channel = self.channel
@@ -161,7 +191,8 @@ def get_dumper():
         lambda dumper, inst: dumper.represent_mapping(
             "!Match",
             {
-                "rule": inst.rule,
+                "all": inst.all,
+                "any": inst.any,
                 "fee_rate": inst.fee_rate,
                 "priority": inst.priority,
                 "alias": inst.alias,

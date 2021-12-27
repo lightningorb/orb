@@ -2,8 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 03:16:07
-
+# @Last Modified time: 2021-12-27 05:12:57
+from orb.logic.normalized_events import ChanRoutingData, Event
 from orb.misc.decorators import guarded
 
 from orb.components.popup_drop_shadow import PopupDropShadow
@@ -11,38 +11,7 @@ from orb.math.normal_distribution import NormalDistribution
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
-
-
-from dataclasses import dataclass
-
-
-@dataclass
-class ChanRoutingData:
-    """
-    Simple dataclass that holds data for
-    normal distribution calculation.
-    """
-
-    alias: str
-    chan_id: str
-    vals: float
-
-
-@dataclass
-class Event:
-    """
-    Simple dataclass that holds an Event for
-    normal distribution calculation.
-    """
-
-    amt: int
-    ppm: int
-
-    def __lt__(self, other):
-        return self.ppm < other.ppm
-
-    def __hash__(self):
-        return self.ppm
+from orb.logic.normalized_events import get_descritized_routing_events
 
 
 class FeeDistribution(PopupDropShadow):
@@ -63,37 +32,9 @@ class FeeDistribution(PopupDropShadow):
         i = 0
 
         for c in data_man.lnd.get_channels():
-            fh = (
-                model.FowardEvent()
-                .select()
-                .where(model.FowardEvent.chan_id_out == str(c.chan_id))
-            )
-
-            # compute the PPMs
-            events = sorted(
-                [
-                    Event(
-                        amt=f.amt_in,
-                        ppm=int(((f.fee_msat / f.amt_in_msat) * 1_000_000_000) / 1_000),
-                    )
-                    for f in fh
-                ]
-            )
-
-            alias = data_man.lnd.get_node_alias(c.remote_pubkey)
-
-            norm_vals = []
-            for e in events:
-                for n in range(int(e.amt / 10_000)):
-                    norm_vals.append(Event(ppm=e.ppm, amt=10_000))
-
-            # make sure we have more than one event
-            if len(set(norm_vals)) >= 2:
-                self.chan_routing_data[i] = ChanRoutingData(
-                    chan_id=str(c.chan_id),
-                    vals=norm_vals,
-                    alias=alias,
-                )
+            routing_events = get_descritized_routing_events(c)
+            if routing_events:
+                self.chan_routing_data[i] = routing_events
                 i += 1
 
         self.next_channel()

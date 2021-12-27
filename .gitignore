@@ -1,3 +1,4 @@
+*.pyc
 fees.yaml
 docsbuild
 makefile

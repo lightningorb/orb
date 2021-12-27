@@ -4,13 +4,10 @@ orb.audio package
 Submodules
 ----------
 
-orb.audio.audio\_manager module
--------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.audio.audio_manager
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.audio.audio_manager
 
 Module contents
 ---------------

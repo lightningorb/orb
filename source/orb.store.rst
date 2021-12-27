@@ -4,45 +4,14 @@ orb.store package
 Submodules
 ----------
 
-orb.store.db\_cache module
---------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.store.db_cache
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.store.db\_create\_tables module
------------------------------------
-
-.. automodule:: orb.store.db_create_tables
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.store.db\_meta module
--------------------------
-
-.. automodule:: orb.store.db_meta
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.store.model module
-----------------------
-
-.. automodule:: orb.store.model
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.store.node\_rank module
----------------------------
-
-.. automodule:: orb.store.node_rank
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.store.db_cache
+   orb.store.db_create_tables
+   orb.store.db_meta
+   orb.store.model
+   orb.store.node_rank
 
 Module contents
 ---------------

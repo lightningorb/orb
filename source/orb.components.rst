@@ -4,13 +4,10 @@ orb.components package
 Submodules
 ----------
 
-orb.components.popup\_drop\_shadow module
------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.components.popup_drop_shadow
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.components.popup_drop_shadow
 
 Module contents
 ---------------

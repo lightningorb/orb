@@ -15,6 +15,7 @@ Subpackages
    orb.dialogs
    orb.lnd
    orb.logic
+   orb.math
    orb.misc
    orb.screens
    orb.scripts

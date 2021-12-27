@@ -4,21 +4,11 @@ orb.screens.console package
 Submodules
 ----------
 
-orb.screens.console.console\_screen module
-------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: orb.screens.console.console_screen
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-orb.screens.console.console\_splitter module
---------------------------------------------
-
-.. automodule:: orb.screens.console.console_splitter
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   orb.screens.console.console_screen
+   orb.screens.console.console_splitter
 
 Module contents
 ---------------
