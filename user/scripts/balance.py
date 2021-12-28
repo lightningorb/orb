@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 09:55:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 05:57:55
+# @Last Modified time: 2021-12-29 05:43:39
 """
 Get the total balance for the node.
 """
@@ -53,12 +53,7 @@ def main():
 
     # Tally everything up.
     grand_total = (
-        local
-        + chain_total
-        + commit
-        + ((pending_in + pending_out) / 2)
-        + pending_open
-        + pending_close
+        local + chain_total + commit + pending_out + pending_open + pending_close
     )
 
     popup = Popup(
