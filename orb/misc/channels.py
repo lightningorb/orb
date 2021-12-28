@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 16:30:04
+# @Last Modified time: 2021-12-29 06:02:31
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
@@ -53,6 +53,11 @@ class Channels(EventDispatcher):
             key=lambda x: int(x.local_balance) / int(x.capacity),
             reverse=True,
         )
+
+    @property
+    def global_ratio(self):
+        cb = self.lnd.channel_balance()
+        return cb.local_balance.sat / (cb.local_balance.sat + cb.remote_balance.sat)
 
     def __len__(self):
         return len(self.channels)

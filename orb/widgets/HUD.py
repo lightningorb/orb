@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-29 06:14:22
 import threading
 import requests
 
@@ -283,5 +288,30 @@ class HUD7(BorderedLabel):
                 update_gui("connected")
             except:
                 update_gui("offline")
+
+        threading.Thread(target=func).start()
+
+
+class HUD8(BorderedLabel):
+    """
+    Global Ratio
+    """
+
+    def __init__(self, *args, **kwargs):
+        BorderedLabel.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.check_connection, 60)
+        Clock.schedule_once(self.check_connection, 1)
+
+    @guarded
+    def check_connection(self, *_):
+        @mainthread
+        def update_gui(text):
+            self.text = text
+            self.show()
+
+        @guarded
+        def func():
+            channels = data_manager.data_man.channels
+            update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
 
         threading.Thread(target=func).start()
