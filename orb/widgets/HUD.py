@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 06:14:22
+# @Last Modified time: 2021-12-29 07:08:46
 import threading
 import requests
 
@@ -257,6 +257,8 @@ class HUD6(GridLayout, Hideable):
         self.show()
 
     def update_rect(self, *args):
+        for c in self.children:
+            c.size = (0, 0)
         self.clear_widgets()
         for t in thread_manager.threads:
             self.add_widget(ThreadWidget(thread=t))
