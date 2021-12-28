@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 08:57:29
+# @Last Modified time: 2021-12-29 07:15:11
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -122,8 +122,10 @@ class Match(Base):
         # compute the current ratio of the channel
         ratio = self.channel.local_balance / self.channel.capacity
         # this is the global ratio the node
-        # todo: calculate this
-        global_ratio = 0.3
+        cb = data_manager.data_man.lnd.channel_balance()
+        global_ratio = cb.local_balance.sat / (
+            cb.local_balance.sat + cb.remote_balance.sat
+        )
         # this is the maximum PPM we've ever routed at
         max_fee = self.max_fee
         # if the channel has never routed, we need to pick a max fee
