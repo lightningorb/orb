@@ -1,5 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-28 09:28:28
+
 import base64
 
+from orb.misc.output import Output
+import data_manager
 
 MAX_ROUTES_TO_REQUEST = 100
 
@@ -19,7 +27,6 @@ class Routes:
         outgoing_chan_id,
         last_hop_pubkey,
         fee_limit_msat,
-        inst,
     ):
         self.lnd = lnd
         self.pub_key = pub_key
@@ -27,7 +34,7 @@ class Routes:
         self.last_hop_pubkey = last_hop_pubkey
         self.outgoing_chan_id = outgoing_chan_id
         self.fee_limit_msat = fee_limit_msat
-        self.inst = inst
+        self.output = Output(lnd)
 
     def has_next(self):
         self.update_routes()
@@ -96,6 +103,6 @@ class Routes:
             return
         if show_message:
             print(
-                f"Ignoring {self.inst.output.get_channel_representation(chan_id, to_pubkey, from_pubkey)}"
+                f"Ignoring {self.output.get_channel_representation(chan_id, to_pubkey, from_pubkey)}"
             )
         self.ignored_pairs.append(pair)

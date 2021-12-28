@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-24 15:30:40
+# @Last Modified time: 2021-12-29 05:12:29
 
 import data_manager
 from time import sleep
@@ -10,6 +10,14 @@ from kivy.clock import Clock
 from threading import Thread
 
 lnd = data_manager.data_man.lnd
+
+
+class MaxPolicy:
+    half_cap = 0
+    local_balance = 1
+
+
+max_policy = MaxPolicy.local_balance
 
 
 class UpdateMaxHTLC(Thread):
@@ -22,18 +30,21 @@ class UpdateMaxHTLC(Thread):
             policy = lnd.get_policy_to(c.chan_id)
             round = lambda x: int(int(x / 1_000) * 1_000)
             max_htlc = round(int(policy.max_htlc_msat / 1_000))
-            half_cap = round(int(c.capacity * 0.5))
-            needs_update = max_htlc != half_cap
+            if max_policy == MaxPolicy.half_cap:
+                new_max_htlc = round(int(c.capacity * 0.5))
+            elif max_policy == MaxPolicy.local_balance:
+                new_max_htlc = round(int(c.local_balance))
+            needs_update = max_htlc != new_max_htlc
             if needs_update:
                 print(
-                    f"Updating policy for: {c.chan_id}, max_htlc: {max_htlc}, half_cap: {half_cap}"
+                    f"Updating policy for: {c.chan_id}, max_htlc: {max_htlc}, new_max_htlc: {new_max_htlc}"
                 )
                 lnd.update_channel_policy(
                     channel=c,
                     time_lock_delta=int(policy.time_lock_delta),
                     fee_rate=int(policy.fee_rate_milli_msat) / 1e6,
                     base_fee_msat=int(policy.fee_base_msat),
-                    max_htlc_msat=int((half_cap * 1_000)),
+                    max_htlc_msat=int((new_max_htlc * 1_000)),
                 )
         print(f"Max HTLC updated")
 

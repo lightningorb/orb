@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 08:17:47
+# @Last Modified time: 2021-12-28 08:57:29
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -112,20 +112,41 @@ class Match(Base):
 
     @property
     def best_fee(self):
-        best = get_best_fee(self.channel) or 500
+        """
+        Calculate the optimal routing fee based on history,
+        and current channel liquidity.
+        """
+        # get the most frequently used fee, or if one doesn't exist
+        # just use 500ppm
+        most_frequent = get_best_fee(self.channel) or 500
+        # compute the current ratio of the channel
         ratio = self.channel.local_balance / self.channel.capacity
+        # this is the global ratio the node
+        # todo: calculate this
         global_ratio = 0.3
+        # this is the maximum PPM we've ever routed at
         max_fee = self.max_fee
+        # if the channel has never routed, we need to pick a max fee
         if not max_fee:
-            if best > 1000:
-                max_fee = best + 1000
+            # if the most frequent is over 1000 PPM
+            if most_frequent > 1000:
+                # just make max fee the most frequent, plus 1000 PPM
+                max_fee = most_frequent + 1000
             else:
+                # else let's say max fee is 1000 PPM
                 max_fee = 1000
-        if ratio < global_ratio:
-            best = lerp(0, best, min(ratio / global_ratio, 1))
         else:
-            best = lerp(best, max_fee, (ratio - global_ratio) / (1 - global_ratio))
-        return best
+            # if the channel has routed, pick the max fee
+            # plus 100 PPM
+            max_fee += 100
+
+        # do our fancy interpolations
+        if ratio < global_ratio:
+            return lerp(0, most_frequent, min(ratio / global_ratio, 1))
+        else:
+            return lerp(
+                most_frequent, max_fee, (ratio - global_ratio) / (1 - global_ratio)
+            )
 
     @property
     def policy_to(self):

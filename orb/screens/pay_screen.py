@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-29 04:49:59
+
 from threading import Thread
-from queue import Queue
 from time import sleep
 import threading
 from collections import Counter
@@ -127,7 +132,6 @@ class PayScreen(PopupDropShadow):
                     print(f"CHAN: {chan_id}")
                     if chan_id:
                         status = pay_thread(
-                            inst=self.inst,
                             stopped=self.stopped,
                             thread_n=self.thread_n,
                             fee_rate=int(self.inst.ids.fee_rate.text),

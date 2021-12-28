@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-24 08:30:20
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-28 06:49:13
+
 from kivy.config import Config
 import sys
 import os
@@ -10,7 +16,6 @@ Config.set("graphics", "window_state", "maximized")
 
 from orb.core_ui.orb_app import OrbApp
 
-from orb.dialogs.autobalance import Autobalance
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.screens.close_channel import CloseChannel
@@ -37,7 +42,6 @@ from orb.logic.cron import cron
 keep = lambda _: _
 
 keep(AttributeEditor)
-keep(Autobalance)
 keep(ChannelsWidget)
 keep(Rebalance)
 keep(CloseChannel)

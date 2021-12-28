@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-22 04:20:14
+# @Last Modified time: 2021-12-28 06:51:53
 
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
@@ -14,7 +14,6 @@ from orb.channels.CN_widget import CNWidget
 from orb.widgets.node import Node
 from orb.misc.utils import pref
 from orb.misc.prefs import is_mock
-from orb.dialogs.autobalance import Autobalance
 from orb.misc.decorators import guarded
 from orb.widgets.chord_widget import ChordWidget
 
@@ -33,7 +32,6 @@ class ChannelsWidget(ScatterLayout):
         if not is_mock():
             self.htlcs_thread.start()
 
-        self.autobalance = Autobalance()
         self.channels = data_manager.data_man.channels
         self.channels.get()
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
@@ -56,7 +54,6 @@ class ChannelsWidget(ScatterLayout):
             round=pref("display.round_central_node"),
         )
         self.ids.relative_layout.add_widget(self.node)
-        self.ids.relative_layout.add_widget(self.autobalance)
         self.ids.relative_layout.add_widget(self.chord_widget)
         self.bind(pos=self.update_rect, size=self.update_rect)
         self.apply_transform(

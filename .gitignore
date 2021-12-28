@@ -1,5 +1,6 @@
 *.pyc
 fees.yaml
+autobalance.yaml
 docsbuild
 makefile
 *.build

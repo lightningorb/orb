@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-29 03:49:35
 import json
 import threading
 import arrow
 
 from orb.logic.routes import Routes
-
 from orb.misc.forex import forex
 
 import data_manager
@@ -33,7 +37,7 @@ def get_failure_source_pubkey(response, route):
     return failure_source_pubkey
 
 
-def handle_error(inst, response, route, routes, pk=None):
+def handle_error(response, route, routes, pk=None):
     if response:
         code = response.failure.code
         failure_source_pubkey = get_failure_source_pubkey(response, route)
@@ -77,7 +81,6 @@ def handle_error(inst, response, route, routes, pk=None):
 
 
 def pay_thread(
-    inst,
     stopped,
     thread_n,
     fee_rate,
@@ -92,7 +95,6 @@ def pay_thread(
     func = pay_thread_rest if is_rest() else pay_thread_grpc
 
     return func(
-        inst=inst,
         stopped=stopped,
         thread_n=thread_n,
         fee_rate=fee_rate,
@@ -105,7 +107,6 @@ def pay_thread(
 
 
 def pay_thread_grpc(
-    inst,
     stopped,
     thread_n,
     fee_rate,
@@ -120,6 +121,7 @@ def pay_thread_grpc(
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
+    print(f"amount: {payment_request.num_satoshis}")
     print(f"fee_limit_sat: {fee_limit_sat}")
     print(f"fee_limit_msat: {fee_limit_msat}")
     routes = Routes(
@@ -129,7 +131,6 @@ def pay_thread_grpc(
         outgoing_chan_id=outgoing_chan_id,
         last_hop_pubkey=last_hop_pubkey,
         fee_limit_msat=fee_limit_msat,
-        inst=inst,
     )
     has_next = False
     count = 0
@@ -207,7 +208,7 @@ def pay_thread_grpc(
                 )
                 with lock:
                     attempt.save()
-                handle_error(inst, response, route, routes)
+                handle_error(response, route, routes)
     if not has_next:
         print(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes
@@ -216,7 +217,6 @@ def pay_thread_grpc(
 
 
 def pay_thread_rest(
-    inst,
     stopped,
     thread_n,
     fee_rate,
