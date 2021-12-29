@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 06:51:53
+# @Last Modified time: 2021-12-29 17:25:40
 
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
@@ -29,16 +29,10 @@ class ChannelsWidget(ScatterLayout):
 
         self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
         self.htlcs_thread.daemon = True
-        if not is_mock():
-            self.htlcs_thread.start()
-
         self.channels = data_manager.data_man.channels
         self.channels.get()
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
         self.channels_thread.daemon = True
-        if not is_mock():
-            self.channels_thread.start()
-
         self.cn = {}
         self.radius = 600
         self.node = None
@@ -59,6 +53,10 @@ class ChannelsWidget(ScatterLayout):
         self.apply_transform(
             Matrix().scale(0.5, 0.5, 0.5), anchor=(self.size[0] / 2, self.size[1] / 2)
         )
+        if not is_mock():
+            self.htlcs_thread.start()
+        if not is_mock():
+            self.channels_thread.start()
 
     def add_channel(self, channel, caps=None):
         if not caps:
