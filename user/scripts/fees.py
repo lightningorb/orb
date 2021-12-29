@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 07:15:11
+# @Last Modified time: 2021-12-30 06:52:04
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -235,10 +235,14 @@ class Fees(Thread):
         Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 5 * 60)
 
     def main(self, *_):
-        if not os.path.exists("fees.yaml"):
-            return
-        obj = yaml.load(open("fees.yaml", "r"), Loader=get_loader())
-        meta = {x.chan_id: x for x in obj.get("meta", [])}
+        load = (
+            lambda x: yaml.load(open(x, "r"), Loader=get_loader())
+            if os.path.exists(x)
+            else {}
+        )
+        obj = load("fees.yaml")
+        obj_meta = load("fees_meta.yaml")
+        meta = {x.chan_id: x for x in obj_meta.get("meta", [])}
         chans = lnd.get_channels()
         setters = {}
         for c in chans:
@@ -265,6 +269,8 @@ class Fees(Thread):
         )
         with open("fees.yaml", "w") as stream:
             stream.write(yaml.dump(obj, Dumper=get_dumper()))
+        with open("fees_meta.yaml", "w") as stream:
+            stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
 
     def run(self, *_):
         self.schedule()
