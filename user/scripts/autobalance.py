@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 05:32:00
+# @Last Modified time: 2021-12-29 13:33:17
 
 import os
 import math
@@ -88,10 +88,23 @@ class To(EvalMixin):
         self.priority = priority
 
 
+class From(EvalMixin):
+    def __init__(
+        self, alias, fee_rate, num_sats=100_000, priority=0, all=None, any=None
+    ):
+        self.all = all
+        self.any = any
+        self.alias = alias
+        self.fee_rate = fee_rate
+        self.num_sats = num_sats
+        self.priority = priority
+
+
 def get_loader():
     loader = yaml.SafeLoader
     loader.add_constructor("!Ignore", lambda l, n: Ignore(**l.construct_mapping(n)))
     loader.add_constructor("!To", lambda l, n: To(**l.construct_mapping(n)))
+    loader.add_constructor("!From", lambda l, n: From(**l.construct_mapping(n)))
     return loader
 
 
@@ -127,7 +140,7 @@ class Setter:
 class Autobalance(Thread):
     def schedule(self):
         Clock.schedule_interval(
-            lambda _: Thread(target=self.do_rebalancing).start(), 15
+            lambda _: Thread(target=self.do_rebalancing).start(), 60
         )
 
     def run(self, *_):
@@ -171,6 +184,17 @@ class Autobalance(Thread):
                         setters[key] = Setter(
                             _from=None,
                             _to=rule_copy.channel,
+                            pk_ignore=pk_ignore,
+                            fee_rate=rule_copy.fee_rate,
+                            num_sats=rule_copy.num_sats,
+                            priority=rule_copy.priority,
+                        )
+                elif type(rule) is From:
+                    key = (c.chan_id, None)
+                    if key not in setters and rule_copy.eval():
+                        setters[key] = Setter(
+                            _from=rule_copy.channel,
+                            _to=None,
                             pk_ignore=pk_ignore,
                             fee_rate=rule_copy.fee_rate,
                             num_sats=rule_copy.num_sats,
