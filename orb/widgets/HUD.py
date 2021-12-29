@@ -131,14 +131,16 @@ class HUD2(BorderedLabel):
             if pending_open:
                 hud += f"Pending Open: {forex(pending_open)}\n"
 
-            total = tot + int(
+            ln_on_chain = tot + int(
                 int(cbal.local_balance.sat)
-                # + int(cbal.remote_balance.sat)
                 + int(cbal.unsettled_remote_balance.sat)
                 + int(pending_open)
             )
 
-            hud += f"Total Balance: {forex(total)}"
+            tlv = ln_on_chain + int(cbal.remote_balance.sat)
+
+            hud += f"Local + Chain: {forex(ln_on_chain)}\n"
+            hud += f"Total: {forex(tlv)}"
             update_gui(hud)
 
         threading.Thread(target=func).start()
