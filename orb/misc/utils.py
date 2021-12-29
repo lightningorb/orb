@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-27 04:05:23
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-30 06:48:01
+
 from kivy.app import App
 
 from orb.math.Vector import Vector
@@ -5,11 +11,11 @@ from orb.math.Vector import Vector
 
 def prefs_col(name):
     app = App.get_running_app()
-    section, key = name.split('.')
+    section, key = name.split(".")
     col = app.config[section][key]
-    if '#' in col:
+    if "#" in col:
         if len(col) == 7:
-            col += 'ff'
+            col += "ff"
         r, g, b, a = list(int(col[i : i + 2], base=16) / 255 for i in range(1, 8, 2))
         return r, g, b, a
     return eval(col)
@@ -17,11 +23,12 @@ def prefs_col(name):
 
 def pref(name):
     app = App.get_running_app()
-    section, key = name.split('.')
-    try:
-        return float(app.config[section][key])
-    except:
-        return app.config[section][key]
+    if app:
+        section, key = name.split(".")
+        try:
+            return float(app.config[section][key])
+        except:
+            return app.config[section][key]
 
 
 class hashabledict(dict):
