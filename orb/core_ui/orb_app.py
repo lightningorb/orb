@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-25 07:53:17
+# @Last Modified time: 2021-12-29 19:10:01
 
 import os
 import sys
@@ -21,18 +21,8 @@ from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.misc.ui_actions import console_output
 
-import grpc
-
 sys.path.append("orb/lnd/grpc_generate")
 sys.path.append("orb/lnd")
-
-
-from orb.lnd.grpc_generated import router_pb2 as lnrouter
-from orb.lnd.grpc_generated import router_pb2_grpc as lnrouterrpc
-from orb.lnd.grpc_generated import lightning_pb2 as ln
-from orb.lnd.grpc_generated import lightning_pb2_grpc as lnrpc
-from orb.lnd.grpc_generated import invoices_pb2 as invoices
-from orb.lnd.grpc_generated import invoices_pb2_grpc as invoicesrpc
 
 import data_manager
 
@@ -59,15 +49,15 @@ class OrbApp(MDApp):
 
     def load_kvs(self):
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if any(x in path for x in ["tutes/", "dist/", "user/"]):
+            if any(x in path for x in ["kivy_garden", "tutes/", "dist/", "user/"]):
                 continue
-            if is_dev and "orb.kv" in path:
+            if "orb.kv" in path:
                 continue
             print(f"Loading: {path}")
             Builder.load_file(path)
-        if not is_dev:
-            Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
-            Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
+        # if not is_dev:
+        # Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
+        # Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
 
     def load_user_setup(self):
         if os.path.exists("user/scripts/user_setup.py"):

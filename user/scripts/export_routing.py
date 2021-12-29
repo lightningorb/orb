@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-16 07:46:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-16 08:31:55
+# @Last Modified time: 2021-12-29 18:05:33
 
 """
 This script exports the forwarding history to an excel sheet.
@@ -13,6 +13,7 @@ from openpyxl import Workbook
 import arrow
 
 from orb.dialogs.forwarding_history import get_forwarding_history
+
 
 def main():
 
@@ -43,8 +44,8 @@ def main():
         )
 
     for i, val in enumerate(vals[::-1], start=2):
-        for j, l in enumerate('ABCDE'):
-        sheet[f"{l}{i}"] = val[j]
+        for j, l in enumerate("ABCDE"):
+            sheet[f"{l}{i}"] = val[j]
 
     fn = os.path.expanduser("~/Desktop/lnd-routing.xlsx")
     workbook.save(filename=fn)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 07:08:46
+# @Last Modified time: 2021-12-30 07:33:17
 import threading
 import requests
 
@@ -110,9 +110,13 @@ class HUD2(BorderedLabel):
                 channel.channel.local_balance
                 for channel in pending_channels.pending_open_channels
             )
-            pending_close = sum(
-                channel.limbo_balance
-                for channel in pending_channels.pending_force_closing_channels
+            pending_close = (
+                sum(
+                    channel.limbo_balance
+                    for channel in pending_channels.pending_force_closing_channels
+                )
+                if hasattr(pending_channels, "pending_force_closing_channels")
+                else 0
             )
 
             hud = f"Chain Balance: {forex(tot)}\n"

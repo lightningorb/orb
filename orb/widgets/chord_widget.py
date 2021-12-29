@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-15 11:52:27
+# @Last Modified time: 2021-12-29 18:31:49
 
 import math
 from collections import defaultdict
@@ -10,7 +10,6 @@ from functools import cmp_to_key
 from threading import Thread
 from random import shuffle, randrange
 
-import bezier
 from colour import Color as Colour
 
 from kivy.clock import Clock
@@ -119,6 +118,8 @@ class ChordWidget(Widget):
             a, b = Vector(x, y), Vector(x1, y1)
             dot = a.normalized().dot(b.normalized())
             b_mid_x, b_mid_y = lerp_vec(Vector(0, 0), a.mid(b), max(0, dot))
+            import bezier
+
             curve1 = bezier.Curve(
                 [
                     [x, b_mid_x, x1],
