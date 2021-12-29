@@ -58,6 +58,7 @@
                 id: channels
             MailScreen
             ConsoleScreen
+            PlayerScreen
         StatusLine
             id: status_line
     TopMenu:
@@ -158,6 +159,10 @@
                 ContextMenuTextItem:
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Player"
+                    on_press:  app.root.ids.sm.current = 'player'
                     on_release: app_menu.close_all()
         AppMenuTextItem:
             text: "Scripts"

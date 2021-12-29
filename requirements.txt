@@ -18,3 +18,4 @@ colour
 bezier
 pygame
 PyYaml
+ffpyplayer

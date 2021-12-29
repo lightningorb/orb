@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 06:49:13
+# @Last Modified time: 2021-12-29 17:14:40
 
 from kivy.config import Config
 import sys
@@ -27,6 +27,7 @@ from orb.screens.open_channel_screen import OpenChannelScreen
 from orb.screens.connect_screen import ConnectScreen
 from orb.screens.ingest_invoices_screen import IngestInvoicesScreen
 from orb.screens.console.console_screen import ConsoleScreen
+from orb.screens.player_screen import PlayerScreen
 from orb.screens.send_coins import SendCoins
 from orb.screens.about import About
 from orb.screens.rankings import Rankings
@@ -52,6 +53,7 @@ keep(OpenChannelScreen)
 keep(ConnectScreen)
 keep(IngestInvoicesScreen)
 keep(ConsoleScreen)
+keep(PlayerScreen)
 keep(SendCoins)
 keep(About)
 keep(Rankings)
