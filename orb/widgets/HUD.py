@@ -255,15 +255,16 @@ class ThreadWidget(Widget):
 class HUD6(GridLayout, Hideable):
     def __init__(self, *args, **kwargs):
         GridLayout.__init__(self, *args, cols=5, **kwargs)
+        self.lock = threading.Lock()
         thread_manager.bind(threads=self.update_rect)
         self.show()
 
+    @mainthread
     def update_rect(self, *args):
-        for c in self.children:
-            c.size = (0, 0)
-        self.clear_widgets()
-        for t in thread_manager.threads:
-            self.add_widget(ThreadWidget(thread=t))
+        with self.lock:
+            self.clear_widgets()
+            for t in thread_manager.threads:
+                self.add_widget(ThreadWidget(thread=t))
 
 
 class HUD7(BorderedLabel):
