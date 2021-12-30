@@ -2,8 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-24 08:34:04
+# @Last Modified time: 2021-12-31 04:31:16
 
+import os
 import sys
 from traceback import format_exc
 from io import StringIO
@@ -19,6 +20,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.codeinput import CodeInput
+from kivy.uix.videoplayer import VideoPlayer
 
 from orb.screens.console.console_splitter import *
 
@@ -28,6 +30,8 @@ import data_manager
 class ConsoleScreen(Screen):
 
     lines = deque()
+    player_showing = False
+    show_player = False
 
     def on_enter(self):
         """
@@ -46,6 +50,14 @@ class ConsoleScreen(Screen):
             ).get("text", "")
             app = App.get_running_app()
             app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
+            if self.show_player and not self.player_showing:
+                self.ids.vid_box.add_widget(
+                    VideoPlayer(
+                        source=os.path.expanduser(
+                            "~/Movies/Monosnap/screencast 2021-12-29 17-28-56.mp4"
+                        )
+                    )
+                )
 
         delayed()
 

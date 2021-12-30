@@ -2,16 +2,21 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-15 11:27:34
+# @Last Modified time: 2021-12-31 04:06:34
+
+import os
+
 from kivy.properties import ObjectProperty
 from kivy.clock import mainthread
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.core.window import Window, Keyboard
+from kivy.uix.videoplayer import VideoPlayer
 import data_manager
 
 
-class MainLayout(BoxLayout):
+class MainLayout(RelativeLayout):
 
     menu_visible = ObjectProperty()
 
@@ -29,6 +34,16 @@ class MainLayout(BoxLayout):
         def delayed():
             app = App.get_running_app()
             app.root.ids.app_menu.populate_scripts()
+            show_player = False
+            if show_player:
+                self.ids.scatter.add_widget(
+                    VideoPlayer(
+                        size=[800, 500],
+                        source=os.path.expanduser(
+                            "~/Movies/Monosnap/screencast 2021-12-29 17-28-56.mp4"
+                        ),
+                    )
+                )
 
         delayed()
 
