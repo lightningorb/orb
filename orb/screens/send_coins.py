@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 06:17:27
+
 from kivy.clock import Clock
-import data_manager
 import requests
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
+from orb.lnd import Lnd
 
 
 class SendCoins(PopupDropShadow):
@@ -28,9 +34,8 @@ class SendCoins(PopupDropShadow):
 
     @guarded
     def send_coins(self, addr, amount, sat_per_vbyte):
-        lnd = data_manager.data_man.lnd
         amount = int(amount)
         sat_per_vbyte = int(sat_per_vbyte)
         print(f"sending: {addr} {amount} {sat_per_vbyte}")
-        out = lnd.send_coins(addr, amount, sat_per_vbyte)
+        out = Lnd().send_coins(addr, amount, sat_per_vbyte)
         print(out)

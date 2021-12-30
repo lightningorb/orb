@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-22 08:47:26
+# @Last Modified time: 2021-12-31 05:38:33
 import json
 import threading
 from time import sleep
@@ -11,7 +11,7 @@ from threading import Lock, Thread
 
 from munch import Munch
 
-import data_manager
+from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
 from orb.logic.thread_manager import thread_manager
 
@@ -38,7 +38,7 @@ class HTLCsThread(threading.Thread):
         rest = is_rest()
         while not self.stopped():
             try:
-                lnd = data_manager.data_man.lnd
+                lnd = Lnd()
                 for e in lnd.get_htlc_events():
                     if self.stopped():
                         return
@@ -46,6 +46,12 @@ class HTLCsThread(threading.Thread):
                     if rest:
                         e = Munch.fromDict(json.loads(e)["result"])
                     htlc = Htlc(lnd, e)
+
+                    # prevent routing from a low outbound channel to
+                    # a channel with zero fees. or for example prevent
+                    # routing from a low local channel to LOOP
+                    # data_manager.data_man.lnd.htlc_interceptor(self, chan_id, htlc_id, action=1)
+
                     with db_lock:
                         htlc.save()
                     for cid in self.inst.cn:

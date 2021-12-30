@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 06:05:47
+
 from threading import Thread
 
 from kivy.animation import Animation
@@ -5,7 +11,7 @@ from kivy.properties import ListProperty, ObjectProperty, BooleanProperty
 from kivy.uix.button import Button
 
 from orb.misc.utils import prefs_col, pref
-import data_manager
+from orb.lnd import Lnd
 
 
 class Node(Button):
@@ -19,11 +25,10 @@ class Node(Button):
     def __init__(self, *args, **kwargs):
         super(Node, self).__init__(*args, **kwargs)
         self.col = prefs_col("display.node_background_color")
-        lnd = data_manager.data_man.lnd
         if self.channel:
             Thread(
                 target=lambda: setattr(
-                    self, "text", lnd.get_node_alias(self.channel.remote_pubkey)
+                    self, "text", Lnd().get_node_alias(self.channel.remote_pubkey)
                 )
             ).start()
 

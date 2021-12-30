@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 10:11:56
+# @Last Modified time: 2021-12-31 06:02:54
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -15,7 +15,6 @@ from time import sleep
 
 import arrow
 
-import data_manager
 from kivy.clock import Clock
 from threading import Thread
 
@@ -23,7 +22,7 @@ from orb.store import model
 from orb.math.lerp import lerp
 from orb.logic.normalized_events import get_best_fee
 
-lnd = data_manager.data_man.lnd
+from orb.lnd import Lnd
 
 
 class Base:
@@ -126,7 +125,7 @@ class Match(Base):
         # compute the current ratio of the channel
         ratio = self.channel.local_balance / self.channel.capacity
         # this is the global ratio the node
-        cb = data_manager.data_man.lnd.channel_balance()
+        cb = Lnd().channel_balance()
         global_ratio = cb.local_balance.sat / (
             cb.local_balance.sat + cb.remote_balance.sat
         )
@@ -156,7 +155,7 @@ class Match(Base):
 
     @property
     def policy_to(self):
-        return lnd.get_policy_to(self.channel.chan_id)
+        return Lnd().get_policy_to(self.channel.chan_id)
 
     def eval(self):
         channel = self.channel
@@ -191,15 +190,15 @@ class Setter(Base):
             self.meta.last_changed
         ) > arrow.utcnow().dehumanize("10 minutes ago"):
             return
-        policy = lnd.get_policy_to(self.channel.chan_id)
-        alias = lnd.get_node_alias(self.channel.remote_pubkey)
+        policy = Lnd().get_policy_to(self.channel.chan_id)
+        alias = Lnd().get_node_alias(self.channel.remote_pubkey)
         self.meta.fee_rate = self.fee_rate
         current_fee_rate = int(policy.fee_rate_milli_msat)
         if current_fee_rate != self.fee_rate:
             self.meta.last_fee_rate = current_fee_rate
             self.meta.last_changed = int(arrow.utcnow().timestamp())
             print(f"setting fee rate to {self.fee_rate} on {alias}")
-            lnd.update_channel_policy(
+            Lnd().update_channel_policy(
                 channel=self.channel, fee_rate=self.fee_rate / 1e6, time_lock_delta=44
             )
 
@@ -247,10 +246,10 @@ class Fees(Thread):
         obj = load("fees.yaml")
         obj_meta = load("fees_meta.yaml")
         meta = {x.chan_id: x for x in obj_meta.get("meta", [])}
-        chans = lnd.get_channels()
+        chans = Lnd().get_channels()
         setters = {}
         for c in chans:
-            alias = lnd.get_node_alias(c.remote_pubkey)
+            alias = Lnd().get_node_alias(c.remote_pubkey)
             if c.chan_id not in meta:
                 meta[c.chan_id] = FeeMeta(chan_id=c.chan_id, alias=alias)
             for rule in obj["rules"]:
@@ -268,7 +267,7 @@ class Fees(Thread):
         for s in setters:
             setters[s].set()
         print("Writing output")
-        obj["meta"] = sorted(
+        obj_meta["meta"] = sorted(
             [*set([*meta.values()])], key=lambda x: (x.ratio or 0), reverse=True
         )
         with open("fees.yaml", "w") as stream:

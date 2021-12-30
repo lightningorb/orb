@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-24 08:34:24
+# @Last Modified time: 2021-12-31 05:34:24
 import sys
 from traceback import format_exc
 from io import StringIO
@@ -66,7 +66,6 @@ class TopMenu(AppMenu):
         menu.submenu._on_visible(False)
 
     def exec(self, text):
-        lnd = data_manager.data_man.lnd
         try:
             exec(text)
         except:

@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-31 04:49:50
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 05:32:35
 from collections import namedtuple
 from dataclasses import dataclass
 from munch import Munch
 from typing import Any
 from time import sleep
-from random import choice, randrange, random
+from random import choice, randrange
 
 M = lambda **kwargs: Munch.fromDict(dict(**kwargs))
 
@@ -38,7 +43,7 @@ class Policy:
     fee_base_msat: Any = 1000
 
 
-Info = namedtuple("Info", "alias")
+Info = namedtuple("Info", "alias identity_pubkey")
 NodeInfo = namedtuple("NodeInfo", "alias")
 Balance = namedtuple("Balance", "total_balance confirmed_balance unconfirmed_balance")
 ChannelBalance = namedtuple(
@@ -49,7 +54,7 @@ CB = namedtuple("ChannelBalanceObj", "sat")
 FeeReport = namedtuple("FeeReport", "day_fee_sum week_fee_sum month_fee_sum")
 
 
-class Lnd(object):
+class LndMock(object):
     def get_channels(self):
         channels = []
         for cid in range(10):
@@ -74,7 +79,7 @@ class Lnd(object):
         return channels
 
     def get_info(self):
-        return Info(alias="mock node")
+        return Info(alias="mock node", identity_pubkey="mock_pubkey")
 
     def get_node_alias(self, x):
         return x

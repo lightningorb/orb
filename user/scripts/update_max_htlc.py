@@ -2,14 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 05:12:29
+# @Last Modified time: 2021-12-31 05:50:39
 
-import data_manager
 from time import sleep
 from kivy.clock import Clock
 from threading import Thread
-
-lnd = data_manager.data_man.lnd
+from orb.lnd import Lnd
 
 
 class MaxPolicy:
@@ -26,8 +24,8 @@ class UpdateMaxHTLC(Thread):
         Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 30 * 60)
 
     def main(self, *_):
-        for i, c in enumerate(lnd.get_channels()):
-            policy = lnd.get_policy_to(c.chan_id)
+        for i, c in enumerate(Lnd().get_channels()):
+            policy = Lnd().get_policy_to(c.chan_id)
             round = lambda x: int(int(x / 1_000) * 1_000)
             max_htlc = round(int(policy.max_htlc_msat / 1_000))
             if max_policy == MaxPolicy.half_cap:
@@ -39,7 +37,7 @@ class UpdateMaxHTLC(Thread):
                 print(
                     f"Updating policy for: {c.chan_id}, max_htlc: {max_htlc}, new_max_htlc: {new_max_htlc}"
                 )
-                lnd.update_channel_policy(
+                Lnd().update_channel_policy(
                     channel=c,
                     time_lock_delta=int(policy.time_lock_delta),
                     fee_rate=int(policy.fee_rate_milli_msat) / 1e6,

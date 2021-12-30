@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 17:25:40
+# @Last Modified time: 2021-12-31 05:28:19
 
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
@@ -16,7 +16,7 @@ from orb.misc.utils import pref
 from orb.misc.prefs import is_mock
 from orb.misc.decorators import guarded
 from orb.widgets.chord_widget import ChordWidget
-
+from orb.lnd import Lnd
 import data_manager
 
 
@@ -36,7 +36,7 @@ class ChannelsWidget(ScatterLayout):
         self.cn = {}
         self.radius = 600
         self.node = None
-        self.lnd = data_manager.data_man.lnd
+        self.lnd = Lnd()
         self.chord_widget = ChordWidget(self.channels)
         caps = self.get_caps(self.channels)
         self.info = self.lnd.get_info()

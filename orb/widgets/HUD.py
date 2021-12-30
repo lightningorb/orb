@@ -2,7 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 07:33:17
+# @Last Modified time: 2021-12-31 06:29:44
+
 import threading
 import requests
 
@@ -24,6 +25,7 @@ from orb.misc.decorators import silent, guarded
 from orb.misc import mempool
 from orb.misc.forex import forex
 from orb.logic.thread_manager import thread_manager
+from orb.lnd import Lnd
 
 import data_manager
 
@@ -68,8 +70,7 @@ class HUD1(BorderedLabel):
 
         @guarded
         def func():
-            lnd = data_manager.data_man.lnd
-            fr = lnd.fee_report()
+            fr = Lnd().fee_report()
             update_gui(
                 f"Day: {forex(fr.day_fee_sum)}\nWeek"
                 f" {forex(fr.week_fee_sum)}\nMonth:"
@@ -100,12 +101,11 @@ class HUD2(BorderedLabel):
 
         @guarded
         def func():
-            lnd = data_manager.data_man.lnd
-            bal = lnd.get_balance()
+            bal = Lnd().get_balance()
             tot = int(bal.total_balance)
             conf = int(bal.confirmed_balance)
             unconf = int(bal.unconfirmed_balance)
-            pending_channels = lnd.get_pending_channels()
+            pending_channels = Lnd().get_pending_channels()
             pending_open = sum(
                 channel.channel.local_balance
                 for channel in pending_channels.pending_open_channels
@@ -124,7 +124,7 @@ class HUD2(BorderedLabel):
                 hud += f"Conf. Chain Balance: {forex(conf)}\n"
                 hud += f"Unconf. Chain Balance: {forex(unconf)}\n"
 
-            cbal = lnd.channel_balance()
+            cbal = Lnd().channel_balance()
             hud += f"Local Balance: {forex(cbal.local_balance.sat)}\n"
             if cbal.unsettled_local_balance.sat:
                 hud += f"Unset. Local B.: {forex(cbal.unsettled_local_balance.sat)}\n"

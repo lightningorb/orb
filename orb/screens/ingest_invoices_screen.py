@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 05:45:18
+
 import humanize
 import arrow
 from datetime import timedelta
@@ -10,7 +16,7 @@ from kivy.properties import ObjectProperty, NumericProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-import data_manager
+from orb.lnd import Lnd
 
 
 class Invoice(BoxLayout):
@@ -32,7 +38,7 @@ class Invoice(BoxLayout):
         zero = timedelta(hours=0, minutes=0, seconds=0)
         delta = arrow.get(int(self.timestamp) + int(self.expiry)) - arrow.now()
         if delta < zero:
-            self.ids.expiry_label.text = 'expired'
+            self.ids.expiry_label.text = "expired"
         else:
             self.ids.expiry_label.text = humanize.precisedelta(
                 delta, minimum_unit="seconds"
@@ -85,9 +91,9 @@ class IngestInvoicesScreen(PopupDropShadow):
                 line = line.strip()
                 if line:
                     try:
-                        req = data_manager.data_man.lnd.decode_payment_request(line)
+                        req = Lnd().decode_payment_request(line)
                         if model.Invoice().select().where(model.Invoice.raw == line):
-                            raise Exception('Already ingested')
+                            raise Exception("Already ingested")
                         invoice = model.Invoice(
                             raw=line,
                             destination=req.destination,

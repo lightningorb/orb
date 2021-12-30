@@ -2,7 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-19 04:40:58
+# @Last Modified time: 2021-12-31 06:20:32
+
 import threading
 
 from kivy.clock import mainthread
@@ -12,9 +13,9 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.datatables import MDDataTable
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-
 from orb.misc.decorators import guarded
 from orb.misc import mempool
+from orb.lnd import Lnd
 
 
 class Tab(MDFloatLayout, MDTabsBase):
@@ -64,10 +65,8 @@ class BatchOpenScreen(PopupDropShadow):
     @guarded
     def on_tab_switch(self, instance_tabs, instance_tab, instance_tab_label, tab_text):
         if tab_text == "confirm":
-            from data_manager import data_man
-
             pks, amounts = self.get_pks_amounts()
-            aliases = [data_man.lnd.get_node_alias(pk) for pk in pks]
+            aliases = [Lnd().get_node_alias(pk) for pk in pks]
             self.ids.table_layout.clear_widgets()
             self.ids.table_layout.add_widget(
                 MDDataTable(
@@ -82,10 +81,8 @@ class BatchOpenScreen(PopupDropShadow):
     @guarded
     def batch_open(self):
         pks, amounts = self.get_pks_amounts()
-        from data_manager import data_man
-
         try:
-            response = data_man.lnd.batch_open(
+            response = Lnd().batch_open(
                 pubkeys=pks,
                 amounts=amounts,
                 sat_per_vbyte=mempool.get_fees("fastestFee") + 1,
@@ -99,8 +96,6 @@ class BatchOpenScreen(PopupDropShadow):
     @guarded
     def batch_connect(self):
         pks, amounts = self.get_pks_amounts()
-        from data_manager import data_man
-
         self.ids.connect.text = ""
 
         @mainthread
@@ -110,14 +105,14 @@ class BatchOpenScreen(PopupDropShadow):
 
         def func(*args):
             for pk, amount in zip(pks, amounts):
-                info = data_man.lnd.get_node_info(pk)
+                info = Lnd().get_node_info(pk)
                 display("-" * 50)
-                display(data_man.lnd.get_node_alias(pk))
+                display(Lnd().get_node_alias(pk))
                 display("-" * 50)
                 for address in info.node.addresses:
                     display(f"Connecting to: {pk}@{address.addr}")
                     try:
-                        data_man.lnd.connect(f"{pk}@{address.addr}")
+                        Lnd().connect(f"{pk}@{address.addr}")
                         display("Success.")
                     except Exception as e:
                         display(e.args[0].details)

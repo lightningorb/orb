@@ -2,15 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 03:49:35
+# @Last Modified time: 2021-12-31 05:40:23
+
 import json
 import threading
 import arrow
 
 from orb.logic.routes import Routes
 from orb.misc.forex import forex
-
-import data_manager
+from orb.lnd import Lnd
 
 lock = threading.Lock()
 
@@ -125,7 +125,7 @@ def pay_thread_grpc(
     print(f"fee_limit_sat: {fee_limit_sat}")
     print(f"fee_limit_msat: {fee_limit_msat}")
     routes = Routes(
-        lnd=data_manager.data_man.lnd,
+        lnd=Lnd(),
         pub_key=payment_request.destination,
         payment_request=payment_request,
         outgoing_chan_id=outgoing_chan_id,
@@ -156,16 +156,14 @@ def pay_thread_grpc(
             with lock:
                 attempt.save()
                 for j, hop in enumerate(route.hops):
-                    node_alias = data_manager.data_man.lnd.get_node_alias(hop.pub_key)
+                    node_alias = Lnd().get_node_alias(hop.pub_key)
                     text = f"{j:<5}:        {node_alias}"
                     print(f"T{thread_n}: {text}")
                     # no actual need for hops for now
                     p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
                     p.save()
             try:
-                response = data_manager.data_man.lnd.send_payment(
-                    payment_request, route
-                )
+                response = Lnd().send_payment(payment_request, route)
             except Exception as e:
                 print(e)
                 code = e.args[0].code.name
@@ -231,9 +229,8 @@ def pay_thread_rest(
     fee_limit_msat = fee_limit_sat * 1_000
     print(f"fee_limit_sat: {fee_limit_sat}")
     print(f"fee_limit_msat: {fee_limit_msat}")
-    from data_manager import data_man
 
-    r = data_man.lnd.router_send(
+    r = Lnd().router_send(
         pub_key=payment_request.destination,
         amount=payment_request.num_satoshis,
         payment_request=payment_request,

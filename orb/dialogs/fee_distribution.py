@@ -2,16 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 05:12:57
-from orb.logic.normalized_events import ChanRoutingData, Event
-from orb.misc.decorators import guarded
-
-from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.math.normal_distribution import NormalDistribution
+# @Last Modified time: 2021-12-31 05:35:26
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
+
+from orb.logic.normalized_events import ChanRoutingData, Event
+from orb.misc.decorators import guarded
+from orb.components.popup_drop_shadow import PopupDropShadow
+from orb.math.normal_distribution import NormalDistribution
 from orb.logic.normalized_events import get_descritized_routing_events
+from orb.lnd import Lnd
 
 
 class FeeDistribution(PopupDropShadow):
@@ -24,14 +25,13 @@ class FeeDistribution(PopupDropShadow):
         Invoked when the dialog opens. Fetches the rourting events and
         prepares the data for normal distribution analysis.
         """
-        from data_manager import data_man
         from orb.store import model
 
         self.chan_routing_data = {}
         self.channel_n = 0
         i = 0
 
-        for c in data_man.lnd.get_channels():
+        for c in Lnd().get_channels():
             routing_events = get_descritized_routing_events(c)
             if routing_events:
                 self.chan_routing_data[i] = routing_events

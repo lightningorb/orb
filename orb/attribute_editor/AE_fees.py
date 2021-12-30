@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 11:13:51
+# @Last Modified time: 2021-12-31 05:25:48
 
 from threading import Thread
 
@@ -11,7 +11,7 @@ from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 
 from orb.misc.decorators import guarded
-import data_manager
+from orb.lnd import Lnd
 
 
 class AEFees(Widget):
@@ -51,7 +51,7 @@ class AEFees(Widget):
                 self.fee_base_msat = policy_to.fee_base_msat
 
             def get_fees():
-                policy_to = data_manager.data_man.lnd.get_policy_to(channel.chan_id)
+                policy_to = Lnd().get_policy_to(channel.chan_id)
                 if policy_to:
                     update(policy_to)
 
@@ -64,7 +64,7 @@ class AEFees(Widget):
         """
         val = int(val)
         if val != self.fee_rate_milli_msat:
-            data_manager.data_man.lnd.update_channel_policy(
+            Lnd().update_channel_policy(
                 channel=self.channel,
                 fee_rate=val / 1e6,
                 base_fee_msat=self.fee_base_msat,
@@ -79,7 +79,7 @@ class AEFees(Widget):
         """
         val = int(val)
         if val != self.fee_base_msat:
-            data_manager.data_man.lnd.update_channel_policy(
+            Lnd().update_channel_policy(
                 channel=self.channel,
                 fee_rate=self.fee_rate_milli_msat / 1e6,
                 base_fee_msat=val,
@@ -94,7 +94,7 @@ class AEFees(Widget):
         """
         val = int(val)
         if val != self.min_htlc:
-            data_manager.data_man.lnd.update_channel_policy(
+            Lnd().update_channel_policy(
                 channel=self.channel,
                 time_lock_delta=self.time_lock_delta,
                 fee_rate=self.fee_rate_milli_msat / 1e6,
@@ -111,7 +111,7 @@ class AEFees(Widget):
         """
         val = int(val)
         if val != self.max_htlc_msat:
-            data_manager.data_man.lnd.update_channel_policy(
+            Lnd().update_channel_policy(
                 channel=self.channel,
                 time_lock_delta=self.time_lock_delta,
                 fee_rate=self.fee_rate_milli_msat / 1e6,
@@ -127,7 +127,7 @@ class AEFees(Widget):
         """
         val = int(val)
         if val != self.time_lock_delta:
-            data_manager.data_man.lnd.update_channel_policy(
+            Lnd().update_channel_policy(
                 channel=self.channel,
                 time_lock_delta=val,
                 fee_rate=self.fee_rate_milli_msat / 1e6,

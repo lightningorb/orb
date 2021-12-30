@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-10 08:11:54
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 06:14:13
 from collections import defaultdict
 import json
 
@@ -9,6 +14,7 @@ def get_payments():
 
 
 def print_logs():
+    lnd = Lnd()
     payments = get_payments()
     for r in payments.iterator():
         if not r.succeeded:
@@ -81,12 +87,9 @@ def ingest(path):
 
 
 def count_successes_failures():
-    import data_manager
-
-    lnd = data_manager.data_man.lnd
     payments = get_payments()
     nodes = defaultdict(lambda: dict(successes=0, failures=0))
-    remote_pubkeys = set([x.remote_pubkey for x in lnd.get_channels()])
+    remote_pubkeys = set([x.remote_pubkey for x in Lnd().get_channels()])
     for r in payments.iterator():
         if not r.succeeded:
             continue

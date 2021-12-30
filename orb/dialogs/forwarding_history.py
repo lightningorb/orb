@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 10:07:22
+# @Last Modified time: 2021-12-31 05:37:10
 
 from collections import defaultdict
 from threading import Thread
@@ -11,10 +11,8 @@ import arrow
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
-
 from orb.misc.forex import forex
-
-import data_manager
+from orb.lnd import Lnd
 
 
 def get_forwarding_history():
@@ -32,11 +30,10 @@ def download_forwarding_history(*args, **kwargs):
         )
         if last:
             last = last.first()
-        lnd = data_manager.data_man.lnd
         i = 0
         start_time = int(last.timestamp) if last else None
         while True:
-            fwd = lnd.get_forwarding_history(
+            fwd = Lnd().get_forwarding_history(
                 start_time=start_time, index_offset=i, num_max_events=100
             )
 

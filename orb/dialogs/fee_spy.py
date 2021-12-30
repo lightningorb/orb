@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 05:36:37
 from threading import Thread
 
 from kivy.clock import mainthread
@@ -8,6 +13,7 @@ from kivy.properties import ListProperty
 from kivy.properties import NumericProperty
 
 from orb.misc.decorators import guarded
+from orb.lnd import Lnd
 
 
 class FeeSpy(Popup):
@@ -49,10 +55,6 @@ class FeeSpy(Popup):
         return zip(*sorted(enumerate(data), key=lambda l: l[1][1]))
 
     def get_data(self):
-        from data_manager import data_man
-
-        lnd = data_man.lnd
-
         updates = {}
         node_updates = {}
 
@@ -64,17 +66,17 @@ class FeeSpy(Popup):
 
         def func():
 
-            for r in lnd.subscribe_channel_graph():
+            for r in Lnd().subscribe_channel_graph():
                 for u in r.channel_updates:
                     cid = u.chan_id
                     last = u.routing_policy.fee_rate_milli_msat / 1000
                     pk = u.advertising_node
                     if cid in updates:
                         updates[cid] = dict(
-                            total=updates[cid]['total']
-                            + (abs(updates[cid]['last'] - last)),
+                            total=updates[cid]["total"]
+                            + (abs(updates[cid]["last"] - last)),
                             last=last,
-                            updates=updates[cid]['updates'] + 1,
+                            updates=updates[cid]["updates"] + 1,
                             pk=pk,
                         )
                     else:
@@ -83,19 +85,19 @@ class FeeSpy(Popup):
                     if pk not in node_updates:
                         node_updates[pk] = updates[cid]
                     else:
-                        node_updates[pk]['total'] += updates[cid]['total']
-                        node_updates[pk]['updates'] += 1
-                    node_updates[pk]['total'] = round(node_updates[pk]['total'], 2)
+                        node_updates[pk]["total"] += updates[cid]["total"]
+                        node_updates[pk]["updates"] += 1
+                    node_updates[pk]["total"] = round(node_updates[pk]["total"], 2)
 
                 to_print = [
                     [
                         lnd.get_node_alias(k),
-                        node_updates[k]['total'],
-                        node_updates[k]['updates'],
+                        node_updates[k]["total"],
+                        node_updates[k]["updates"],
                     ]
                     for k in sorted(
                         node_updates,
-                        key=lambda x: node_updates[x]['total'],
+                        key=lambda x: node_updates[x]["total"],
                         reverse=True,
                     )[:5]
                 ]

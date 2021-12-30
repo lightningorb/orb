@@ -2,20 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 07:44:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-24 07:47:12
+# @Last Modified time: 2021-12-31 05:52:22
 """
 Get the total balance for the node.
 """
 
-from data_manager import data_man
+from orb.lnd import Lnd
 
 
 def main():
-    lnd = data_man.lnd
     remote, local, pending_in, pending_out, commit = 0, 0, 0, 0, 0
 
     # For each channel (including inactive channels)
-    for c in lnd.get_channels():
+    for c in Lnd().get_channels():
         # Tally the local and remote balances
         local += c.local_balance
         remote += c.remote_balance

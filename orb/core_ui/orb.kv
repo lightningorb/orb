@@ -2,6 +2,7 @@
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
 #:import data_manager data_manager
+#:import Lnd orb.lnd.Lnd
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoicesScreen orb.screens.ingest_invoices_screen.IngestInvoicesScreen
@@ -182,28 +183,32 @@
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Terminal"
-                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "Amboss"
-                            on_release: webbrowser.open("https://amboss.space/node/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://amboss.space/node/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LNRouter"
-                            on_release: webbrowser.open("https://lnrouter.app/node/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://lnrouter.app/node/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LNNodeInsight"
                             on_release: webbrowser.open("https://lnnodeinsight.com/")
                         ContextMenuTextItem:
                             text: "1ML"
-                            on_release: webbrowser.open("https://1ml.com/node/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://1ml.com/node/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "HashXP"
-                            on_release: webbrowser.open("https://hashxp.org/lightning/node/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://hashxp.org/lightning/node/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LN.plus"
-                            on_release: webbrowser.open("https://lightningnetwork.plus/nodes/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://lightningnetwork.plus/nodes/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "CheeseRobot"
-                            on_release: webbrowser.open("https://cheeserobot.org/node/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://cheeserobot.org/node/" + Lnd().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "Acinq"
-                            on_release: webbrowser.open("https://explorer.acinq.co/n/" + data_manager.data_man.lnd.get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://explorer.acinq.co/n/" + Lnd().get_info().identity_pubkey)
+    Scatter:
+        id: scatter
+        size: 800, 500
+        size_hint: None, None

@@ -2,24 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 11:05:53
+# @Last Modified time: 2021-12-31 05:17:33
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from functools import lru_cache
 import base64, json, requests
-from kivy.app import App
-import os
 from munch import Munch
 
 
-class Lnd(LndBase):
-    def __init__(self):
-        app = App.get_running_app()
-        data_dir = app.user_data_dir
-        self.cert_path = os.path.join(data_dir, "tls.cert")
-        self.hostname = app.config["lnd"]["hostname"]
-        self.rest_port = app.config["lnd"]["rest_port"]
-        macaroon = app.config["lnd"]["macaroon_admin"]
+class LndREST(LndBase):
+    def __init__(self, tls_certificate, server, network, macaroon, port):
+        self.cert_path = tls_certificate
+        self.hostname = server
+        self.rest_port = port
         self.headers = {"Grpc-Metadata-macaroon": macaroon.encode()}
 
     @property

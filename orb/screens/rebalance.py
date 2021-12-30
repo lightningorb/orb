@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 06:42:56
+# @Last Modified time: 2021-12-31 06:18:00
 
 from traceback import print_exc
 import threading
@@ -12,6 +12,7 @@ from kivy.clock import mainthread
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.output import *
 from orb.logic.rebalance_thread import RebalanceThread
+from orb.lnd import Lnd
 import data_manager
 
 
@@ -19,8 +20,8 @@ class Rebalance(PopupDropShadow):
     def __init__(self, **kwargs):
         PopupDropShadow.__init__(self, **kwargs)
         self.output = Output(None)
-        self.output.lnd = data_manager.data_man.lnd
-        self.lnd = data_manager.data_man.lnd
+        self.output.lnd = Lnd()
+        self.lnd = Lnd()
         self.chan_id = None
         self.last_hop_pubkey = None
         self.alias_to_pk = {}

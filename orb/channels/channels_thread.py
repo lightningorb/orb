@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 05:26:50
+
 import threading
 from time import sleep
 
-import data_manager
+from orb.lnd import Lnd
 from orb.logic.thread_manager import thread_manager
 
 
@@ -22,8 +28,7 @@ class ChannelsThread(threading.Thread):
     def __run(self):
         while not self.stopped():
             try:
-                lnd = data_manager.data_man.lnd
-                it = lnd.get_channel_events()
+                it = Lnd().get_channel_events()
                 if it:
                     for e in it:
                         if self.stopped():

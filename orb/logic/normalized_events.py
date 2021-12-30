@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:55:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 06:55:54
+# @Last Modified time: 2021-12-31 05:39:08
 
 from dataclasses import dataclass
 from orb.math.normal_distribution import NormalDistribution
+from orb.lnd import Lnd
 
 
 @dataclass
@@ -39,7 +40,6 @@ class Event:
 
 def get_descritized_routing_events(c):
     from orb.store import model
-    from data_manager import data_man
 
     fh = (
         model.FowardEvent()
@@ -63,7 +63,7 @@ def get_descritized_routing_events(c):
         for n in range(int(e.amt / 10_000)):
             norm_vals.append(Event(ppm=e.ppm, amt=10_000))
 
-    alias = data_man.lnd.get_node_alias(c.remote_pubkey)
+    alias = Lnd().get_node_alias(c.remote_pubkey)
 
     # make sure we have more than one event
     if len(set(norm_vals)) >= 2:

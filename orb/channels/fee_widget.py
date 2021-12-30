@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-27 04:05:23
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-31 06:08:22
+
 from threading import Thread
 
 from kivy.uix.label import Label
@@ -13,7 +19,7 @@ from orb.misc.utils import closest_point_on_line
 from orb.math.Vector import Vector
 
 
-import data_manager
+from orb.lnd import Lnd
 
 
 class FeeWidgetLabel(Label):
@@ -34,7 +40,7 @@ class FeeWidget(Widget):
 
     def __init__(self, **kwargs):
         super(FeeWidget, self).__init__(**kwargs)
-        self.lnd = data_manager.data_man.lnd
+        self.lnd = Lnd()
         self.P1 = Vector()
         self.P2 = Vector()
         self.touch_pos = None
@@ -95,13 +101,11 @@ class FeeWidget(Widget):
         if self.touch_pos:
             self.touch_pos = None
             self.to_fee = self.new_fee
-            from data_manager import data_man
-
             self.label.hide()
 
             def update_fees(*args):
                 print(f"Setting fees to: {self.to_fee / 1e6}")
-                data_man.lnd.update_channel_policy(
+                Lnd().update_channel_policy(
                     channel=self.channel,
                     fee_rate=self.to_fee / 1e6,
                     base_fee_msat=self.policy_to.fee_base_msat,

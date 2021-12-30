@@ -2,17 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-28 08:26:04
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 09:32:29
+# @Last Modified time: 2021-12-31 05:41:09
 
 import threading
+from traceback import print_exc
 
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.channel_selector import get_low_outbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.thread_manager import thread_manager
-from traceback import print_exc
-
-import data_manager
+from orb.lnd import Lnd
 
 
 class RebalanceThread(threading.Thread):
@@ -37,7 +36,7 @@ class RebalanceThread(threading.Thread):
         self.fee_rate = fee_rate
         self.name = name
         self.thread_n = thread_n
-        self.lnd = data_manager.data_man.lnd
+        self.lnd = Lnd()
         thread_manager.add_thread(self)
 
     def run(self):
@@ -84,7 +83,7 @@ class RebalanceThread(threading.Thread):
 
         if not status == PaymentStatus.success:
             try:
-                data_manager.data_man.lnd.cancel_invoice(payment_request.payment_hash)
+                self.lnd.cancel_invoice(payment_request.payment_hash)
             except:
                 print("Exception while cancelling invoice")
 

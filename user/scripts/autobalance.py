@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 13:33:17
+# @Last Modified time: 2021-12-31 06:05:12
 
 import os
 import math
@@ -18,7 +18,7 @@ from orb.misc.utils import pref
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.channel_selector import *
 from orb.logic.rebalance_thread import RebalanceThread
-import data_manager
+from orb.lnd import Lnd
 
 chan_ignore = set([])
 
@@ -119,7 +119,7 @@ class Setter:
 
     def set(self):
         outbound_channel = get_low_inbound_channel(
-            lnd=data_manager.data_man.lnd,
+            lnd=Lnd(),
             pk_ignore=self.pk_ignore,
             chan_ignore=chan_ignore,
             num_sats=self.num_sats,
@@ -144,8 +144,6 @@ class Autobalance(Thread):
         )
 
     def run(self, *_):
-        import data_manager
-
         self.ratio = 0.5
         self.lock = Lock()
         self.threads = set([])
@@ -158,9 +156,7 @@ class Autobalance(Thread):
         if self.lock.locked():
             return
         self.lock.acquire()
-        from data_manager import data_man
-
-        lnd = data_man.lnd
+        lnd = Lnd()
         if not os.path.exists("autobalance.yaml"):
             return
         obj = yaml.load(open("autobalance.yaml", "r"), Loader=get_loader())

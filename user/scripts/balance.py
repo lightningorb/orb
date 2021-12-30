@@ -2,18 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 09:55:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 05:43:39
+# @Last Modified time: 2021-12-31 06:03:55
 """
 Get the total balance for the node.
 """
 
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from data_manager import data_man
+from orb.lnd import Lnd
 
 
 def main():
-    lnd = data_man.lnd
+    lnd = Lnd()
     remote, local, pending_in, pending_out, commit = 0, 0, 0, 0, 0
 
     # For each channel (including inactive channels)
@@ -56,9 +56,12 @@ def main():
         local + chain_total + commit + pending_out + pending_open + pending_close
     )
 
+    tot = f"{grand_total:_}"
+    print(tot)
+
     popup = Popup(
         title="Balance",
-        content=Label(text=f"{grand_total:_}"),
+        content=Label(text=tot),
         size_hint=(None, None),
         size=(300, 300),
     )

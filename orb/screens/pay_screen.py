@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 04:49:59
+# @Last Modified time: 2021-12-31 05:48:10
 
 from threading import Thread
 from time import sleep
@@ -39,8 +39,8 @@ class PayScreen(PopupDropShadow):
         self.in_flight = set([])
         PopupDropShadow.__init__(self, **kwargs)
         self.output = Output(None)
-        self.output.lnd = data_manager.data_man.lnd
-        lnd = data_manager.data_man.lnd
+        lnd = Lnd()
+        self.output.lnd = lnd
         self.chan_id = None
         self.inflight = set([])
 
@@ -109,15 +109,13 @@ class PayScreen(PopupDropShadow):
                     if not invoices:
                         print("no more usable invoices")
                         return
-                    payment_request = data_manager.data_man.lnd.decode_request(
-                        invoice.raw
-                    )
+                    payment_request = Lnd().decode_request(invoice.raw)
                     if not auto:
                         chan_id = self.inst.chan_id
                     else:
                         with lock:
                             chan_id = get_low_inbound_channel(
-                                lnd=data_manager.data_man.lnd,
+                                lnd=Lnd(),
                                 pk_ignore=self.inst.get_ignored_pks(),
                                 chan_ignore=chan_ignore,
                                 num_sats=payment_request.num_satoshis

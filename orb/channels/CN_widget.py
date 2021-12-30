@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 12:08:28
+# @Last Modified time: 2021-12-31 05:29:06
 import math
 
 from kivy.app import App
@@ -24,7 +24,6 @@ class CNWidget(Widget):
     def __init__(self, c, caps, attribute_editor, *args):
         super(CNWidget, self).__init__(*args)
         self.attribute_editor = attribute_editor
-        lnd = data_manager.data_man.lnd
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
         self.b = Node(text="", channel=c, attribute_editor=attribute_editor)
         self.show_sent_received = (

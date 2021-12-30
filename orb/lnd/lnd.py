@@ -1,313 +1,54 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2021-12-15 07:15:28
+# @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 16:57:31
-import sys
-import base64
-import os
-from functools import lru_cache
+# @Last Modified time: 2021-12-31 05:21:17
+
+from orb.misc.utils import pref
 from traceback import print_exc
-from orb.lnd.lnd_base import LndBase
-from orb.store.db_cache import aliases_cache
-from orb.misc.channel import Channel
 
-sys.path.append("orb/lnd/grpc_generate")
-sys.path.append("orb/lnd")
-
-try:
-    import grpc
-
-    from orb.lnd.grpc_generated import router_pb2 as lnrouter
-    from orb.lnd.grpc_generated import router_pb2_grpc as lnrouterrpc
-    from orb.lnd.grpc_generated import lightning_pb2 as ln
-    from orb.lnd.grpc_generated import lightning_pb2_grpc as lnrpc
-    from orb.lnd.grpc_generated import invoices_pb2 as invoices
-    from orb.lnd.grpc_generated import invoices_pb2_grpc as invoicesrpc
-except:
-    print_exc()
-
-MESSAGE_SIZE_MB = 50 * 1024 * 1024
+lnd = None
 
 
-class Lnd(LndBase):
-    def __init__(self, tls_certificate, server, network, macaroon):
-        os.environ["GRPC_SSL_CIPHER_SUITES"] = "HIGH+ECDSA"
-        combined_credentials = self.get_credentials(
-            tls_certificate.encode(), network, macaroon.encode()
-        )
-        channel_options = [
-            ("grpc.max_message_length", MESSAGE_SIZE_MB),
-            ("grpc.max_receive_message_length", MESSAGE_SIZE_MB),
-        ]
-        grpc_channel = grpc.secure_channel(
-            server + ":10009", combined_credentials, channel_options
-        )
-        self.stub = lnrpc.LightningStub(grpc_channel)
-        self.router_stub = lnrouterrpc.RouterStub(grpc_channel)
-        self.invoices_stub = invoicesrpc.InvoicesStub(grpc_channel)
+def Lnd():
+    """
+    Return the appropriate Lnd class based on protocol.
+    """
 
-    @staticmethod
-    def get_credentials(tls_certificate, network, macaroon):
-        ssl_credentials = grpc.ssl_channel_credentials(tls_certificate)
-        auth_credentials = grpc.metadata_call_credentials(
-            lambda _, callback: callback([("macaroon", macaroon)], None)
-        )
-        combined_credentials = grpc.composite_channel_credentials(
-            ssl_credentials, auth_credentials
-        )
-        return combined_credentials
+    global lnd
 
-    @lru_cache(maxsize=None)
-    def get_info(self):
-        return self.stub.GetInfo(ln.GetInfoRequest())
+    if lnd is None:
+        if pref("lnd.protocol") == "grpc":
+            from orb.lnd.lnd_grpc import LndGRPC
 
-    def get_balance(self):
-        return self.stub.WalletBalance(ln.WalletBalanceRequest())
+            try:
+                lnd = LndGRPC(
+                    tls_certificate=pref("lnd.tls_certificate"),
+                    server=pref("lnd.hostname"),
+                    network=pref("lnd.network"),
+                    macaroon=pref("lnd.macaroon_admin"),
+                )
+            except:
+                print(print_exc())
+                from orb.lnd.lnd_mock import LndMock
 
-    def channel_balance(self):
-        request = ln.ChannelBalanceRequest()
-        response = self.stub.ChannelBalance(request)
-        return response
+                lnd = LndMock()
+        elif pref("lnd.protocol") == "rest":
+            from orb.lnd.lnd_rest import LndREST
 
-    def sign_message(self, message):
-        request = ln.SignMessageRequest(msg=message.encode())
-        return self.stub.SignMessage(request)
-
-    @aliases_cache
-    def get_node_alias(self, pub_key):
-        return self.stub.GetNodeInfo(
-            ln.NodeInfoRequest(pub_key=pub_key, include_channels=False)
-        ).node.alias
-
-    @lru_cache(maxsize=None)
-    def get_node_info(self, pub_key):
-        return self.stub.GetNodeInfo(
-            ln.NodeInfoRequest(pub_key=pub_key, include_channels=True)
-        )
-
-    @lru_cache(maxsize=None)
-    def get_node_channels_pubkeys(self, pub_key):
-        node_info = self.get_node_info(pub_key)
-        return [
-            (c.node1_pub, c.node2_pub)[pub_key == c.node1_pub]
-            for c in node_info.channels
-        ]
-
-    def get_own_pubkey(self):
-        return self.get_info().identity_pubkey
-
-    def generate_invoice(self, memo, amount):
-        invoice_request = ln.Invoice(memo=memo, value=amount, expiry=3600)
-        add_invoice_response = self.stub.AddInvoice(invoice_request)
-        return add_invoice_response.payment_request, self.decode_payment_request(
-            add_invoice_response.payment_request
-        )
-
-    def cancel_invoice(self, payment_hash):
-        payment_hash_bytes = self.hex_string_to_bytes(payment_hash)
-        return self.invoices_stub.CancelInvoice(
-            invoices.CancelInvoiceMsg(payment_hash=payment_hash_bytes)
-        )
-
-    def list_invoices(self):
-        request = ln.ListInvoiceRequest(
-            pending_only=False, index_offset=0, num_max_invoices=100, reversed=False
-        )
-        return self.stub.ListInvoices(request)
-
-    @lru_cache(None)
-    def decode_payment_request(self, payment_request):
-        request = ln.PayReqString(pay_req=payment_request)
-        return self.stub.DecodePayReq(request)
-
-    def get_channels(self, active_only=False):
-        return [
-            Channel(c)
-            for c in self.stub.ListChannels(
-                ln.ListChannelsRequest(active_only=active_only)
-            ).channels
-        ]
-
-    def get_route(
-        self,
-        pub_key,
-        amount,
-        ignored_pairs,
-        ignored_nodes,
-        last_hop_pubkey,
-        outgoing_chan_id,
-        fee_limit_msat,
-    ):
-        if fee_limit_msat:
-            fee_limit = {"fixed_msat": int(fee_limit_msat)}
-        else:
-            fee_limit = None
-        if last_hop_pubkey:
-            last_hop_pubkey = base64.b16decode(last_hop_pubkey, True)
-        request = ln.QueryRoutesRequest(
-            pub_key=pub_key,
-            last_hop_pubkey=last_hop_pubkey,
-            outgoing_chan_id=outgoing_chan_id,
-            amt=amount,
-            ignored_pairs=ignored_pairs,
-            fee_limit=fee_limit,
-            ignored_nodes=ignored_nodes,
-            use_mission_control=True,
-        )
-        try:
-            response = self.stub.QueryRoutes(request)
-            return response.routes
-        except:
-            return None
-
-    # @lru_cache(maxsize=None)
-    def get_edge(self, channel_id):
-        return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
-
-    def get_policy_to(self, channel_id):
-        edge = self.get_edge(channel_id)
-        # node1_policy contains the fee base and rate for payments from node1 to node2
-        if edge.node1_pub == self.get_own_pubkey():
-            return edge.node1_policy
-        return edge.node2_policy
-
-    def get_policy_from(self, channel_id):
-        edge = self.get_edge(channel_id)
-        # node1_policy contains the fee base and rate for payments from node1 to node2
-        if edge.node1_pub == self.get_own_pubkey():
-            return edge.node2_policy
-        return edge.node1_policy
-
-    def get_ppm_to(self, channel_id):
-        return self.get_policy_to(channel_id).fee_rate_milli_msat
-
-    def get_ppm_from(self, channel_id):
-        return self.get_policy_from(channel_id).fee_rate_milli_msat
-
-    def send_payment(self, payment_request, route):
-        last_hop = route.hops[-1]
-        last_hop.mpp_record.payment_addr = payment_request.payment_addr
-        last_hop.mpp_record.total_amt_msat = payment_request.num_msat
-        request = lnrouter.SendToRouteRequest(route=route)
-        request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
-        result = []
-        res = self.router_stub.SendToRouteV2(request)
-        return res
-
-    @lru_cache(maxsize=None)
-    def decode_request(self, req: str):
-        request = ln.PayReqString(pay_req=req)
-        response = self.stub.DecodePayReq(request)
-        return response
-
-    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
-        request = ln.OpenChannelRequest(
-            sat_per_vbyte=sat_per_vbyte,
-            node_pubkey_string=node_pubkey_string,
-            local_funding_amount=amount_sat,
-            push_sat=0,
-            private=False,
-            spend_unconfirmed=False,
-        )
-        response = self.stub.OpenChannelSync(request)
-        return response
-
-    def close_channel(self, channel_point, force, sat_per_vbyte):
-        tx, output = channel_point.split(":")
-        cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
-        request = ln.CloseChannelRequest(
-            channel_point=cp, force=force, sat_per_vbyte=sat_per_vbyte
-        )
-        return self.stub.CloseChannel(request)
-
-    def new_address(self):
-        request = ln.NewAddressRequest(type=0, account=None)
-        response = self.stub.NewAddress(request)
-        return response
-
-    def connect(self, addr):
-        pk, h = addr.split("@")
-        ln_addr = ln.LightningAddress(pubkey=pk, host=h)
-        request = ln.ConnectPeerRequest(addr=ln_addr, perm=False, timeout=10)
-        return self.stub.ConnectPeer(request)
-
-    def send_coins(self, addr, amount, sat_per_vbyte):
-        return self.stub.SendCoins(
-            ln.SendCoinsRequest(addr=addr, amount=amount, sat_per_vbyte=sat_per_vbyte)
-        )
-        return response
-
-    def update_channel_policy(self, channel, *args, **kwargs):
-        tx, output = channel.channel_point.split(":")
-        cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
-        request = ln.PolicyUpdateRequest(*args, **kwargs, chan_point=cp)
-        return self.stub.UpdateChannelPolicy(request)
-
-    def get_htlc_events(self):
-        request = lnrouter.SubscribeHtlcEventsRequest()
-        return self.router_stub.SubscribeHtlcEvents(request)
-
-    def get_channel_events(self):
-        request = ln.ChannelEventSubscription()
-        return self.stub.SubscribeChannelEvents(request)
-
-    def get_forwarding_history(
-        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
-    ):
-        request = ln.ForwardingHistoryRequest(
-            start_time=start_time,
-            end_time=end_time,
-            index_offset=index_offset,
-            num_max_events=num_max_events,
-        )
-        return self.stub.ForwardingHistory(request)
-
-    def list_payments(self, include_incomplete=True, index_offset=0, max_payments=100):
-        request = ln.ListPaymentsRequest(
-            include_incomplete=True,
-            index_offset=index_offset,
-            max_payments=max_payments,
-            reversed=True,
-        )
-        response = self.stub.ListPayments(request)
-        return response.payments
-
-    def get_own_alias(self):
-        return self.get_info().alias
-
-    def fee_report(self):
-        request = ln.FeeReportRequest()
-        return self.stub.FeeReport(request)
-
-    def cancel_invoice(self, payment_hash):
-        payment_hash_bytes = self.hex_string_to_bytes(payment_hash)
-        return self.invoices_stub.CancelInvoice(
-            invoices.CancelInvoiceMsg(payment_hash=payment_hash_bytes)
-        )
-
-    def get_pending_channels(self):
-        request = ln.PendingChannelsRequest()
-        response = self.stub.PendingChannels(request)
-        return response
-
-    def subscribe_channel_graph(self):
-        request = ln.GraphTopologySubscription()
-        return self.stub.SubscribeChannelGraph(request)
-
-    def batch_open(self, pubkeys, amounts, sat_per_vbyte):
-        chans = [
-            dict(
-                node_pubkey=base64.b16decode(pk, True),
-                local_funding_amount=int(amount),
-                push_sat=0,
-                private=False,
-                min_htlc_msat=1000,
+            app = App.get_running_app()
+            data_dir = app.user_data_dir
+            cert_path = os.path.join(data_dir, "tls.cert")
+            lnd = LndREST(
+                tls_certificate=cert_path,
+                server=pref("lnd.hostname"),
+                network=pref("lnd.network"),
+                macaroon=pref("lnd.macaroon_admin"),
+                port=pref("lnd.rest_port"),
             )
-            for pk, amount in zip(pubkeys, amounts)
-        ]
-        return self.stub.BatchOpenChannel(
-            ln.BatchOpenChannelRequest(
-                sat_per_vbyte=sat_per_vbyte, spend_unconfirmed=False, channels=chans
-            )
-        )
+        elif pref("lnd.protocol") == "mock":
+            from orb.lnd.lnd_mock import LndMock
+
+            lnd = LndMock()
+
+    return lnd
