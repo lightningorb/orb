@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 02:59:59
+# @Last Modified time: 2021-12-30 11:13:51
 
 from threading import Thread
 
@@ -52,7 +52,8 @@ class AEFees(Widget):
 
             def get_fees():
                 policy_to = data_manager.data_man.lnd.get_policy_to(channel.chan_id)
-                update(policy_to)
+                if policy_to:
+                    update(policy_to)
 
             Thread(target=get_fees).start()
 

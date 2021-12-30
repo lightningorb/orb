@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-30 11:05:53
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from functools import lru_cache
@@ -55,6 +60,9 @@ class Lnd(LndBase):
     def get_policy_to(self, channel_id):
 
         edge = self.get_edge(channel_id)
+        if edge.get("code", 0) == 3:
+            print(edge.message)
+            return None
         if edge.get("error"):
             print(edge.error)
             return None
@@ -65,6 +73,9 @@ class Lnd(LndBase):
 
     def get_policy_from(self, channel_id):
         edge = self.get_edge(channel_id)
+        if edge.get("code", 0) == 3:
+            print(edge.message)
+            return None
         if edge.get("error"):
             print(edge.error)
             return None

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-21 08:13:39
+# @Last Modified time: 2021-12-30 10:19:33
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
@@ -20,28 +20,39 @@ class SentReceivedWidget(Widget):
 
         self.channel = channel
         c = self.channel
-        self.received = (
-            sum(
-                [
-                    x.amt_in
-                    for x in model.FowardEvent()
-                    .select()
-                    .where(model.FowardEvent.chan_id_in == str(c.chan_id))
-                ]
+
+        skip = False
+        try:
+            model.FowardEvent().select()
+        except:
+            skip = True
+
+        if skip:
+            self.received = None
+            self.sent = None
+        else:
+            self.received = (
+                sum(
+                    [
+                        x.amt_in
+                        for x in model.FowardEvent()
+                        .select()
+                        .where(model.FowardEvent.chan_id_in == str(c.chan_id))
+                    ]
+                )
+                / 1e8
             )
-            / 1e8
-        )
-        self.sent = (
-            sum(
-                [
-                    x.amt_in
-                    for x in model.FowardEvent()
-                    .select()
-                    .where(model.FowardEvent.chan_id_out == str(c.chan_id))
-                ]
+            self.sent = (
+                sum(
+                    [
+                        x.amt_in
+                        for x in model.FowardEvent()
+                        .select()
+                        .where(model.FowardEvent.chan_id_out == str(c.chan_id))
+                    ]
+                )
+                / 1e8
             )
-            / 1e8
-        )
         with self.canvas:
             Color(*[0.5, 1, 0.5, 1])
             self.sent_line = Line(points=[0, 0, 0, 0], width=2)

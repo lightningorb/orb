@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 04:48:05
+# @Last Modified time: 2021-12-30 12:08:54
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -153,8 +153,6 @@ class ChannelWidget(Widget):
         incoming = (
             forward or receive
         ) and htlc.incoming_channel_id == self.channel.chan_id
-
-        # print(htlc.__dict__)
 
         if incoming:
             self.pending_in = htlc.incoming_channel_pending_htlcs["pending_in"]

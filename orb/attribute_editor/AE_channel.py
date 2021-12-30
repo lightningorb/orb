@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 03:35:29
+# @Last Modified time: 2021-12-30 11:07:09
 
 from munch import Munch
 
@@ -52,7 +52,7 @@ class AEChannel(GridLayout):
     def __init__(self, *args, **kwargs):
         """
         Class constructor.
-        """        
+        """
 
         super(AEChannel, self).__init__(*args, **kwargs)
         self.add_widget(Label(text="         "))
@@ -66,7 +66,7 @@ class AEChannel(GridLayout):
         """
         Populate fields when using the REST API.
         """
-        c = self.channel
+        c = self.channel.__dict__
         for field in c:
             if type(c[field]) is bool:
                 widget = BoxLayout(
@@ -155,7 +155,7 @@ class AEChannel(GridLayout):
 
         :param ratio: the desired ratio, between 0 and 1
         :type ratio: bool
-        """        
+        """
         vals = data_manager.data_man.store.get("balanced_ratio", {})
         vals[str(self.channel.chan_id)] = ratio
         data_manager.data_man.store.put("balanced_ratio", **vals)

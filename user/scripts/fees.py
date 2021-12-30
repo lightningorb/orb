@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 06:52:04
+# @Last Modified time: 2021-12-30 10:11:56
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -71,8 +71,12 @@ class Match(Base):
             .select()
             .order_by(model.FowardEvent.timestamp.desc())
             .where(model.FowardEvent.chan_id_out == str(self.channel.chan_id))
-            .first()
         )
+        try:
+            if ev:
+                ev = ev.first()
+        except:
+            ev = None
         if ev:
             self.meta.last_routed = arrow.get(ev.timestamp).humanize()
 

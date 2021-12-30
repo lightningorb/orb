@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 16:19:48
+# @Last Modified time: 2021-12-30 11:45:35
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -53,11 +53,11 @@ class Channel(EventDispatcher):
         self.remote_pubkey = channel.remote_pubkey
         self.local_balance = channel.local_balance
         self.remote_balance = channel.remote_balance
-        self.chan_id = channel.chan_id
+        self.chan_id = int(channel.chan_id)
         self.pending_htlcs = channel.pending_htlcs
         self.total_satoshis_sent = channel.total_satoshis_sent
         self.total_satoshis_received = channel.total_satoshis_received
-        self.ListFields = channel.ListFields
+        self.ListFields = channel.ListFields if hasattr(channel, "ListFields") else None
         self.initiator = channel.initiator
         self.commit_fee = channel.commit_fee
         self.unsettled_balance = channel.unsettled_balance

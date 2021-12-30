@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-30 12:08:28
 import math
 
 from kivy.app import App
@@ -11,6 +16,7 @@ from orb.misc.utils import pref
 from orb.misc.prefs import inverted_channels
 
 import data_manager
+
 
 class CNWidget(Widget):
     attribute_editor = ObjectProperty(None)
@@ -37,8 +43,8 @@ class CNWidget(Widget):
         y = math.cos(i / n * 3.14378 * 2) * self.radius
         points = [x, y, 0, 0] if inverted_channels() else [0, 0, x, y]
         pos = (
-            x - (pref('display.node_width') / 2),
-            y - (pref('display.node_height') / 2),
+            x - (pref("display.node_width") / 2),
+            y - (pref("display.node_height") / 2),
         )
         if self.l.points == [0, 0, 0, 0]:
             self.l.points = points

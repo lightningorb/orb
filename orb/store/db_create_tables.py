@@ -1,4 +1,11 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-30 10:04:12
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2021-12-30 10:20:15
+
 from orb.store.db_meta import *
+from orb.store.model import *
 
 
 def create_invoices_tables():
