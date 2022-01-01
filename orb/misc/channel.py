@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 11:45:35
+# @Last Modified time: 2021-12-31 07:09:14
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -47,7 +47,17 @@ class Channel(EventDispatcher):
     initiator = BooleanProperty(False)
 
     def __init__(self, channel, *args, **kwargs):
+        """
+        Channel constructor.
+        """
         super(Channel, self).__init__(*args, **kwargs)
+        self.update(channel)
+
+    def update(self, channel):
+        """
+        Update the given Channel object with the given lnd
+        channel.
+        """
         self.local_balance = channel.local_balance
         self.capacity = channel.capacity
         self.remote_pubkey = channel.remote_pubkey

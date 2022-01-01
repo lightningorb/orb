@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2021-12-15 07:15:28
+# @Date:   2022-01-01 09:56:56
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 11:37:57
-
+# @Last Modified time: 2022-01-01 09:57:23
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
+from kivy.properties import ObjectProperty
 from orb.misc.channel import Channel
 
 
@@ -16,18 +16,25 @@ class Channels(EventDispatcher):
     as :py:mod:`orb.misc.channel.Channel` objects.
 
     The purpose is that it's expensive getting channels over
-    and over from LND. This this class offers a way to read
+    and over from LND. This class offers a way to read
     and effectively cache channel data.
 
     In addition to caching, it also uses Kivi's properties
     and event dispatcher mechanism so the application can observe
     channel attribute changes.
 
+    The object ids in self.channels should not change. Instead
+    channels should be added and removed. This enables the
+    rest of the application classes to bind data to these
+    objects.
+
     Please note this class is iterable.
     """
 
     #: the channels as a ListProperty
-    channels = ListProperty([])
+    channels = ObjectProperty({})
+    #: the sorted channels chan_ids
+    sorted_chan_ids = ListProperty([])
 
     def __init__(self, lnd):
         """
@@ -41,15 +48,21 @@ class Channels(EventDispatcher):
         """
         Get and sorts channel data.
         """
-        self.channels = [Channel(c) for c in self.lnd.get_channels()]
+        for c in self.lnd.get_channels():
+            if c.chan_id in self.channels:
+                self.channels[c.chan_id].update(c)
+            else:
+                self.channels[c.chan_id] = Channel(c)
+        self.sorted_chan_ids = [x for x in self.channels]
         self.sort_channels()
 
     def sort_channels(self):
         """
         Sort channel data based on channel ratio.
         """
-        self.channels.sort(
-            key=lambda x: int(x.local_balance) / int(x.capacity),
+        self.sorted_chan_ids.sort(
+            key=lambda x: int(self.channels[x].local_balance)
+            / int(self.channels[x].capacity),
             reverse=True,
         )
 
@@ -61,7 +74,7 @@ class Channels(EventDispatcher):
         )
 
     def __len__(self):
-        return len(self.channels)
+        return len(self.sorted_chan_ids)
 
     def __iter__(self):
         self.it = 0
@@ -69,8 +82,8 @@ class Channels(EventDispatcher):
 
     def __next__(self):
         if self.it < len(self):
-            ret = self.channels[self.it]
+            ind = self.sorted_chan_ids[self.it]
             self.it += 1
         else:
             raise StopIteration
-        return ret
+        return self.channels[ind]

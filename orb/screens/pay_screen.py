@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2021-12-15 07:15:28
+# @Date:   2022-01-01 09:57:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 04:49:59
+# @Last Modified time: 2022-01-01 09:57:37
 
 from threading import Thread
 from time import sleep
@@ -22,6 +22,7 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.thread_manager import thread_manager
 
 import data_manager
+from orb.lnd import Lnd
 
 
 chan_ignore = set([])
