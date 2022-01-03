@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:44:31
+# @Last Modified time: 2022-01-04 07:45:17
 
 from functools import lru_cache
 import base64, json, requests
@@ -214,5 +214,15 @@ class LndREST(LndBase):
         kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
         r = requests.post(
             url, headers=self.headers, verify=self.cert_path, data=json.dumps(kwargs)
+        )
+        return dict2obj(r.json())
+
+    def list_invoices(self):
+        url = f"{self.fqdn}/v1/invoices"
+        r = requests.get(
+            url,
+            headers=self.headers,
+            verify=self.cert_path,
+            data=json.dumps(dict(reversed=True, num_max_invoices="100")),
         )
         return dict2obj(r.json())

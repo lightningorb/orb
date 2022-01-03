@@ -2,8 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 07:43:18
+# @Last Modified time: 2022-01-04 07:52:33
 
+import base64
 import time
 
 from kivy.clock import mainthread
@@ -12,6 +13,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 
 from orb.lnd import Lnd
+from orb.misc.prefs import is_rest
 
 
 class FocusTextInput(TextInput):
@@ -33,14 +35,18 @@ class MailScreen(Screen):
                     htlc.custom_records for htlc in invoice.htlcs if htlc.custom_records
                 ]
                 if htlc_records:
-                    text += f"{time.ctime(invoice.settle_date)}:\n\n"
                     for r in htlc_records:
-                        if r.get(34349334, ""):
-                            msg = str(r.get(34349334, "")).strip("b'")
-                            try:
-                                msg = r.get(34349334, "").decode()
-                            except UnicodeDecodeError:
-                                pass
+                        keysend = r.get("34349334" if is_rest() else 34349334, "")
+                        if keysend:
+                            if is_rest():
+                                msg = base64.b64decode(keysend)
+                            else:
+                                msg = str(keysend).strip("b'")
+                                try:
+                                    msg = keysend.decode()
+                                except UnicodeDecodeError:
+                                    pass
                             if msg:
+                                text += f"{time.ctime(invoice.settle_date)}:\n\n"
                                 text += f"{msg}\n\n"
         self.ids.input.text = text

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:14:13
+# @Last Modified time: 2022-01-04 07:23:30
 
 import json
 
@@ -58,6 +58,9 @@ class obj:
 
     def __init__(self, dict1):
         self.__dict__.update(dict1)
+
+    def __str__(self):
+        return str(self.__dict__)
 
     def get(self, key, default=None):
         return self.__dict__.get(key, default)
