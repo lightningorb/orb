@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:50:39
+# @Last Modified time: 2022-01-03 17:43:20
 
 from time import sleep
 from kivy.clock import Clock
@@ -27,7 +27,7 @@ class UpdateMaxHTLC(Thread):
         for i, c in enumerate(Lnd().get_channels()):
             policy = Lnd().get_policy_to(c.chan_id)
             round = lambda x: int(int(x / 1_000) * 1_000)
-            max_htlc = round(int(policy.max_htlc_msat / 1_000))
+            max_htlc = round(int(int(policy.max_htlc_msat) / 1_000))
             if max_policy == MaxPolicy.half_cap:
                 new_max_htlc = round(int(c.capacity * 0.5))
             elif max_policy == MaxPolicy.local_balance:

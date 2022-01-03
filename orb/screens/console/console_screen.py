@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 04:31:16
+# @Last Modified time: 2022-01-03 17:50:23
 
 import os
 import sys
@@ -25,6 +25,10 @@ from kivy.uix.videoplayer import VideoPlayer
 from orb.screens.console.console_splitter import *
 
 import data_manager
+
+from kivy.utils import platform
+
+ios = platform == "ios"
 
 
 class ConsoleScreen(Screen):
@@ -63,7 +67,8 @@ class ConsoleScreen(Screen):
 
     @mainthread
     def update_output(self, text, last_line):
-        self.ids.console_output.output = text
+        if not ios:
+            self.ids.console_output.output = text
         if last_line:
             app = App.get_running_app()
             app.root.ids.status_line.ids.line_output.output = last_line
