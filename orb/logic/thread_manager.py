@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 11:42:51
+# @Last Modified time: 2022-01-03 17:42:00
 
 from kivy.clock import Clock
 from kivy.properties import ListProperty
@@ -26,6 +26,11 @@ class ThreadManager(EventDispatcher):
 
     def __init__(self, *args):
         Clock.schedule_interval(lambda _: Thread(target=self.check_alive).start(), 1)
+
+    def stop_threads(self):
+        for t in self.threads:
+            t.stop()
+        self.threads.clear()
 
     def check_alive(self, *args):
         for t in self.threads:

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 19:10:01
+# @Last Modified time: 2022-01-03 17:41:05
 
 import os
 import sys
@@ -68,6 +68,11 @@ class OrbApp(MDApp):
             except:
                 print_exc()
                 print("Unable to load user_setup.py")
+
+    def on_stop(self):
+        from orb.logic import thread_manager
+
+        thread_manager.thread_manager.stop_threads()
 
     def on_start(self):
         audio_manager.set_volume()
