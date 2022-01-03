@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 16:41:23
+# @Last Modified time: 2022-01-03 11:23:13
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
@@ -55,8 +55,10 @@ class AttributeEditor(BoxLayout):
         """
         Detect when the user touched inside the AttributeEditor.
         """
-        if self.collide_point(*touch.pos):
-            if touch.is_mouse_scrolling:
-                self.ids.ae_scroll_view.on_touch_down(touch)
-                return True
-        return super(AttributeEditor, self).on_touch_down(touch)
+        if self.selection:
+            if self.collide_point(*touch.pos):
+                if touch.is_mouse_scrolling:
+                    self.ids.ae_scroll_view.on_touch_down(touch)
+                    return True
+            return super(AttributeEditor, self).on_touch_down(touch)
+        return False
