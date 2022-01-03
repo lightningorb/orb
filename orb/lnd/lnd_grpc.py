@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 13:26:22
+# @Last Modified time: 2022-01-04 06:29:45
 import sys
 import base64
 import os
@@ -272,9 +272,6 @@ class LndGRPC(LndBase):
         )
         response = self.stub.ListPayments(request)
         return response.payments
-
-    def get_own_alias(self):
-        return self.get_info().alias
 
     def fee_report(self):
         request = ln.FeeReportRequest()
