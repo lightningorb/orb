@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-01-04 05:59:21
+
 from io import StringIO
 import sys
 
@@ -5,33 +11,12 @@ from kivy.clock import mainthread
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
+from kivy.uix.label import Label
 
 
 class StatusLine(BoxLayout):
     def __init__(self, *args, **kwargs):
         super(StatusLine, self).__init__(*args, **kwargs)
-
-        @mainthread
-        def delayed():
-            self.ids.line_input.bind(output=self.ids.line_output.setter("output"))
-
-        delayed()
-
-
-class StatusLineInput(TextInput):
-
-    output = StringProperty("")
-
-    def got_input(self, text):
-        old_stdout = sys.stdout
-        sys.stdout = mystdout = StringIO()
-        try:
-            eval(text)
-        except:
-            print("Error")
-        sys.stdout = old_stdout
-        message = mystdout.getvalue()
-        self.output = message.strip()
 
 
 class StatusLineOutput(TextInput):
