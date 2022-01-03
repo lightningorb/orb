@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 10:33:35
+# @Last Modified time: 2022-01-03 16:50:39
 
 from threading import Thread
 from time import sleep
@@ -127,8 +127,8 @@ class PayScreen(PopupDropShadow):
                                 lnd=Lnd(),
                                 pk_ignore=self.inst.get_ignored_pks(),
                                 chan_ignore=chan_ignore,
-                                num_sats=payment_request.num_satoshis
-                                + payment_request.num_satoshis
+                                num_sats=int(payment_request.num_satoshis)
+                                + int(payment_request.num_satoshis)
                                 * 0.05,  # 5% for the fees
                             )
                             if chan_id:

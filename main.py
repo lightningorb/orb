@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 14:38:17
+# @Last Modified time: 2022-01-03 15:39:02
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -18,7 +18,7 @@ Config.set("graphics", "fullscreen", "auto")
 
 Window.maximize()
 
-Window.fullscreen = True
+# Window.fullscreen = True
 
 from orb.core_ui.orb_app import OrbApp
 

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:21:17
+# @Last Modified time: 2022-01-03 16:32:54
 
 from orb.misc.utils import pref
 from traceback import print_exc
@@ -35,6 +35,8 @@ def Lnd():
                 lnd = LndMock()
         elif pref("lnd.protocol") == "rest":
             from orb.lnd.lnd_rest import LndREST
+            from kivy.app import App
+            import os
 
             app = App.get_running_app()
             data_dir = app.user_data_dir
@@ -44,7 +46,7 @@ def Lnd():
                 server=pref("lnd.hostname"),
                 network=pref("lnd.network"),
                 macaroon=pref("lnd.macaroon_admin"),
-                port=pref("lnd.rest_port"),
+                port=int(pref("lnd.rest_port")),
             )
         elif pref("lnd.protocol") == "mock":
             from orb.lnd.lnd_mock import LndMock
