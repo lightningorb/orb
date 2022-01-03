@@ -2,9 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-10 08:11:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:14:13
+# @Last Modified time: 2022-01-02 06:08:58
+
 from collections import defaultdict
 import json
+
+from orb.lnd import Lnd
 
 
 def get_payments():
@@ -87,6 +90,7 @@ def ingest(path):
 
 
 def count_successes_failures():
+    lnd = Lnd()
     payments = get_payments()
     nodes = defaultdict(lambda: dict(successes=0, failures=0))
     remote_pubkeys = set([x.remote_pubkey for x in Lnd().get_channels()])
