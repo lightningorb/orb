@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:02:54
+# @Last Modified time: 2022-01-02 07:17:25
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -270,8 +270,6 @@ class Fees(Thread):
         obj_meta["meta"] = sorted(
             [*set([*meta.values()])], key=lambda x: (x.ratio or 0), reverse=True
         )
-        with open("fees.yaml", "w") as stream:
-            stream.write(yaml.dump(obj, Dumper=get_dumper()))
         with open("fees_meta.yaml", "w") as stream:
             stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
 
