@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 05:59:56
+# @Last Modified time: 2022-01-04 06:57:42
 
 import os
 import sys
@@ -23,8 +23,6 @@ from kivy.uix.codeinput import CodeInput
 from kivy.uix.videoplayer import VideoPlayer
 
 from orb.screens.console.console_splitter import *
-
-import data_manager
 
 from kivy.utils import platform
 
@@ -49,8 +47,10 @@ class ConsoleScreen(Screen):
             self.ids.console_input.bind(output=self.ids.console_output.setter("output"))
             # retrieve the code stored in the prefs, and set it
             # in the console input
+            import data_manager
+
             self.ids.console_input.text = data_manager.data_man.store.get(
-                "console_input"
+                "console_input", {}
             ).get("text", "")
             app = App.get_running_app()
             app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
@@ -141,6 +141,7 @@ class ConsoleInput(CodeInput):
 
     def load(self, *_):
         inst = LoadScript()
+        import data_manager
 
         def do_load(button, *_):
             sc = data_manager.data_man.store.get("scripts", {})
@@ -161,6 +162,7 @@ class ConsoleInput(CodeInput):
     def install(self, *_):
         inst = InstallScript()
         inst.open()
+        import data_manager
 
         def do_install(_, *__):
             sc = data_manager.data_man.store.get("scripts", {})
@@ -179,6 +181,8 @@ class ConsoleInput(CodeInput):
 
     def delete(self, *_):
         inst = LoadScript()
+        import data_manager
+
         try:
             sc = data_manager.data_man.store.get("scripts")
         except:
@@ -235,6 +239,8 @@ class ConsoleInput(CodeInput):
         if text != "\u0135":
             to_save = self.text + (text or "")
             do_eval = keycode[1] == "enter" and self.selection_text
+            import data_manager
+
             data_manager.data_man.store.put("console_input", text=to_save)
             if do_eval:
                 self.exec(self.selection_text)
