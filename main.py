@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-29 17:14:40
+# @Last Modified time: 2022-01-03 14:36:35
 
 from kivy.config import Config
+from kivy.core.window import Window
 import sys
 import os
 
@@ -13,6 +14,11 @@ sys.path.append(os.path.join("orb", "lnd", "grpc_generated"))
 sys.path.append(os.path.join("user", "scripts"))
 
 Config.set("graphics", "window_state", "maximized")
+Config.set("graphics", "fullscreen", "auto")
+
+Window.maximize()
+
+# Window.fullscreen = True
 
 from orb.core_ui.orb_app import OrbApp
 

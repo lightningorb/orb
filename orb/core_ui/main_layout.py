@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 08:04:48
+# @Last Modified time: 2022-01-03 14:35:37
 
 import os
 
@@ -14,6 +14,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.core.window import Window, Keyboard
 from kivy.uix.videoplayer import VideoPlayer
 import data_manager
+from kivy.core.window import Window
 
 
 class MainLayout(BoxLayout):
@@ -38,6 +39,7 @@ class MainLayout(BoxLayout):
         )
         self.super = []
         self.shift = False
+        Window.maximize()
 
         @mainthread
         def delayed():
