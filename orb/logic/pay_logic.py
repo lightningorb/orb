@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:40:23
+# @Last Modified time: 2022-01-01 11:25:08
 
 import json
 import threading
@@ -137,7 +137,7 @@ def pay_thread_grpc(
     payment = model.Payment(
         amount=int(payment_request.num_satoshis),
         dest=payment_request.destination,
-        fees=0,
+        fees=fee_limit_sat,
         succeeded=False,
         timestamp=int(arrow.now().timestamp()),
     )
