@@ -2,15 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:32:35
+# @Last Modified time: 2022-01-04 06:16:18
+
 from collections import namedtuple
 from dataclasses import dataclass
-from munch import Munch
 from typing import Any
 from time import sleep
 from random import choice, randrange
 
-M = lambda **kwargs: Munch.fromDict(dict(**kwargs))
+from orb.types.obj import dict2obj
+
+M = lambda **kwargs: dict2obj(dict(**kwargs))
 
 
 @dataclass
@@ -105,7 +107,7 @@ class LndMock(object):
         return FeeReport(day_fee_sum=1000, week_fee_sum=1000, month_fee_sum=1000)
 
     def get_pending_channels(self):
-        m = Munch.fromDict(
+        m = M(
             dict(
                 pending_open_channels=[
                     dict(

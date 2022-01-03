@@ -2,18 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 09:41:11
+# @Last Modified time: 2022-01-04 06:17:09
 import json
 import threading
 from time import sleep
 from traceback import print_exc
 from threading import Lock, Thread
 
-from munch import Munch
-
 from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
 from orb.logic.thread_manager import thread_manager
+from orb.types.obj import dict2obj
 
 db_lock = Lock()
 
@@ -43,7 +42,7 @@ class HTLCsThread(threading.Thread):
                     if self.stopped():
                         return
                     if rest:
-                        e = Munch.fromDict(json.loads(e)["result"])
+                        e = dict2obj(json.loads(e)["result"])
                     htlc = Htlc(self.inst, lnd, e)
 
                     # prevent routing from a low outbound channel to

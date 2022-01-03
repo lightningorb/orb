@@ -262,7 +262,6 @@ If you succeeded id building kivy with the IOS toolchain, then install all the r
 toolchain pip3 install simple-chalk
 toolchain pip3 install qrcode
 toolchain pip3 install yachalk
-toolchain pip3 install munch
 toolchain pip3 install kivymd
 toolchain pip3 install kivy_garden.contextmenu
 toolchain pip3 install pygments

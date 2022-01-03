@@ -4,7 +4,6 @@ git+https://github.com/kivy/kivy.git
 qrcode
 grpcio
 yachalk
-munch
 kivymd
 kivy_garden.contextmenu
 pygments

@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:17:33
-from orb.store.db_cache import aliases_cache
-from orb.lnd.lnd_base import LndBase
+# @Last Modified time: 2022-01-04 06:14:48
+
 from functools import lru_cache
 import base64, json, requests
-from munch import Munch
+
+from orb.store.db_cache import aliases_cache
+from orb.lnd.lnd_base import LndBase
+from orb.types.obj import dict2obj
 
 
 class LndREST(LndBase):
@@ -24,12 +26,12 @@ class LndREST(LndBase):
     def get_balance(self):
         url = f"{self.fqdn}/v1/balance/blockchain"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def channel_balance(self):
         url = f"{self.fqdn}/v1/balance/channels"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def get_channels(self, active_only=False):
         url = f"{self.fqdn}/v1/channels"
@@ -39,18 +41,18 @@ class LndREST(LndBase):
             verify=self.cert_path,
             data={"active_only": active_only},
         )
-        return Munch.fromDict(r.json()).channels
+        return dict2obj(r.json()).channels
 
     @lru_cache(maxsize=None)
     def get_info(self):
         url = f"{self.fqdn}/v1/getinfo"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def get_edge(self, channel_id):
         url = f"{self.fqdn}/v1/graph/edge/{channel_id}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def get_policy_to(self, channel_id):
 
@@ -63,8 +65,8 @@ class LndREST(LndBase):
             return None
         # node1_policy contains the fee base and rate for payments from node1 to node2
         if edge.node1_pub == self.get_own_pubkey():
-            return Munch.fromDict(edge.node1_policy)
-        return Munch.fromDict(edge.node2_policy)
+            return edge.node1_policy
+        return edge.node2_policy
 
     def get_policy_from(self, channel_id):
         edge = self.get_edge(channel_id)
@@ -76,8 +78,8 @@ class LndREST(LndBase):
             return None
         # node1_policy contains the fee base and rate for payments from node1 to node2
         if edge.node1_pub == self.get_own_pubkey():
-            return Munch.fromDict(edge.node2_policy)
-        return Munch.fromDict(edge.node1_policy)
+            return edge.node2_policy
+        return edge.node1_policy
 
     def get_own_pubkey(self):
         return self.get_info().identity_pubkey
@@ -86,22 +88,22 @@ class LndREST(LndBase):
     def get_node_alias(self, pub_key):
         url = f"{self.fqdn}/v1/graph/node/{pub_key}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json()).node.alias
+        return dict2obj(r.json()).node.alias
 
     def fee_report(self):
         url = f"{self.fqdn}/v1/fees"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def decode_payment_request(self, payment_request):
         url = f"{self.fqdn}/v1/payreq/{payment_request}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def decode_request(self, payment_request):
         url = f"{self.fqdn}/v1/payreq/{payment_request}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def get_route(
         self,
@@ -131,12 +133,11 @@ class LndREST(LndBase):
                 }
             ),
         )
-        obj = r.json()
-        return Munch.fromDict(obj).routes
+        return dict2obj(r.json()).routes
 
     def send_payment(self, payment_request, route):
         last_hop = route.hops[-1]
-        last_hop.mpp_record = Munch.fromDict(
+        last_hop.mpp_record = dict2obj(
             dict(
                 payment_addr=payment_request.payment_addr,
                 total_amt_msat=payment_request.num_msat,
@@ -148,7 +149,7 @@ class LndREST(LndBase):
         r = requests.post(
             url, data=json.dumps(data), headers=self.headers, verify=self.cert_path
         )
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def get_htlc_events(self):
         url = f"{self.fqdn}/v2/router/htlcevents"
@@ -172,12 +173,12 @@ class LndREST(LndBase):
         r = requests.post(
             url, headers=self.headers, verify=self.cert_path, data=json.dumps(data)
         )
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def get_pending_channels(self):
         url = f"{self.fqdn}/v1/channels/pending"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
 
     def router_send(
         self,
@@ -214,4 +215,4 @@ class LndREST(LndBase):
         r = requests.post(
             url, headers=self.headers, verify=self.cert_path, data=json.dumps(kwargs)
         )
-        return Munch.fromDict(r.json())
+        return dict2obj(r.json())
