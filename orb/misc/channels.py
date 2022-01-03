@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-01 10:04:32
+# @Last Modified time: 2022-01-03 08:56:23
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
@@ -61,8 +61,13 @@ class Channels(EventDispatcher):
         """
         Sort channel data based on channel ratio.
         """
+        pending_out = lambda x: sum(
+            int(p.amount) for p in x.pending_htlcs if not p.incoming
+        )
         self.sorted_chan_ids.sort(
-            key=lambda x: int(self.channels[x].local_balance)
+            key=lambda x: (
+                int(self.channels[x].local_balance) + pending_out(self.channels[x])
+            )
             / int(self.channels[x].capacity),
             reverse=True,
         )

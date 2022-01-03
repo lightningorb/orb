@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-02 17:00:05
+# @Last Modified time: 2022-01-03 09:41:11
 import json
 import threading
 from time import sleep
@@ -42,10 +42,9 @@ class HTLCsThread(threading.Thread):
                 for e in lnd.get_htlc_events():
                     if self.stopped():
                         return
-                    self.inst.update_rect()
                     if rest:
                         e = Munch.fromDict(json.loads(e)["result"])
-                    htlc = Htlc(lnd, e)
+                    htlc = Htlc(self.inst, lnd, e)
 
                     # prevent routing from a low outbound channel to
                     # a channel with zero fees. or for example prevent
@@ -64,10 +63,12 @@ class HTLCsThread(threading.Thread):
                             else None,
                         ]
                         if self.inst.cn[cid].l.channel.chan_id in chans:
-                            Thread(
-                                target=lambda *_: self.inst.cn[cid].l.anim_htlc(htlc)
-                            ).start()
+                            # this "should" update the balances
+                            # on the channel object
+                            self.inst.cn[cid].l.anim_htlc(htlc)
                             self.inst.ids.relative_layout.do_layout()
+
+                    self.inst.update_rect()
 
             except:
                 print("Exception getting HTLCs - let's sleep")

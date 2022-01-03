@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 12:08:54
+# @Last Modified time: 2022-01-03 09:52:53
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -50,7 +50,7 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.line_local = Segment(
-                amount=int(self.channel.local_balance) - int(self.pending_out),
+                amount=int(self.channel.local_balance),
                 points=[0, 0, 0, 0],
                 width=self.width,
                 cap="none",
@@ -85,27 +85,40 @@ class ChannelWidget(Widget):
         |                  |                                                |
         a          ca      c    cb                                          b
 
-            lerp a, b, r - pending/cap      lerp a, b, r + pending/cap
+        lerp a, b, ratio - pending/cap      lerp a, b, ratio + pending/cap
 
         """
-        chan, p = self.channel, self.points
-        trim = 0.1
-        r = int(chan.local_balance) / int(chan.capacity)
+
+        self.pending_in = sum(
+            int(p.amount) for p in self.channel.pending_htlcs if p.incoming
+        )
+        self.pending_out = sum(
+            int(p.amount) for p in self.channel.pending_htlcs if not p.incoming
+        )
+
+        chan, line, trim = self.channel, self.points, 0.1
+        ratio = int(chan.local_balance) / int(chan.capacity)
 
         # trim starting point so it doesn't overlap node
-        a = lerp_2d(p[:2], p[2:], trim)
+        a = lerp_2d(line[:2], line[2:], trim)
         # trim ending points so it doesn't overlap node
-        b = lerp_2d(p[:2], p[2:], 1 - trim)
+        b = lerp_2d(line[:2], line[2:], 1 - trim)
 
         # c is the 'center point' where local meets remote
-        c = lerp_2d(a, b, r)
+        # (given there are no pending HTLCs)
+        c = lerp_2d(a, b, ratio + (self.pending_out / chan.capacity))
 
         # ca is where the local line ends, minus pending out HTLC amounts
         # e.g the outbound that's actually available
-        ca = lerp_2d(a, b, r - self.pending_out / int(chan.capacity))
+        ca = lerp_2d(a, b, ratio)
 
-        cb = lerp_2d(a, b, r + self.pending_in / int(chan.capacity))
+        # cb is where the remote line beings, i.e local + all pending
+        cb = lerp_2d(
+            a, b, ratio + (self.pending_in + self.pending_out) / int(chan.capacity)
+        )
         self.line_local.line.points = [a[0], a[1], ca[0], ca[1]]
+
+        # the pending line goes from where local ends, and remote starts
         self.line_pending.line.points = [ca[0], ca[1], cb[0], cb[1]]
         self.line_remote.line.points = [cb[0], cb[1], b[0], b[1]]
         self.to_fee.set_points(a, b, c)
@@ -115,7 +128,10 @@ class ChannelWidget(Widget):
         self.line_remote.update_rect()
 
     def anim_outgoing(self, s=10):
-        start, end = (self.b, self.c) if inverted_channels else (self.c, self.b)
+        start, end = (
+            self.c,
+            self.b,
+        )  # (self.b, self.c) if inverted_channels else (self.c, self.b)
         anim = Animation(pos=start, size=(s, s), duration=0)
         anim += Animation(pos=end, size=(s, s), duration=0.4)
         anim += Animation(pos=end, size=(1, 1), duration=0)
@@ -126,7 +142,10 @@ class ChannelWidget(Widget):
         anim.start(self.anim_col)
 
     def anim_incoming(self, s=10):
-        start, end = (self.c, self.b) if inverted_channels else (self.c, self.b)
+        start, end = (
+            self.b,
+            self.c,
+        )  # (self.c, self.b) if inverted_channels else (self.c, self.b)
         anim = Animation(pos=start, size=(s, s), duration=0)
         anim += Animation(pos=end, size=(s, s), duration=0.4)
         anim.start(self.anim_rect)
@@ -154,13 +173,6 @@ class ChannelWidget(Widget):
             forward or receive
         ) and htlc.incoming_channel_id == self.channel.chan_id
 
-        if incoming:
-            self.pending_in = htlc.incoming_channel_pending_htlcs["pending_in"]
-            self.pending_out = htlc.incoming_channel_pending_htlcs["pending_out"]
-        if outgoing:
-            self.pending_in = htlc.outgoing_channel_pending_htlcs["pending_in"]
-            self.pending_out = htlc.outgoing_channel_pending_htlcs["pending_out"]
-
         if send and outgoing:
             self.anim_outgoing()
         elif receive:
@@ -173,23 +185,16 @@ class ChannelWidget(Widget):
 
         if send and settle:
             audio_manager.play_send_settle()
-            self.channel.local_balance = htlc.outgoing_channel_local_balance
-            self.channel.remote_balance = htlc.outgoing_channel_remote_balance
         elif (forward or receive) and settle:
             if forward:
                 audio_manager.play_forward_settle()
-            if htlc.outgoing_channel_id == self.channel.chan_id:
-                self.channel.local_balance = htlc.outgoing_channel_local_balance
-                self.channel.remote_balance = htlc.outgoing_channel_remote_balance
-            if htlc.incoming_channel_id == self.channel.chan_id:
-                self.channel.local_balance = htlc.incoming_channel_local_balance
-                self.channel.remote_balance = htlc.incoming_channel_remote_balance
         elif fail:
             if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                 if htlc.incoming_channel_id and htlc.outgoing_channel_id:
                     print("FAIL!")
                     print(htlc.__dict__)
-                    audio_manager.play_link_fail_event()
+                    if htlc.failure_detail != "HTLC_EXCEEDS_MAX":
+                        audio_manager.play_link_fail_event()
 
         self.update_rect()
 

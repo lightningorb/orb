@@ -22,5 +22,6 @@ Submodules
 
    orb.lnd.lnd
    orb.lnd.lnd_base
+   orb.lnd.lnd_grpc
+   orb.lnd.lnd_mock
    orb.lnd.lnd_rest
-   orb.lnd.mock_lnd

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:28:19
+# @Last Modified time: 2022-01-03 09:13:14
 
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
@@ -41,7 +41,7 @@ class ChannelsWidget(ScatterLayout):
         caps = self.get_caps(self.channels)
         self.info = self.lnd.get_info()
         for c in self.channels:
-            self.add_channel(channel=c, caps=caps)
+            self.add_channel(channel=c, caps=caps, update_rect=False)
         self.node = Node(
             text=self.info.alias,
             attribute_editor=self.attribute_editor,
@@ -58,13 +58,14 @@ class ChannelsWidget(ScatterLayout):
         if not is_mock():
             self.channels_thread.start()
 
-    def add_channel(self, channel, caps=None):
+    def add_channel(self, channel, caps=None, update_rect=True):
         if not caps:
             caps = self.get_caps(self.channels)
         cn = CNWidget(c=channel, caps=caps, attribute_editor=self.attribute_editor)
         self.cn[channel.chan_id] = cn
         self.ids.relative_layout.add_widget(cn)
-        self.update_rect()
+        if update_rect:
+            self.update_rect()
 
     def remove_channel(self, channel, caps=None):
         pass
@@ -79,15 +80,8 @@ class ChannelsWidget(ScatterLayout):
         if self.node:
             self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
         self.channels.sort_channels()
-        for i, cn in enumerate(
-            sorted(
-                self.cn.values(),
-                reverse=True,
-                key=lambda x: int(x.b.channel.local_balance)
-                / int(x.b.channel.capacity),
-            )
-        ):
-            cn.update_rect(i, len(self.cn))
+        for i, chan_id in enumerate(self.channels.sorted_chan_ids):
+            self.cn[chan_id].update_rect(i, len(self.cn))
 
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:

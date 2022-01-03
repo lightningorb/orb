@@ -30,6 +30,7 @@ Submodules
    orb.screens.new_address_screen
    orb.screens.open_channel_screen
    orb.screens.pay_screen
+   orb.screens.player_screen
    orb.screens.rankings
    orb.screens.rebalance
    orb.screens.send_coins

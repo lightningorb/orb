@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 10:15:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 18:50:05
+# @Last Modified time: 2022-01-03 09:45:41
 try:
     from grpc_generated import router_pb2 as lnrouter
     from grpc_generated import lightning_pb2 as lnrpc
@@ -41,9 +41,10 @@ class Htlc(Model):
     event_outcome = CharField()
     event_outcome_info = JSONField(default={"pending_in": 0, "pending_out": 0})
 
-    def __init__(self, lnd, htlc):
+    def __init__(self, inst, lnd, htlc):
         super(Htlc, self).__init__()
-        channels = lnd.get_channels()
+        inst.channels.get()
+        channels = inst.channels.channels.values()
         if getattr(htlc, "incoming_channel_id") != 0:
             ic = next(
                 iter(c for c in channels if c.chan_id == htlc.incoming_channel_id), None
@@ -52,6 +53,7 @@ class Htlc(Model):
                 self.incoming_channel = lnd.get_alias_from_channel_id(
                     htlc.incoming_channel_id
                 )
+                self.incoming_channel_obj = ic
                 self.incoming_channel_id = htlc.incoming_channel_id
                 self.incoming_channel_capacity = ic.capacity
                 self.incoming_channel_remote_balance = ic.remote_balance
@@ -75,6 +77,7 @@ class Htlc(Model):
                 iter(c for c in channels if c.chan_id == htlc.outgoing_channel_id), None
             )
             if oc:
+                self.outgoing_channel_obj = oc
                 self.outgoing_channel_capacity = oc.capacity
                 self.outgoing_channel_remote_balance = oc.remote_balance
                 self.outgoing_channel_local_balance = oc.local_balance

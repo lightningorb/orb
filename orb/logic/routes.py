@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:41:21
+# @Last Modified time: 2022-01-03 06:42:24
 
 import base64
 
@@ -33,7 +33,7 @@ class Routes:
         self.last_hop_pubkey = last_hop_pubkey
         self.outgoing_chan_id = outgoing_chan_id
         self.fee_limit_msat = fee_limit_msat
-        self.output = Output(lnd)
+        self.output = Output()
 
     def has_next(self):
         self.update_routes()

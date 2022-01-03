@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-01 10:04:26
+# @Last Modified time: 2022-01-03 10:33:35
 
 from threading import Thread
 from time import sleep
@@ -39,9 +39,7 @@ class PayScreen(PopupDropShadow):
     def __init__(self, **kwargs):
         self.in_flight = set([])
         PopupDropShadow.__init__(self, **kwargs)
-        self.output = Output(None)
         lnd = Lnd()
-        self.output.lnd = lnd
         self.chan_id = None
         self.inflight = set([])
 
@@ -81,7 +79,8 @@ class PayScreen(PopupDropShadow):
             def __init__(self, inst, name, thread_n, *args, **kwargs):
                 super(PayThread, self).__init__(*args, **kwargs)
                 self._stop_event = threading.Event()
-                self.name = name
+                # self.name = name
+                self.name = str(thread_n)
                 self.inst = inst
                 self.thread_n = thread_n
                 thread_manager.add_thread(self)
@@ -104,13 +103,22 @@ class PayScreen(PopupDropShadow):
 
                 while not self.stopped():
                     with invoices_lock:
-                        invoices = list(set(self.inst.load()) - self.inst.inflight)
-                        invoice = choice(invoices) if invoices else None
-                        self.inst.inflight.add(invoice)
-                    if not invoices:
-                        print("no more usable invoices")
-                        return
-                    payment_request = Lnd().decode_request(invoice.raw)
+                        all_invoices = self.inst.load()
+                        usable_invoices = list(set(all_invoices) - self.inst.inflight)
+                        invoice = choice(usable_invoices) if usable_invoices else None
+                        if invoice:
+                            self.inst.inflight.add(invoice)
+                    if invoice:
+                        payment_request = Lnd().decode_request(invoice.raw)
+                    else:
+                        if not all_invoices:
+                            print("no more usable invoices")
+                            print(f"THREAD {self.thread_n} EXITING")
+                            return
+                        elif not usable_invoices:
+                            print("all invoices are in-flight, sleeping")
+                            sleep(30)
+                            continue
                     if not auto:
                         chan_id = self.inst.chan_id
                     else:
@@ -128,7 +136,6 @@ class PayScreen(PopupDropShadow):
                     if not chan_id:
                         print("no more channels left to rebalance")
                         sleep(60)
-                    print(f"CHAN: {chan_id}")
                     if chan_id:
                         status = pay_thread(
                             stopped=self.stopped,

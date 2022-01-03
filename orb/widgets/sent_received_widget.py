@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 10:19:33
+# @Last Modified time: 2022-01-02 17:09:41
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
+from kivy.animation import Animation
 
 from orb.math.Vector import Vector
 
@@ -59,7 +60,7 @@ class SentReceivedWidget(Widget):
             Color(*[0.5, 0.5, 1, 1])
             self.received_line = Line(points=[0, 0, 0, 0], width=2)
 
-    def update_rect(self, x, y):
+    def anim_to_pos(self, x, y):
         offset = 0.1
         x += x * offset
         y += y * offset
@@ -70,8 +71,10 @@ class SentReceivedWidget(Widget):
         sAB_norm = (sa - sb).perp().normalized() * 10
         sP1 = sa + sAB_norm
         sP2 = sb + sAB_norm
-        self.sent_line.points = [sP1.x, sP1.y, sP2.x, sP2.y]
         rAB_norm = (ra - rb).perp().normalized() * 10
         rP1 = ra - rAB_norm
         rP2 = rb - rAB_norm
-        self.received_line.points = [rP1.x, rP1.y, rP2.x, rP2.y]
+        Animation(points=[sP1.x, sP1.y, sP2.x, sP2.y], duration=1).start(self.sent_line)
+        Animation(points=[rP1.x, rP1.y, rP2.x, rP2.y], duration=1).start(
+            self.received_line
+        )
