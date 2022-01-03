@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 04:06:34
+# @Last Modified time: 2022-01-03 08:04:48
 
 import os
 
@@ -16,12 +16,21 @@ from kivy.uix.videoplayer import VideoPlayer
 import data_manager
 
 
-class MainLayout(RelativeLayout):
+class MainLayout(BoxLayout):
+    """
+    This is the main layout for the application. Edit with care!
+    We inherit from BoxLayout vertically as the main UI elements are
+    stacked, i.e the TopMenu, the main area, and the status line.
+    """
 
     menu_visible = ObjectProperty()
 
     def __init__(self, *args, **kwargs):
         super(MainLayout, self).__init__(*args, **kwargs)
+        # hack alert: the submenus are pretty buggy, and require
+        # us to build them at the bottom off the screen then moving
+        # them to the top. So we build this widget upside down and
+        # then flip it.
         self.children = self.children[::-1]
         keyboard = Window.request_keyboard(self._keyboard_released, self)
         keyboard.bind(
@@ -35,19 +44,25 @@ class MainLayout(RelativeLayout):
             app = App.get_running_app()
             app.root.ids.app_menu.populate_scripts()
             show_player = False
+            # to test out the video player, change the parent to a RelativeLayout
+            # and uncomment the Scatter in the .kv file.
             if show_player:
                 self.ids.scatter.add_widget(
                     VideoPlayer(
                         size=[800, 500],
-                        source=os.path.expanduser(
-                            "~/Movies/Monosnap/screencast 2021-12-29 17-28-56.mp4"
-                        ),
+                        source=os.path.expanduser("~/Desktop/vids/rankings.mp4"),
                     )
                 )
 
         delayed()
 
     def on_menu_visible(self, *args):
+        """
+        This callback is because Kivy has trouble handling focus
+        with the submenu system. Thus we track when the menu is visible,
+        and all Widgets in the application need to ensure not recieving
+        clicks when the menu is showing.
+        """
         data_manager.menu_visible = self.menu_visible
 
     def _keyboard_released(self, window=None, key=None):
