@@ -2,7 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-02 17:09:41
+# @Last Modified time: 2022-01-03 13:44:22
+
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
@@ -32,49 +33,32 @@ class SentReceivedWidget(Widget):
             self.received = None
             self.sent = None
         else:
-            self.received = (
-                sum(
-                    [
-                        x.amt_in
-                        for x in model.FowardEvent()
-                        .select()
-                        .where(model.FowardEvent.chan_id_in == str(c.chan_id))
-                    ]
-                )
-                / 1e8
+            self.received = sum(
+                [
+                    x.fee
+                    for x in model.FowardEvent()
+                    .select()
+                    .where(model.FowardEvent.chan_id_in == str(c.chan_id))
+                ]
             )
-            self.sent = (
-                sum(
-                    [
-                        x.amt_in
-                        for x in model.FowardEvent()
-                        .select()
-                        .where(model.FowardEvent.chan_id_out == str(c.chan_id))
-                    ]
-                )
-                / 1e8
+            self.sent = sum(
+                [
+                    x.fee
+                    for x in model.FowardEvent()
+                    .select()
+                    .where(model.FowardEvent.chan_id_out == str(c.chan_id))
+                ]
             )
+        alpha = 0.5
         with self.canvas:
-            Color(*[0.5, 1, 0.5, 1])
-            self.sent_line = Line(points=[0, 0, 0, 0], width=2)
-            Color(*[0.5, 0.5, 1, 1])
-            self.received_line = Line(points=[0, 0, 0, 0], width=2)
+            Color(*[0.5, 1, 0.5, alpha])
+            self.lines = []
+            for i in range(int(self.sent / 1_000)):
+                self.lines.append(Line(circle=(0, 0, 0, 0, 0), width=1, cap="none"))
+            Color(*[0.5, 0.5, 1, alpha])
+            for i in range(int(self.received / 100_000)):
+                self.lines.append(Line(circle=(0, 0, 0, 0, 0), width=3, cap="none"))
 
-    def anim_to_pos(self, x, y):
-        offset = 0.1
-        x += x * offset
-        y += y * offset
-        sa = Vector(x, y)
-        sb = Vector(x + x * self.sent, y + y * self.sent)
-        ra = Vector(x, y)
-        rb = Vector(x + x * self.received, y + y * self.received)
-        sAB_norm = (sa - sb).perp().normalized() * 10
-        sP1 = sa + sAB_norm
-        sP2 = sb + sAB_norm
-        rAB_norm = (ra - rb).perp().normalized() * 10
-        rP1 = ra - rAB_norm
-        rP2 = rb - rAB_norm
-        Animation(points=[sP1.x, sP1.y, sP2.x, sP2.y], duration=1).start(self.sent_line)
-        Animation(points=[rP1.x, rP1.y, rP2.x, rP2.y], duration=1).start(
-            self.received_line
-        )
+    def anim_to_pos(self, i, r):
+        for rr, line in enumerate(self.lines):
+            line.circle = (0, 0, r + 100 + (rr * 10), (i * 360) - 2, (i * 360) + 2)

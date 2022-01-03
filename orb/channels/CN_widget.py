@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-02 17:06:31
+# @Last Modified time: 2022-01-03 12:47:07
 import math
 
 from kivy.app import App
@@ -52,4 +52,4 @@ class CNWidget(Widget):
             self.l.anim_to_pos(points)
             self.b.anim_to_pos(pos)
         if self.show_sent_received and self.sent_received_widget:
-            self.sent_received_widget.anim_to_pos(x, y)
+            self.sent_received_widget.anim_to_pos((i / n), self.radius)

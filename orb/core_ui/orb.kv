@@ -31,6 +31,7 @@
     id: main_layout
     menu_visible: any([view_context_menu.visible, scripts_context_menu.visible, app_context_menu.visible, lightning_context_menu.visible, help_context_menu.visible, onchain_context_menu.visible])
     orientation: 'vertical'
+    size_hint: [1, 1]
     canvas.before:
         Color:
             rgba: 35 / 255, 35 / 255, 35 / 255, 1
@@ -40,7 +41,7 @@
     BoxLayout:
         id: box_layout
         orientation: "vertical"
-        size: root.width, root.height
+        size_hint: [1, 1]
         canvas.before:
             Color:
                 rgba: 1, 0, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
