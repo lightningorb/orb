@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:08:22
+# @Last Modified time: 2022-01-03 06:54:28
 
 from threading import Thread
 
@@ -17,6 +17,7 @@ from kivy.uix.widget import Widget
 
 from orb.misc.utils import closest_point_on_line
 from orb.math.Vector import Vector
+from kivy.clock import mainthread
 
 
 from orb.lnd import Lnd
@@ -49,11 +50,16 @@ class FeeWidget(Widget):
             self.policy_to = self.lnd.get_policy_to(self.channel.chan_id)
             self.policy_from = self.lnd.get_policy_from(self.channel.chan_id)
             if self.policy_to:
-                self.to_fee = self.policy_to.fee_rate_milli_msat
-                self.to_fee_norm = min(
-                    int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30
-                )
-                self.from_fee = self.policy_from.fee_rate_milli_msat
+
+                @mainthread
+                def update_attrs():
+                    self.to_fee = self.policy_to.fee_rate_milli_msat
+                    self.to_fee_norm = min(
+                        int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30
+                    )
+                    self.from_fee = self.policy_from.fee_rate_milli_msat
+
+                update_attrs()
 
         with self.canvas.before:
             Color(0.5, 1, 0.5, 1)
