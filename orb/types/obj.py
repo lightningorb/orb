@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 07:23:30
+# @Last Modified time: 2022-01-04 09:24:02
 
 import json
 
@@ -59,9 +59,6 @@ class obj:
     def __init__(self, dict1):
         self.__dict__.update(dict1)
 
-    def __str__(self):
-        return str(self.__dict__)
-
     def get(self, key, default=None):
         return self.__dict__.get(key, default)
 
@@ -77,3 +74,28 @@ def dict2obj(dict1):
     """
     convert_to_num(dict1)
     return json.loads(json.dumps(dict1), object_hook=obj)
+
+
+def todict(obj, classkey=None):
+    if isinstance(obj, dict):
+        data = {}
+        for (k, v) in obj.items():
+            data[k] = todict(v, classkey)
+        return data
+    elif hasattr(obj, "_ast"):
+        return todict(obj._ast())
+    elif hasattr(obj, "__iter__") and not isinstance(obj, str):
+        return [todict(v, classkey) for v in obj]
+    elif hasattr(obj, "__dict__"):
+        data = dict(
+            [
+                (key, todict(value, classkey))
+                for key, value in obj.__dict__.items()
+                if not callable(value) and not key.startswith("_")
+            ]
+        )
+        if classkey is not None and hasattr(obj, "__class__"):
+            data[classkey] = obj.__class__.__name__
+        return data
+    else:
+        return obj

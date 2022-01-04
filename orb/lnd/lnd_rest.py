@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 07:45:17
+# @Last Modified time: 2022-01-04 12:06:40
 
 from functools import lru_cache
 import base64, json, requests
 
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
-from orb.types.obj import dict2obj
+from orb.types.obj import dict2obj, todict
 
 
 class LndREST(LndBase):
@@ -115,27 +115,29 @@ class LndREST(LndBase):
         outgoing_chan_id,
         fee_limit_msat,
     ):
-        if last_hop_pubkey:
-            last_hop_pubkey = base64.b16decode(last_hop_pubkey, True)
-        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}"
+        """
+        https://github.com/lightningnetwork/lnd/issues/6133
+        """
         exit()
-        r = requests.get(
-            url,
-            headers=self.headers,
-            verify=self.cert_path,
-            data=json.dumps(
-                {
-                    "use_mission_control": True,
-                    "last_hop_pubkey": last_hop_pubkey,
-                    "fee_limit.fixed_msat": fee_limit_msat,
-                    "ignored_nodes": [x["from"] for x in ignored_pairs],
-                    "outgoing_chan_id": int(outgoing_chan_id),
-                }
-            ),
-        )
+        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}"
+        obj = {
+            "use_mission_control": True,
+            "last_hop_pubkey": last_hop_pubkey,
+            "fee_limit.fixed_msat": str(fee_limit_msat),
+            # "ignored_nodes": [x["from"] for x in ignored_pairs],
+            "outgoing_chan_id": str(outgoing_chan_id),
+        }
+        data = json.dumps(obj)
+        r = requests.get(url, headers=self.headers, verify=self.cert_path, data=data)
         return dict2obj(r.json()).routes
 
     def send_payment(self, payment_request, route):
+        """
+        SendToRouteV2 attempts to make a payment via the specified route.
+        This method differs from SendPayment in that it allows users to
+        specify a full route manually. This can be used for things like
+        rebalancing, and atomic swaps.
+        """
         last_hop = route.hops[-1]
         last_hop.mpp_record = dict2obj(
             dict(
@@ -146,10 +148,42 @@ class LndREST(LndBase):
         url = f"{self.fqdn}/v2/router/route/send"
         pbytes = self.hex_string_to_bytes(payment_request.payment_hash)
         data = {"payment_hash": base64.b64encode(pbytes).decode(), "route": route}
-        r = requests.post(
-            url, data=json.dumps(data), headers=self.headers, verify=self.cert_path
-        )
+        jdata = json.dumps(todict(data))
+        r = requests.post(url, data=jdata, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
+
+    def router_send(
+        self,
+        pub_key,
+        amount,
+        payment_request,
+        last_hop_pubkey,
+        outgoing_chan_id,
+        fee_limit_msat,
+        payment_request_raw,
+    ):
+        """
+        SendPaymentV2 attempts to route a payment described
+        by the passed PaymentRequest to the final destination.
+        The call returns a stream of payment updates.
+
+        Does not allow for self-payment.
+        """
+        url = f"{self.fqdn}/v2/router/send"
+        data = {
+            "payment_request": payment_request_raw,
+            "timeout_seconds": 120,
+            "fee_limit_msat": int(fee_limit_msat),
+            "outgoing_chan_id": outgoing_chan_id,
+        }
+        r = requests.post(
+            url,
+            headers=self.headers,
+            verify=self.cert_path,
+            stream=True,
+            data=json.dumps(data),
+        )
+        return r
 
     def get_htlc_events(self):
         url = f"{self.fqdn}/v2/router/htlcevents"
@@ -180,32 +214,6 @@ class LndREST(LndBase):
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
 
-    def router_send(
-        self,
-        pub_key,
-        amount,
-        payment_request,
-        last_hop_pubkey,
-        outgoing_chan_id,
-        fee_limit_msat,
-        payment_request_raw,
-    ):
-        url = f"{self.fqdn}/v2/router/send"
-        data = {
-            "payment_request": payment_request_raw,
-            "timeout_seconds": 120,
-            "fee_limit_msat": int(fee_limit_msat),
-            "outgoing_chan_id": outgoing_chan_id,
-        }
-        r = requests.post(
-            url,
-            headers=self.headers,
-            verify=self.cert_path,
-            stream=True,
-            data=json.dumps(data),
-        )
-        return r
-
     def update_channel_policy(self, channel, *args, **kwargs):
         tx, output = channel.channel_point.split(":")
         url = f"{self.fqdn}/v1/chanpolicy"
@@ -226,3 +234,14 @@ class LndREST(LndBase):
             data=json.dumps(dict(reversed=True, num_max_invoices="100")),
         )
         return dict2obj(r.json())
+
+    def generate_invoice(self, memo, amount):
+        url = f"{self.fqdn}/v1/invoices"
+        data = dict(memo=memo, value=amount, expiry=3600)
+        r = requests.post(
+            url, headers=self.headers, verify=self.cert_path, data=json.dumps(data)
+        )
+        add_invoice_response = dict2obj(r.json())
+        return add_invoice_response.payment_request, self.decode_payment_request(
+            add_invoice_response.payment_request
+        )
