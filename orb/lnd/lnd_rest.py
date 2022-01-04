@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 12:06:40
+# @Last Modified time: 2022-01-04 12:20:17
 
 from functools import lru_cache
 import base64, json, requests
@@ -245,3 +245,17 @@ class LndREST(LndBase):
         return add_invoice_response.payment_request, self.decode_payment_request(
             add_invoice_response.payment_request
         )
+
+    def new_address(self):
+        """
+        lncli: newaddress NewAddress creates a new address
+        under control of the local wallet.
+        """
+        return self.__get("/v1/newaddress")
+
+    def __get(self, url, data=None):
+        full_url = f"{self.fqdn}{url}"
+        r = requests.get(
+            full_url, headers=self.headers, verify=self.cert_path, data=data
+        )
+        return dict2obj(r.json())
