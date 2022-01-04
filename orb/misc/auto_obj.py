@@ -2,15 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 09:24:02
+# @Last Modified time: 2022-01-05 06:02:37
 
 import json
 
 
-def convert(data):
+def string_to_num(data):
     """
     Convert the given data to float or int: whichever one
     fits best.
+
+    >>> string_to_num('1')
+    1
+    >>> string_to_num('1.0')
+    1.0
     """
     try:
         f = float(data)
@@ -35,25 +40,31 @@ def convert(data):
     return data
 
 
-def convert_to_num(data):
+def to_num(data):
     """
     Recursively convert any data type to float or int
     if and when appropriate to do so.
+
+    >>> to_num(dict(a='1', b=dict(c='1.0')))['b']['c']
+    1.0
     """
     if type(data) is list:
         for i, v in enumerate(data):
-            data[i] = convert_to_num(v)
+            data[i] = to_num(v)
     elif type(data) is dict:
         for k, v in data.items():
-            data[k] = convert_to_num(v)
+            data[k] = to_num(v)
     elif type(data) is str:
-        return convert(data)
+        return string_to_num(data)
     return data
 
 
-class obj:
+class AutoObj(object):
     """
     Recursively convert given data to objects.
+
+    >>> AutoObj(dict(a='1')).a
+    '1'
     """
 
     def __init__(self, dict1):
@@ -71,12 +82,21 @@ def dict2obj(dict1):
     Recursively convert any data type to float or int
     if and when appropriate to do so. Also convert the
     an object.
+
+    >>> dict2obj(dict(a='1')).a
+    1
     """
-    convert_to_num(dict1)
-    return json.loads(json.dumps(dict1), object_hook=obj)
+    to_num(dict1)
+    return json.loads(json.dumps(dict1), object_hook=AutoObj)
 
 
 def todict(obj, classkey=None):
+    """
+    Recursively convert an object to a dict.
+    >>> obj = AutoObj(dict(a='1'))
+    >>> todict(obj)['a']
+    '1'
+    """
     if isinstance(obj, dict):
         data = {}
         for (k, v) in obj.items():
@@ -99,3 +119,9 @@ def todict(obj, classkey=None):
         return data
     else:
         return obj
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

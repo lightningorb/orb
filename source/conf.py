@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-28 03:12:51
+# @Last Modified time: 2022-01-05 05:28:39
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -18,8 +18,9 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("."))
 sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, os.path.abspath("../orb/lnd"))
+sys.path.insert(0, os.path.abspath("../orb/lnd/grpc_generated"))
 
 # -- Project information -----------------------------------------------------
 

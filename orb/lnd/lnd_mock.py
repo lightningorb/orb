@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:16:18
+# @Last Modified time: 2022-01-05 05:00:18
 
 from collections import namedtuple
 from dataclasses import dataclass
@@ -10,7 +10,7 @@ from typing import Any
 from time import sleep
 from random import choice, randrange
 
-from orb.types.obj import dict2obj
+from orb.misc.auto_obj import dict2obj
 
 M = lambda **kwargs: dict2obj(dict(**kwargs))
 

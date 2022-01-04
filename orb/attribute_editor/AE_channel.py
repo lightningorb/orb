@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:15:27
+# @Last Modified time: 2022-01-05 05:00:12
 
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -12,7 +12,7 @@ from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
 
 from orb.misc.prefs import is_rest
-from orb.types.obj import obj
+from orb.misc.auto_obj import AutoObj
 
 import data_manager
 
@@ -75,7 +75,7 @@ class AEChannel(GridLayout):
                 widget.add_widget(MDCheckbox(active=c[field]))
                 widget.readonly = True
                 self.add_widget(widget)
-            elif type(c[field]) is obj:
+            elif type(c[field]) is AutoObj:
                 self.add_widget(Label(text="         "))
                 self.add_widget(Label(text=field))
                 try:

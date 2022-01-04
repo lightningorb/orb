@@ -12,6 +12,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   orb.misc.auto_obj
    orb.misc.channel
    orb.misc.channels
    orb.misc.colors

@@ -2,17 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:17:09
+# @Last Modified time: 2022-01-05 05:00:39
 import json
 import threading
 from time import sleep
 from traceback import print_exc
-from threading import Lock, Thread
+from threading import Lock
 
 from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
 from orb.logic.thread_manager import thread_manager
-from orb.types.obj import dict2obj
+from orb.misc.auto_obj import dict2obj
 
 db_lock = Lock()
 

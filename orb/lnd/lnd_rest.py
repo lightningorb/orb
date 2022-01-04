@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 12:20:17
+# @Last Modified time: 2022-01-05 05:00:22
 
 from functools import lru_cache
 import base64, json, requests
 
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
-from orb.types.obj import dict2obj, todict
+from orb.misc.auto_obj import dict2obj, todict
 
 
 class LndREST(LndBase):

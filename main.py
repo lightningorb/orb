@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 15:39:02
+# @Last Modified time: 2022-01-05 05:23:04
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -40,6 +40,7 @@ from orb.screens.rankings import Rankings
 from orb.widgets.HUD import HUD
 from orb.dialogs.fee_spy import FeeSpy
 from orb.attribute_editor.AE_fees import AEFees
+from orb.lnd import Lnd
 
 from orb.core_ui.main_layout import MainLayout
 from orb.status_line.status_line import StatusLine
@@ -48,6 +49,7 @@ from orb.logic.cron import cron
 
 keep = lambda _: _
 
+keep(Lnd)
 keep(AttributeEditor)
 keep(ChannelsWidget)
 keep(Rebalance)

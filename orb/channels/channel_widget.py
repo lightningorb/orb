@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 09:52:53
+# @Last Modified time: 2022-01-05 05:16:47
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
