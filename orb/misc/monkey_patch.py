@@ -1,4 +1,16 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-01-04 13:33:42
+
+
 def patch_datatables():
+    """
+    KivyMD's datatables seems to be very buggy.
+    This monkey patch attempts to alleviate some of these
+    bugs & crashes.
+    """
     from kivymd.uix.datatables import TableData
 
     def select_all(self, state):
@@ -62,6 +74,10 @@ def patch_datatables():
 
 
 def patch_settings():
+    """
+    Kivy's settings deal very badly with large inputs.
+    This monkey patch resolves this issue.
+    """
 
     from kivy.uix.settings import SettingItem
     from kivy.uix.label import Label
@@ -80,6 +96,10 @@ def patch_settings():
 
 
 def patch_store():
+    """
+    Make Kivy's JsonStore behave more like a regular
+    python dictionary.
+    """
     from kivy.storage.jsonstore import JsonStore
 
     def get(self, key, default=None):
@@ -93,6 +113,10 @@ def patch_store():
 
 
 def patch_kv_settings():
+    """
+    Kivy hides the app settings if settings are provided.
+    Make sure the app settings are also included in the UI.
+    """
     from kivy.uix.settings import Settings
 
     def add_kivy_panel(self):
@@ -108,6 +132,9 @@ def patch_kv_settings():
 
 
 def patch_text_input():
+    """
+    Disable keyboard shortcuts when a TextInput is focussed.
+    """
     from kivy.uix.textinput import TextInput
     import data_manager
 
