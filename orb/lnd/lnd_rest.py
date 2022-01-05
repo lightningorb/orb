@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:00:22
+# @Last Modified time: 2022-01-05 08:49:32
 
 from functools import lru_cache
 import base64, json, requests
@@ -43,7 +43,6 @@ class LndREST(LndBase):
         )
         return dict2obj(r.json()).channels
 
-    @lru_cache(maxsize=None)
     def get_info(self):
         url = f"{self.fqdn}/v1/getinfo"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
@@ -118,17 +117,9 @@ class LndREST(LndBase):
         """
         https://github.com/lightningnetwork/lnd/issues/6133
         """
-        exit()
-        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}"
-        obj = {
-            "use_mission_control": True,
-            "last_hop_pubkey": last_hop_pubkey,
-            "fee_limit.fixed_msat": str(fee_limit_msat),
-            # "ignored_nodes": [x["from"] for x in ignored_pairs],
-            "outgoing_chan_id": str(outgoing_chan_id),
-        }
-        data = json.dumps(obj)
-        r = requests.get(url, headers=self.headers, verify=self.cert_path, data=data)
+        ignored = ",".join([x["from"] for x in ignored_pairs])
+        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}?use_mission_control=true&last_hop_pubkey={last_hop_pubkey}&fee_limit.fixed_msat={fee_limit_msat}&outgoing_chan_id={outgoing_chan_id}&ignored_nodes={ignored}"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json()).routes
 
     def send_payment(self, payment_request, route):

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:29:45
+# @Last Modified time: 2022-01-05 08:49:26
 import sys
 import base64
 import os
@@ -58,7 +58,6 @@ class LndGRPC(LndBase):
         )
         return combined_credentials
 
-    @lru_cache(maxsize=None)
     def get_info(self):
         return self.stub.GetInfo(ln.GetInfoRequest())
 
