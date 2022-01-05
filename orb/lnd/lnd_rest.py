@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 20:46:13
+# @Last Modified time: 2022-01-06 01:28:00
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -10,6 +10,11 @@ import base64, json, requests, codecs
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from orb.misc.auto_obj import dict2obj, todict
+
+decode_hex = codecs.getdecoder("hex_codec")
+encode_pk = lambda PK: base64.urlsafe_b64encode(
+    b"".join(decode_hex(PK[x : x + 2])[0] for x in range(0, len(PK), 2))
+).decode()
 
 
 class LndREST(LndBase):
@@ -119,15 +124,16 @@ class LndREST(LndBase):
         """
         url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}?use_mission_control=true&fee_limit.fixed_msat={int(fee_limit_msat)}&outgoing_chan_id={outgoing_chan_id}"
         if last_hop_pubkey:
-            decode_hex = codecs.getdecoder("hex_codec")
-            encode_pk = lambda PK: base64.urlsafe_b64encode(
-                b"".join(decode_hex(PK[x : x + 2])[0] for x in range(0, len(PK), 2))
-            ).decode()
+            print(last_hop_pubkey)
             last_hop_pubkey = encode_pk(last_hop_pubkey)
             url += f"&last_hop_pubkey={last_hop_pubkey}"
         if ignored_pairs:
-            ignored = ",".join([encode_pk(x["from"]) for x in ignored_pairs])
-            url += f"&ignored_nodes={ignored}"
+            # todo: encoding isn't correct, but mission control knows
+            # what to do even without the ignored nodes
+            pass
+            # print([x["from"] for x in ignored_pairs])
+            # ignored = ",".join([x["from"].decode() for x in ignored_pairs])
+            #     url += f"&ignored_nodes={ignored}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json()).get("routes")
 
