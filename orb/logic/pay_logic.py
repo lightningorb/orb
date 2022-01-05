@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-01 11:25:08
+# @Last Modified time: 2022-01-05 21:11:53
 
 import json
 import threading
@@ -44,7 +44,7 @@ def handle_error(response, route, routes, pk=None):
     else:
         code = -1000
         failure_source_pubkey = route.hops[-1].pub_key
-    if code == 15:
+    if code in [15, "TEMPORARY_CHANNEL_FAILURE"]:
         print("Temporary channel failure")
         routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
@@ -81,32 +81,6 @@ def handle_error(response, route, routes, pk=None):
 
 
 def pay_thread(
-    stopped,
-    thread_n,
-    fee_rate,
-    payment_request,
-    outgoing_chan_id,
-    last_hop_pubkey,
-    max_paths,
-    payment_request_raw,
-):
-    from orb.misc.prefs import is_rest
-
-    func = pay_thread_rest if is_rest() else pay_thread_grpc
-
-    return func(
-        stopped=stopped,
-        thread_n=thread_n,
-        fee_rate=fee_rate,
-        payment_request=payment_request,
-        outgoing_chan_id=outgoing_chan_id,
-        last_hop_pubkey=last_hop_pubkey,
-        max_paths=max_paths,
-        payment_request_raw=payment_request_raw,
-    )
-
-
-def pay_thread_grpc(
     stopped,
     thread_n,
     fee_rate,
@@ -211,43 +185,4 @@ def pay_thread_grpc(
         print(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes
     print("No more routes found.")
-    return PaymentStatus.none
-
-
-def pay_thread_rest(
-    stopped,
-    thread_n,
-    fee_rate,
-    payment_request,
-    outgoing_chan_id,
-    last_hop_pubkey,
-    max_paths,
-    payment_request_raw,
-):
-    print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
-    fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
-    fee_limit_msat = fee_limit_sat * 1_000
-    print(f"fee_limit_sat: {fee_limit_sat}")
-    print(f"fee_limit_msat: {fee_limit_msat}")
-
-    r = Lnd().router_send(
-        pub_key=payment_request.destination,
-        amount=payment_request.num_satoshis,
-        payment_request=payment_request,
-        last_hop_pubkey=last_hop_pubkey,
-        outgoing_chan_id=outgoing_chan_id,
-        fee_limit_msat=fee_limit_msat,
-        payment_request_raw=payment_request_raw,
-    )
-
-    for raw_response in r.iter_lines():
-        json_response = json.loads(raw_response)
-        print(json_response)
-        # print(raw_response)
-        if "result" in json_response:
-            if json_response["result"]["status"] == "SUCCEEDED":
-                return PaymentStatus.success
-        elif "error" in json_response:
-            if json_response["error"]["message"] == "invoice is already paid":
-                return PaymentStatus.already_paid
     return PaymentStatus.none
