@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 17:41:05
+# @Last Modified time: 2022-01-05 09:54:21
 
 import os
 import sys
@@ -88,6 +88,14 @@ class OrbApp(MDApp):
             console_output(content)
 
         sys.stdout.write = write
+
+    def on_pause(self):
+        # Here you can save data if needed
+        return True
+
+    def on_resume(self):
+        # Here you can check if any data needs replacing (usually nothing)
+        pass
 
     def build(self):
         """
