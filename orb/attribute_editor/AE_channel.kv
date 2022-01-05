@@ -1,0 +1,24 @@
+#:import prefs_col orb.misc.utils.prefs_col
+#:import dp kivy.metrics.dp
+#:import data_manager data_manager
+
+<AEChannel@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    AEFees:
+        channel: root.channel
+    Label:
+        text: 'Pay through channel:'
+        size_hint_y: None
+        height: dp(60)
+    MDSwitch:
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        active: data_manager.data_man.store.get('pay_through_channel', {}).get(str(root.channel.chan_id), True)
+        on_active: root.pay_through_channel(self.active)
+        size_hint_y: None
+        height: dp(50)
+    MDTextField:
+        text: data_manager.data_man.store.get('balanced_ratio', {}).get(str(root.channel.chan_id), '0.5')
+        helper_text: 'balanced ratio (local / capacity)'
+        helper_text_mode: "persistent"
+        on_text_validate: root.on_balanced_ratio(self.text)

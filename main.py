@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:23:04
+# @Last Modified time: 2022-01-05 19:26:48
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -22,7 +22,6 @@ Window.maximize()
 
 from orb.core_ui.orb_app import OrbApp
 
-from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.screens.close_channel import CloseChannel
 from orb.screens.rebalance import Rebalance
@@ -50,7 +49,6 @@ from orb.logic.cron import cron
 keep = lambda _: _
 
 keep(Lnd)
-keep(AttributeEditor)
 keep(ChannelsWidget)
 keep(Rebalance)
 keep(CloseChannel)

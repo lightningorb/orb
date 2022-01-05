@@ -2,19 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:25:48
+# @Last Modified time: 2022-01-05 19:23:23
 
 from threading import Thread
 
 from kivy.clock import mainthread
 from kivy.properties import ObjectProperty, NumericProperty
-from kivy.uix.widget import Widget
+from kivy.uix.boxlayout import BoxLayout
 
 from orb.misc.decorators import guarded
 from orb.lnd import Lnd
 
 
-class AEFees(Widget):
+class AEFees(BoxLayout):
     """
     This class displays and modifies fees on Channels in the
     :py:mod:`orb.attribute_editor.attribute_editor` class.
@@ -49,8 +49,10 @@ class AEFees(Widget):
                 self.max_htlc_msat = policy_to.max_htlc_msat
                 self.last_update = policy_to.last_update
                 self.fee_base_msat = policy_to.fee_base_msat
+                self.size_hint_y = None
 
             def get_fees():
+                self.height = sum(x.height for x in self.children)
                 policy_to = Lnd().get_policy_to(channel.chan_id)
                 if policy_to:
                     update(policy_to)

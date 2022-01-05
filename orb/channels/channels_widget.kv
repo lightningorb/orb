@@ -1,6 +1,3 @@
-#:import prefs_col orb.misc.utils.prefs_col
-
-
 <ChannelsWidget>:
     size_hint: 3, 3
     pos: [-self.width/10, -self.height/10]
@@ -21,24 +18,9 @@
                 pos: self.pos
                 size: self.size
 
-<ChannelsScreen>:
-    name: 'channels'
-    FloatLayout:
-        canvas:
-            Color:
-                rgba: prefs_col('display.channels_background_color')
-            Rectangle:
-                size: self.size
-                pos: self.pos
-        RelativeLayout:
-            id: cw_layout
-        AttributeEditor:
-            id: attribute_editor
-            pos: (root.width - self.width, 0)
-            size_hint_x: 0.2
-    HUD:
-        id: hud
 
 <ChannelWidget>:
 
 <FeeWidget>:
+
+

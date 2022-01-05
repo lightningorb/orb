@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:05:47
+# @Last Modified time: 2022-01-05 16:50:11
 
 from threading import Thread
 
@@ -37,10 +37,8 @@ class Node(Button):
 
     def on_release(self):
         self.col = prefs_col("display.node_selected_background_color")
-        ae = self.attribute_editor
-        ae.selection = self.text
         if self.channel:
-            ae.channel = self.channel
+            self.attribute_editor.channel = self.channel
 
     def on_press(self):
         self.col = prefs_col("display.node_selected_background_color")

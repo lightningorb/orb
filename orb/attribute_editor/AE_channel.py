@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:00:12
+# @Last Modified time: 2022-01-05 19:38:24
 
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -10,6 +10,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
+from kivy.metrics import dp
 
 from orb.misc.prefs import is_rest
 from orb.misc.auto_obj import AutoObj
@@ -36,13 +37,13 @@ class MyMDCheckbox(MDCheckbox):
         return False
 
 
-class AEChannel(GridLayout):
+class AEChannel(BoxLayout):
     """
     The Attributes Editor can display anything (not just channels).
     This is the class for displaying channels.
 
-    :param GridLayout: [description]
-    :type GridLayout: [type]
+    :param BoxLayout: [description]
+    :type BoxLayout: [type]
     """
 
     #: The channel being represented by this instance.
@@ -52,14 +53,12 @@ class AEChannel(GridLayout):
         """
         Class constructor.
         """
-
         super(AEChannel, self).__init__(*args, **kwargs)
-        self.add_widget(Label(text="         "))
-
         if is_rest():
             self.populate_rest()
         else:
             self.populate_grpc()
+        self.height = sum(x.height for x in self.children)
 
     def populate_rest(self):
         """
@@ -68,15 +67,13 @@ class AEChannel(GridLayout):
         c = self.channel.__dict__
         for field in c:
             if type(c[field]) is bool:
-                widget = BoxLayout(
-                    orientation="horizontal", height=100, size_hint_y=None
-                )
+                widget = BoxLayout(orientation="horizontal", size_hint_y=None)
                 widget.add_widget(Label(text=field))
                 widget.add_widget(MDCheckbox(active=c[field]))
                 widget.readonly = True
                 self.add_widget(widget)
+                widget.height = sum(x.height for x in self.children)
             elif type(c[field]) is AutoObj:
-                self.add_widget(Label(text="         "))
                 self.add_widget(Label(text=field))
                 try:
                     for f in c[field]:
@@ -99,7 +96,6 @@ class AEChannel(GridLayout):
                 )
                 self.add_widget(widget)
                 widget.readonly = True
-        self.add_widget(Label(text="         "))
 
     def populate_grpc(self):
         """
@@ -107,15 +103,13 @@ class AEChannel(GridLayout):
         """
         for field in self.channel.ListFields():
             if field[0].type == 8:
-                widget = BoxLayout(
-                    orientation="horizontal", height=100, size_hint_y=None
-                )
+                widget = BoxLayout(orientation="horizontal", size_hint_y=None)
                 widget.add_widget(Label(text=field[0].name))
                 widget.add_widget(MDCheckbox(active=field[1]))
                 self.add_widget(widget)
+                widget.height = sum(x.height for x in widget.children)
             elif field[0].type == 11:
-                self.add_widget(Label(text="         "))
-                self.add_widget(Label(text=field[0].name))
+                self.add_widget(Label(text=field[0].name, height=dp(15)))
                 try:
                     for f in field[1].DESCRIPTOR.fields:
                         widget = MDTextField(
@@ -135,7 +129,6 @@ class AEChannel(GridLayout):
                 )
                 widget.readonly = True
                 self.add_widget(widget)
-        self.add_widget(Label(text="         "))
 
     def pay_through_channel(self, active: bool):
         """

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 09:13:14
+# @Last Modified time: 2022-01-05 16:46:39
 
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
@@ -90,7 +90,8 @@ class ChannelsWidget(ScatterLayout):
             if s:
                 self.apply_transform(Matrix().scale(s, s, s), anchor=touch.pos)
         else:
-            self.attribute_editor.clear()
+            if self.attribute_editor:
+                self.attribute_editor.clear()
             if self.node:
                 self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
             for cn in self.cn.values():
