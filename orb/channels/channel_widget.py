@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:16:47
+# @Last Modified time: 2022-01-06 01:06:31
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -24,15 +24,18 @@ from orb.misc.prefs import inverted_channels
 class ChannelWidget(Widget):
     """
     This is the Channel line ------------ between two nodes.
+    The actual line Segments are implemented by the Segment class.
+    It also handles animating the 1M sat circles as HTLCs occur,
+    and flashing the channel.
     """
 
-    local_line_col = ObjectProperty(None)
-    remote_line_col = ObjectProperty(None)
+    #: the channel object
     channel = ObjectProperty("")
 
-    # where the channel starts and ends
+    #: where the channel starts and ends
     points = ListProperty([0, 0, 0, 0])
 
+    #: the girth of the channel
     width = NumericProperty(0)
 
     def __init__(self, **kwargs):
@@ -50,18 +53,10 @@ class ChannelWidget(Widget):
 
         with self.canvas.before:
             self.line_local = Segment(
-                amount=int(self.channel.local_balance),
-                points=[0, 0, 0, 0],
-                width=self.width,
-                cap="none",
-                color=GREEN,
+                amt_sat=int(self.channel.local_balance), width=self.width, color=GREEN
             )
-            self.line_pending = Segment(
-                points=[0, 0, 0, 0], width=self.width, cap="none", color=ORANGE
-            )
-            self.line_remote = Segment(
-                points=[0, 0, 0, 0], width=self.width, cap="none", color=BLUE
-            )
+            self.line_pending = Segment(width=self.width, color=ORANGE)
+            self.line_remote = Segment(width=self.width, color=BLUE)
             self.anim_col = Color(0.5, 1, 0.5, 1)
             self.anim_rect = RoundedRectangle(
                 pos=[-1000, -1000], size=[0, 0], radius=[5]
@@ -123,7 +118,7 @@ class ChannelWidget(Widget):
         self.line_remote.line.points = [cb[0], cb[1], b[0], b[1]]
         self.to_fee.set_points(a, b, c)
         self.a, self.b, self.c = a, b, c
-        self.line_local.update_rect(amount=self.channel.local_balance)
+        self.line_local.update_rect(amt_sat=self.channel.local_balance)
         self.line_pending.update_rect()
         self.line_remote.update_rect()
 
@@ -131,7 +126,7 @@ class ChannelWidget(Widget):
         start, end = (
             self.c,
             self.b,
-        )  # (self.b, self.c) if inverted_channels else (self.c, self.b)
+        )
         anim = Animation(pos=start, size=(s, s), duration=0)
         anim += Animation(pos=end, size=(s, s), duration=0.4)
         anim += Animation(pos=end, size=(1, 1), duration=0)
@@ -145,7 +140,7 @@ class ChannelWidget(Widget):
         start, end = (
             self.b,
             self.c,
-        )  # (self.c, self.b) if inverted_channels else (self.c, self.b)
+        )
         anim = Animation(pos=start, size=(s, s), duration=0)
         anim += Animation(pos=end, size=(s, s), duration=0.4)
         anim.start(self.anim_rect)
