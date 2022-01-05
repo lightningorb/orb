@@ -1,4 +1,5 @@
 #:import prefs_col orb.misc.utils.prefs_col
+#:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
 
 <BorderedLabel>:
@@ -81,16 +82,15 @@
 <HUD7>:
     size_hint: [None, None]
     size: [200, (int(len(self.children) / 6) + 1) * dp(30)]
-    padding: dp(10), dp(10)
-    spacing: dp(10)
+    background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
+            rgba: prefs_col('display.channels_background_color')
         Rectangle:
             size: self.size
             pos: self.pos
         Color:
-            rgba: .6, .6, .8, root.alpha
+            rgba: .6, .6, .8, 1
         Line:
             points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
             width: 1
@@ -103,7 +103,6 @@
         Line:
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
-
 
 <HUD8>:
     size_hint: [None, None]

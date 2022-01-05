@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:29:44
+# @Last Modified time: 2022-01-05 09:59:04
 
 import threading
 import requests
@@ -14,6 +14,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
+from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
@@ -26,6 +27,7 @@ from orb.misc import mempool
 from orb.misc.forex import forex
 from orb.logic.thread_manager import thread_manager
 from orb.lnd import Lnd
+from orb.misc.utils import pref
 
 import data_manager
 
@@ -271,34 +273,57 @@ class HUD6(GridLayout, Hideable):
                 self.add_widget(ThreadWidget(thread=t))
 
 
-class HUD7(BorderedLabel):
+class HUD7(Button):
     """
     Connected HUD
     """
 
     def __init__(self, *args, **kwargs):
-        BorderedLabel.__init__(self, *args, **kwargs)
-        Clock.schedule_interval(self.check_connection, 60)
+        Button.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.check_connection, 10)
         Clock.schedule_once(self.check_connection, 1)
+
+    def on_release(self, *args, **kwargs):
+        from kivy.app import App
+        from orb.misc.prefs import is_rest
+
+        app = App.get_running_app()
+        app.config.set("lnd", "protocol", "grpc" if is_rest() else "rest")
+        self.text = pref("lnd.protocol")
 
     @guarded
     def check_connection(self, *_):
+        import ctypes
+        import time
+
         @mainthread
         def update_gui(text):
             self.text = text
-            self.show()
 
-        @guarded
+        data = {"success": False}
+
         def func():
-            try:
-                requests.get(
-                    "https://api.coindesk.com/v1/bpi/currentprice.json", timeout=5
+            def inner_func():
+                data["success"] = False
+                try:
+                    Lnd().get_info()
+                    update_gui(f"{pref('lnd.protocol')} connected")
+                    data["success"] = True
+                except:
+                    data["success"] = False
+                    update_gui(f"{pref('lnd.protocol')} offline")
+
+            thread = threading.Thread(target=inner_func)
+            thread.start()
+            time.sleep(5)
+            if not data["success"]:
+                update_gui(f"{pref('lnd.protocol')} offline")
+                ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                    ctypes.c_long(thread.ident), ctypes.py_object(SystemExit)
                 )
-                update_gui("connected")
-            except:
-                update_gui("offline")
 
         threading.Thread(target=func).start()
+
 
 
 class HUD8(BorderedLabel):
