@@ -2,12 +2,21 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 07:44:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:52:22
+# @Last Modified time: 2022-01-06 20:02:33
+
 """
 Get the total balance for the node.
 """
 
 from orb.lnd import Lnd
+
+from orb.misc.plugin import Plugin
+
+Plugin().install(
+    script_name="global_ratio.py",
+    menu="node > global ratio",
+    uuid="0a4f7d20-ad6c-4b1a-8320-fdd819a44dee",
+)
 
 
 def main():

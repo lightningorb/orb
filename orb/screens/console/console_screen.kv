@@ -1,7 +1,36 @@
-########################################################################################
-# CONSOLE SCREEN
-########################################################################################
+#:import dp kivy.metrics.dp
+#:import App kivy.app.App
+#:import os os
 
+<ConsoleFileChooser>:
+    title: 'Open File'
+    size_hint: [.7,.7]
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        FileChooserIconView:
+            size_hint: [1,1]
+            id: filechooser
+            path: App.get_running_app().user_data_dir
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: None, None
+            height: dp(30)
+            MDRaisedButton:
+                text: 'Open'
+                size_hint_x: None
+                width: 30
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
+            MDRaisedButton:
+                text: 'Cancel'
+                size_hint_x: None
+                width: 30
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.dismiss()
 <ConsoleInput>:
     id: text_input
     disabled: False

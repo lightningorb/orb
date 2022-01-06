@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:34:24
+# @Last Modified time: 2022-01-06 22:02:32
 import sys
 from traceback import format_exc
 from io import StringIO
@@ -13,6 +13,7 @@ from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
 
+from orb.store.scripts import scripts, Script, load_scripts
 
 import data_manager
 
@@ -23,9 +24,10 @@ class TopMenu(AppMenu):
     view_widgets = []
 
     def populate_scripts(self):
-        scripts = data_manager.data_man.store.get("scripts", {})
+        scripts = load_scripts()
         scripts = {
-            ">".join([x.strip() for x in k.split(">")]): v for k, v in scripts.items()
+            ">".join([x.strip() for x in v.menu.split(">")]): v
+            for v in scripts.values()
         }
         menu = [x for x in self.children if x.text.lower() == "scripts"][0]
 
@@ -51,7 +53,7 @@ class TopMenu(AppMenu):
                 def run(self, *args):
                     app = App.get_running_app()
                     app.root.ids.app_menu.close_all()
-                    tm.exec(scripts[self.full_name])
+                    tm.exec(scripts[self.full_name].code)
                     return True
 
                 widget = ContextMenuTextItem(text=c[d], on_release=run)
@@ -98,6 +100,8 @@ class TopMenu(AppMenu):
             ContextMenuTextItem(text="Run", on_release=cbs.run),
             ContextMenuTextItem(text="Install", on_release=cbs.install),
             ContextMenuTextItem(text="Delete", on_release=cbs.delete),
+            ContextMenuDivider(),
+            ContextMenuTextItem(text="Load", on_release=cbs.open_file),
             ContextMenuDivider(),
             ContextMenuTextItem(text="Clear Input", on_release=cbs.clear_input),
             ContextMenuTextItem(text="Clear Output", on_release=cbs.clear_output),

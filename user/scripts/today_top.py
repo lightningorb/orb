@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-03 11:27:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 11:42:36
+# @Last Modified time: 2022-01-06 20:10:01
 
 from collections import defaultdict
 
@@ -12,6 +12,15 @@ from kivy.metrics import dp
 
 from orb.store import model
 from orb.lnd import Lnd
+
+
+from orb.misc.plugin import Plugin
+
+Plugin().install(
+    script_name="today_top.py",
+    menu="routing > today top",
+    uuid="05d24c8e-b6eb-4f0a-937d-d5dce68a89d4",
+)
 
 
 def main():

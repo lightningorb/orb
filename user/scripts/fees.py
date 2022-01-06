@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-02 07:17:25
+# @Last Modified time: 2022-01-06 22:28:06
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -17,6 +17,8 @@ import arrow
 
 from kivy.clock import Clock
 from threading import Thread
+
+from kivy.app import App
 
 from orb.store import model
 from orb.math.lerp import lerp
@@ -243,7 +245,8 @@ class Fees(Thread):
             if os.path.exists(x)
             else {}
         )
-        obj = load("fees.yaml")
+        user_data_dir = App.get_running_app().user_data_dir
+        obj = load(os.path.join(user_data_dir, "scripts", "fees.yaml"))
         obj_meta = load("fees_meta.yaml")
         meta = {x.chan_id: x for x in obj_meta.get("meta", [])}
         chans = Lnd().get_channels()
@@ -270,7 +273,10 @@ class Fees(Thread):
         obj_meta["meta"] = sorted(
             [*set([*meta.values()])], key=lambda x: (x.ratio or 0), reverse=True
         )
-        with open("fees_meta.yaml", "w") as stream:
+        user_data_dir = App.get_running_app().user_data_dir
+        with open(
+            os.path.join(user_data_dir, "scripts", "fees_meta.yaml"), "w"
+        ) as stream:
             stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
 
     def run(self, *_):

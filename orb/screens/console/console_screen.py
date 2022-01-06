@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 06:57:42
+# @Last Modified time: 2022-01-07 06:40:52
 
 import os
 import sys
@@ -23,10 +23,17 @@ from kivy.uix.codeinput import CodeInput
 from kivy.uix.videoplayer import VideoPlayer
 
 from orb.screens.console.console_splitter import *
+from orb.store.scripts import Script, save_scripts, load_scripts
+from orb.components.popup_drop_shadow import PopupDropShadow
 
 from kivy.utils import platform
 
 ios = platform == "ios"
+
+
+class ConsoleFileChooser(PopupDropShadow):
+
+    selected_path = StringProperty("")
 
 
 class ConsoleScreen(Screen):
@@ -139,6 +146,16 @@ class ConsoleInput(CodeInput):
     def run(self, *_):
         self.exec(self.text)
 
+    def open_file(self, *_):
+        dialog = ConsoleFileChooser()
+        dialog.open()
+
+        def do_open(widget, path):
+            print(f"opening {path}")
+            self.text = open(path).read()
+
+        dialog.bind(selected_path=do_open)
+
     def load(self, *_):
         inst = LoadScript()
         import data_manager
@@ -165,12 +182,23 @@ class ConsoleInput(CodeInput):
         import data_manager
 
         def do_install(_, *__):
-            sc = data_manager.data_man.store.get("scripts", {})
             script_name = ">".join(
                 x.strip() for x in inst.ids.script_name.text.split(">")
             )
-            sc[script_name] = self.text
-            data_manager.data_man.store.put("scripts", **sc)
+            code = self.text
+            scripts = load_scripts()
+            existing = next(
+                iter([x for x in scripts if scripts[x].menu == script_name]), None
+            )
+            if existing:
+                scripts[existing.uuid].code = code
+            else:
+                import uuid
+
+                uid = str(uuid.uuid4())
+                scripts[uid] = Script(code=code, menu=script_name, uuid=uid)
+
+            save_scripts()
             app = App.get_running_app()
             app.root.ids.app_menu.populate_scripts()
             inst.dismiss()
@@ -219,6 +247,7 @@ class ConsoleInput(CodeInput):
         )
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
+        print(keycode, text, modifiers)
         meta = "meta" in modifiers
         direction = (
             keycode[1]

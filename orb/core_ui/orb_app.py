@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 09:54:21
+# @Last Modified time: 2022-01-06 22:38:04
 
 import os
 import sys
@@ -20,6 +20,10 @@ from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.misc.ui_actions import console_output
+from kivy.utils import platform
+from orb.misc.utils import pref
+
+ios = platform == "ios"
 
 sys.path.append("orb/lnd/grpc_generate")
 sys.path.append("orb/lnd")
@@ -59,12 +63,45 @@ class OrbApp(MDApp):
         # Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
         # Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
 
+    def save_user_scripts(self):
+        """
+        Compile user scripts into a json file, so they make it
+        into the build.
+
+        The second step is to copy them into the users'
+        data directory so the user scripts can be loaded
+        into the script editor.
+        """
+        from glob import glob
+        import json
+
+        user_scripts = {}
+        for g in ["user/scripts/*.py", "fees.yaml", "autobalance.yaml"]:
+            for f in glob(g):
+                user_scripts[f] = open(f).read()
+        if not ios:
+            with open("user_scripts.json", "w") as f:
+                f.write(json.dumps(user_scripts))
+        with open("user_scripts.json") as f:
+            user_scripts = json.loads(f.read())
+            scripts_dir = os.path.join(self.user_data_dir, "scripts")
+            if not os.path.isdir(scripts_dir):
+                os.mkdir(scripts_dir)
+            for path in user_scripts:
+                code = user_scripts[path]
+                dest = os.path.join(
+                    self.user_data_dir, "scripts", os.path.basename(path)
+                )
+                with open(dest, "w") as f:
+                    f.write(code)
+
     def load_user_setup(self):
-        if os.path.exists("user/scripts/user_setup.py"):
+        scripts_dir = os.path.join(self.user_data_dir, "scripts")
+        if os.path.exists(os.path.join(scripts_dir, "user_setup.py")):
             from importlib import __import__
 
             try:
-                __import__("user.scripts.user_setup")
+                __import__("user_setup")
             except:
                 print_exc()
                 print("Unable to load user_setup.py")
@@ -75,10 +112,10 @@ class OrbApp(MDApp):
         thread_manager.thread_manager.stop_threads()
 
     def on_start(self):
+        sys.path.append(os.path.join(self.user_data_dir, "scripts"))
         audio_manager.set_volume()
+        self.save_user_scripts()
         self.load_user_setup()
-
-        import sys
 
         _write = sys.stdout.write
 

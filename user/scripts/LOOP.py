@@ -2,10 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 11:17:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-01 11:20:03
+# @Last Modified time: 2022-01-06 20:08:14
 
 from orb.lnd import Lnd
 import requests
+
+from orb.misc.plugin import Plugin
+
+Plugin().install(
+    script_name="LOOP.py",
+    menu="open > LOOP MAX",
+    uuid="29873ca1-f74e-4cc0-85c7-a8695c14f8d6",
+)
 
 
 def main():

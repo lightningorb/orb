@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 09:55:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:03:55
+# @Last Modified time: 2022-01-06 21:37:07
 """
 Get the total balance for the node.
 """
@@ -10,6 +10,13 @@ Get the total balance for the node.
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from orb.lnd import Lnd
+from orb.misc.plugin import Plugin
+
+Plugin().install(
+    script_name=__file__,
+    menu="node > balance",
+    uuid="7ce3aa4b-9164-4f4d-8955-4b251d55abea",
+)
 
 
 def main():
