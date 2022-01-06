@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 19:26:48
+# @Last Modified time: 2022-01-06 10:53:05
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -22,6 +22,7 @@ Window.maximize()
 
 from orb.core_ui.orb_app import OrbApp
 
+from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.screens.close_channel import CloseChannel
 from orb.screens.rebalance import Rebalance
@@ -38,7 +39,6 @@ from orb.screens.about import About
 from orb.screens.rankings import Rankings
 from orb.widgets.HUD import HUD
 from orb.dialogs.fee_spy import FeeSpy
-from orb.attribute_editor.AE_fees import AEFees
 from orb.lnd import Lnd
 
 from orb.core_ui.main_layout import MainLayout
@@ -69,7 +69,6 @@ keep(StatusLine)
 keep(TopMenu)
 keep(HUD)
 keep(MailScreen)
-keep(AEFees)
 keep(cron)
 
 if __name__ == "__main__":

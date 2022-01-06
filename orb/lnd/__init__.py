@@ -4,4 +4,4 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2021-12-31 05:22:58
 
-from lnd import Lnd
+from orb.lnd.lnd import Lnd

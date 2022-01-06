@@ -17,42 +17,10 @@
                 anchor: "right"
                 id: nav_drawer
                 md_bg_color: 1, .3, .4, (0.1 * (app.config['debug']['layouts'] == '1'))
-                ContentNavigationDrawer:
+                AttributeEditor:
                     id: content_drawer
     HUD:
         id: hud
-
-<ContentNavigationDrawer>
-    orientation: "vertical"
-    padding: "8dp"
-    spacing: "8dp"
-
-    AnchorLayout:
-        anchor_x: "right"
-        size_hint_y: None
-        height: avatar.height
-
-        Image:
-            id: avatar
-            size_hint: None, None
-            size: "30dp", "30dp"
-            source: "ln.png"
-
-    MDLabel:
-        text: root.alias
-        font_style: "Button"
-        size_hint_y: None
-        height: self.texture_size[1]
-
-    MDLabel:
-        text: root.identity_pubkey
-        font_style: "Caption"
-        size_hint_y: None
-        height: self.texture_size[1]
-
-    ScrollView:
-        DrawerList:
-            id: md_list
 
 
 <ItemDrawer>
