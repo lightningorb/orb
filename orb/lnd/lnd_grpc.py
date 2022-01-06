@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 08:49:26
+# @Last Modified time: 2022-01-06 18:42:45
 import sys
 import base64
 import os
@@ -318,3 +318,43 @@ class LndGRPC(LndBase):
                 )
 
         return self.router_stub.HtlcInterceptor(request_generator())
+
+    def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
+        import secrets
+        from hashlib import sha256
+
+        secret = secrets.token_bytes(32)
+        hashed_secret = sha256(secret).hexdigest()
+        custom_records = [
+            (5482373484, secret),
+        ]
+        msg = str(msg)
+        if len(msg) > 0:
+            custom_records.append((34349334, bytes.fromhex(msg.encode("utf-8").hex())))
+        for response in self.router_stub.SendPaymentV2(
+            lnrouter.SendPaymentRequest(
+                dest=bytes.fromhex(target_pubkey),
+                dest_custom_records=custom_records,
+                fee_limit_sat=fee_limit,
+                timeout_seconds=timeout,
+                amt=amount,
+                payment_hash=bytes.fromhex(hashed_secret),
+            )
+        ):
+            if response.status == 1:
+                print("In-flight")
+            if response.status == 2:
+                print("Succeeded")
+            if response.status == 3:
+                if response.failure_reason == 1:
+                    print("Failure - Timeout")
+                elif response.failure_reason == 2:
+                    print("Failure - No Route")
+                elif response.failure_reason == 3:
+                    print("Failure - Error")
+                elif response.failure_reason == 4:
+                    print("Failure - Incorrect Payment Details")
+                elif response.failure_reason == 5:
+                    print("Failure Insufficient Balance")
+            if response.status == 0:
+                print("Unknown Error")
