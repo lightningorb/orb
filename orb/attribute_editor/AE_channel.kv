@@ -7,7 +7,8 @@
     size_hint_y: None
     AEFees:
         channel: root.channel
-    Label:
+    ItemDrawer:
+        icon: 'arrow-expand-right'
         text: 'Pay through channel:'
         size_hint_y: None
         height: dp(60)
@@ -17,8 +18,18 @@
         on_active: root.pay_through_channel(self.active)
         size_hint_y: None
         height: dp(50)
+    ItemDrawer:
+        icon: 'chart-bell-curve-cumulative'
+        text: 'Aim for Ratio:'
+        size_hint_y: None
+        height: dp(60)
     MDTextField:
         text: data_manager.data_man.store.get('balanced_ratio', {}).get(str(root.channel.chan_id), '0.5')
         helper_text: 'balanced ratio (local / capacity)'
         helper_text_mode: "persistent"
         on_text_validate: root.on_balanced_ratio(self.text)
+    ItemDrawer:
+        icon: 'abacus'
+        text: 'Attributes:'
+        size_hint_y: None
+        height: dp(60)

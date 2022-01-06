@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 06:02:37
+# @Last Modified time: 2022-01-06 07:20:44
 
 import json
 
@@ -69,6 +69,9 @@ class AutoObj(object):
 
     def __init__(self, dict1):
         self.__dict__.update(dict1)
+
+    def __str__(self):
+        return self.toJSON()
 
     def get(self, key, default=None):
         return self.__dict__.get(key, default)

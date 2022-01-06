@@ -2,18 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 19:38:24
+# @Last Modified time: 2022-01-06 09:26:03
 
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.textfield import MDTextField
 from kivy.metrics import dp
 
 from orb.misc.prefs import is_rest
-from orb.misc.auto_obj import AutoObj
+from orb.misc.auto_obj import AutoObj, todict
 
 import data_manager
 
@@ -64,7 +63,7 @@ class AEChannel(BoxLayout):
         """
         Populate fields when using the REST API.
         """
-        c = self.channel.__dict__
+        c = self.channel.channel.__dict__
         for field in c:
             if type(c[field]) is bool:
                 widget = BoxLayout(orientation="horizontal", size_hint_y=None)
@@ -74,7 +73,7 @@ class AEChannel(BoxLayout):
                 self.add_widget(widget)
                 widget.height = sum(x.height for x in self.children)
             elif type(c[field]) is AutoObj:
-                self.add_widget(Label(text=field))
+                self.add_widget(Label(text=field, height=dp(15)))
                 try:
                     for f in c[field]:
                         widget = MDTextField(

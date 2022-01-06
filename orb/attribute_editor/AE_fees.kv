@@ -4,8 +4,9 @@
     orientation: 'vertical'
     height: dp(0)
     size_hint_y: None
-    Label:
-        text: "Fees:"
+    ItemDrawer:
+        icon: 'boom-gate'
+        text: 'Fees:'
     MDTextField:
         text: str(root.fee_rate_milli_msat)
         helper_text: 'Fee Rate Milli Msat'

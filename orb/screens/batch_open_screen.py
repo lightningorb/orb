@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 06:20:32
+# @Last Modified time: 2022-01-06 02:46:02
 
 import threading
 
@@ -70,7 +70,8 @@ class BatchOpenScreen(PopupDropShadow):
             self.ids.table_layout.clear_widgets()
             self.ids.table_layout.add_widget(
                 MDDataTable(
-                    use_pagination=False,
+                    use_pagination=True,
+                    rows_num=25,
                     check=False,
                     column_data=[("Alias", dp(60)), ("Amount", dp(30))],
                     row_data=[(al, f"{int(am):,}") for al, am in zip(aliases, amounts)],
