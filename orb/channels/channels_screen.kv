@@ -10,17 +10,17 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
+        HUD:
+            id: hud
         RelativeLayout:
             id: cw_layout
         MDNavigationLayout:
             MDNavigationDrawer:
                 anchor: "right"
                 id: nav_drawer
-                md_bg_color: 1, .3, .4, (0.1 * (app.config['debug']['layouts'] == '1'))
+                md_bg_color: 0, 0, 0, 0.5
                 AttributeEditor:
                     id: content_drawer
-    HUD:
-        id: hud
 
 
 <ItemDrawer>

@@ -1,0 +1,46 @@
+#:import prefs_col orb.misc.utils.prefs_col
+
+
+
+<HUD>:
+    anchor_x: 'left'
+    anchor_y: 'top'
+    size_hint: [1, 1]
+    HUDSW
+    HUDNW
+    HUDSE
+    HUDNE
+
+<HUDNW>:
+    anchor_x: 'left'
+    anchor_y: 'top'
+    BoxLayout:
+        pos: root.pos
+        size: root.size
+        orientation: 'vertical'
+        HUDDPI
+        HUDThreadManager
+        HUDProtocol
+        Widget:
+
+<HUDNE>:
+    anchor_x: 'right'
+    anchor_y: 'top'
+    HUDMempool
+
+
+<HUDSW>:
+    anchor_x: 'left'
+    anchor_y: 'bottom'
+    BoxLayout:
+        size_hint: [1, 1]
+        orientation: 'vertical'
+        HUDGlobalRatio
+        HUDFeeSummary
+        HUDBalance
+
+
+<HUDSE>:
+    anchor_x: 'right'
+    anchor_y: 'bottom'
+    HUDBTCPrice

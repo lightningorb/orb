@@ -2,57 +2,37 @@
 #:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
 
-<BorderedLabel>:
-    canvas.before:
-        Color:
-            rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
-        Rectangle:
-            size: self.size
-            pos: self.pos
-        Color:
-            rgba: .6, .6, .8, root.alpha
-        Line:
-            points: [self.pos[0]+self.width, self.pos[1], self.pos[0]+self.width, self.pos[1] + self.height]
-            width: 1
-        Line:
-            points: [self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height]
-            width: 1
-        Line:
-            points: [self.pos[0], self.pos[1], self.pos[0] + self.width, self.pos[1]]
-            width: 1
-        Line:
-            points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
-            width: 1
 
-<HUD1>:
+
+<HUDFeeSummary>:
     id: hud_label
     text: root.hud
     size_hint: [None, None]
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
-<HUD2>:
+<HUDBalance>:
     id: hud_label
     text: root.hud
     size_hint: [None, None]
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
-<HUD3>:
+<HUDDPI>:
     id: hud_label
     text: root.hud
     size_hint: [None, None]
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
-<HUD5>:
+<HUDMempool>:
     id: hud_label
     text: root.hud
     size_hint: [None, None]
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
-<HUD6>:
+<HUDThreadManager>:
     size_hint: [None, None]
     size: [300, (int(len(self.children) / 6) + 1) * dp(30)]
     padding: dp(10)
@@ -79,7 +59,7 @@
             width: 1
 
 
-<HUD7>:
+<HUDProtocol>:
     size_hint: [None, None]
     size: [200, (int(len(self.children) / 6) + 1) * dp(30)]
     background_color: 0,0,0,0
@@ -104,7 +84,7 @@
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
 
-<HUD8>:
+<HUDGlobalRatio>:
     size_hint: [None, None]
     size: [200, (int(len(self.children) / 6) + 1) * dp(30)]
     padding: dp(10), dp(10)
@@ -130,7 +110,7 @@
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
 
-<HUD4>:
+<HUDBTCPrice>:
     size_hint: [None, None]
     size: [300, 150]
     canvas.before:
@@ -181,20 +161,3 @@
         pos: root.pos
         on_release: root.thread.stop()
 
-<HUD>:
-    size_hint: [1, 1]
-    orientation: 'vertical'
-    canvas.before:
-        Color:
-            rgba: 1, 0, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    HUD6
-    HUD5
-    HUD4
-    HUD1
-    HUD2
-    HUD7
-    HUD8
-    HUD3

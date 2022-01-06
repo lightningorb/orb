@@ -6,13 +6,20 @@ orb.widgets package
    :undoc-members:
    :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   orb.widgets.hud
+
 Submodules
 ----------
 
 .. toctree::
    :maxdepth: 4
 
-   orb.widgets.HUD
    orb.widgets.chord_widget
    orb.widgets.node
    orb.widgets.sent_received_widget

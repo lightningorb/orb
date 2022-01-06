@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 10:53:05
+# @Last Modified time: 2022-01-06 15:25:01
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -17,8 +17,6 @@ Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")
 
 Window.maximize()
-
-# Window.fullscreen = True
 
 from orb.core_ui.orb_app import OrbApp
 
@@ -37,9 +35,10 @@ from orb.screens.player_screen import PlayerScreen
 from orb.screens.send_coins import SendCoins
 from orb.screens.about import About
 from orb.screens.rankings import Rankings
-from orb.widgets.HUD import HUD
 from orb.dialogs.fee_spy import FeeSpy
 from orb.lnd import Lnd
+from orb.widgets.hud.HUD import HUD
+from orb.widgets.hud import HUDS
 
 from orb.core_ui.main_layout import MainLayout
 from orb.status_line.status_line import StatusLine
@@ -67,9 +66,11 @@ keep(FeeSpy)
 keep(MainLayout)
 keep(StatusLine)
 keep(TopMenu)
-keep(HUD)
 keep(MailScreen)
 keep(cron)
+keep(AttributeEditor)
+keep(HUD)
+keep(HUDS)
 
 if __name__ == "__main__":
     OrbApp().run()

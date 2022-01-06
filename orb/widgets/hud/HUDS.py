@@ -2,24 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 09:59:04
+# @Last Modified time: 2022-01-06 15:24:03
 
 import threading
 import requests
 
 from kivy.clock import mainthread
-from kivy.graphics.context_instructions import Color
-from kivy.graphics.vertex_instructions import Line
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
-from kivy.properties import NumericProperty
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
 from kivy.uix.widget import Widget
-from kivy.properties import StringProperty
 from kivy.clock import Clock
 
 from orb.misc.decorators import silent, guarded
@@ -30,28 +25,10 @@ from orb.lnd import Lnd
 from orb.misc.utils import pref
 
 import data_manager
+from orb.widgets.hud.hud_common import Hideable, BorderedLabel
 
 
-class Bordered(Widget):
-    pass
-
-
-class Hideable:
-    alpha = NumericProperty(0)
-
-    def show(self):
-        self.alpha = 1
-
-
-class BorderedLabel(Label, Hideable):
-    pass
-
-
-class HUD(BoxLayout):
-    pass
-
-
-class HUD1(BorderedLabel):
+class HUDFeeSummary(BorderedLabel):
     """
     Fee Summary HUD
     """
@@ -82,7 +59,7 @@ class HUD1(BorderedLabel):
         threading.Thread(target=func).start()
 
 
-class HUD2(BorderedLabel):
+class HUDBalance(BorderedLabel):
     """
     Balance HUD
     """
@@ -152,7 +129,7 @@ class HUD2(BorderedLabel):
         threading.Thread(target=func).start()
 
 
-class HUD3(BorderedLabel):
+class HUDDPI(BorderedLabel):
     """
     DPI HUD
     """
@@ -169,7 +146,7 @@ class HUD3(BorderedLabel):
         self.show()
 
 
-class HUD4(FloatLayout, Hideable):
+class HUDBTCPrice(FloatLayout, Hideable):
     """
     BTC Price HUD
     """
@@ -228,7 +205,7 @@ class HUD4(FloatLayout, Hideable):
         threading.Thread(target=func).start()
 
 
-class HUD5(BorderedLabel):
+class HUDMempool(BorderedLabel):
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
@@ -258,7 +235,7 @@ class ThreadWidget(Widget):
     thread = ObjectProperty(None, allownone=True)
 
 
-class HUD6(GridLayout, Hideable):
+class HUDThreadManager(GridLayout, Hideable):
     def __init__(self, *args, **kwargs):
         GridLayout.__init__(self, *args, cols=5, **kwargs)
         self.lock = threading.Lock()
@@ -273,7 +250,7 @@ class HUD6(GridLayout, Hideable):
                 self.add_widget(ThreadWidget(thread=t))
 
 
-class HUD7(Button):
+class HUDProtocol(Button):
     """
     Connected HUD
     """
@@ -325,8 +302,7 @@ class HUD7(Button):
         threading.Thread(target=func).start()
 
 
-
-class HUD8(BorderedLabel):
+class HUDGlobalRatio(BorderedLabel):
     """
     Global Ratio
     """
