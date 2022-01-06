@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 01:28:00
+# @Last Modified time: 2022-01-06 07:37:53
 
 from functools import lru_cache
-import base64, json, requests, codecs
+import base64, json, requests, codecs, binascii
 
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
@@ -222,14 +222,10 @@ class LndREST(LndBase):
 
     def update_channel_policy(self, channel, *args, **kwargs):
         tx, output = channel.channel_point.split(":")
-        url = f"{self.fqdn}/v1/chanpolicy"
         kwargs.update(dict(chan_point=dict(funding_txid_str=tx, output_index=output)))
-        kwargs["global"] = False
-        kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
-        r = requests.post(
-            url, headers=self.headers, verify=self.cert_path, data=json.dumps(kwargs)
-        )
-        return dict2obj(r.json())
+        if kwargs.get("base_fee_msat"):
+            kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
+        return self.__post(url=f"/v1/chanpolicy", data=kwargs)
 
     def list_invoices(self):
         url = f"{self.fqdn}/v1/invoices"
@@ -259,9 +255,33 @@ class LndREST(LndBase):
         """
         return self.__get("/v1/newaddress")
 
-    def __get(self, url, data=None):
+    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
+        """
+        OpenChannelSync is a synchronous version of the OpenChannel
+        RPC call. This call is meant to be consumed by clients to
+        the REST proxy. As with all other sync calls, all byte
+        slices are intended to be populated as hex encoded strings.
+        """
+        url = f"/v1/channels"
+        data = dict(
+            sat_per_vbyte=int(sat_per_vbyte),
+            node_pubkey_string=node_pubkey_string,
+            local_funding_amount=int(amount_sat),
+            push_sat=0,
+            private=False,
+            spend_unconfirmed=False,
+        )
+        return self.__post(url=url, data=data)
+
+    def __get(self, url):
         full_url = f"{self.fqdn}{url}"
+        r = requests.get(full_url, headers=self.headers, verify=self.cert_path)
+        return dict2obj(r.json())
+
+    def __post(self, url, data):
+        full_url = f"{self.fqdn}{url}"
+        jdata = json.dumps(todict(data))
         r = requests.get(
-            full_url, headers=self.headers, verify=self.cert_path, data=data
+            full_url, headers=self.headers, verify=self.cert_path, data=jdata
         )
         return dict2obj(r.json())

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 07:09:14
+# @Last Modified time: 2022-01-06 09:22:40
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -72,3 +72,4 @@ class Channel(EventDispatcher):
         self.commit_fee = channel.commit_fee
         self.unsettled_balance = channel.unsettled_balance
         self.channel_point = channel.channel_point
+        self.channel = channel
