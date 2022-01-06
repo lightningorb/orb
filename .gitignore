@@ -1,3 +1,4 @@
+*.spec
 *.pyc
 *.yaml
 docsbuild
