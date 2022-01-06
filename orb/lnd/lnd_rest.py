@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 07:37:53
+# @Last Modified time: 2022-01-06 16:35:30
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -223,7 +223,7 @@ class LndREST(LndBase):
     def update_channel_policy(self, channel, *args, **kwargs):
         tx, output = channel.channel_point.split(":")
         kwargs.update(dict(chan_point=dict(funding_txid_str=tx, output_index=output)))
-        if kwargs.get("base_fee_msat"):
+        if kwargs.get("base_fee_msat") is not None:
             kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
         return self.__post(url=f"/v1/chanpolicy", data=kwargs)
 
@@ -281,7 +281,8 @@ class LndREST(LndBase):
     def __post(self, url, data):
         full_url = f"{self.fqdn}{url}"
         jdata = json.dumps(todict(data))
-        r = requests.get(
+        r = requests.post(
             full_url, headers=self.headers, verify=self.cert_path, data=jdata
         )
-        return dict2obj(r.json())
+        j = r.json()
+        return dict2obj(j)
