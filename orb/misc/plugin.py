@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 09:42:50
+# @Last Modified time: 2022-01-07 21:24:45
 
 from textwrap import dedent
 from threading import Thread
@@ -38,3 +38,7 @@ class Plugin:
     @property
     def menu(self):
         return None
+
+    @property
+    def autorun(self):
+        return False

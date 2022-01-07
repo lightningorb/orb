@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 08:30:04
+# @Last Modified time: 2022-01-07 21:19:43
 
 from time import sleep
 from kivy.clock import Clock
 from threading import Thread
 
+from orb.misc.stoppable_thread import StoppableThread
 from orb.lnd import Lnd
 from orb.misc.plugin import Plugin
 
@@ -20,11 +21,7 @@ class MaxPolicy:
 max_policy = MaxPolicy.local_balance
 
 
-class UpdateMaxHTLC(Thread):
-    def schedule(self):
-        Clock.schedule_once(lambda _: Thread(target=self.main).start(), 1)
-        Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 10 * 60)
-
+class UpdateMaxHTLC(StoppableThread):
     def main(self, *_):
         for i, c in enumerate(Lnd().get_channels()):
             policy = Lnd().get_policy_to(c.chan_id)
@@ -49,17 +46,26 @@ class UpdateMaxHTLC(Thread):
         print(f"Max HTLC updated")
 
     def run(self, *_):
-        self.schedule()
-        while True:
+        Clock.schedule_once(lambda _: Thread(target=self.main).start(), 1)
+        Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 10 * 60)
+        while not self.stopped():
             sleep(5)
 
 
 class UpdateMaxHTLCPlug(Plugin):
     def main(self):
-        max_htlc = UpdateMaxHTLC()
+        max_htlc = UpdateMaxHTLC(name="M")
         max_htlc.daemon = True
         max_htlc.start()
 
     @property
     def uuid(self):
         return "bf10981e-4238-4db8-b42a-f498b79b35ca"
+
+    @property
+    def menu(self):
+        return "auto > Max HTLCs"
+
+    @property
+    def autorun(self):
+        return True

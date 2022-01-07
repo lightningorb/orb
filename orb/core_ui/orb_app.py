@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 11:21:35
+# @Last Modified time: 2022-01-07 21:23:23
 
 import os
 import sys
@@ -114,7 +114,12 @@ class OrbApp(MDApp):
 
         for cls in Plugin.__subclasses__():
             print(f"{cls.__name__}: {cls.__module__}")
-            cls().install(script_name=f"{cls.__module__}.py", class_name=cls.__name__)
+            plugin_instance = cls()
+            plugin_instance.install(
+                script_name=f"{cls.__module__}.py", class_name=cls.__name__
+            )
+            if plugin_instance.autorun:
+                plugin_instance.main()
 
     def on_stop(self):
         from orb.logic import thread_manager

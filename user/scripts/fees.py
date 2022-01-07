@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 08:36:59
+# @Last Modified time: 2022-01-07 21:20:04
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -17,13 +17,13 @@ import arrow
 
 from kivy.clock import Clock
 from threading import Thread
-
 from kivy.app import App
 
 from orb.store import model
 from orb.math.lerp import lerp
-from orb.logic.normalized_events import get_best_fee
 from orb.misc.plugin import Plugin
+from orb.logic.normalized_events import get_best_fee
+from orb.misc.stoppable_thread import StoppableThread
 from orb.lnd import Lnd
 
 
@@ -234,7 +234,7 @@ def get_dumper():
     return safe_dumper
 
 
-class Fees(Thread):
+class Fees(StoppableThread):
     def schedule(self):
         Clock.schedule_once(lambda _: Thread(target=self.main).start(), 1)
         Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 5 * 60)
@@ -292,5 +292,13 @@ class AutoFees(Plugin):
         auto_fee.start()
 
     @property
+    def menu(self):
+        return "auto > fees"
+
+    @property
     def uuid(self):
         return "892c0205-ff51-499a-84f7-0ff8c097ee5d"
+
+    @property
+    def autorun(self):
+        return True

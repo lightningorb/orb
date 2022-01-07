@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 08:35:09
+# @Last Modified time: 2022-01-07 21:20:00
 
 import os
 import math
@@ -17,6 +17,7 @@ from kivy.clock import Clock
 from orb.misc.utils import pref
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.channel_selector import *
+from orb.misc.stoppable_thread import StoppableThread
 from orb.logic.rebalance_thread import RebalanceThread
 from orb.misc.plugin import Plugin
 from orb.lnd import Lnd
@@ -138,7 +139,7 @@ class Setter:
         return t
 
 
-class Autobalance(Thread):
+class Rebalance(StoppableThread):
     def schedule(self):
         Clock.schedule_interval(
             lambda _: Thread(target=self.do_rebalancing).start(), 60
@@ -212,10 +213,18 @@ class Autobalance(Thread):
 
 class AutoBalance(Plugin):
     def main(self):
-        autobalance = Autobalance()
+        autobalance = Rebalance()
         autobalance.daemon = True
         autobalance.start()
 
     @property
     def uuid(self):
         return "913994a0-5677-45c3-b9e2-f8fbdeabb20d"
+
+    @property
+    def menu(self):
+        return "auto > rebalance"
+
+    @property
+    def autorun(self):
+        return True
