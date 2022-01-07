@@ -24,5 +24,6 @@ Submodules
    orb.misc.output
    orb.misc.plugin
    orb.misc.prefs
+   orb.misc.stoppable_thread
    orb.misc.ui_actions
    orb.misc.utils
