@@ -1,9 +1,7 @@
 google-api-python-client
-simple-chalk
 git+https://github.com/kivy/kivy.git
 qrcode
 grpcio
-yachalk
 kivymd
 kivy_garden.contextmenu
 pygments
@@ -15,6 +13,5 @@ currency-symbols
 forex-python
 colour
 bezier
-pygame
 PyYaml
 ffpyplayer
