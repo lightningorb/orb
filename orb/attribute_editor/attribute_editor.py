@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 14:16:43
+# @Last Modified time: 2022-01-07 11:47:24
 
 from threading import Thread
 
@@ -274,7 +274,7 @@ class AttributeEditor(BoxLayout):
                 widget.readonly = True
                 self.ids.md_list.add_widget(widget)
 
-    def pay_through_channel(self, active):
+    def pay_through_channel(self, active, widget):
         """
         Callback for when the 'pay through channel' checkbox is ticked.
 
@@ -351,17 +351,19 @@ class AttributeEditor(BoxLayout):
                 height=dp(60),
             )
         )
-        self.ids.md_list.add_widget(
-            MDSwitch(
-                pos_hint={"center_x": 0.5, "center_y": 0.5},
-                active=data_manager.data_man.store.get("pay_through_channel", {}).get(
-                    str(self.channel.chan_id if self.channel else ""), True
-                ),
-                on_active=self.pay_through_channel,
-                size_hint_y=None,
-                height=dp(50),
-            )
+
+        ptc = MDSwitch(
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            active=data_manager.data_man.store.get("pay_through_channel", {}).get(
+                str(self.channel.chan_id if self.channel else ""), True
+            ),
+            size_hint_y=None,
+            height=dp(50),
         )
+
+        ptc.bind(active=self.pay_through_channel)
+
+        self.ids.md_list.add_widget(ptc)
         self.ids.md_list.add_widget(
             ItemDrawer(
                 icon="chart-bell-curve-cumulative",
