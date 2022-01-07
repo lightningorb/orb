@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 17:36:07
+# @Last Modified time: 2022-01-07 20:00:09
 
 from orb.misc.utils import pref
 from traceback import print_exc
@@ -26,6 +26,10 @@ def Lnd():
     protocol = pref("lnd.protocol")
 
     if lnd.get(protocol) is None:
+        if protocol == None:
+            from orb.lnd.lnd_mock import LndMock
+
+            lnd[protocol] = LndMock()
         if protocol == Protocol.grpc:
             from orb.lnd.lnd_grpc import LndGRPC
 
