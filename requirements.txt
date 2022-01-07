@@ -1,5 +1,5 @@
 google-api-python-client
-git+https://github.com/kivy/kivy.git
+kivy
 qrcode
 grpcio
 kivymd
