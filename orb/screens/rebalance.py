@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 06:43:04
+# @Last Modified time: 2022-01-08 07:28:18
 
 from traceback import print_exc
 import threading
+from functools import lru_cache
 
 from kivy.clock import mainthread
 
@@ -13,6 +14,11 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.rebalance_thread import RebalanceThread
 from orb.lnd import Lnd
 import data_manager
+
+
+@lru_cache(maxsize=None)
+def alias(lnd, pk):
+    return lnd.get_node_alias(pk)
 
 
 class Rebalance(PopupDropShadow):
@@ -24,20 +30,18 @@ class Rebalance(PopupDropShadow):
         self.alias_to_pk = {}
 
         @mainthread
-        def delayed():
-            channels = data_manager.data_man.channels
-            for c in channels:
-                self.ids.spinner_out_id.values.append(
-                    f"{c.chan_id}: {self.lnd.get_node_alias(c.remote_pubkey)}"
-                )
-                self.ids.spinner_in_id.values.append(
-                    f"{self.lnd.get_node_alias(c.remote_pubkey)}"
-                )
-                self.alias_to_pk[
-                    self.lnd.get_node_alias(c.remote_pubkey)
-                ] = c.remote_pubkey
+        def delayed(chans_pk):
+            self.ids.spinner_out_id.values = chans_pk
+            self.ids.spinner_in_id.values = chans_pk
 
-        delayed()
+        channels = data_manager.data_man.channels
+        self.alias_to_pk = {
+            alias(self.lnd, c.remote_pubkey): c.remote_pubkey for c in channels
+        }
+        chans_pk = [
+            f"{c.chan_id}: {alias(self.lnd, c.remote_pubkey)}" for c in channels
+        ]
+        delayed(chans_pk)
 
     def first_hop_spinner_click(self, chan):
         self.chan_id = int(chan.split(":")[0])

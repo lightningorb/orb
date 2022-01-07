@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 16:50:39
+# @Last Modified time: 2022-01-08 07:25:36
 
 from threading import Thread
 from time import sleep
@@ -10,6 +10,7 @@ import threading
 from collections import Counter
 from random import choice
 from traceback import print_exc
+from functools import lru_cache
 
 from kivy.clock import mainthread
 
@@ -35,6 +36,11 @@ class PaymentUIOption:
     user_selected_first_hop = 1
 
 
+@lru_cache(maxsize=None)
+def alias(lnd, pk):
+    return lnd.get_node_alias(pk)
+
+
 class PayScreen(PopupDropShadow):
     def __init__(self, **kwargs):
         self.in_flight = set([])
@@ -43,14 +49,17 @@ class PayScreen(PopupDropShadow):
         self.chan_id = None
         self.inflight = set([])
 
-        @mainthread
-        def delayed(channels):
-            for c in channels:
-                self.ids.spinner_id.values.append(
-                    f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}"
-                )
+        channels = data_manager.data_man.channels
 
-        threading.Thread(target=lambda: delayed(data_manager.data_man.channels)).start()
+        @mainthread
+        def delayed(chans_pk):
+            self.ids.spinner_id.values = chans_pk
+
+        def func():
+            chans_pk = [f"{c.chan_id}: {alias(lnd, c.remote_pubkey)}" for c in channels]
+            delayed(chans_pk)
+
+        threading.Thread(target=func).start()
 
     def first_hop_spinner_click(self, chan):
         self.chan_id = int(chan.split(":")[0])
