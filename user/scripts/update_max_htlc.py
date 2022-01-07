@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 09:45:55
+# @Last Modified time: 2022-01-07 08:30:04
 
 from time import sleep
 from kivy.clock import Clock
 from threading import Thread
+
 from orb.lnd import Lnd
+from orb.misc.plugin import Plugin
 
 
 class MaxPolicy:
@@ -52,7 +54,12 @@ class UpdateMaxHTLC(Thread):
             sleep(5)
 
 
-def main():
-    max_htlc = UpdateMaxHTLC()
-    max_htlc.daemon = True
-    max_htlc.start()
+class UpdateMaxHTLCPlug(Plugin):
+    def main(self):
+        max_htlc = UpdateMaxHTLC()
+        max_htlc.daemon = True
+        max_htlc.start()
+
+    @property
+    def uuid(self):
+        return "bf10981e-4238-4db8-b42a-f498b79b35ca"

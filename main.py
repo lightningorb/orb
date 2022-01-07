@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 15:25:01
+# @Last Modified time: 2022-01-07 11:21:05
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -11,7 +11,6 @@ import os
 
 sys.path.append(os.path.join("orb", "lnd"))
 sys.path.append(os.path.join("orb", "lnd", "grpc_generated"))
-sys.path.append(os.path.join("user", "scripts"))
 
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")

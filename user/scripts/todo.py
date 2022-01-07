@@ -2,10 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 20:57:31
+# @Last Modified time: 2022-01-07 08:45:12
 
-import os
 from functools import lru_cache
+import os
+
+from peewee import Model, SqliteDatabase, CharField, BooleanField
 
 from kivy.app import App
 from kivy.lang import Builder
@@ -13,15 +15,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
 
-from peewee import Model, SqliteDatabase, CharField, BooleanField
-
 from orb.misc.plugin import Plugin
-
-Plugin().install(
-    script_name="todo.py",
-    menu="todo",
-    uuid="3aa44f15-0afa-407f-8e11-2b5bfadb2ad4",
-)
 
 
 @lru_cache(None)
@@ -103,14 +97,23 @@ class TodoView(Popup):
             self.display_todo(todo)
 
 
-def main():
-    """
-    Main function. The caller must call this.
-    """
-    db = get_db("todo")
-    db.connect()
-    with db:
-        db.create_tables([Todo])
-    Builder.unload_file("user/scripts/todo.kv")
-    Builder.load_file("user/scripts/todo.kv")
-    TodoView().open()
+class Todo(Plugin):
+    def main(self):
+        """
+        Main function. The caller must call this.
+        """
+        db = get_db("todo")
+        db.connect()
+        with db:
+            db.create_tables([Todo])
+        Builder.unload_file("user/scripts/todo.kv")
+        Builder.load_file("user/scripts/todo.kv")
+        TodoView().open()
+
+    @property
+    def menu(self):
+        return "todo"
+
+    @property
+    def uuid(self):
+        return "3aa44f15-0afa-407f-8e11-2b5bfadb2ad4"

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 22:02:32
+# @Last Modified time: 2022-01-07 10:00:14
 import sys
 from traceback import format_exc
 from io import StringIO
@@ -28,6 +28,7 @@ class TopMenu(AppMenu):
         scripts = {
             ">".join([x.strip() for x in v.menu.split(">")]): v
             for v in scripts.values()
+            if v.menu
         }
         menu = [x for x in self.children if x.text.lower() == "scripts"][0]
 
@@ -96,7 +97,6 @@ class TopMenu(AppMenu):
             menu.submenu.remove_widget(widget)
 
         self.view_widgets = [
-            ContextMenuTextItem(text="Load", on_release=cbs.load),
             ContextMenuTextItem(text="Run", on_release=cbs.run),
             ContextMenuTextItem(text="Install", on_release=cbs.install),
             ContextMenuTextItem(text="Delete", on_release=cbs.delete),

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 06:40:52
+# @Last Modified time: 2022-01-07 10:00:04
 
 import os
 import sys
@@ -110,10 +110,6 @@ class DeleteScript(Popup):
     pass
 
 
-class LoadScript(Popup):
-    pass
-
-
 class ConsoleInput(CodeInput):
 
     output = StringProperty("")
@@ -155,26 +151,6 @@ class ConsoleInput(CodeInput):
             self.text = open(path).read()
 
         dialog.bind(selected_path=do_open)
-
-    def load(self, *_):
-        inst = LoadScript()
-        import data_manager
-
-        def do_load(button, *_):
-            sc = data_manager.data_man.store.get("scripts", {})
-            self.text = sc.get(button.text, "")
-            inst.dismiss()
-
-        sc = data_manager.data_man.store.get("scripts", {})
-
-        for name in sc:
-            button = Button(text=name, size_hint=(None, None), size=(480, 40))
-            button.bind(on_release=do_load)
-            inst.ids.grid.add_widget(button)
-
-        inst.open()
-        app = App.get_running_app()
-        app.root.ids.app_menu.close_all()
 
     def install(self, *_):
         inst = InstallScript()

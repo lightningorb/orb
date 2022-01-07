@@ -2,12 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 22:38:04
+# @Last Modified time: 2022-01-07 11:21:35
 
 import os
 import sys
 from pathlib import Path
 from traceback import print_exc
+from importlib import __import__
+from os.path import join
+from glob import glob
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -22,13 +25,17 @@ from orb.core_ui.main_layout import MainLayout
 from orb.misc.ui_actions import console_output
 from kivy.utils import platform
 from orb.misc.utils import pref
+from orb.misc.plugin import Plugin
+import data_manager
 
 ios = platform == "ios"
 
 sys.path.append("orb/lnd/grpc_generate")
 sys.path.append("orb/lnd")
 
-import data_manager
+if not ios:
+    sys.path.append(os.path.join("user", "scripts"))
+
 
 do_monkey_patching()
 is_dev = "main.py" in sys.argv[0]
@@ -72,7 +79,6 @@ class OrbApp(MDApp):
         data directory so the user scripts can be loaded
         into the script editor.
         """
-        from glob import glob
         import json
 
         user_scripts = {}
@@ -88,23 +94,27 @@ class OrbApp(MDApp):
             if not os.path.isdir(scripts_dir):
                 os.mkdir(scripts_dir)
             for path in user_scripts:
-                code = user_scripts[path]
                 dest = os.path.join(
                     self.user_data_dir, "scripts", os.path.basename(path)
                 )
-                with open(dest, "w") as f:
-                    f.write(code)
+                if not os.path.exists(dest):
+                    with open(dest, "w") as f:
+                        f.write(user_scripts[path])
 
     def load_user_setup(self):
         scripts_dir = os.path.join(self.user_data_dir, "scripts")
-        if os.path.exists(os.path.join(scripts_dir, "user_setup.py")):
-            from importlib import __import__
-
+        plugins = {}
+        for plugin_file_path in glob(os.path.join(scripts_dir, "*.py")):
+            plugin_module_name = os.path.basename(os.path.splitext(plugin_file_path)[0])
             try:
-                __import__("user_setup")
+                plugins[plugin_module_name] = __import__(plugin_module_name)
             except:
                 print_exc()
-                print("Unable to load user_setup.py")
+                print(f"Unable to load {plugin_module_name}")
+
+        for cls in Plugin.__subclasses__():
+            print(f"{cls.__name__}: {cls.__module__}")
+            cls().install(script_name=f"{cls.__module__}.py", class_name=cls.__name__)
 
     def on_stop(self):
         from orb.logic import thread_manager

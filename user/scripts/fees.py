@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 22:28:06
+# @Last Modified time: 2022-01-07 08:36:59
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -23,7 +23,7 @@ from kivy.app import App
 from orb.store import model
 from orb.math.lerp import lerp
 from orb.logic.normalized_events import get_best_fee
-
+from orb.misc.plugin import Plugin
 from orb.lnd import Lnd
 
 
@@ -285,7 +285,12 @@ class Fees(Thread):
             sleep(5)
 
 
-def main():
-    auto_fee = Fees()
-    auto_fee.daemon = True
-    auto_fee.start()
+class AutoFees(Plugin):
+    def main(self):
+        auto_fee = Fees()
+        auto_fee.daemon = True
+        auto_fee.start()
+
+    @property
+    def uuid(self):
+        return "892c0205-ff51-499a-84f7-0ff8c097ee5d"
