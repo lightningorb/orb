@@ -110,9 +110,7 @@ sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
 If you succeeded id building kivy with the IOS toolchain, then install all the requirements via toolchain:
 
 ```
-toolchain pip3 install simple-chalk
 toolchain pip3 install qrcode
-toolchain pip3 install yachalk
 toolchain pip3 install kivymd
 toolchain pip3 install kivy_garden.contextmenu
 toolchain pip3 install pygments
@@ -123,12 +121,14 @@ toolchain pip3 install humanize
 toolchain pip3 install currency-symbols
 toolchain pip3 install forex-python
 toolchain pip3 install colour
+toolchain pip3 install PyYaml
+toolchain pip3 install ffpyplayer
 ```
 
 
 You can now create the project:
 ```
-toolchain create orb orb
+toolchain create orb lnorb
 ```
 
 Now assuming this codebase is cloned in `~/dev/orb`
