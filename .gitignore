@@ -4,7 +4,6 @@ user_scripts.json
 *.pyc
 *.yaml
 docsbuild
-makefile
 *.build
 .DS_Store
 tutes

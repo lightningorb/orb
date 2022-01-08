@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 21:23:23
+# @Last Modified time: 2022-01-08 09:49:04
 
 import os
 import sys
@@ -81,13 +81,6 @@ class OrbApp(MDApp):
         """
         import json
 
-        user_scripts = {}
-        for g in ["user/scripts/*.py", "fees.yaml", "autobalance.yaml"]:
-            for f in glob(g):
-                user_scripts[f] = open(f).read()
-        if not ios:
-            with open("user_scripts.json", "w") as f:
-                f.write(json.dumps(user_scripts))
         with open("user_scripts.json") as f:
             user_scripts = json.loads(f.read())
             scripts_dir = os.path.join(self.user_data_dir, "scripts")
