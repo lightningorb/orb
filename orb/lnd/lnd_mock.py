@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:00:18
+# @Last Modified time: 2022-01-08 09:56:33
 
 from collections import namedtuple
 from dataclasses import dataclass
@@ -152,3 +152,6 @@ class LndMock(object):
             forwarding_events = []
 
         return ForwardHistory()
+
+    def update_channel_policy(self, channel, *args, **kwargs):
+        pass

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 21:20:04
+# @Last Modified time: 2022-01-08 09:57:39
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -273,11 +273,13 @@ class Fees(StoppableThread):
         obj_meta["meta"] = sorted(
             [*set([*meta.values()])], key=lambda x: (x.ratio or 0), reverse=True
         )
-        user_data_dir = App.get_running_app().user_data_dir
-        with open(
-            os.path.join(user_data_dir, "scripts", "fees_meta.yaml"), "w"
-        ) as stream:
-            stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
+        app = App.get_running_app()
+        if app:
+            user_data_dir = app.user_data_dir
+            with open(
+                os.path.join(user_data_dir, "scripts", "fees_meta.yaml"), "w"
+            ) as stream:
+                stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
 
     def run(self, *_):
         self.schedule()
