@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 15:28:58
+# @Last Modified time: 2022-01-08 09:55:32
 
 import os
 
@@ -14,7 +14,9 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.core.window import Window, Keyboard
 from kivy.uix.videoplayer import VideoPlayer
 import data_manager
-from kivy.core.window import Window
+from kivy.utils import platform
+
+ios = platform == "ios"
 
 
 class MainLayout(BoxLayout):
@@ -33,13 +35,14 @@ class MainLayout(BoxLayout):
         # them to the top. So we build this widget upside down and
         # then flip it.
         self.children = self.children[::-1]
-        keyboard = Window.request_keyboard(self._keyboard_released, self)
-        keyboard.bind(
-            on_key_down=self._keyboard_on_key_down, on_key_up=self._keyboard_released
-        )
+        if not ios:
+            keyboard = Window.request_keyboard(self._keyboard_released, self)
+            keyboard.bind(
+                on_key_down=self._keyboard_on_key_down,
+                on_key_up=self._keyboard_released,
+            )
         self.super = []
         self.shift = False
-        Window.maximize()
 
         @mainthread
         def delayed():
