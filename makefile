@@ -41,8 +41,12 @@ prep_for_ios:
 
 build_ios: prep_for_ios
 	rm -rf ../lnorb-ios
-	cd .. && toolchain create orb ./orb
+	mkdir -p ../tmp
+	cp -r main.py orb user data_manager.py fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
+	cd .. && toolchain create lnorb ./tmp
 
 update_ios: prep_for_ios
 	python3 orb/scripts/prep_user_scripts.py
+	mv orb.ini /tmp/
 	cd ../ && toolchain update lnorb-ios/
+	mv /tmp/orb.ini .
