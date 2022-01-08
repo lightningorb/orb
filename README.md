@@ -159,5 +159,6 @@ In XCode, make sure you add this to your info.plist:
 
 Supports opening documents in place
 Application supports iTunes file sharing
+Privacy - Camera Usage Description     ->          [enter a reason]
 
 You can now build & launch Kivy on your target IOS device.
