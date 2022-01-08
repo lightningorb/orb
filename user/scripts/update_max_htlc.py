@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 21:19:43
+# @Last Modified time: 2022-01-08 10:29:35
 
 from time import sleep
 from kivy.clock import Clock
@@ -11,6 +11,9 @@ from threading import Thread
 from orb.misc.stoppable_thread import StoppableThread
 from orb.lnd import Lnd
 from orb.misc.plugin import Plugin
+from kivy.utils import platform
+
+ios = platform == "ios"
 
 
 class MaxPolicy:
@@ -68,4 +71,8 @@ class UpdateMaxHTLCPlug(Plugin):
 
     @property
     def autorun(self):
-        return True
+        print("DECIDING IF SHOULD AUTORUN MAX HTLCS")
+        print("IS THIS IOS???")
+        print(ios)
+        print("----------")
+        return not ios
