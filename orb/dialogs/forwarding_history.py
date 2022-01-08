@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:37:10
+# @Last Modified time: 2022-01-08 18:44:07
 
 from collections import defaultdict
 from threading import Thread
 import arrow
-
+from kivy.uix.popup import Popup
+from kivy_garden.graph import Graph, MeshLinePlot, SmoothLinePlot
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
@@ -109,16 +110,21 @@ def sma(data, n=3):
 
 
 def graph_fees_earned():
-    from kivy.uix.popup import Popup
-    from kivy_garden.graph import Graph, MeshLinePlot, SmoothLinePlot
 
     fh = get_forwarding_history()
     buckets = defaultdict(int)
+    today = arrow.get().replace(hour=0, minute=0, second=0).timestamp()
     for f in fh:
-        date = int(
-            arrow.get(f.timestamp).replace(hour=0, minute=0, second=0).timestamp()
-        )
-        buckets[date] += f.fee
+        buckets[
+            int(arrow.get(f.timestamp).replace(hour=0, minute=0, second=0).timestamp())
+        ] += f.fee
+    if not buckets:
+        return
+    last = sorted(buckets.keys(), reverse=True)[0]
+    del buckets[last]
+    if not buckets:
+        return
+
     graph = Graph(
         size_hint=[1, 0.9],
         xlabel="Day",
