@@ -161,4 +161,8 @@ Supports opening documents in place
 Application supports iTunes file sharing
 Privacy - Camera Usage Description     ->          [enter a reason]
 
+Make sure to replace the icon set with a valid one.
+
 You can now build & launch Kivy on your target IOS device.
+
+To upload to apple connect, select build -> archive.
