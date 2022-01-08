@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:20:35
+# @Last Modified time: 2022-01-08 12:52:03
 
 from traceback import print_exc
 
@@ -14,6 +14,7 @@ from kivy.event import EventDispatcher
 from orb.store.db_meta import *
 from orb.misc.channels import Channels
 from orb.lnd.lnd import Lnd
+from orb.misc.utils import pref
 
 
 class DataManager(EventDispatcher):
@@ -57,6 +58,12 @@ class DataManager(EventDispatcher):
         user_data_dir = App.get_running_app().user_data_dir
         with open(os.path.join(user_data_dir, "tls.cert"), "w") as f:
             f.write(cert)
+
+    @staticmethod
+    def ensure_cert():
+        user_data_dir = App.get_running_app().user_data_dir
+        with open(os.path.join(user_data_dir, "tls.cert"), "w") as f:
+            f.write(pref("lnd.tls_certificate"))
 
 
 data_man = None

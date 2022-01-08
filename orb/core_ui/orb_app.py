@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 09:49:04
+# @Last Modified time: 2022-01-08 12:50:56
 
 import os
 import sys
@@ -146,6 +146,7 @@ class OrbApp(MDApp):
         """
         Main build method for the app.
         """
+        data_manager.DataManager.ensure_cert()
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
         self.theme_cls.theme_style = "Dark"
