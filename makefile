@@ -29,7 +29,8 @@ run_app:
 clean: clean_docs
 	rm -rf build dist source/gen
 
-doctest:
+test:
+	PYTHONPATH=. python3 tests/test_certificate.py
 	python3 -m orb.math.Vector -v
 	python3 -m orb.math.lerp -v
 	python3 -m orb.misc.mempool -v
@@ -38,15 +39,14 @@ doctest:
 
 prep_for_ios:
 	python3 orb/scripts/prep_user_scripts.py
+	rm -rf ../tmp
+	mkdir -p ../tmp
+	cp -r main.py orb user data_manager.py fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
 
 build_ios: prep_for_ios
 	rm -rf ../lnorb-ios
-	mkdir -p ../tmp
-	cp -r main.py orb user data_manager.py fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
+	rm -rf ../tmp
 	cd .. && toolchain create lnorb ./tmp
 
 update_ios: prep_for_ios
-	python3 orb/scripts/prep_user_scripts.py
-	mv orb.ini /tmp/
 	cd ../ && toolchain update lnorb-ios/
-	mv /tmp/orb.ini .
