@@ -52,10 +52,10 @@ Encode your macaroon to hex, by running this command in your node's terminal:
 python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
 ```
 
-Next cat your cert:
+Next encode your cert to base64:
 
 ```
-cat ~/.lnd/tls.cert
+python3 -c 'import base64; print(base64.b64encode(open(".lnd/tls.cert").read().encode()).decode())'
 ```
 
 And paste those into orb.

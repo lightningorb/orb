@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 06:16:36
+# @Last Modified time: 2022-01-10 06:13:14
 
 import os
 import sys
@@ -18,6 +18,7 @@ from kivymd.effects import stiffscroll
 from kivy.utils import platform
 
 from orb.misc.monkey_patch import do_monkey_patching
+from kivy.core.window import Window
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
@@ -148,6 +149,8 @@ class OrbApp(MDApp):
         data_manager.DataManager.ensure_cert()
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager(config=self.config)
+        window_sizes = Window.size
+
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
         self.icon = "orb.png"

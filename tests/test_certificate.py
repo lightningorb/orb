@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:44:05
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 10:45:13
+# @Last Modified time: 2022-01-10 05:57:27
 
 import unittest
 from textwrap import dedent
@@ -125,14 +125,12 @@ class TestCertificate(unittest.TestCase):
                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                AAAAAAAAAA=
+                AAAAAAAAAAAAAAAAAAAA=
                 -----END CERTIFICATE-----
                 """
             )
         )
-        self.assertEqual(
-            cert.debug(), "line 12 length is 11. Needs to be 8 characters long"
-        )
+        self.assertEqual(cert.debug(), "Certificate correctly formatted")
 
     def test_badly_formatted_2(self):
         cert = Certificate.init_from_str(
@@ -290,7 +288,7 @@ AAAAAAA=
                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                AAAAAAA=
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
                 -----END CERTIFICATE-----"""
         )
         self.assertEqual(Certificate.init_from_not_sure(text).is_well_formed(), True)

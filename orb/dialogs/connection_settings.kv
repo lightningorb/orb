@@ -1,10 +1,11 @@
 #:import dp kivy.metrics.dp
 #:import pref orb.misc.utils.pref
+#:import Window kivy.core.window.Window
 
 
 <ConnectionSettings>:
     title: 'LND Node Connection Settings'
-    size: (dp(800), dp(500))
+    size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -122,14 +123,14 @@
                 orientation: 'vertical'
                 size_hint: (1, 1)
                 MDLabel:
-                    text: "Enter the TLS Certificate. Orb will make sure it's valid upon saving."
-                    size_hint_y: 0.1
+                    text: "Enter the TLS Certificate in plain text or base64. Orb will make sure it's valid upon saving."
+                    size_hint_y: 0.2
                     multiline: True
                 TextInput:
                     id: tls_cert
                     text: root.get_cert()
                     on_text: root.validate_cert(self.text)
-                    size_hint_y: 0.7
+                    size_hint_y: 0.6
                     multiline: True
                     size_hint: (1, 1)
                 MDLabel:

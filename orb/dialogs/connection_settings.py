@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 12:44:15
+# @Last Modified time: 2022-01-10 06:18:36
 
 import threading
 import re
@@ -60,13 +60,17 @@ class ConnectionSettings(PopupDropShadow):
     def save_cert(self, text):
         key = "lnd.tls_certificate"
         cert = Certificate.init_from_not_sure(text)
-        self.set_and_save(key, cert.reformat())
+        if cert.is_well_formed():
+            self.set_and_save(key, cert.reformat())
+        else:
+            self.ids.feedback.text = cert.debug()
 
     def get_cert(self):
         cert = Certificate.init_from_str(pref("lnd.tls_certificate"))
         if cert.is_well_formed():
             return cert.reformat()
         else:
+            self.ids.feedback.text = cert.debug()
             return ""
 
     def get_macaroon(self):

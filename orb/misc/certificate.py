@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 10:41:51
+# @Last Modified time: 2022-01-10 05:56:28
 
 import re
 import base64
@@ -67,6 +67,6 @@ class Certificate:
             if len(line) != 64:
                 return f"line {i} length is {len(line)}. Needs to be 64 characters long"
         line = lines[12]
-        if len(line) != 8:
-            return f"line 12 length is {len(line)}. Needs to be 8 characters long"
+        if not len(line) <= 64:
+            return f"line 12 length is {len(line)}. Needs to be <= 64 characters long"
         return "Certificate correctly formatted"
