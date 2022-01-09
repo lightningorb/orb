@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 15:24:03
+# @Last Modified time: 2022-01-09 12:58:31
 
 import threading
 import requests
@@ -277,18 +277,22 @@ class HUDProtocol(Button):
         def update_gui(text):
             self.text = text
 
-        data = {"success": False}
+        data = {"success": False, "prev_protocol": pref("lnd.protocol")}
 
         def func():
             def inner_func():
                 data["success"] = False
                 try:
                     Lnd().get_info()
-                    update_gui(f"{pref('lnd.protocol')} connected")
+                    if pref("lnd.protocol") != data["prev_protocol"]:
+                        update_gui(f"connecting")
+                    else:
+                        update_gui(f"{pref('lnd.protocol')} connected")
                     data["success"] = True
                 except:
                     data["success"] = False
                     update_gui(f"{pref('lnd.protocol')} offline")
+                data["prev_protocol"] = pref("lnd.protocol")
 
             thread = threading.Thread(target=inner_func)
             thread.start()
