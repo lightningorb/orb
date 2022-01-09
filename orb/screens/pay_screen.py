@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 07:25:36
+# @Last Modified time: 2022-01-09 15:24:22
 
 from threading import Thread
 from time import sleep
@@ -12,6 +12,7 @@ from random import choice
 from traceback import print_exc
 from functools import lru_cache
 
+import arrow
 from kivy.clock import mainthread
 
 from orb.misc.output import *
@@ -48,8 +49,17 @@ class PayScreen(PopupDropShadow):
         lnd = Lnd()
         self.chan_id = None
         self.inflight = set([])
+        self.inflight_times = {}
 
         channels = data_manager.data_man.channels
+
+        def timeout_inflight_invoices(self):
+            with invoices_lock:
+                remove_from_inflight = set([])
+                for inv in self.inflight:
+                    if arrow.now().timestamp() - self.inflight_times[inv] > 60:
+                        remove_from_inflight.add(inv)
+                self.inflight -= remove_from_inflight
 
         @mainthread
         def delayed(chans_pk):
@@ -88,7 +98,6 @@ class PayScreen(PopupDropShadow):
             def __init__(self, inst, name, thread_n, *args, **kwargs):
                 super(PayThread, self).__init__(*args, **kwargs)
                 self._stop_event = threading.Event()
-                # self.name = name
                 self.name = str(thread_n)
                 self.inst = inst
                 self.thread_n = thread_n
@@ -116,6 +125,7 @@ class PayScreen(PopupDropShadow):
                         usable_invoices = list(set(all_invoices) - self.inst.inflight)
                         invoice = choice(usable_invoices) if usable_invoices else None
                         if invoice:
+                            self.inst.inflight_times[invoice] = arrow.now().timestamp()
                             self.inst.inflight.add(invoice)
                     if invoice:
                         payment_request = Lnd().decode_request(invoice.raw)
