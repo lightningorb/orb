@@ -13,12 +13,14 @@ Submodules
    :maxdepth: 4
 
    orb.misc.auto_obj
+   orb.misc.certificate
    orb.misc.channel
    orb.misc.channels
    orb.misc.colors
    orb.misc.conf_defaults
    orb.misc.decorators
    orb.misc.forex
+   orb.misc.macaroon
    orb.misc.mempool
    orb.misc.monkey_patch
    orb.misc.output

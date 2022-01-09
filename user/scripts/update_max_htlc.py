@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 10:29:35
+# @Last Modified time: 2022-01-09 06:15:47
 
 from time import sleep
 from kivy.clock import Clock
@@ -71,8 +71,4 @@ class UpdateMaxHTLCPlug(Plugin):
 
     @property
     def autorun(self):
-        print("DECIDING IF SHOULD AUTORUN MAX HTLCS")
-        print("IS THIS IOS???")
-        print(ios)
-        print("----------")
         return not ios

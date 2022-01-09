@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 12:50:56
+# @Last Modified time: 2022-01-09 06:16:36
 
 import os
 import sys
@@ -55,7 +55,6 @@ class OrbApp(MDApp):
             "appname": self.name,
             "appdir": self.directory,
         }
-        print(path)
         return path
 
     def load_kvs(self):
@@ -106,7 +105,7 @@ class OrbApp(MDApp):
                 print(f"Unable to load {plugin_module_name}")
 
         for cls in Plugin.__subclasses__():
-            print(f"{cls.__name__}: {cls.__module__}")
+            print(f"Loading plugin: {cls.__name__} (from {cls.__module__})")
             plugin_instance = cls()
             plugin_instance.install(
                 script_name=f"{cls.__module__}.py", class_name=cls.__name__

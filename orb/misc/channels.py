@@ -2,11 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 16:44:57
+# @Last Modified time: 2022-01-09 08:21:39
+
+from traceback import print_exc
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
+
 from orb.misc.channel import Channel
 
 
@@ -49,14 +52,18 @@ class Channels(EventDispatcher):
         """
         Get and sorts channel data.
         """
-        for c in self.lnd.get_channels():
-            chan_id = int(c.chan_id)
-            if chan_id in self.channels:
-                self.channels[chan_id].update(c)
-            else:
-                self.channels[chan_id] = Channel(c)
-        self.sorted_chan_ids = [int(x) for x in self.channels]
-        self.sort_channels()
+        try:
+            for c in self.lnd.get_channels():
+                chan_id = int(c.chan_id)
+                if chan_id in self.channels:
+                    self.channels[chan_id].update(c)
+                else:
+                    self.channels[chan_id] = Channel(c)
+            self.sorted_chan_ids = [int(x) for x in self.channels]
+            self.sort_channels()
+        except:
+            print_exc()
+            print("Failed to get channels")
 
     def sort_channels(self):
         """

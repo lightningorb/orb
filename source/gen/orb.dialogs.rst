@@ -12,6 +12,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   orb.dialogs.connection_settings
    orb.dialogs.fee_distribution
-   orb.dialogs.fee_spy
    orb.dialogs.forwarding_history

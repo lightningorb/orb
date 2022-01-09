@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 20:00:09
+# @Last Modified time: 2022-01-09 10:33:56
 
 from orb.misc.utils import pref
 from traceback import print_exc
 from kivy.app import App
 import os
+
+from orb.misc.certificate import Certificate
 
 lnd = {}
 
@@ -34,8 +36,9 @@ def Lnd():
             from orb.lnd.lnd_grpc import LndGRPC
 
             try:
+                cert = Certificate.init_from_str(pref("lnd.tls_certificate"))
                 lnd[protocol] = LndGRPC(
-                    tls_certificate=pref("lnd.tls_certificate"),
+                    tls_certificate=cert.reformat(),
                     server=pref("lnd.hostname"),
                     network=pref("lnd.network"),
                     macaroon=pref("lnd.macaroon_admin"),

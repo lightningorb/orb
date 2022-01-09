@@ -18,7 +18,7 @@
 #:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
 #:import About orb.screens.about.About
 #:import Rankings orb.screens.rankings.Rankings
-#:import FeeSpy orb.dialogs.fee_spy.FeeSpy
+#:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
 
 #: import webbrowser webbrowser
 ########################################################################################
@@ -150,6 +150,10 @@
             text: "App"
             ContextMenu:
                 id: app_context_menu
+                ContextMenuTextItem:
+                    text: "Connection Settings"
+                    on_press: ConnectionSettings().open()
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Settings"
                     on_press: app_menu.close_all()

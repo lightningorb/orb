@@ -13,4 +13,5 @@ Submodules
    :maxdepth: 4
 
    orb.scripts.fee_spy
+   orb.scripts.prep_user_scripts
    orb.scripts.test_connection

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 11:21:05
+# @Last Modified time: 2022-01-09 05:24:38
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -34,7 +34,7 @@ from orb.screens.player_screen import PlayerScreen
 from orb.screens.send_coins import SendCoins
 from orb.screens.about import About
 from orb.screens.rankings import Rankings
-from orb.dialogs.fee_spy import FeeSpy
+from orb.dialogs.connection_settings import ConnectionSettings
 from orb.lnd import Lnd
 from orb.widgets.hud.HUD import HUD
 from orb.widgets.hud import HUDS
@@ -61,7 +61,6 @@ keep(PlayerScreen)
 keep(SendCoins)
 keep(About)
 keep(Rankings)
-keep(FeeSpy)
 keep(MainLayout)
 keep(StatusLine)
 keep(TopMenu)
@@ -70,6 +69,7 @@ keep(cron)
 keep(AttributeEditor)
 keep(HUD)
 keep(HUDS)
+keep(ConnectionSettings)
 
 if __name__ == "__main__":
     OrbApp().run()

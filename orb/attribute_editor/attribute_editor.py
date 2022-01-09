@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 11:47:24
+# @Last Modified time: 2022-01-09 08:24:31
 
 from threading import Thread
 
@@ -77,9 +77,14 @@ class AttributeEditor(BoxLayout):
         Class constructor.
         """
         super(AttributeEditor, self).__init__(*args, **kwargs)
-        info = Lnd().get_info()
-        self.alias = info.alias
-        self.identity_pubkey = info.identity_pubkey
+        lnd = Lnd()
+        try:
+            info = lnd.get_info()
+            self.alias = info.alias
+            self.identity_pubkey = info.identity_pubkey
+        except:
+            self.alias = "offline"
+            self.identity_pubkey = "offline"
 
     def clear(self):
         """
