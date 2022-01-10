@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 08:31:00
+# @Last Modified time: 2022-01-10 14:47:13
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -247,6 +247,8 @@ class Fees(StoppableThread):
         )
         user_data_dir = App.get_running_app().user_data_dir
         obj = load(os.path.join(user_data_dir, "scripts", "fees.yaml"))
+        if not obj:
+            return
         obj_meta = load("fees_meta.yaml")
         meta = {x.chan_id: x for x in obj_meta.get("meta", [])}
         chans = Lnd().get_channels()

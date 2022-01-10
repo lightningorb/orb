@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 09:23:22
+# @Last Modified time: 2022-01-10 14:42:16
 
 import os
 import sys
+import json
 from pathlib import Path
 from traceback import print_exc
 from importlib import __import__
@@ -16,17 +17,18 @@ from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivymd.effects import stiffscroll
 from kivy.utils import platform
+from kivy.core.window import Window
+from kivy.utils import platform
 
 from orb.misc.monkey_patch import do_monkey_patching
-from kivy.core.window import Window
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.misc.ui_actions import console_output
-from kivy.utils import platform
 from orb.misc.utils import pref
 from orb.misc.plugin import Plugin
+
 import data_manager
 
 ios = platform == "ios"
@@ -70,7 +72,26 @@ class OrbApp(MDApp):
         # Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
         # Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
 
-    def load_user_setup(self):
+    def save_user_scripts(self):
+        """
+        Load the scripts from 'user_scripts.json' and save the
+        scripts in the users's user_data_dir.
+        """
+
+        if os.path.exists("user_scripts.json"):
+            with open("user_scripts.json") as f:
+                user_scripts = json.loads(f.read())
+                scripts_dir = os.path.join(self.user_data_dir, "scripts")
+                if not os.path.isdir(scripts_dir):
+                    os.mkdir(scripts_dir)
+                for path in user_scripts:
+                    dest = os.path.join(
+                        self.user_data_dir, "scripts", os.path.basename(path)
+                    )
+                    with open(dest, "w") as f:
+                        f.write(user_scripts[path])
+
+    def load_user_scripts(self):
         scripts_dir = os.path.join(self.user_data_dir, "scripts")
         plugins = {}
         for plugin_file_path in glob(os.path.join(scripts_dir, "*.py")):
@@ -98,7 +119,8 @@ class OrbApp(MDApp):
     def on_start(self):
         sys.path.append(os.path.join(self.user_data_dir, "scripts"))
         audio_manager.set_volume()
-        self.load_user_setup()
+        self.save_user_scripts()
+        self.load_user_scripts()
 
         _write = sys.stdout.write
 
