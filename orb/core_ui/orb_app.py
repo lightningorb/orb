@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 06:13:14
+# @Last Modified time: 2022-01-10 09:23:22
 
 import os
 import sys
@@ -70,30 +70,6 @@ class OrbApp(MDApp):
         # Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
         # Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
 
-    def save_user_scripts(self):
-        """
-        Compile user scripts into a json file, so they make it
-        into the build.
-
-        The second step is to copy them into the users'
-        data directory so the user scripts can be loaded
-        into the script editor.
-        """
-        import json
-
-        with open("user_scripts.json") as f:
-            user_scripts = json.loads(f.read())
-            scripts_dir = os.path.join(self.user_data_dir, "scripts")
-            if not os.path.isdir(scripts_dir):
-                os.mkdir(scripts_dir)
-            for path in user_scripts:
-                dest = os.path.join(
-                    self.user_data_dir, "scripts", os.path.basename(path)
-                )
-                if not os.path.exists(dest):
-                    with open(dest, "w") as f:
-                        f.write(user_scripts[path])
-
     def load_user_setup(self):
         scripts_dir = os.path.join(self.user_data_dir, "scripts")
         plugins = {}
@@ -122,7 +98,6 @@ class OrbApp(MDApp):
     def on_start(self):
         sys.path.append(os.path.join(self.user_data_dir, "scripts"))
         audio_manager.set_volume()
-        self.save_user_scripts()
         self.load_user_setup()
 
         _write = sys.stdout.write
