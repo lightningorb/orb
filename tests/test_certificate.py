@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:44:05
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 09:54:14
+# @Last Modified time: 2022-01-10 12:49:23
 
 import unittest
 from textwrap import dedent
@@ -315,6 +315,32 @@ AAAAAAA=
             Certificate.init_from_not_sure(text).debug(),
             "Certificate correctly formatted",
         )
+
+    def test_arbitrary_0(self):
+        text = dedent(
+            """\
+                -----BEGIN CERTIFICATE-----
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAA
+                -----END CERTIFICATE-----"""
+        )
+        cert = Certificate.init_from_not_sure(text)
+        self.assertEqual(
+            cert.debug(),
+            "Certificate correctly formatted",
+        )
+        self.assertEqual(text, cert.reformat())
 
 
 if __name__ == "__main__":

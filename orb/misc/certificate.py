@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 10:44:02
+# @Last Modified time: 2022-01-10 12:47:17
 
 import re
 import base64
@@ -50,7 +50,7 @@ class Certificate:
         if not self.is_well_formed():
             raise Exception("Certificate is badly formatted")
         lines = [x.strip() for x in self.cert.split("\n") if x]
-        formatted = [self.first_line] + lines[1:13] + [self.last_line]
+        formatted = [self.first_line] + lines[1:-1] + [self.last_line]
         self.cert = "\n".join(formatted)
         return self.cert
 
