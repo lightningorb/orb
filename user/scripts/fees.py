@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 09:57:39
+# @Last Modified time: 2022-01-10 08:31:00
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -255,7 +255,7 @@ class Fees(StoppableThread):
             alias = Lnd().get_node_alias(c.remote_pubkey)
             if c.chan_id not in meta:
                 meta[c.chan_id] = FeeMeta(chan_id=c.chan_id, alias=alias)
-            for rule in obj["rules"]:
+            for rule in obj.get("rules", []):
                 match = copy(rule)
                 match.channel = c
                 match.set_meta(meta[c.chan_id])
