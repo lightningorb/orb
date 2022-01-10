@@ -123,6 +123,7 @@ toolchain pip3 install forex-python
 toolchain pip3 install colour
 toolchain pip3 install PyYaml
 toolchain pip3 install ffpyplayer
+toolchain pip3 install openpyxl
 ```
 
 

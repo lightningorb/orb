@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 09:55:32
+# @Last Modified time: 2022-01-10 10:17:25
 
 import os
 
@@ -68,7 +68,7 @@ class MainLayout(BoxLayout):
         and all Widgets in the application need to ensure not recieving
         clicks when the menu is showing.
         """
-        data_manager.menu_visible = self.menu_visible
+        data_manager.data_man.menu_visible = self.menu_visible
 
     def _keyboard_released(self, window=None, key=None):
         if data_manager.data_man.disable_shortcuts:

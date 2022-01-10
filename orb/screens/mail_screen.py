@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 19:21:24
+# @Last Modified time: 2022-01-10 08:56:57
 
 import base64
 import time
@@ -23,7 +23,7 @@ class FocusTextInput(TextInput):
         import data_manager
 
         if self.collide_point(*touch.pos):
-            if data_manager.menu_visible:
+            if data_manager.data_man.menu_visible:
                 return False
         return super(FocusTextInput, self).on_touch_down(touch)
 

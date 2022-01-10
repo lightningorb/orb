@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 10:00:04
+# @Last Modified time: 2022-01-10 08:56:55
 
 import os
 import sys
@@ -123,7 +123,7 @@ class ConsoleInput(CodeInput):
         import data_manager
 
         if self.collide_point(*touch.pos):
-            if data_manager.menu_visible:
+            if data_manager.data_man.menu_visible:
                 return False
         return super(ConsoleInput, self).on_touch_down(touch)
 
@@ -262,6 +262,6 @@ class ConsoleOutput(TextInput):
         import data_manager
 
         if self.collide_point(*touch.pos):
-            if data_manager.menu_visible:
+            if data_manager.data_man.menu_visible:
                 return False
         return super(ConsoleOutput, self).on_touch_down(touch)

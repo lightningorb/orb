@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 12:58:31
+# @Last Modified time: 2022-01-10 10:10:16
 
 import threading
 import requests
@@ -16,13 +16,15 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.app import App
 
+from orb.misc.prefs import is_rest
 from orb.misc.decorators import silent, guarded
 from orb.misc import mempool
 from orb.misc.forex import forex
 from orb.logic.thread_manager import thread_manager
 from orb.lnd import Lnd
-from orb.misc.utils import pref
+from orb.misc.utils import mobile, desktop, pref
 
 import data_manager
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
@@ -234,6 +236,13 @@ High priority: {fees["fastestFee"]} sat/vB"""
 class ThreadWidget(Widget):
     thread = ObjectProperty(None, allownone=True)
 
+    def on_release(self, *args):
+        import data_manager
+
+        if not data_manager.data_man.menu_visible:
+            self.thread.stop()
+        return super(ThreadWidget, self).on_release(*args)
+
 
 class HUDThreadManager(GridLayout, Hideable):
     def __init__(self, *args, **kwargs):
@@ -256,20 +265,36 @@ class HUDProtocol(Button):
     """
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializer sets the timers.
+        """
         Button.__init__(self, *args, **kwargs)
         Clock.schedule_interval(self.check_connection, 10)
         Clock.schedule_once(self.check_connection, 1)
 
-    def on_release(self, *args, **kwargs):
-        from kivy.app import App
-        from orb.misc.prefs import is_rest
+    def on_press(self, *args, **kwargs):
+        return True
 
-        app = App.get_running_app()
-        app.config.set("lnd", "protocol", "grpc" if is_rest() else "rest")
-        self.text = pref("lnd.protocol")
+    def on_release(self, *args, **kwargs):
+        """
+        Allow the switching of protocol if on desktop
+        """
+        import data_manager
+
+        if desktop and not data_manager.data_man.menu_visible:
+            app = App.get_running_app()
+            app.config.set("lnd", "protocol", "grpc" if is_rest() else "rest")
+            self.text = pref("lnd.protocol")
+            return False
+        return super(HUDProtocol, self).on_release(*args, **kwargs)
 
     @guarded
     def check_connection(self, *_):
+        """
+        Function on timer that calls get_info. Kills the thread
+        after a timeout, and updates the UI saying we're not
+        connected.
+        """
         import ctypes
         import time
 

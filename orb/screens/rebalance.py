@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 07:28:18
+# @Last Modified time: 2022-01-10 10:13:46
 
 from traceback import print_exc
 import threading
@@ -30,9 +30,9 @@ class Rebalance(PopupDropShadow):
         self.alias_to_pk = {}
 
         @mainthread
-        def delayed(chans_pk):
+        def delayed(chans_pk, alias_to_pk):
             self.ids.spinner_out_id.values = chans_pk
-            self.ids.spinner_in_id.values = chans_pk
+            self.ids.spinner_in_id.values = alias_to_pk
 
         channels = data_manager.data_man.channels
         self.alias_to_pk = {
@@ -41,7 +41,7 @@ class Rebalance(PopupDropShadow):
         chans_pk = [
             f"{c.chan_id}: {alias(self.lnd, c.remote_pubkey)}" for c in channels
         ]
-        delayed(chans_pk)
+        delayed(chans_pk, self.alias_to_pk)
 
     def first_hop_spinner_click(self, chan):
         self.chan_id = int(chan.split(":")[0])
