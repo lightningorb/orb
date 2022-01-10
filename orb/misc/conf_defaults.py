@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-01-06 17:51:07
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-01-10 10:32:28
+
+
 def set_conf_defaults(config):
     config.add_section("lnd")
     config.set("lnd", "hostname", "localhost")
@@ -9,11 +16,11 @@ def set_conf_defaults(config):
     config.set("lnd", "macaroon_admin", "")
     config.add_section("display")
     config.set("display", "channel_length", 600)
-    config.set("display", "inverted_channels", 1)
-    config.set("display", "show_sent_received", 0)
-    config.set("display", "channel_opacity", 0.8)
+    config.set("display", "inverted_channels", 0)
+    config.set("display", "show_sent_received", 1)
+    config.set("display", "channel_opacity", 0.3)
     config.set("display", "channels_background_color", "#000003")
-    config.set("display", "1m_color", "#5df75b")
+    config.set("display", "1m_color", "#64ff64ff")
     config.set("display", "node_background_color", "#505050")
     config.set("display", "node_selected_background_color", "#969696")
     config.set("display", "node_width", 70)
