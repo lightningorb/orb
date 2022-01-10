@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 05:56:28
+# @Last Modified time: 2022-01-10 09:53:14
 
 import re
 import base64
@@ -57,16 +57,16 @@ class Certificate:
     def debug(self):
         cert = self.cert
         lines = [x.strip() for x in cert.split("\n") if x]
-        if len(lines) != 14:
-            return f"Certificate length is {len(lines)}. It should be 14 lines long"
+        if len(lines) > 20:
+            return f"Certificate length is {len(lines)}. It should be <= 20 lines long"
         if not re.search(self.first_line, lines[0]):
             return f"First line should be {self.first_line}"
-        if not re.search(self.last_line, lines[13]):
+        if not re.search(self.last_line, lines[-1]):
             return f"Last line should be {self.last_line}"
-        for i, line in enumerate(lines[1:12], 1):
+        for i, line in enumerate(lines[1:-2], 1):
             if len(line) != 64:
                 return f"line {i} length is {len(line)}. Needs to be 64 characters long"
-        line = lines[12]
+        line = lines[-2]
         if not len(line) <= 64:
-            return f"line 12 length is {len(line)}. Needs to be <= 64 characters long"
+            return f"line {len(lines)-1} length is {len(line)}. Needs to be <= 64 characters long"
         return "Certificate correctly formatted"
