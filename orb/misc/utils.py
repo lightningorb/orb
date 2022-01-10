@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-30 06:48:01
+# @Last Modified time: 2022-01-10 09:05:05
 
 from kivy.app import App
 
 from orb.math.Vector import Vector
+from kivy.utils import platform
 
 
 def prefs_col(name):
@@ -41,3 +42,7 @@ def closest_point_on_line(p1, p2, p3):
     det = dx * dx + dy * dy
     a = (dy * (p3.y - p1.y) + dx * (p3.x - p1.x)) / det
     return Vector(p1.x + a * dx, p1.y + a * dy)
+
+
+mobile = platform in ("ios", "android")
+desktop = platform not in ("ios", "android")
