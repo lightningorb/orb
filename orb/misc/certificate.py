@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 09:53:14
+# @Last Modified time: 2022-01-10 10:44:02
 
 import re
 import base64
@@ -57,6 +57,8 @@ class Certificate:
     def debug(self):
         cert = self.cert
         lines = [x.strip() for x in cert.split("\n") if x]
+        if len(lines) < 3:
+            return "Certificate empty"
         if len(lines) > 20:
             return f"Certificate length is {len(lines)}. It should be <= 20 lines long"
         if not re.search(self.first_line, lines[0]):
