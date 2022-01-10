@@ -41,7 +41,7 @@ prep_for_ios:
 	python3 orb/scripts/prep_user_scripts.py
 	rm -rf ../tmp
 	mkdir -p ../tmp
-	cp -r main.py orb user data_manager.py fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
+	cp -r main.py docsbuild orb user data_manager.py fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
 
 build_ios: prep_for_ios
 	rm -rf ../lnorb-ios
