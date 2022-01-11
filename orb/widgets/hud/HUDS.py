@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 10:10:16
+# @Last Modified time: 2022-01-11 13:30:27
 
 import threading
 import requests
@@ -11,6 +11,7 @@ from kivy.clock import mainthread
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -354,3 +355,38 @@ class HUDGlobalRatio(BorderedLabel):
             update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
 
         threading.Thread(target=func).start()
+
+
+class HUDUIMode(Button):
+    """
+    UI mode, i.e whether we are in free mode (pan, zoom etc.)
+    or gestures mode.
+    """
+
+    modes = ["pan / zoom", "gestures"]
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initializer sets the timers.
+        """
+        Button.__init__(self, *args, **kwargs)
+        import data_manager
+
+        self.text = self.modes[0]
+
+        def update_text(widget, val):
+            self.text = self.modes[val]
+
+        data_manager.data_man.bind(channels_widget_ux_mode=update_text)
+
+    def on_press(self, *args, **kwargs):
+        return True
+
+    def on_release(self, *args, **kwargs):
+        """
+        Allow the switching of protocol if on desktop
+        """
+        import data_manager
+
+        mode = data_manager.data_man.channels_widget_ux_mode
+        data_manager.data_man.channels_widget_ux_mode = [1, 0][mode]

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 08:50:54
+# @Last Modified time: 2022-01-11 09:34:12
 
 from collections import namedtuple
 from dataclasses import dataclass
@@ -12,7 +12,7 @@ from random import choice, randrange
 
 from orb.misc.auto_obj import dict2obj
 
-M = lambda **kwargs: dict2obj(dict(**kwargs))
+M = lambda **kwargs: dict2obj(kwargs)
 
 
 @dataclass
@@ -55,19 +55,58 @@ ChannelBalance = namedtuple(
 CB = namedtuple("ChannelBalanceObj", "sat")
 FeeReport = namedtuple("FeeReport", "day_fee_sum week_fee_sum month_fee_sum")
 
+adj = [
+    "unfightable",
+    "weary",
+    "stubborn",
+    "indignant",
+    "vehemant",
+    "green",
+    "sleepy",
+    "screamy",
+    "happy",
+    "sad",
+    "blue",
+    "determined",
+    "unstoppable",
+    "jovial",
+]
+
+nouns = [
+    "fiat",
+    "visa",
+    "bukele",
+    "chivo",
+    "volcano",
+    "exchange",
+    "strike",
+    "bolt",
+    "sats",
+    "coin",
+    "elon",
+    "satoshi",
+    "dolphin",
+    "herring",
+    "fighter",
+    "pilot",
+    "hoarder",
+]
+
 
 class LndMock(object):
     def get_channels(self):
         channels = []
-        for cid in range(10):
+        for cid in range(50):
             capacity = choice([3e6, 5e6, 10e6])
             f = 0.5
+            local = randrange(0, capacity)
+            remote = capacity - local
             sent = randrange(1e6, 10e8)
             c = Channel(
                 capacity=capacity,
                 pending_htlcs=[],
-                local_balance=int(capacity * f),
-                remote_balance=int(capacity * (1 - f)),
+                local_balance=int(local),
+                remote_balance=int(remote),
                 remote_pubkey=f"peer_{cid}",
                 chan_id=cid,
                 total_satoshis_sent=sent,
@@ -84,7 +123,7 @@ class LndMock(object):
         return Info(alias="mock node", identity_pubkey="mock_pubkey")
 
     def get_node_alias(self, x):
-        return x
+        return f"{choice(adj)}_{choice(nouns)}"
 
     def get_policy_to(self, x):
         return Policy(fee_rate_milli_msat=1000, fee_base_msat=1000)
@@ -104,30 +143,31 @@ class LndMock(object):
         )
 
     def fee_report(self):
-        return FeeReport(day_fee_sum=1000, week_fee_sum=1000, month_fee_sum=1000)
+        daily = randrange(30_000, 120_000)
+        weekly = randrange(30_000 * 7, 120_000 * 7)
+        monthly = randrange(30_000 * 30, 70_000 * 30)
+        return FeeReport(day_fee_sum=daily, week_fee_sum=weekly, month_fee_sum=monthly)
 
     def get_pending_channels(self):
         m = M(
-            dict(
-                pending_open_channels=[
-                    dict(
-                        channel=Channel(
-                            capacity=1000000,
-                            pending_htlcs=[],
-                            local_balance=500000,
-                            remote_balance=500000,
-                            remote_pubkey="f",
-                            chan_id="5",
-                            total_satoshis_sent=50000,
-                            total_satoshis_received=50000,
-                            initiator=False,
-                            commit_fee=5,
-                            unsettled_balance=0,
-                            channel_point="123:0",
-                        )
+            pending_open_channels=[
+                M(
+                    channel=M(
+                        capacity=1000000,
+                        pending_htlcs=[],
+                        local_balance=500000,
+                        remote_balance=500000,
+                        remote_pubkey="f",
+                        chan_id="5",
+                        total_satoshis_sent=50000,
+                        total_satoshis_received=50000,
+                        initiator=False,
+                        commit_fee=5,
+                        unsettled_balance=0,
+                        channel_point="123:0",
                     )
-                ]
-            )
+                )
+            ]
         )
         return m
 

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-28 08:26:04
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:41:09
+# @Last Modified time: 2022-01-11 11:03:59
 
 import threading
 from traceback import print_exc
@@ -85,7 +85,8 @@ class RebalanceThread(threading.Thread):
             try:
                 self.lnd.cancel_invoice(payment_request.payment_hash)
             except:
-                print("Exception while cancelling invoice")
+                pass
+                # print("Exception while cancelling invoice")
 
     def stop(self):
         self._stop_event.set()

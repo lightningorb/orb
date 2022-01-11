@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 13:44:08
+# @Last Modified time: 2022-01-11 12:28:07
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -11,6 +11,7 @@ from kivymd.uix.screen import MDScreen
 
 from orb.channels.channels_widget import ChannelsWidget
 from orb.misc.decorators import guarded
+from orb.logic.gestures_delegate import GesturesDelegate
 
 
 class ChannelsScreen(MDScreen):
@@ -36,8 +37,10 @@ class ChannelsScreen(MDScreen):
     def build(self, *_):
         @mainthread
         def delayed():
+            self.gestures_delegate = GesturesDelegate(overlay=self.ids.gestures_overlay)
             self.channels_widget = ChannelsWidget(
-                attribute_editor=self.ids.content_drawer
+                attribute_editor=self.ids.content_drawer,
+                gestures_delegate=self.gestures_delegate,
             )
             self.ids.cw_layout.add_widget(self.channels_widget)
             self.ids.content_drawer.bind(

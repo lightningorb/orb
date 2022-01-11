@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 12:47:07
+# @Last Modified time: 2022-01-11 07:26:58
 import math
 
 from kivy.app import App
@@ -14,6 +14,7 @@ from orb.widgets.node import Node
 from orb.widgets.sent_received_widget import SentReceivedWidget
 from orb.misc.utils import pref
 from orb.misc.prefs import inverted_channels
+from kivy.gesture import Gesture
 
 import data_manager
 
@@ -25,7 +26,10 @@ class CNWidget(Widget):
         super(CNWidget, self).__init__(*args)
         self.attribute_editor = attribute_editor
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
+        self.c = c
         self.b = Node(text="", channel=c, attribute_editor=attribute_editor)
+        self.gesture_in = None
+        self.gesture_out = None
         self.show_sent_received = (
             App.get_running_app().config["display"]["show_sent_received"] == "1"
         )
@@ -45,6 +49,16 @@ class CNWidget(Widget):
             x - (pref("display.node_width") / 2),
             y - (pref("display.node_height") / 2),
         )
+        if not self.gesture_in:
+            self.gesture_in = Gesture()
+            self.gesture_out = Gesture()
+            self.gesture_in.name = self.c.chan_id
+            self.gesture_out.name = self.c.chan_id
+            stroke = [(x * (f / 100), y * (f / 100)) for f in range(100)]
+            self.gesture_in.add_stroke(stroke)
+            self.gesture_out.add_stroke(stroke[::-1])
+            self.gesture_in.normalize()
+            self.gesture_out.normalize()
         if self.l.points == [0, 0, 0, 0]:
             self.l.points = points
             self.b.pos = pos

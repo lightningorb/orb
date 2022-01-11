@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 01:06:31
+# @Last Modified time: 2022-01-11 09:13:25
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -200,5 +200,14 @@ class ChannelWidget(Widget):
         )
 
         (Animation(rgba=col, duration=0.2) + Animation(rgba=GREEN, duration=1)).start(
+            self.line_local.color
+        )
+
+    def flash(self, rgba):
+        (Animation(rgba=rgba, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
+            self.line_remote.color
+        )
+
+        (Animation(rgba=rgba, duration=0.2) + Animation(rgba=GREEN, duration=1)).start(
             self.line_local.color
         )

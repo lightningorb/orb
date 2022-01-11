@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-08 12:52:03
+# @Last Modified time: 2022-01-11 08:25:50
 
 from traceback import print_exc
 
@@ -22,6 +22,7 @@ class DataManager(EventDispatcher):
     show_chords = BooleanProperty(False)
     show_chord = NumericProperty(0)
     chords_direction = NumericProperty(0)
+    channels_widget_ux_mode = NumericProperty(0)
 
     def __init__(self, config, *args, **kwargs):
         super(DataManager, self).__init__(*args, **kwargs)

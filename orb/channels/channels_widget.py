@@ -2,11 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 16:46:39
+# @Last Modified time: 2022-01-11 09:32:29
 
+from time import time
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
+from kivy.properties import NumericProperty
+
 
 from orb.logic.htlcs_thread import HTLCsThread
 from orb.channels.channels_thread import ChannelsThread
@@ -17,14 +20,16 @@ from orb.misc.prefs import is_mock
 from orb.misc.decorators import guarded
 from orb.widgets.chord_widget import ChordWidget
 from orb.lnd import Lnd
+from orb.misc.enums import ChannelsWidgetUXMode
 import data_manager
 
 
 class ChannelsWidget(ScatterLayout):
     attribute_editor = ObjectProperty(None)
+    mode = NumericProperty(0)
 
     @guarded
-    def __init__(self, *args, **kwargs):
+    def __init__(self, gestures_delegate, *args, **kwargs):
         super(ChannelsWidget, self).__init__(*args, **kwargs)
 
         self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
@@ -34,8 +39,14 @@ class ChannelsWidget(ScatterLayout):
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
         self.channels_thread.daemon = True
         self.cn = {}
-        self.radius = 600
-        self.node = None
+        self.touch_time = time()
+        self.gestures_delegate = gestures_delegate
+        self.mode = data_manager.data_man.channels_widget_ux_mode
+
+        def update_mode(_, val):
+            self.mode = val
+
+        data_manager.data_man.bind(channels_widget_ux_mode=update_mode)
         self.lnd = Lnd()
         self.chord_widget = ChordWidget(self.channels)
         caps = self.get_caps(self.channels)
@@ -57,6 +68,8 @@ class ChannelsWidget(ScatterLayout):
             self.htlcs_thread.start()
         if not is_mock():
             self.channels_thread.start()
+
+        self.gestures_delegate.init_gdb(self)
 
     def add_channel(self, channel, caps=None, update_rect=True):
         if not caps:
@@ -83,10 +96,27 @@ class ChannelsWidget(ScatterLayout):
         for i, chan_id in enumerate(self.channels.sorted_chan_ids):
             self.cn[chan_id].update_rect(i, len(self.cn))
 
+    def on_touch_move(self, touch):
+        if self.mode == ChannelsWidgetUXMode.gestures:
+            self.gestures_delegate.on_touch_move(touch)
+            return False
+        return super(ChannelsWidget, self).on_touch_move(touch)
+
+    def on_touch_up(self, touch):
+        if self.mode == ChannelsWidgetUXMode.gestures:
+            self.gestures_delegate.on_touch_up(touch)
+            return False
+        return super(ChannelsWidget, self).on_touch_up(touch)
+
     def on_touch_down(self, touch):
+        if self.mode == ChannelsWidgetUXMode.gestures:
+            self.gestures_delegate.on_touch_down(touch)
+            return False
         if touch.is_mouse_scrolling:
-            delta = 0.2
-            s = dict(scrolldown=1 + delta, scrollup=1 - delta).get(touch.button)
+            scroll_delta = 0.2
+            s = dict(scrolldown=1 + scroll_delta, scrollup=1 - scroll_delta).get(
+                touch.button
+            )
             if s:
                 self.apply_transform(Matrix().scale(s, s, s), anchor=touch.pos)
         else:
