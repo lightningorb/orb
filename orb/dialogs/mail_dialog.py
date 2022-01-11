@@ -2,13 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 08:56:57
+# @Last Modified time: 2022-01-12 06:59:12
 
 import base64
 import time
 from threading import Thread
 
-from kivy.clock import mainthread
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
@@ -16,6 +15,7 @@ from kivy.clock import mainthread
 
 from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
+from orb.components.popup_drop_shadow import PopupDropShadow
 
 
 class FocusTextInput(TextInput):
@@ -28,11 +28,10 @@ class FocusTextInput(TextInput):
         return super(FocusTextInput, self).on_touch_down(touch)
 
 
-class MailScreen(Screen):
-    def on_enter(self):
+class MailDialog(PopupDropShadow):
+    def open(self, *args):
         self.get_mail()
-        self.ids.contact_list.clear_widgets()
-        self.ids.contact_list.add_widget(Label(text="Joe"))
+        super(MailDialog, self).open(self, *args)
 
     def get_mail(self):
         @mainthread

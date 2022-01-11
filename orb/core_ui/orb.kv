@@ -3,6 +3,7 @@
 #:import dp kivy.metrics.dp
 #:import data_manager data_manager
 #:import Lnd orb.lnd.Lnd
+#:import MailDialog orb.dialogs.mail_dialog.MailDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoicesScreen orb.screens.ingest_invoices_screen.IngestInvoicesScreen
@@ -58,7 +59,6 @@
                     size: self.size
             ChannelsScreen:
                 id: channels
-            MailScreen
             ConsoleScreen
             PlayerScreen
         StatusLine
@@ -90,8 +90,8 @@
                     on_press:  Rebalance().open()
                 ContextMenuTextItem:
                     text: "Mail"
-                    on_press:  app.root.ids.sm.current = 'mail'
-                    on_release: app_menu.close_all()
+                    on_press:  app_menu.close_all()
+                    on_release: MailDialog().open()
                 ContextMenuTextItem:
                     text: "Open Channel"
                     on_press:  OpenChannelScreen().open()

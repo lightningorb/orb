@@ -25,7 +25,7 @@ from orb.screens.close_channel import CloseChannel
 from orb.screens.rebalance import Rebalance
 from orb.screens.channels_screen import ChannelsScreen
 from orb.screens.pay_screen import PayScreen
-from orb.screens.mail_screen import MailScreen
+from orb.dialogs.mail_dialog import MailDialog
 from orb.screens.open_channel_screen import OpenChannelScreen
 from orb.screens.connect_screen import ConnectScreen
 from orb.screens.ingest_invoices_screen import IngestInvoicesScreen
@@ -64,7 +64,7 @@ keep(Rankings)
 keep(MainLayout)
 keep(StatusLine)
 keep(TopMenu)
-keep(MailScreen)
+keep(MailDialog)
 keep(cron)
 keep(AttributeEditor)
 keep(HUD)
