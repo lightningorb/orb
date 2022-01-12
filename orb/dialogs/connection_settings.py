@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 06:18:36
+# @Last Modified time: 2022-01-13 06:18:28
 
 from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
@@ -11,6 +11,7 @@ from kivy.app import App
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 from orb.misc.utils import pref
+from orb.misc.utils import mobile
 from orb.misc.certificate import Certificate
 from orb.misc.macaroon import Macaroon
 
@@ -24,6 +25,7 @@ class ConnectionSettings(PopupDropShadow):
         from data_manager import data_man
 
         self.config = App.get_running_app().config
+        self.ids.grpc.disabled = mobile
 
         super(ConnectionSettings, self).open(self, *args)
 
