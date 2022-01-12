@@ -1,7 +1,7 @@
-orb.screens.player\_screen module
+orb.logic.download\_thread module
 =================================
 
-.. automodule:: orb.screens.player_screen
+.. automodule:: orb.logic.download_thread
    :members:
    :undoc-members:
    :show-inheritance:

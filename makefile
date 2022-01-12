@@ -8,6 +8,8 @@ clean_docs:
 docs:
 	sphinx-apidoc --ext-autodoc --module-first --follow-links --ext-coverage --separate --force -o source/gen/ orb 
 	sphinx-build -b html source docsbuild
+
+view_docs:
 	cd docsbuild && python3 -m http.server
 
 .PHONY: build
@@ -41,12 +43,12 @@ prep_for_ios:
 	python3 orb/scripts/prep_user_scripts.py
 	rm -rf ../tmp
 	mkdir -p ../tmp
-	cp -r main.py ln.png docsbuild orb user data_manager.py fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
+	cp -r main.py ln.png images docsbuild orb user data_manager.py video_library.yaml fees.yaml autobalance.yaml orb.png user_scripts.json ../tmp/
 
 build_ios: prep_for_ios
 	rm -rf ../lnorb-ios
 	rm -rf ../tmp
 	cd .. && toolchain create lnorb ./tmp
 
-update_ios: prep_for_ios
+update_ios: clean docs prep_for_ios
 	cd ../ && toolchain update lnorb-ios/

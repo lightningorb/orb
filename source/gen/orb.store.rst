@@ -18,3 +18,4 @@ Submodules
    orb.store.model
    orb.store.node_rank
    orb.store.scripts
+   orb.store.video_library

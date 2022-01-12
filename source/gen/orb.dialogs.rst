@@ -15,3 +15,5 @@ Submodules
    orb.dialogs.connection_settings
    orb.dialogs.fee_distribution
    orb.dialogs.forwarding_history
+   orb.dialogs.mail_dialog
+   orb.dialogs.player_dialog

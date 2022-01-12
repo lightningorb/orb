@@ -19,6 +19,7 @@ Submodules
    orb.misc.colors
    orb.misc.conf_defaults
    orb.misc.decorators
+   orb.misc.enums
    orb.misc.forex
    orb.misc.macaroon
    orb.misc.mempool

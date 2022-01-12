@@ -4,20 +4,12 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-10 06:18:36
 
-import threading
-import re
-
-from kivy.clock import mainthread
-from kivy.metrics import dp
 from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.datatables import MDDataTable
 from kivy.app import App
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
-from orb.misc import mempool
-from orb.lnd import Lnd
 from orb.misc.utils import pref
 from orb.misc.certificate import Certificate
 from orb.misc.macaroon import Macaroon

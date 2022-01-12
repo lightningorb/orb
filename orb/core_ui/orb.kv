@@ -4,6 +4,7 @@
 #:import data_manager data_manager
 #:import Lnd orb.lnd.Lnd
 #:import MailDialog orb.dialogs.mail_dialog.MailDialog
+#:import PlayerDialog orb.dialogs.player_dialog.PlayerDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoicesScreen orb.screens.ingest_invoices_screen.IngestInvoicesScreen
@@ -60,7 +61,6 @@
             ChannelsScreen:
                 id: channels
             ConsoleScreen
-            PlayerScreen
         StatusLine
             id: status_line
     TopMenu:
@@ -168,8 +168,8 @@
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Player"
-                    on_press:  app.root.ids.sm.current = 'player'
-                    on_release: app_menu.close_all()
+                    on_press:  app_menu.close_all()
+                    on_release: PlayerDialog().open()
         AppMenuTextItem:
             text: "Scripts"
             id: scripts

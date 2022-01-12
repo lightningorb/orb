@@ -26,11 +26,9 @@ Submodules
    orb.screens.close_channel
    orb.screens.connect_screen
    orb.screens.ingest_invoices_screen
-   orb.screens.mail_screen
    orb.screens.new_address_screen
    orb.screens.open_channel_screen
    orb.screens.pay_screen
-   orb.screens.player_screen
    orb.screens.rankings
    orb.screens.rebalance
    orb.screens.send_coins

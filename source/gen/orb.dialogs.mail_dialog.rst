@@ -1,7 +1,7 @@
-orb.screens.mail\_screen module
+orb.dialogs.mail\_dialog module
 ===============================
 
-.. automodule:: orb.screens.mail_screen
+.. automodule:: orb.dialogs.mail_dialog
    :members:
    :undoc-members:
    :show-inheritance:

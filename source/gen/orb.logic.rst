@@ -14,6 +14,8 @@ Submodules
 
    orb.logic.channel_selector
    orb.logic.cron
+   orb.logic.download_thread
+   orb.logic.gestures_delegate
    orb.logic.htlc
    orb.logic.htlcs_thread
    orb.logic.normalized_events
