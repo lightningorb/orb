@@ -2,13 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:41:16
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 11:41:40
+# @Last Modified time: 2022-01-13 15:18:27
 
 from invoke import task
 
 
 @task
 def test(c):
+    """
+    Run the unit tests and doctests.
+    """
     c.run("PYTHONPATH=. python3 tests/test_certificate.py")
     c.run("python3 -m orb.math.Vector -v")
     c.run("python3 -m orb.math.lerp -v")
