@@ -1,6 +1,7 @@
 #:import dp kivy.metrics.dp
 #:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
+#:import Clipboard kivy.core.clipboard.Clipboard
 
 
 <ConnectionSettings>:
@@ -123,14 +124,18 @@
                 orientation: 'vertical'
                 size_hint: (1, 1)
                 MDLabel:
-                    text: "Enter the TLS Certificate in plain text or base64. Orb will make sure it's valid upon saving."
-                    size_hint_y: 0.2
+                    text: "Paste your TLS Certificate in plain text or base64. Orb will make sure it's valid upon saving. You can copy and run the provided command on your node."
+                    size_hint_y: 0.3
                     multiline: True
+                MDIconButton:
+                    icon: "content-copy"
+                    size_hint_y: 0.2
+                    on_release: Clipboard.copy("""python3 -c 'import base64; print(base64.b64encode(open(".lnd/tls.cert").read().encode()).decode())'""")
                 TextInput:
                     id: tls_cert
                     text: root.get_cert()
                     on_text: root.validate_cert(self.text)
-                    size_hint_y: 0.6
+                    size_hint_y: 0.4
                     multiline: True
                     size_hint: (1, 1)
                 MDLabel:
@@ -153,13 +158,21 @@
             BoxLayout:
                 orientation: 'vertical'
                 size_hint: (1, 1)
+                MDLabel:
+                    text: "Paste your hex encoded macaroon. Orb will make sure it's valid upon saving. You can copy and run the provided command on your node."
+                    size_hint_y: 0.3
+                    multiline: True
+                MDIconButton:
+                    icon: "content-copy"
+                    size_hint_y: 0.2
+                    on_release: Clipboard.copy("""python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'""")
                 TextInput:
                     id: macaroon
                     text: root.get_macaroon()
                     helper_text: 'Macaroon'
                     helper_text_mode: "persistent"
                     on_text: root.validate_macaroon(self.text)
-                    size_hint_y: 8
+                    size_hint_y: 0.4
                     multiline: True
                     size_hint: (1, 1)
                 MDLabel:
