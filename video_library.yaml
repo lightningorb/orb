@@ -10,6 +10,9 @@ collections:
       name: "connect_your_node.mp4"
       title: "[color=ebded4]Connect\nyour node[/color]"
     - !Video
+      name: "documentation.mp4"
+      title: "[color=ebded4]Documentation[/color]"
+    - !Video
       name: 'attributes_editor.mp4'
       title: "[color=ebded4]Attributes Editor[/color]"
     - !Video
