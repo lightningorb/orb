@@ -10,10 +10,9 @@ from kivy.properties import ObjectProperty
 from kivy.clock import mainthread
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.relativelayout import RelativeLayout
-from kivy.core.window import Window, Keyboard
+from kivy.core.window import Window
 from kivy.uix.videoplayer import VideoPlayer
-import data_manager
+from orb.misc import data_manager
 from kivy.utils import platform
 
 ios = platform == "ios"

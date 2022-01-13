@@ -8,9 +8,6 @@
 This module is used to interpolate values.
 """
 
-import math
-
-
 def lerp(a, b, t):
     """
     Interpolate 2 values.

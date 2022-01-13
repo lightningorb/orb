@@ -16,8 +16,6 @@ from orb.misc.utils import pref
 from orb.misc.prefs import inverted_channels
 from kivy.gesture import Gesture
 
-import data_manager
-
 
 class CNWidget(Widget):
     attribute_editor = ObjectProperty(None)

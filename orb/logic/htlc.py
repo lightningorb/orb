@@ -10,9 +10,6 @@ except:
     pass
 
 
-import datetime
-from peewee import *
-
 from playhouse.sqlite_ext import *
 
 from orb.store.db_meta import htlcs_db_name, get_db

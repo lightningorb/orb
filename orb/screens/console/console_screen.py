@@ -22,7 +22,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.codeinput import CodeInput
 from kivy.uix.videoplayer import VideoPlayer
 
-from orb.screens.console.console_splitter import *
 from orb.store.scripts import Script, save_scripts, load_scripts
 from orb.components.popup_drop_shadow import PopupDropShadow
 
@@ -54,7 +53,7 @@ class ConsoleScreen(Screen):
             self.ids.console_input.bind(output=self.ids.console_output.setter("output"))
             # retrieve the code stored in the prefs, and set it
             # in the console input
-            import data_manager
+            from orb.misc import data_manager
 
             self.ids.console_input.text = data_manager.data_man.store.get(
                 "console_input", {}
@@ -120,7 +119,7 @@ class ConsoleInput(CodeInput):
         )
 
     def on_touch_down(self, touch):
-        import data_manager
+        from orb.misc import data_manager
 
         if self.collide_point(*touch.pos):
             if data_manager.data_man.menu_visible:
@@ -155,7 +154,6 @@ class ConsoleInput(CodeInput):
     def install(self, *_):
         inst = InstallScript()
         inst.open()
-        import data_manager
 
         def do_install(_, *__):
             script_name = ">".join(
@@ -185,7 +183,7 @@ class ConsoleInput(CodeInput):
 
     def delete(self, *_):
         inst = LoadScript()
-        import data_manager
+        from orb.misc import data_manager
 
         try:
             sc = data_manager.data_man.store.get("scripts")
@@ -216,7 +214,7 @@ class ConsoleInput(CodeInput):
         self.output = ""
 
     def reset_split_size(self, *args):
-        import data_manager
+        from orb.misc import data_manager
 
         data_manager.data_man.store.put(
             "console", input_height=None, output_height=None
@@ -244,7 +242,7 @@ class ConsoleInput(CodeInput):
         if text != "\u0135":
             to_save = self.text + (text or "")
             do_eval = keycode[1] == "enter" and self.selection_text
-            import data_manager
+            from orb.misc import data_manager
 
             data_manager.data_man.store.put("console_input", text=to_save)
             if do_eval:
@@ -259,7 +257,7 @@ class ConsoleOutput(TextInput):
     output = StringProperty("")
 
     def on_touch_down(self, touch):
-        import data_manager
+        from orb.misc import data_manager
 
         if self.collide_point(*touch.pos):
             if data_manager.data_man.menu_visible:

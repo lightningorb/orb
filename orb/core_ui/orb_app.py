@@ -10,13 +10,10 @@ import json
 from pathlib import Path
 from traceback import print_exc
 from importlib import __import__
-from os.path import join
 from glob import glob
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
-from kivymd.effects import stiffscroll
-from kivy.utils import platform
 from kivy.core.window import Window
 from kivy.utils import platform
 
@@ -26,10 +23,9 @@ from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.misc.ui_actions import console_output
-from orb.misc.utils import pref
 from orb.misc.plugin import Plugin
 
-import data_manager
+from orb.misc import data_manager
 
 ios = platform == "ios"
 

@@ -4,8 +4,6 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-10 10:13:46
 
-from traceback import print_exc
-import threading
 from functools import lru_cache
 
 from kivy.clock import mainthread
@@ -13,7 +11,7 @@ from kivy.clock import mainthread
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.rebalance_thread import RebalanceThread
 from orb.lnd import Lnd
-import data_manager
+from orb.misc import data_manager
 
 
 @lru_cache(maxsize=None)

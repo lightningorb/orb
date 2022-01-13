@@ -5,7 +5,7 @@
 # @Last Modified time: 2022-01-05 17:16:42
 
 from random import choice
-import data_manager
+from orb.misc import data_manager
 
 
 def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):

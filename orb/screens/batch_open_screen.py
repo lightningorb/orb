@@ -25,14 +25,13 @@ class Tab(MDFloatLayout, MDTabsBase):
 class BatchOpenScreen(PopupDropShadow):
     @guarded
     def open(self, *args):
-        from data_manager import data_man
+        from orb.misc.data_manager import data_man
 
         self.ids.pubkeys.text = data_man.store.get("batch_open", {}).get("text", "")
         super(BatchOpenScreen, self).open(*args)
 
     @guarded
     def calculate(self, text, amount):
-        from data_manager import data_man
 
         pks, amounts = [], []
         for line in text.split("\n"):
@@ -48,7 +47,7 @@ class BatchOpenScreen(PopupDropShadow):
         self.ids.pubkeys.text = "\n".join([f"{p},{a}" for p, a in zip(pks, amounts)])
 
     def ingest(self, text):
-        from data_manager import data_man
+        from orb.misc.data_manager import data_man
 
         data_man.store.put("batch_open", text=text)
 

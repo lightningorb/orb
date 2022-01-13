@@ -22,7 +22,6 @@ class Tab(MDFloatLayout, MDTabsBase):
 
 class ConnectionSettings(PopupDropShadow):
     def open(self, *args):
-        from data_manager import data_man
 
         self.config = App.get_running_app().config
         self.ids.grpc.disabled = mobile

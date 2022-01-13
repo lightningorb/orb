@@ -4,8 +4,6 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-11 08:25:50
 
-from traceback import print_exc
-
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
 from kivy.properties import NumericProperty

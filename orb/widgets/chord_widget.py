@@ -24,7 +24,7 @@ from kivy.clock import mainthread
 from orb.math.Vector import Vector
 from orb.misc.prefs import is_mock
 from orb.math.lerp import lerp_vec
-import data_manager
+from orb.misc import data_manager
 
 
 class Direction:

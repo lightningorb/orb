@@ -4,10 +4,8 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-09 15:24:22
 
-from threading import Thread
 from time import sleep
 import threading
-from collections import Counter
 from random import choice
 from traceback import print_exc
 from functools import lru_cache
@@ -15,15 +13,12 @@ from functools import lru_cache
 import arrow
 from kivy.clock import mainthread
 
-from orb.misc.output import *
-
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
-from orb.misc.utils import hashabledict
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.thread_manager import thread_manager
 
-import data_manager
+from orb.misc import data_manager
 from orb.lnd import Lnd
 
 

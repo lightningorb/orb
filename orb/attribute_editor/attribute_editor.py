@@ -24,7 +24,7 @@ from orb.misc.prefs import is_rest
 from orb.misc.auto_obj import AutoObj, todict
 from orb.lnd import Lnd
 
-import data_manager
+from orb.misc import data_manager
 
 
 class MyMDCheckbox(MDCheckbox):

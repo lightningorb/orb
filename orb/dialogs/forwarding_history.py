@@ -8,7 +8,7 @@ from collections import defaultdict
 from threading import Thread
 import arrow
 from kivy.uix.popup import Popup
-from kivy_garden.graph import Graph, MeshLinePlot, SmoothLinePlot
+from kivy_garden.graph import Graph, SmoothLinePlot
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 
@@ -113,7 +113,6 @@ def graph_fees_earned():
 
     fh = get_forwarding_history()
     buckets = defaultdict(int)
-    today = arrow.get().replace(hour=0, minute=0, second=0).timestamp()
     for f in fh:
         buckets[
             int(arrow.get(f.timestamp).replace(hour=0, minute=0, second=0).timestamp())

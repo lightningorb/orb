@@ -4,26 +4,19 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-12 20:35:42
 
-import requests
 import os
-from threading import Thread
 from functools import partial
 from kivy.clock import mainthread
 
-from kivy.uix.widget import Widget
-from kivy.uix.screenmanager import Screen
 from kivy.properties import (
-    ObjectProperty,
     StringProperty,
     ListProperty,
     NumericProperty,
 )
-from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.videoplayer import VideoPlayer
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.tab import MDTabsBase
-from kivy.properties import BooleanProperty
 from kivy.app import App
 
 from orb.components.popup_drop_shadow import PopupDropShadow

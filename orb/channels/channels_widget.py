@@ -21,7 +21,7 @@ from orb.misc.decorators import guarded
 from orb.widgets.chord_widget import ChordWidget
 from orb.lnd import Lnd
 from orb.misc.enums import ChannelsWidgetUXMode
-import data_manager
+from orb.misc import data_manager
 
 
 class ChannelsWidget(ScatterLayout):

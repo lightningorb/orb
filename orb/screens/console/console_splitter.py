@@ -16,7 +16,7 @@ class ConsoleSplitter(Splitter):
         self.output_pressed_height = 0
 
         def load_config(*_):
-            import data_manager
+            from orb.misc import data_manager
 
             input_height = data_manager.data_man.store.get("console", {}).get(
                 "input_height", None
@@ -47,7 +47,7 @@ class ConsoleSplitter(Splitter):
         return super(ConsoleSplitter, self).on_touch_down(touch)
 
     def on_touch_move(self, touch):
-        import data_manager
+        from orb.misc import data_manager
 
         if self.pressed:
             self.input.height = self.input_pressed_height + (

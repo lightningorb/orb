@@ -7,13 +7,12 @@
 import os
 from pathlib import Path
 from functools import lru_cache
-from time import sleep, time
+from time import time
 import requests
 from collections import defaultdict
 
 from kivy.app import App
 from kivy.properties import NumericProperty
-from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
 
 from orb.misc.stoppable_thread import StoppableThread

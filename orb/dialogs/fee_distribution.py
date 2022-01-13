@@ -7,7 +7,6 @@ from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 
-from orb.logic.normalized_events import ChanRoutingData, Event
 from orb.misc.decorators import guarded
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.math.normal_distribution import NormalDistribution

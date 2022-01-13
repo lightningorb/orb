@@ -6,7 +6,7 @@
 
 from kivy.graphics import Line, Ellipse, Color
 from kivy.gesture import Gesture, GestureDatabase
-import data_manager
+from orb.misc import data_manager
 
 from orb.logic.rebalance_thread import RebalanceThread
 

@@ -44,7 +44,7 @@ class Node(Button):
         self.col = prefs_col("display.node_selected_background_color")
 
     def on_touch_down(self, touch):
-        import data_manager
+        from orb.misc import data_manager
 
         if self.collide_point(*touch.pos):
             if data_manager.data_man.menu_visible:

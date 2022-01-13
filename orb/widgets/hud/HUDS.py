@@ -11,9 +11,7 @@ from kivy.clock import mainthread
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
-from kivy.properties import StringProperty
 from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
@@ -21,13 +19,12 @@ from kivy.app import App
 
 from orb.misc.prefs import is_rest
 from orb.misc.decorators import silent, guarded
-from orb.misc import mempool
+from orb.misc import mempool, data_manager
 from orb.misc.forex import forex
 from orb.logic.thread_manager import thread_manager
 from orb.lnd import Lnd
-from orb.misc.utils import mobile, desktop, pref
+from orb.misc.utils import desktop, pref
 
-import data_manager
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
 
 
@@ -238,8 +235,6 @@ class ThreadWidget(Widget):
     thread = ObjectProperty(None, allownone=True)
 
     def on_release(self, *args):
-        import data_manager
-
         if not data_manager.data_man.menu_visible:
             self.thread.stop()
         return super(ThreadWidget, self).on_release(*args)
@@ -280,7 +275,6 @@ class HUDProtocol(Button):
         """
         Allow the switching of protocol if on desktop
         """
-        import data_manager
 
         if desktop and not data_manager.data_man.menu_visible:
             app = App.get_running_app()
@@ -370,7 +364,6 @@ class HUDUIMode(Button):
         Initializer sets the timers.
         """
         Button.__init__(self, *args, **kwargs)
-        import data_manager
 
         self.text = self.modes[0]
 
@@ -386,7 +379,6 @@ class HUDUIMode(Button):
         """
         Allow the switching of protocol if on desktop
         """
-        import data_manager
 
         mode = data_manager.data_man.channels_widget_ux_mode
         data_manager.data_man.channels_widget_ux_mode = [1, 0][mode]

@@ -3,9 +3,7 @@
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-07 10:00:14
-import sys
 from traceback import format_exc
-from io import StringIO
 
 from kivy_garden.contextmenu import AppMenu
 from kivy.app import App
@@ -13,9 +11,7 @@ from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
 
-from orb.store.scripts import scripts, Script, load_scripts
-
-import data_manager
+from orb.store.scripts import load_scripts
 
 
 class TopMenu(AppMenu):

@@ -136,7 +136,7 @@ def patch_text_input():
     Disable keyboard shortcuts when a TextInput is focussed.
     """
     from kivy.uix.textinput import TextInput
-    import data_manager
+    from orb.misc import data_manager
 
     def on_focus(_, inst, value):
         if value:

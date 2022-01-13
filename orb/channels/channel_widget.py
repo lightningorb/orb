@@ -18,7 +18,6 @@ from orb.channels.fee_widget import FeeWidget
 from orb.math.lerp import lerp_2d
 from kivy.animation import Animation
 from orb.misc.colors import *
-from orb.misc.prefs import inverted_channels
 
 
 class ChannelWidget(Widget):

@@ -5,7 +5,6 @@
 # @Last Modified time: 2022-01-07 21:24:45
 
 from textwrap import dedent
-from threading import Thread
 import os
 
 from orb.store.scripts import scripts, Script, save_scripts

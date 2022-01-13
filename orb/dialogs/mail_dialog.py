@@ -8,8 +8,6 @@ import base64
 import time
 from threading import Thread
 
-from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.clock import mainthread
 
@@ -20,7 +18,7 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 
 class FocusTextInput(TextInput):
     def on_touch_down(self, touch):
-        import data_manager
+        from orb.misc import data_manager
 
         if self.collide_point(*touch.pos):
             if data_manager.data_man.menu_visible:

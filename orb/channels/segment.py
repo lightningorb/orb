@@ -6,7 +6,6 @@
 
 from math import ceil
 
-from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
