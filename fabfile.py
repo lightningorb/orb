@@ -2,8 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 07:28:26
+# @Last Modified time: 2022-01-13 09:09:29
 
+import re
+import os
 from invoke import task, Context, Collection
 import semver
 
@@ -59,5 +61,17 @@ def push_tags(c):
 
 
 @task()
-def udpate_ios(c):
-    c.run("make update_ios")
+def update_ios(c, env=dict(PATH=os.environ["PATH"])):
+    path = "../lnorb-ios/lnorb.xcodeproj/project.pbxproj"
+    content = open(path).read()
+    ver = get_ver()
+
+    c.run("make update_ios", env=env)
+
+    content = re.sub(
+        r"MARKETING_VERSION = \d+.\d+.\d+;",
+        f"MARKETING_VERSION = {ver.major}.{ver.minor}.{ver.patch};",
+        content,
+    )
+
+    open(path, "w").write(content)
