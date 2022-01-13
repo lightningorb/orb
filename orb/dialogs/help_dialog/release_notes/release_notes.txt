@@ -1,0 +1,11 @@
+In player, disable the videos tab until a collection is selected. #120
+refactoring: moved data_manager into the orb module
+updated docs
+moving build system to python - housekeeping
+Make video about documentation #129
+build
+by default, channels are now longer
+Make video about connecting to the node #127
+Add copy buttons to the Connection Settings dialog, to copy python commands #133
+GRPC should not be available in IOS #94
+add VERSION file with semver support #132

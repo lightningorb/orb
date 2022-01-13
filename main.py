@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-12 07:49:37
+# @Last Modified time: 2022-01-14 06:59:25
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -25,14 +25,12 @@ from orb.screens.close_channel import CloseChannel
 from orb.screens.rebalance import Rebalance
 from orb.screens.channels_screen import ChannelsScreen
 from orb.screens.pay_screen import PayScreen
-from orb.dialogs.mail_dialog import MailDialog
 from orb.screens.open_channel_screen import OpenChannelScreen
 from orb.screens.connect_screen import ConnectScreen
 from orb.screens.ingest_invoices_screen import IngestInvoicesScreen
 from orb.screens.console.console_screen import ConsoleScreen
 from orb.dialogs.player_dialog import PlayerDialog
 from orb.screens.send_coins import SendCoins
-from orb.screens.about import About
 from orb.screens.rankings import Rankings
 from orb.dialogs.connection_settings import ConnectionSettings
 from orb.lnd import Lnd
@@ -59,12 +57,10 @@ keep(IngestInvoicesScreen)
 keep(ConsoleScreen)
 keep(PlayerDialog)
 keep(SendCoins)
-keep(About)
 keep(Rankings)
 keep(MainLayout)
 keep(StatusLine)
 keep(TopMenu)
-keep(MailDialog)
 keep(cron)
 keep(AttributeEditor)
 keep(HUD)

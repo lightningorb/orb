@@ -18,7 +18,8 @@
 #:import view_forwarding_history orb.dialogs.forwarding_history.view_forwarding_history
 #:import graph_fees_earned orb.dialogs.forwarding_history.graph_fees_earned
 #:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
-#:import About orb.screens.about.About
+#:import About orb.dialogs.help_dialog.about.about.About
+#:import ReleaseNotes orb.dialogs.help_dialog.release_notes.release_notes.ReleaseNotes
 #:import Rankings orb.screens.rankings.Rankings
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
 
@@ -183,6 +184,10 @@
                     text: "About"
                     on_press: app_menu.close_all()
                     on_release: About().open()
+                ContextMenuTextItem:
+                    text: "Release Notes"
+                    on_press: app_menu.close_all()
+                    on_release: ReleaseNotes().open()
                 ContextMenuTextItem:
                     text: "Links"
                     ContextMenu:

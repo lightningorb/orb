@@ -1,0 +1,11 @@
+#:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<ReleaseNotes>:
+    title: 'Release Notes'
+    size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
+    size_hint: [None, None]
+    Label:
+        id: release_notes
+        size_hint: [1,1]
+        multiline: True
