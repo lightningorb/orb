@@ -23,7 +23,6 @@ Subpackages
    orb.math
    orb.misc
    orb.screens
-   orb.scripts
    orb.status_line
    orb.store
    orb.widgets

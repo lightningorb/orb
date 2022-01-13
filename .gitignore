@@ -1,8 +1,12 @@
+# IOS
+build/lnorb-ios/lnorb.xcodeproj/
+build/lnorb-ios/lnorb/Images.xcassets/
+build/lnorb-ios/YourApp/
+
 icons
 user_scripts.json
 *.spec
 *.pyc
-docsbuild
 *.build
 .DS_Store
 tutes
@@ -11,10 +15,10 @@ tmp.py
 orb.json
 __pycache__
 .idea
-build
-dist
+docs/docsbuild
+build/build
+build/dist
 orb.spec
-
 autobalance.yaml
 fees.yaml
 fees_meta.yaml

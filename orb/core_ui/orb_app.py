@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 14:42:16
+# @Last Modified time: 2022-01-13 14:15:29
 
 import os
 import sys
@@ -38,7 +38,8 @@ sys.path.append("orb/lnd")
 
 if not ios:
     sys.path.append(os.path.join("user", "scripts"))
-
+    os.environ["KIVY_DPI"] = "240"
+    os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
 do_monkey_patching()
 is_dev = "main.py" in sys.argv[0]
@@ -62,7 +63,9 @@ class OrbApp(MDApp):
 
     def load_kvs(self):
         for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if any(x in path for x in ["kivy_garden", "tutes/", "dist/", "user/"]):
+            if any(
+                x in path for x in ["kivy_garden", "build/", "tutes/", "dist/", "user/"]
+            ):
                 continue
             if "orb.kv" in path:
                 continue

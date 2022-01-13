@@ -126,16 +126,10 @@ toolchain pip3 install openpyxl
 
 You can now create the project:
 ```
-toolchain create orb lnorb
+./build.py ios.create
 ```
 
-Now assuming this codebase is cloned in `~/dev/orb`
-
-```
-toolchain create Touchtracer ~/dev/orb
-```
-
-Please note this creates the xcode project in `./orb-ios`.
+Please note this creates the xcode project in `./lnorb-ios`.
 
 You can now open the IOS project with:
 
@@ -143,10 +137,10 @@ You can now open the IOS project with:
 open orb-ios/orb.xcodeproj
 ```
 
-You'll need to update the project after each `git pull`.
+You'll need to update the project after each `git pull` or local modification.
 
 ```
-toolchain update touchtracer-ios
+./build.py ios.update
 ```
 
 In the XCode project, under 'signing capabilities' make sure to set your team, and a unique identifier.
