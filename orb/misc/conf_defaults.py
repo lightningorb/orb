@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 10:32:28
+# @Last Modified time: 2022-01-13 08:22:14
 
 
 def set_conf_defaults(config):
@@ -15,7 +15,7 @@ def set_conf_defaults(config):
     config.set("lnd", "network", "mainnet")
     config.set("lnd", "macaroon_admin", "")
     config.add_section("display")
-    config.set("display", "channel_length", 600)
+    config.set("display", "channel_length", 1000)
     config.set("display", "inverted_channels", 0)
     config.set("display", "show_sent_received", 1)
     config.set("display", "channel_opacity", 0.3)
