@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-12 20:35:42
+# @Last Modified time: 2022-01-13 16:32:11
 
 import os
 from functools import partial
@@ -95,6 +95,7 @@ class PlayerDialog(PopupDropShadow):
     def collection_clicked(self, widget, collection):
         lib = load_video_library()
         self.ids.videos.clear_widgets()
+        self.collection = collection
         self.ids.tabs.switch_tab("Videos")
         for video in collection.videos:
             video_widget = VideoWidget(**video.__dict__)
