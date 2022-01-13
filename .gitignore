@@ -2,7 +2,6 @@ icons
 user_scripts.json
 *.spec
 *.pyc
-*.yaml
 docsbuild
 *.build
 .DS_Store
@@ -15,3 +14,9 @@ __pycache__
 build
 dist
 orb.spec
+
+autobalance.yaml
+fees.yaml
+fees_meta.yaml
+orb/store/scripts.yaml
+scripts.yaml

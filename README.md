@@ -17,52 +17,49 @@ sudo apt-get install -y xclip xsel # Linux users only
 python3 main.py
 ```
 
-## SSH Tunnel
+# Connecting your node
 
-You'll need to decide whether to access your node directly, or use an SSH tunnel. To tunnel:
+## step 1/
 
-```bash
-ssh -L 10009:localhost:10009 -N <username>@<host_ip> -i <path_to_pem>
-```
+    get your node's IP address or domain name, as visible from the LAN / WAN
 
-## Direct connection
+## step 2/
 
-If you want to connect to your node directly, without an SSH tunnel, you may need to add your node's IP to your lnd.conf, since by default, LND only serves requests on localhost.
+    set tlsextraip or tlsextradomain
 
-tlsextraip=<your_node_ip>
+## step 3/
 
-(please note the `tlsextraip=` line may appear multiple times).
+    shut down LND
 
-Then restart lnd.
+## step 4/ 
 
-## Firewall
+    $ mv ~/.lnd/tls.cert ~/.lnd/tls.cert.backup
+    $ mv ~/.lnd/tls.key ~/.lnd/tls.key.backup
 
-If you've opted for a direct connection, then on your node you'll need to open up port `10009` (or `8080` for IOS users).
+## step 5/
 
-```
-sudo ufw allow 10009
-sudo ufw allow 8080
-```
+    start LND
 
-## cert and macaroon
+## step 6/
 
-Encode your macaroon to hex, by running this command in your node's terminal:
+    encode TLS CERT
 
-```
-python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
-```
+    $ python3 -c 'import base64; print(base64.b64encode(open(".lnd/tls.cert").read().encode()).decode())'
 
-Next encode your cert to base64:
+## step 7/ 
 
-```
-python3 -c 'import base64; print(base64.b64encode(open(".lnd/tls.cert").read().encode()).decode())'
-```
+    encode Macaroon
 
-And paste those into orb.
+    $ python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
 
-Next change the protocol from mock to grpc.
+## step 8/
 
-In orb now press 'refresh' to see your channels. If this doesn't work, you may need to restart the application to pick up the new config.
+    copy and paste those strings into Orb
+
+## step 9/
+
+    restart Orb
+
 
 # Resolution
 
