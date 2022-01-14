@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 10:58:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 11:02:33
+# @Last Modified time: 2022-01-14 22:35:35
 
 from build_system.semantic import *
+from invoke import task
 
 
-@task()
+@task
 def tag(c):
     ver = get_ver()
     print(ver)
