@@ -188,3 +188,10 @@ Make sure to replace the icon set with a valid one.
 You can now build & launch Kivy on your target IOS device.
 
 To upload to apple connect, select build -> archive.
+
+
+# SSL
+
+In MacOSX if you get any issues relating to SSL, try installing Python's SSL certs.
+
+/Applications/Python\ 3.10/Install\ Certificates.command
