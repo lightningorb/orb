@@ -1,13 +1,10 @@
-########################################################################################
-# SEND COINS
-########################################################################################
+#:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
 
 <SendCoins>:
     title: "Send Coins"
-    size: (800,850)
+    size: min(dp(500), Window.size[0]), min(dp(500), Window.size[1])
     size_hint: (None, None)
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
 
     BoxLayout:
         orientation: 'vertical'
@@ -15,27 +12,28 @@
         padding: 20
         Label:
             id: fees
-            height: 120
+            height: dp(120)
             size_hint_y: None
             text: "Fetching fees..."
         MDTextField:
             id: address
-            height: 120
+            height: dp(120)
             size_hint: (1, None)
             helper_text: 'Address'
             helper_text_mode: "persistent"
         MDTextField:
             id: amount
-            height: 120
+            height: dp(120)
             size_hint: (1, None)
-            helper_text: 'Amount'
+            helper_text: 'Amount (Sats)'
             helper_text_mode: "persistent"
         MDTextField:
             id: sats_per_vbyte
-            height: 120
+            height: dp(120)
             size_hint: (1, None)
             helper_text: 'Sats per v/byte'
             helper_text_mode: "persistent"
         MDRaisedButton:
+            id: send_button
             text: "Send"
             on_release: root.send_coins(addr=address.text, amount=amount.text, sat_per_vbyte=sats_per_vbyte.text)

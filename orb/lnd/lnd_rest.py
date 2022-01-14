@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 18:45:58
+# @Last Modified time: 2022-01-15 05:31:18
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -274,12 +274,45 @@ class LndREST(LndBase):
         )
         return self.__post(url=url, data=data)
 
+    def send_coins(self, addr, amount, sat_per_vbyte):
+        """
+        lncli: sendcoins SendCoins executes a request to send coins
+        to a particular address. Unlike SendMany, this RPC call
+        only allows creating a single output at a time. If
+        neither target_conf, or sat_per_vbyte are set, then
+        the internal wallet will consult its fee model to
+        determine a fee for the default confirmation target.
+        """
+        url = f"/v1/transactions"
+        data = {
+            "addr": addr,  # The address to send coins to
+            "amount": amount,  # The amount in satoshis to send
+            "sat_per_vbyte": sat_per_vbyte,  # A manual fee rate set in sat/vbyte that should be used when crafting the transaction.
+        }
+        return self.__post(url, data=data)
+
     def __get(self, url):
+        """
+        Simplify get requests.
+
+        url should NOT including the FQDN.
+        data should NOT be json encoded.
+
+        returns an autoobj
+        """
         full_url = f"{self.fqdn}{url}"
         r = requests.get(full_url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
 
     def __post(self, url, data):
+        """
+        Simplify posts requests.
+
+        url should NOT including the FQDN.
+        data should NOT be json encoded.
+
+        returns an autoobj
+        """
         full_url = f"{self.fqdn}{url}"
         jdata = json.dumps(todict(data))
         r = requests.post(
