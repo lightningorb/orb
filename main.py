@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 21:15:05
+# @Last Modified time: 2022-01-15 04:40:15
 
 import sys
 import os
 from pathlib import Path
 from kivy.utils import platform
 
-if platform == "osx":
+if platform == "macosx":
     os.environ["KIVY_DPI"] = "240"
     os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
