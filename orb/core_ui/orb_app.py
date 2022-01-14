@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 14:15:29
+# @Last Modified time: 2022-01-14 07:45:36
 
 import os
 import sys
@@ -34,8 +34,6 @@ sys.path.append("orb/lnd")
 
 if not ios:
     sys.path.append(os.path.join("user", "scripts"))
-    os.environ["KIVY_DPI"] = "240"
-    os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
 do_monkey_patching()
 is_dev = "main.py" in sys.argv[0]
