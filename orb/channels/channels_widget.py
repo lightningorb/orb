@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 10:45:44
+# @Last Modified time: 2022-01-14 12:28:39
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -34,6 +34,7 @@ class ChannelsWidget(ScatterLayout):
 
         self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
         self.htlcs_thread.daemon = True
+        self.node = None
         self.channels = data_manager.data_man.channels
         self.channels.get()
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
