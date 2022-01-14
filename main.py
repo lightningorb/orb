@@ -2,14 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 16:24:14
+# @Last Modified time: 2022-01-14 21:15:05
 
 import sys
 import os
 from pathlib import Path
+from kivy.utils import platform
 
-os.environ["KIVY_DPI"] = "240"
-os.environ["KIVY_METRICS_DENSITY"] = "1.5"
+if platform == "osx":
+    os.environ["KIVY_DPI"] = "240"
+    os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
 from kivy.config import Config
 from kivy.core.window import Window
