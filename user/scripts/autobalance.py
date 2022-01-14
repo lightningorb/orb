@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 21:20:00
+# @Last Modified time: 2022-01-15 05:59:01
 
 import os
 import math
@@ -162,6 +162,8 @@ class Rebalance(StoppableThread):
         if not os.path.exists("autobalance.yaml"):
             return
         obj = yaml.load(open("autobalance.yaml", "r"), Loader=get_loader())
+        if not obj:
+            return
         chans = lnd.get_channels()
         pk_ignore = set([])
         setters = {}
@@ -170,7 +172,7 @@ class Rebalance(StoppableThread):
             if c.chan_id in pk_ignore:
                 continue
             alias = lnd.get_node_alias(c.remote_pubkey)
-            for rule in obj["rules"]:
+            for rule in obj.get("rules", []):
                 rule_copy = copy(rule)
                 rule_copy.channel = c
                 if type(rule) is Ignore:
