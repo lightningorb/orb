@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 08:45:12
+# @Last Modified time: 2022-01-14 13:17:07
 
 from functools import lru_cache
 import os
@@ -16,18 +16,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
 
 from orb.misc.plugin import Plugin
-
-
-@lru_cache(None)
-def get_db(name):
-    """
-    Create the db file, and return the db object
-    in a cached function.
-    """
-    user_data_dir = App.get_running_app().user_data_dir
-    path = os.path.join(user_data_dir, f"{name}.db")
-    db = SqliteDatabase(path)
-    return db
+from orb.store.db_meta import get_db
 
 
 class Todo(Model):

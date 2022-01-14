@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-16 07:46:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 08:46:11
+# @Last Modified time: 2022-01-14 16:12:56
 
 """
 This script exports the forwarding history to an excel sheet.
@@ -17,6 +17,7 @@ from kivy.app import App
 
 from orb.dialogs.forwarding_history import get_forwarding_history
 from orb.misc.plugin import Plugin
+from orb.misc.utils import pref_path
 
 
 class ExportRouting(Plugin):
@@ -53,7 +54,7 @@ class ExportRouting(Plugin):
                 sheet[f"{l}{i}"] = val[j]
 
         user_data_dir = App.get_running_app().user_data_dir
-        fn = os.path.expanduser(os.path.join(user_data_dir, "lnd-routing.xlsx"))
+        fn = pref_path("export") / "lnd-routing.xlsx"
         workbook.save(filename=fn)
         print(f"Done exporting to {fn}")
 

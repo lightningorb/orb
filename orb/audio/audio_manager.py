@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 16:47:46
+# @Last Modified time: 2022-01-14 17:31:40
 from kivy.utils import platform
 from orb.misc.utils import pref
 
-ios = platform == "ios"
+# ios = platform == "ios"
+ios = False
 
 
 class AudioManager:

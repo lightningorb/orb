@@ -2,11 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 19:26:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 22:45:53
+# @Last Modified time: 2022-01-14 15:19:47
+
+import os
+from pathlib import Path
 
 import yaml
-import os
+
 from kivy.app import App
+
+from orb.misc.utils import pref
 
 scripts = {}
 
@@ -48,18 +53,14 @@ def load_scripts():
     )
     scripts.clear()
     user_data_dir = App.get_running_app().user_data_dir
-    scripts.update(load(os.path.join(user_data_dir, "scripts.yaml")))
+    path = Path(user_data_dir) / pref("path.yaml") / "scripts.yaml"
+    scripts.update(load(path))
     return scripts
 
 
 def save_scripts():
     user_data_dir = App.get_running_app().user_data_dir
+    path = Path(user_data_dir) / pref("path.yaml") / "scripts.yaml"
 
-    with open(os.path.join(user_data_dir, "scripts.yaml"), "w") as stream:
+    with open(path, "w") as stream:
         stream.write(yaml.dump(scripts, Dumper=get_dumper()))
-
-
-if __name__ == "__main__":
-    scripts.update(Script(code='print("Hello World")', menu="test > hello world"))
-    save_scripts()
-    print(load_scripts())

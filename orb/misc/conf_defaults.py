@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 08:22:14
+# @Last Modified time: 2022-01-14 15:54:16
 
 
 def set_conf_defaults(config):
@@ -39,3 +39,11 @@ def set_conf_defaults(config):
     config.set("shortcuts", "toggle_chords", "shift c")
     config.set("shortcuts", "next_chord", "j")
     config.set("shortcuts", "prev_chord", "k")
+    config.add_section("path")
+    config.set("path", "video", "videos")
+    config.set("path", "db", "store/dbs")
+    config.set("path", "yaml", "store/yaml")
+    config.set("path", "json", "store/json")
+    config.set("path", "cert", "certs")
+    config.set("path", "script", "scripts")
+    config.set("path", "export", "exports")

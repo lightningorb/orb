@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-12 16:23:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-12 21:05:30
+# @Last Modified time: 2022-01-14 14:44:12
 
 import os
 from pathlib import Path
@@ -16,6 +16,7 @@ from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
 
 from orb.misc.stoppable_thread import StoppableThread
+from orb.misc.utils import pref
 
 
 class Base(EventDispatcher, StoppableThread):
@@ -26,7 +27,11 @@ class Base(EventDispatcher, StoppableThread):
     def __init__(self, url, *args, **kwargs):
         super(Base, self).__init__(*args, **kwargs)
         self.url = url
-        self.DOWNLOAD_FOLDER = Path(App.get_running_app().user_data_dir)
+        self.DOWNLOAD_FOLDER = Path(App.get_running_app().user_data_dir) / pref(
+            "path.video"
+        )
+        if not self.DOWNLOAD_FOLDER.is_dir():
+            self.DOWNLOAD_FOLDER.mkdir()
         self.file = self.DOWNLOAD_FOLDER / url.split("/")[-1]
         self.bps = defaultdict(int)
         self.i = 0

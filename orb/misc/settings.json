@@ -219,5 +219,58 @@
       "desc":"Only display the liquidity Chords for the previous node",
       "section":"shortcuts",
       "key":"prev_chord"
+   },
+   {
+      "type":"title",
+      "title":"Data Paths"
+   },
+   {
+      "type":"string",
+      "title":"Videos",
+      "desc":"Path where videos are stored",
+      "section":"path",
+      "key":"video"
+   },
+   {
+      "type":"string",
+      "title":"Yaml",
+      "desc":"Path where yaml files are stored",
+      "section":"path",
+      "key":"yaml"
+   },
+   {
+      "type":"string",
+      "title":"DB",
+      "desc":"Path where db files are stored",
+      "section":"path",
+      "key":"db"
+   },
+   {
+      "type":"string",
+      "title":"JSON",
+      "desc":"Path where JSON are stored",
+      "section":"path",
+      "key":"json"
+   },
+   {
+      "type":"string",
+      "title":"cert",
+      "desc":"Path where certs are stored",
+      "section":"path",
+      "key":"cert"
+   },
+   {
+      "type":"string",
+      "title":"script",
+      "desc":"Path where scripts are stored",
+      "section":"path",
+      "key":"script"
+   },
+   {
+      "type":"string",
+      "title":"export",
+      "desc":"Path where data is exported",
+      "section":"path",
+      "key":"export"
    }
 ]

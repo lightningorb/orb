@@ -2,10 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 20:28:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 08:04:35
+# @Last Modified time: 2022-01-14 15:45:37
 
+from pathlib import Path
+from orb.misc.utils import pref as p
+from orb.misc.prefs import cert_path
 import base64, codecs, json, requests
-from kivy.app import App
 import os
 import json
 
@@ -14,15 +16,9 @@ from orb.misc.plugin import Plugin
 
 class RestExample(Plugin):
     def main(self):
-        app = App.get_running_app()
-        data_dir = app.user_data_dir
-        cert_path = os.path.join(data_dir, "tls.cert")
-        hostname = app.config["lnd"]["hostname"]
-        rest_port = app.config["lnd"]["rest_port"]
-        macaroon = app.config["lnd"]["macaroon_admin"]
-        url = f"https://{hostname}:{rest_port}/v1/channels"
-        headers = {"Grpc-Metadata-macaroon": macaroon.encode()}
-        r = requests.get(url, headers=headers, verify=cert_path)
+        url = f"https://{p('lnd.hostname')}:{p('lnd.rest_port')}/v1/channels"
+        headers = {"Grpc-Metadata-macaroon": p("lnd.macaroon_admin").encode()}
+        r = requests.get(url, headers=headers, verify=cert_path())
         print(json.dumps(r.json(), indent=4))
 
     @property

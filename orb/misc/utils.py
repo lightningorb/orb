@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 09:05:05
+# @Last Modified time: 2022-01-14 16:24:44
+
+from pathlib import Path
 
 from kivy.app import App
+from kivy.utils import platform
 
 from orb.math.Vector import Vector
-from kivy.utils import platform
 
 
 def prefs_col(name):
@@ -30,6 +32,11 @@ def pref(name):
             return float(app.config[section][key])
         except:
             return app.config[section][key]
+
+
+def pref_path(name):
+    app = App.get_running_app()
+    return Path(app.user_data_dir) / pref(f"path.{name}")
 
 
 class hashabledict(dict):

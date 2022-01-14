@@ -2,6 +2,7 @@
 #:import App kivy.app.App
 #:import os os
 #:import RankingsFileChooser orb.screens.rankings.RankingsFileChooser
+#:import pref_path orb.misc.utils.pref_path
 
 
 <RankingsFileChooser>:
@@ -46,7 +47,7 @@
         orientation: 'vertical'
         MDTextField:
             id: path
-            text: os.path.join(App.get_running_app().user_data_dir, 'path_finding.json')
+            text: pref_path('export') / 'path_finding.json'
             helper_text: 'Export path'
             helper_text_mode: "persistent"
         Splitter:

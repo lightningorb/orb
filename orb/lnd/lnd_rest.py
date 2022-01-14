@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 16:35:30
+# @Last Modified time: 2022-01-14 18:45:58
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -20,6 +20,7 @@ encode_pk = lambda PK: base64.urlsafe_b64encode(
 class LndREST(LndBase):
     def __init__(self, tls_certificate, server, network, macaroon, port):
         self.cert_path = tls_certificate
+        print(f"Starting lndREST with cert_path: {tls_certificate}")
         self.hostname = server
         self.rest_port = port
         self.headers = {"Grpc-Metadata-macaroon": macaroon.encode()}

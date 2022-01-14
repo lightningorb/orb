@@ -2,20 +2,21 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 09:42:18
+# @Last Modified time: 2022-01-14 16:24:14
 
+import sys
 import os
+from pathlib import Path
 
 os.environ["KIVY_DPI"] = "240"
 os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
 from kivy.config import Config
 from kivy.core.window import Window
-import sys
 
-sys.path.append(os.path.join("orb", "lnd"))
-sys.path.append(os.path.join("orb", "lnd", "grpc_generated"))
-sys.path.append(os.path.join("third_party", "contextmenu"))
+sys.path.append(str(Path("orb/lnd")))
+sys.path.append(str(Path("orb/lnd/grpc_generated")))
+sys.path.append(str(Path("third_party/contextmenu")))
 
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")

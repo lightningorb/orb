@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 16:32:11
+# @Last Modified time: 2022-01-14 14:22:56
 
 import os
 from functools import partial
 from kivy.clock import mainthread
+from pathlib import Path
 
 from kivy.properties import (
     StringProperty,
@@ -49,14 +50,11 @@ class VideoWidget(BoxLayout):
         if not self.download_thread:
 
             def open_or_dl(widget, is_complete):
-                print("open_or_dl")
                 self.check_complete_thread.unbind(is_complete=open_or_dl)
                 if is_complete == 1:
-                    print("OPEN THE VIDEO")
                     self.check_complete_thread = None
                     self.is_complete += 1
                 elif is_complete == 0:
-                    print("START THE DOWNLOAD")
                     self.download_thread = DownloadThread(url=self.url)
                     self.download_thread.daemon = True
                     self.download_thread.start()
@@ -104,22 +102,22 @@ class PlayerDialog(PopupDropShadow):
 
     @mainthread
     def open_video(self, widget, is_complete):
-        print("open_video")
-        user_data_dir = App.get_running_app().user_data_dir
-        path = f"{user_data_dir}/{widget.name}"
-        if self.player:
-            self.player.state = "stop"
-        self.ids.bl.clear_widgets()
-        self.player = VideoPlayer(
-            source=(path if os.path.exists(path) else None),
-            options={"allow_stretch": True},
-            state="play",
-        )
-        self.ids.bl.add_widget(self.player)
-        self.ids.tabs.switch_tab("Player")
+        """
+        Play the video in the player tab.
+        """
+        user_data_dir = Path(App.get_running_app().user_data_dir)
+        path = user_data_dir / "videos" / widget.name
+        if path.is_file():
+            if self.player:
+                self.player.state = "stop"
+            self.ids.bl.clear_widgets()
+            self.player = VideoPlayer(
+                source=path, options={"allow_stretch": True}, state="play"
+            )
+            self.ids.bl.add_widget(self.player)
+            self.ids.tabs.switch_tab("Player")
 
     def dismiss(self):
-        print("Close")
         if self.player:
             self.player.state = "stop"
         super(PlayerDialog, self).dismiss()

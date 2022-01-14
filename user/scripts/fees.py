@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 14:47:13
+# @Last Modified time: 2022-01-14 18:41:25
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -12,6 +12,7 @@ import os
 import yaml
 from copy import copy
 from time import sleep
+from pathlib import Path
 
 import arrow
 
@@ -24,6 +25,7 @@ from orb.math.lerp import lerp
 from orb.misc.plugin import Plugin
 from orb.logic.normalized_events import get_best_fee
 from orb.misc.stoppable_thread import StoppableThread
+from orb.misc.utils import pref
 from orb.lnd import Lnd
 
 
@@ -240,13 +242,14 @@ class Fees(StoppableThread):
         Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 5 * 60)
 
     def main(self, *_):
-        load = (
-            lambda x: yaml.load(open(x, "r"), Loader=get_loader())
-            if os.path.exists(x)
-            else {}
-        )
+        def load(fn):
+            path = (Path(user_data_dir) / pref("path.yaml") / fn).as_posix()
+            if os.path.exists(path):
+                return yaml.load(open(path, "r"), Loader=get_loader())
+            return {}
+
         user_data_dir = App.get_running_app().user_data_dir
-        obj = load(os.path.join(user_data_dir, "scripts", "fees.yaml"))
+        obj = load("fees.yaml")
         if not obj:
             return
         obj_meta = load("fees_meta.yaml")
@@ -278,9 +281,8 @@ class Fees(StoppableThread):
         app = App.get_running_app()
         if app:
             user_data_dir = app.user_data_dir
-            with open(
-                os.path.join(user_data_dir, "scripts", "fees_meta.yaml"), "w"
-            ) as stream:
+            path = Path(user_data_dir) / pref("path.yaml") / "fees_meta.yaml"
+            with open(path, "w") as stream:
                 stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
 
     def run(self, *_):
