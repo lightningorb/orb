@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 15:45:47
+# @Last Modified time: 2022-01-14 10:57:46
 
 import os
 import re
@@ -34,7 +34,7 @@ def copy_files(c):
     c.run("rm -rf /tmp/lnorb/")
     c.run("mkdir -p /tmp/lnorb/")
     c.run(
-        "cp -r main.py images/ln.png images docs/docsbuild orb user video_library.yaml fees.yaml autobalance.yaml images/orb.png user_scripts.json /tmp/lnorb/"
+        "cp -r third_party main.py images/ln.png images docs/docsbuild orb user video_library.yaml fees.yaml autobalance.yaml images/orb.png user_scripts.json /tmp/lnorb/"
     )
 
 
@@ -62,6 +62,8 @@ def update(c, env=dict(PATH=os.environ["PATH"])):
     update_version(c)
     prep_user_scripts(c)
     copy_files(c)
+    with c.cd("build"):
+        c.run("toolchain update lnorb-ios", env=env)
 
 
 @task

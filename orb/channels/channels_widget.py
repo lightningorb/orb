@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 09:32:29
+# @Last Modified time: 2022-01-14 10:45:44
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -97,6 +97,8 @@ class ChannelsWidget(ScatterLayout):
             self.cn[chan_id].update_rect(i, len(self.cn))
 
     def on_touch_move(self, touch):
+        if data_manager.data_man.menu_visible:
+            return False
         if self.mode == ChannelsWidgetUXMode.gestures:
             self.gestures_delegate.on_touch_move(touch)
             return False
@@ -109,6 +111,8 @@ class ChannelsWidget(ScatterLayout):
         return super(ChannelsWidget, self).on_touch_up(touch)
 
     def on_touch_down(self, touch):
+        if data_manager.data_man.menu_visible:
+            return False
         if self.mode == ChannelsWidgetUXMode.gestures:
             self.gestures_delegate.on_touch_down(touch)
             return False

@@ -1,0 +1,25 @@
+<AppMenu>:
+    height: dp(30)
+    size_hint: 1, None
+
+    canvas.before:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<AppMenuTextItem>:
+    disabled: True
+    size_hint: None, None
+    on_children: self._check_submenu()
+    font_size: '15sp'
+    background_normal: ""
+    background_down: ""
+    background_color: root.hl_color if self.state == 'down' else (0.2, 0.2, 0.2, 1.0)
+    background_disabled_normal: ""
+    background_disabled_down: ""
+    border: (0, 0, 0, 0)
+    size: self.texture_size[0], dp(30)
+    padding_x: dp(10)

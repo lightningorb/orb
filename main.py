@@ -2,15 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 06:59:25
+# @Last Modified time: 2022-01-14 09:42:18
+
+import os
+
+os.environ["KIVY_DPI"] = "240"
+os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
 from kivy.config import Config
 from kivy.core.window import Window
 import sys
-import os
 
 sys.path.append(os.path.join("orb", "lnd"))
 sys.path.append(os.path.join("orb", "lnd", "grpc_generated"))
+sys.path.append(os.path.join("third_party", "contextmenu"))
 
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")

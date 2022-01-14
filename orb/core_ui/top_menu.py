@@ -2,22 +2,30 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-07 10:00:14
+# @Last Modified time: 2022-01-14 09:26:57
+
 from traceback import format_exc
 
-from kivy_garden.contextmenu import AppMenu
 from kivy.app import App
+from kivy_garden.contextmenu import AppMenu
 from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
+from kivy.properties import ObjectProperty
 
 from orb.store.scripts import load_scripts
+from orb.misc import data_manager
 
 
 class TopMenu(AppMenu):
 
+    hovered_menu_item = ObjectProperty()
+
     script_widgets = []
     view_widgets = []
+
+    def __init__(self, *args, **kwargs):
+        super(TopMenu, self).__init__(*args, **kwargs)
 
     def populate_scripts(self):
         scripts = load_scripts()
@@ -47,7 +55,7 @@ class TopMenu(AppMenu):
             else:
                 tm = self
 
-                def run(self, *args):
+                def run(self, *_):
                     app = App.get_running_app()
                     app.root.ids.app_menu.close_all()
                     tm.exec(scripts[self.full_name].code)
@@ -63,6 +71,16 @@ class TopMenu(AppMenu):
             components = [x.strip() for x in script.split(">")]
             add_to_tree(d=0, c=components, t=tree, p=menu.submenu)
         menu.submenu._on_visible(False)
+
+    def on_hovered_menu_item(self, *_, **__):
+        """
+        When the menu is hovered, tell data_manager.
+        Sadly this doesn't seem to work as expected.
+        :param _: args
+        :param __: kwargs
+        :return: None
+        """
+        data_manager.data_man.menu_visible = True
 
     def exec(self, text):
         try:

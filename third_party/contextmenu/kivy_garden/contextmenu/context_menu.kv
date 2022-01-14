@@ -1,0 +1,125 @@
+<ContextMenu>:
+    cols: 1
+    size_hint: None, None
+    spacing: 0, 0
+    spacer: _spacer
+    on_visible: self._on_visible(args[1])
+    on_parent: self._on_visible(self.visible)
+
+    Widget:
+        id: _spacer
+        size_hint: 1, None
+        height: dp(3)
+        canvas.before:
+            Color:
+                rgb: root.hl_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+<ContextMenuItem>:
+    size_hint: None, None
+    submenu_arrow: _submenu_arrow
+    on_children: self._check_submenu()
+    on_parent: self._check_submenu()
+    canvas.before:
+        Color:
+            rgb: (0.15, 0.15, 0.15)
+        Rectangle:
+            pos: 0,0
+            size: self.size
+
+    Widget:
+        id: _submenu_arrow
+        size_hint: None, None
+        width: dp(6)
+        height: dp(11)
+        pos: self.parent.width - self.width - dp(5), (self.parent.height - self.height) / 2
+        canvas.before:
+            Translate:
+                xy: self.pos
+            Color:
+                rgb: (0.35, 0.35, 0.35) if self.disabled else (1, 1, 1)
+            Triangle:
+                points: [0,0, self.width,self.height/2, 0,self.height]
+            Translate:
+                xy: (-self.pos[0], -self.pos[1])
+
+
+<ContextMenuText>:
+    label: _label
+    width: self.parent.width if self.parent else 0
+    height: dp(26)
+    font_size: '15sp'
+
+    Label:
+        pos: 0,0
+        id: _label
+        text: self.parent.text
+        color: self.parent.color
+        font_size: self.parent.font_size
+        padding: dp(10), 0
+        halign: 'left'
+        valign: 'middle'
+        size: self.texture_size
+        size_hint: None, 1
+
+
+<AbstractMenuItemHoverable>:
+    on_hovered: self._on_hovered(args[1])
+    canvas.before:
+        Color:
+            rgb: (0.25, 0.25, 0.25) if self.hovered and not self.disabled else (0.15, 0.15, 0.15)
+        Rectangle:
+            pos: 0,0
+            size: self.size
+
+
+<ContextMenuDivider>:
+    font_size: '10sp'
+    height: dp(20) if len(self.label.text) > 0 else dp(1)
+    canvas.before:
+        Color:
+            rgb: (0.25, 0.25, 0.25)
+        Rectangle:
+            pos: 0,self.height - 1
+            size: self.width, 1
+
+
+<ContextMenuButton@Button>:
+    size_hint: None, None
+    font_size: '12sp'
+    height: dp(20)
+    background_normal: ""
+    background_down: ""
+    background_color: HIGHLIGHT_COLOR
+    border: (0, 0, 0, 0)
+    on_press: self.background_color = 0.10, 0.6, 0.8, 1.0
+    on_release: self.background_color = HIGHLIGHT_COLOR
+
+
+<ContextMenuToggleButton@ToggleButton>:
+    size_hint: None, None
+    font_size: '12sp'
+    size: dp(30), dp(20)
+    background_normal: ""
+    background_down: ""
+    background_color: HIGHLIGHT_COLOR if self.state == 'down' else (0.25, 0.25, 0.25, 1.0)
+    border: (0, 0, 0, 0)
+    on_press: self.background_color = 0.10, 0.6, 0.8, 1.0
+    on_release: self.background_color = HIGHLIGHT_COLOR
+
+
+<ContextMenuSmallLabel@Label>:
+    size: self.texture_size[0], dp(18)
+    size_hint: None, None
+    font_size: '12sp'
+
+
+<ContextMenuTextInput@TextInput>:
+    size_hint: None, None
+    height: dp(22)
+    font_size: '12sp'
+    padding: dp(7), dp(3)
+    multiline: False

@@ -16,8 +16,7 @@ orb.json
 __pycache__
 .idea
 docs/docsbuild
-build/build
-build/dist
+build/
 orb.spec
 autobalance.yaml
 fees.yaml

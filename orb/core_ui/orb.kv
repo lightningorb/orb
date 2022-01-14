@@ -28,47 +28,33 @@
 # MAIN
 ########################################################################################
 
-<TopMenu@AppMenu>:
 
-<MainLayout>:
+<MainLayout@BoxLayout>:
+    # This is the main UI Layout KV. This is where a lot of the
+    # top-level UI magic happens.
     id: main_layout
     menu_visible: any([view_context_menu.visible, scripts_context_menu.visible, app_context_menu.visible, lightning_context_menu.visible, help_context_menu.visible, onchain_context_menu.visible])
     orientation: 'vertical'
-    size_hint: [1, 1]
-    canvas.before:
-        Color:
-            rgba: 35 / 255, 35 / 255, 35 / 255, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        id: box_layout
-        orientation: "vertical"
-        size_hint: [1, 1]
-        canvas.before:
-            Color:
-                rgba: 1, 0, 0, (0.1 * (app.config['debug']['layouts'] == '1'))
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        ScreenManager:
-            id: sm
-            canvas.before:
-                Color:
-                    rgba: 0, 1, 1, (0.1 * (app.config['debug']['layouts'] == '1'))
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            ChannelsScreen:
-                id: channels
-            ConsoleScreen
-        StatusLine
-            id: status_line
+    # hack alert: the submenus are pretty buggy, and require
+    # us to build them at the bottom off the screen then moving
+    # them to the top. So we build this widget upside down and
+    # then flip it.
+    StatusLine
+        id: status_line
+    ScreenManager:
+        # In case we have many screens, well we have a screen
+        # manager to easily go from one screen to another.
+        # might be a good idea to get rid of this as it may 
+        # introduce a lot of unecessary complexity, and most
+        # things seem to work well as dialogs in Kivy. 
+        id: sm
+        ChannelsScreen:
+            id: channels
+        ConsoleScreen
     TopMenu:
         id: app_menu
         top: root.height
         cancel_handler_widget: main_layout
-
         AppMenuTextItem:
             text: "View"
             ContextMenu:
@@ -113,10 +99,6 @@
                     text: "Ingest Invoices"
                     on_press: IngestInvoicesScreen().open()
                     on_release: app_menu.close_all()
-                # ContextMenuTextItem:
-                #     text: "Fee Spy"
-                #     on_press: FeeSpy().open()
-                #     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Rankings"
                     on_press: Rankings().open()
@@ -152,17 +134,17 @@
             ContextMenu:
                 id: app_context_menu
                 ContextMenuTextItem:
-                    text: "Connection Settings"
-                    on_press: ConnectionSettings().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
                     text: "Settings"
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuTextItem:
-                    text: "Quit"
+                    text: "Connection Settings"
+                    on_press: ConnectionSettings().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Files"
                     on_press: app_menu.close_all()
-                    on_release: app.get_running_app().stop()
+                    on_release: webbrowser.open('file://' + App.get_running_app().user_data_dir)
                 ContextMenuTextItem:
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
@@ -171,6 +153,10 @@
                     text: "Player"
                     on_press:  app_menu.close_all()
                     on_release: PlayerDialog().open()
+                ContextMenuTextItem:
+                    text: "Quit"
+                    on_press: app_menu.close_all()
+                    on_release: app.get_running_app().stop()
         AppMenuTextItem:
             text: "Scripts"
             id: scripts
@@ -218,7 +204,3 @@
                         ContextMenuTextItem:
                             text: "Acinq"
                             on_release: webbrowser.open("https://explorer.acinq.co/n/" + Lnd().get_info().identity_pubkey)
-    # Scatter:
-    #     id: scatter
-    #     size: 800, 500
-    #     size_hint: None, None
