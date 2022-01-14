@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 17:44:54
+# @Last Modified time: 2022-01-15 04:48:13
 
 import os
 import sys
@@ -111,7 +111,10 @@ class OrbApp(MDApp):
                         f.write(user_scripts[path])
 
     def load_user_scripts(self):
-        scripts_dir = pref_path("script")
+        if ios:
+            scripts_dir = pref_path("script")
+        else:
+            scripts_dir = Path("user/scripts")
         plugins = {}
         for plugin_file_path in scripts_dir.glob("*.py"):
             plugin_module_name = os.path.basename(os.path.splitext(plugin_file_path)[0])
@@ -176,7 +179,6 @@ class OrbApp(MDApp):
         else:
             sys.path.append(Path("user/scripts").as_posix())
         audio_manager.set_volume()
-        self.save_user_scripts()
         self.load_user_scripts()
 
         _write = sys.stdout.write
@@ -214,6 +216,7 @@ class OrbApp(MDApp):
         """
         self.make_dirs()
         self.upgrade_tasks()
+        self.save_user_scripts()
 
         data_manager.DataManager.ensure_cert()
         self.load_kvs()
