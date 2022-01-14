@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 05:59:21
+# @Last Modified time: 2022-01-14 12:02:18
 
 from io import StringIO
 import sys
@@ -19,5 +19,5 @@ class StatusLine(BoxLayout):
         super(StatusLine, self).__init__(*args, **kwargs)
 
 
-class StatusLineOutput(TextInput):
+class StatusLineOutput(Label):
     output = StringProperty("")

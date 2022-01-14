@@ -6,11 +6,11 @@
 
 <StatusLineOutput>
     text: root.output
-    foreground_color: 1, 1, 1, 1
     multiline: True
-    background_color: (70 / 255, 70 / 255, 70 / 255, 1) if self.focus else (55 / 255, 55 / 255, 55 / 255, 1)
-    width: dp(25)
-    size_hint_y: 1
+    size_hint: 0, 1
+    width: self.texture_size[0]
+    halign: "left"
+    valign: "top"
 
 
 ########################################################################################
