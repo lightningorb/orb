@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 21:11:53
+# @Last Modified time: 2022-01-14 20:36:26
 
 import json
 import threading
@@ -11,6 +11,7 @@ import arrow
 from orb.logic.routes import Routes
 from orb.misc.forex import forex
 from orb.lnd import Lnd
+from orb.misc.prefs import is_rest
 
 lock = threading.Lock()
 
@@ -154,6 +155,15 @@ def pay_thread(
                     return PaymentStatus.already_paid
                 print(f"T{thread_n}: exception.. not sure what's up")
                 return PaymentStatus.exception
+
+            if is_rest():
+                if hasattr(response, "code"):
+                    if response.code == 6:
+                        print(f"T{thread_n}: INVOICE IS ALREADY PAID")
+                        return PaymentStatus.already_paid
+                    elif response.code == 2:
+                        print(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
+                        return PaymentStatus.inflight
             is_successful = response and (
                 response.failure is None or response.failure.code == 0
             )

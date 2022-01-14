@@ -16,6 +16,8 @@ def is_mock():
 def is_rest():
     return pref("lnd.protocol") == "rest"
 
+def is_grpc():
+    return pref("lnd.protocol") == "rest"
 
 def hostname():
     app = App.get_running_app()
