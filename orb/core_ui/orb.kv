@@ -108,15 +108,13 @@
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Total Routing"
-                            on_release: (view_forwarding_history(), app_menu.close_all())
+                            on_release: (app_menu.close_all(), view_forwarding_history())
                         ContextMenuTextItem:
                             text: "Fees Earned"
-                            on_press: graph_fees_earned()
-                            on_release: app_menu.close_all()
+                            on_release: (app_menu.close_all(), graph_fees_earned())
                         ContextMenuTextItem:
                             text: "Fee Distribution"
-                            on_press: FeeDistribution().open()
-                            on_release: app_menu.close_all()
+                            on_release: (app_menu.close_all(), FeeDistribution().open())
         AppMenuTextItem:
             text: "On-Chain"
             ContextMenu:
