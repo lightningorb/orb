@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 14:22:56
+# @Last Modified time: 2022-01-16 07:52:52
 
 import os
 from functools import partial
@@ -112,7 +112,7 @@ class PlayerDialog(PopupDropShadow):
                 self.player.state = "stop"
             self.ids.bl.clear_widgets()
             self.player = VideoPlayer(
-                source=path, options={"allow_stretch": True}, state="play"
+                source=path.as_posix(), options={"allow_stretch": True}, state="play"
             )
             self.ids.bl.add_widget(self.player)
             self.ids.tabs.switch_tab("Player")
