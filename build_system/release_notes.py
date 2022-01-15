@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-14 06:37:53
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 07:18:01
+# @Last Modified time: 2022-01-15 15:00:11
 
 import os
 
@@ -11,9 +11,17 @@ from invoke import task
 
 @task
 def create(c, env=dict(PATH=os.environ["PATH"])):
-    tag_commits = c.run(
-        "git log $(git describe --tags --abbrev=0)..HEAD --oneline", env=env, hide=True
-    ).stdout
+    cmd = lambda x: c.run(x, env=env, hide=True).stdout
+    tags = ([x for x in cmd("git tag").split("\n") if x] + ["HEAD"])[::-1]
+    notes = ""
+    for prev_tag, tag in zip(tags, tags[1:]):
+        notes += f"{prev_tag:}\n{'-'*len(prev_tag)}\n\n"
+        tag_commits = cmd(f"git log {tag}..{prev_tag} --oneline")
+        notes += (
+            "\n".join(x[8:] for x in tag_commits.split("\n") if "[dev]" not in x)
+            + "\n\n"
+        )
 
-    notes = "\n".join(x[8:] for x in tag_commits.split("\n"))
+    print(notes)
+
     open("orb/dialogs/help_dialog/release_notes/release_notes.txt", "w").write(notes)

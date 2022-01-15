@@ -1,4 +1,36 @@
-[dev] load user scripts from source if running on desktop
-[dev] platform is macosx not 'osx'
-[dev] include tags in fabfile
+HEAD
+----
+
+Move printing / console output to the consumable pattern #138
 'on-chain > send coins' now working as expected over REST #137
+
+
+v0.4.0+build.1
+--------------
+
+release notes
+high res background picture
+readme
+bespoke pay_logic error handling for REST
+only explicitly set high res on osx
+bump minor version
+files are better organized
+init node to None, in case we fail to get channels
+'Forwarding History' submenu triggers a 'on_press' unexpectedly in IOS
+swiping up gives focus to the status output line, and brings up the keyboard #136
+Clicking on the menubar pans the channels view #135
+high resolution by default on desktop
+Make release notes available within the UI #134
+In player, disable the videos tab until a collection is selected. #120
+refactoring: moved data_manager into the orb module
+updated docs
+moving build system to python - housekeeping
+Make video about documentation #129
+build
+by default, channels are now longer
+Make video about connecting to the node #127
+Add copy buttons to the Connection Settings dialog, to copy python commands #133
+GRPC should not be available in IOS #94
+add VERSION file with semver support #132
+
+

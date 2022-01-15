@@ -5,7 +5,13 @@
     title: 'Release Notes'
     size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
     size_hint: [None, None]
-    Label:
-        id: release_notes
-        size_hint: [1,1]
-        multiline: True
+    ScrollView:
+        size_hint: 1, 1
+        padding: dp(50)
+        spacing: dp(50)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        Label:
+            id: release_notes
+            size_hint: None, None
+            size: self.texture_size
+            multiline: True
