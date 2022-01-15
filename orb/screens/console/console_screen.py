@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2021-12-15 07:15:28
+# @Date:   2022-01-15 13:22:44
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 08:56:55
+# @Last Modified time: 2022-01-15 13:40:24
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2021-12-15 07:15:28
+# @Last Modiconsumablesfied by:   lnorb.com
+# @Last Modified time: 2022-01-15 13:07:26
 
-import os
-import sys
-from traceback import format_exc
-from io import StringIO
+from traceback import print_exc
 from collections import deque
+import uuid
 
 from pygments.lexers import CythonLexer
 
 from kivy.app import App
+from kivy.clock import (
+    Clock,
+    _default_time as time,
+)  # ok, no better way to use the same clock as kivy, hmm
 from kivy.clock import mainthread
 from kivy.properties import StringProperty
 from kivy.uix.button import Button
@@ -20,14 +27,15 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.codeinput import CodeInput
-from kivy.uix.videoplayer import VideoPlayer
+from kivy.utils import platform
 
 from orb.store.scripts import Script, save_scripts, load_scripts
 from orb.components.popup_drop_shadow import PopupDropShadow
+from orb.misc import data_manager
 
-from kivy.utils import platform
 
 ios = platform == "ios"
+MAX_TIME = 1 / 5
 
 
 class ConsoleFileChooser(PopupDropShadow):
@@ -41,6 +49,10 @@ class ConsoleScreen(Screen):
     player_showing = False
     show_player = False
 
+    def __init__(self, *args, **kwargs):
+        super(ConsoleScreen, self).__init__(*args, **kwargs)
+        Clock.schedule_interval(self.consume, 0)
+
     def on_enter(self):
         """
         We have entered the console screen
@@ -53,51 +65,43 @@ class ConsoleScreen(Screen):
             self.ids.console_input.bind(output=self.ids.console_output.setter("output"))
             # retrieve the code stored in the prefs, and set it
             # in the console input
-            from orb.misc import data_manager
 
             self.ids.console_input.text = data_manager.data_man.store.get(
                 "console_input", {}
             ).get("text", "")
             app = App.get_running_app()
             app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
-            if self.show_player and not self.player_showing:
-                self.ids.vid_box.add_widget(
-                    VideoPlayer(
-                        source=os.path.expanduser(
-                            "~/Movies/Monosnap/screencast 2021-12-29 17-28-56.mp4"
-                        )
-                    )
-                )
 
         delayed()
 
-    @mainthread
     def update_output(self, text, last_line):
-        if not ios:
+        if text and text != "\n":
             self.ids.console_output.output = text
-        if last_line:
+        if last_line and last_line != "\n":
             app = App.get_running_app()
             app.root.ids.status_line.ids.line_output.output = last_line
-            app.root.ids.status_line.ids.line_output.cursor = (0, 0)
 
-    def print(self, text):
+    def consume(self, *args):
         """
         Print to the console's output section.
         Print the last line on the status line.
         """
-        # make sure we have something to print
-        if text:
-            # make sure it's a string
-            text = str(text)
-            # split up the output into lines
-            text_lines = text.split("\n")
-            if text_lines:
-                for line in text_lines:
-                    if line:
-                        self.lines.append(line)
-                for _ in range(max(0, len(self.lines) - 30)):
-                    self.lines.popleft()
-                last_line = text_lines[-1]
+        app = App.get_running_app()
+        while app.consumables and time() < (Clock.get_time() + MAX_TIME):
+            text = app.consumables.popleft()
+            # make sure we have something to print
+            if text:
+                # make sure it's a string
+                text = str(text)
+                # split up the output into lines
+                text_lines = text.split("\n")
+                if text_lines:
+                    for line in text_lines:
+                        if line:
+                            self.lines.append(line)
+                    for _ in range(max(0, len(self.lines) - 100)):
+                        self.lines.popleft()
+                    last_line = text_lines[-1]
                 self.update_output("\n".join(self.lines), last_line)
 
 
@@ -119,7 +123,6 @@ class ConsoleInput(CodeInput):
         )
 
     def on_touch_down(self, touch):
-        from orb.misc import data_manager
 
         if self.collide_point(*touch.pos):
             if data_manager.data_man.menu_visible:
@@ -127,16 +130,10 @@ class ConsoleInput(CodeInput):
         return super(ConsoleInput, self).on_touch_down(touch)
 
     def exec(self, text):
-        old_stdout = sys.stdout
-        sys.stdout = mystdout = StringIO()
         try:
             exec(text)
-            sys.stdout = old_stdout
-            self.output += "\n" + mystdout.getvalue().strip() + "\n"
         except:
-            exc = format_exc()
-            if exc:
-                self.output += exc
+            print_exc()
 
     def run(self, *_):
         self.exec(self.text)
@@ -167,7 +164,6 @@ class ConsoleInput(CodeInput):
             if existing:
                 scripts[existing.uuid].code = code
             else:
-                import uuid
 
                 uid = str(uuid.uuid4())
                 scripts[uid] = Script(code=code, menu=script_name, uuid=uid)
@@ -183,7 +179,6 @@ class ConsoleInput(CodeInput):
 
     def delete(self, *_):
         inst = LoadScript()
-        from orb.misc import data_manager
 
         try:
             sc = data_manager.data_man.store.get("scripts")
@@ -207,21 +202,19 @@ class ConsoleInput(CodeInput):
         app = App.get_running_app()
         app.root.ids.app_menu.close_all()
 
-    def clear_input(self, *args):
+    def clear_input(self, *_):
         self.text = ""
 
-    def clear_output(self, *args):
+    def clear_output(self, *_):
         self.output = ""
 
-    def reset_split_size(self, *args):
-        from orb.misc import data_manager
+    def reset_split_size(self, *_):
 
         data_manager.data_man.store.put(
             "console", input_height=None, output_height=None
         )
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
-        print(keycode, text, modifiers)
         meta = "meta" in modifiers
         direction = (
             keycode[1]
@@ -242,7 +235,6 @@ class ConsoleInput(CodeInput):
         if text != "\u0135":
             to_save = self.text + (text or "")
             do_eval = keycode[1] == "enter" and self.selection_text
-            from orb.misc import data_manager
 
             data_manager.data_man.store.put("console_input", text=to_save)
             if do_eval:
@@ -257,7 +249,6 @@ class ConsoleOutput(TextInput):
     output = StringProperty("")
 
     def on_touch_down(self, touch):
-        from orb.misc import data_manager
 
         if self.collide_point(*touch.pos):
             if data_manager.data_man.menu_visible:

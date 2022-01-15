@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 04:48:13
+# @Last Modified time: 2022-01-15 14:11:29
 
 import os
 import sys
@@ -10,23 +10,23 @@ import json
 from pathlib import Path
 from traceback import print_exc
 from importlib import __import__
-from glob import glob
 import shutil
+from collections import deque
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.utils import platform
+from kivy.properties import ObjectProperty
 
 from orb.misc.monkey_patch import do_monkey_patching
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
-from orb.misc.ui_actions import console_output
 from orb.misc.plugin import Plugin
 from orb.logic import thread_manager
-from orb.misc.utils import pref, pref_path
+from orb.misc.utils import pref_path
 
 from orb.misc import data_manager
 
@@ -41,6 +41,7 @@ is_dev = "main.py" in sys.argv[0]
 
 class OrbApp(MDApp):
     title = "Orb"
+    consumables = deque()
 
     def get_application_config(self, defaultpath=f"{os.getcwd()}/orb.ini"):
         """
@@ -181,13 +182,27 @@ class OrbApp(MDApp):
         audio_manager.set_volume()
         self.load_user_scripts()
 
+    def override_stdout(self):
+        """
+        Override stdout, so the standard 'print' command goes
+        to Orb's console.
+        """
+        # _write is the original stdout
         _write = sys.stdout.write
 
         def write(*args):
+            """
+            New 'write' command
+            """
+            # simply join the arguments passed in
             content = " ".join(args)
+            # print them out the regular way
             _write(content)
-            console_output(content)
+            # print them out to Orb's console
+            self.consumables.append(content)
+            # console_output(content)
 
+        # do the override
         sys.stdout.write = write
 
     def on_stop(self):
@@ -214,6 +229,7 @@ class OrbApp(MDApp):
         """
         Main build method for the app.
         """
+        self.override_stdout()
         self.make_dirs()
         self.upgrade_tasks()
         self.save_user_scripts()
@@ -227,6 +243,7 @@ class OrbApp(MDApp):
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
         self.icon = "orb.png"
         self.main_layout = MainLayout()
+
         return self.main_layout
 
     def build_config(self, config):
