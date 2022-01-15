@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-15 13:22:44
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 13:40:24
+# @Last Modified time: 2022-01-15 19:47:28
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
@@ -76,7 +76,8 @@ class ConsoleScreen(Screen):
 
     def update_output(self, text, last_line):
         if text and text != "\n":
-            self.ids.console_output.output = text
+            # self.ids.console_output.output = text
+            pass
         if last_line and last_line != "\n":
             app = App.get_running_app()
             app.root.ids.status_line.ids.line_output.output = last_line

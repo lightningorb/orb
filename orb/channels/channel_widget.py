@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 09:13:25
+# @Last Modified time: 2022-01-16 05:50:45
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -11,13 +11,14 @@ from kivy.graphics.vertex_instructions import RoundedRectangle
 from kivy.graphics.context_instructions import Color
 
 from kivy.uix.widget import Widget
+from kivy.animation import Animation
+
 from orb.audio.audio_manager import audio_manager
 from orb.channels.segment import Segment
-
 from orb.channels.fee_widget import FeeWidget
 from orb.math.lerp import lerp_2d
-from kivy.animation import Animation
 from orb.misc.colors import *
+from orb.misc.auto_obj import dict2obj
 
 
 class ChannelWidget(Widget):
@@ -152,37 +153,98 @@ class ChannelWidget(Widget):
         Animation(points=points, duration=1).start(self)
 
     def anim_htlc(self, htlc):
+        col = WHITE
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
         receive = htlc.event_type == "RECEIVE"
         if receive:
             pass
         settle = htlc.event_outcome == "settle_event"
-        fail = htlc.event_outcome == "link_fail_event"
-        outgoing = (
-            hasattr(htlc, "outgoing_channel_id")
-            and htlc.outgoing_channel_id == self.channel.chan_id
+        link_fail = htlc.event_outcome == "link_fail_event"
+        forward_fail = htlc.event_outcome == "forward_fail_event"
+        outgoing = htlc.outgoing_channel_id == self.channel.chan_id
+        c = self.channel
+
+        get_pending_outgoing_event = lambda html: next(
+            (
+                x
+                for x in c.pending_htlcs
+                if (not x.incoming)
+                and hasattr(x, "outgoing_htlc_id")
+                and x.outgoing_htlc_id == htlc.outgoing_htlc_id
+            ),
+            None,
         )
-        incoming = (
-            forward or receive
-        ) and htlc.incoming_channel_id == self.channel.chan_id
 
         if send and outgoing:
-            self.anim_outgoing()
+            if htlc.event_outcome == "forward_fail_event":
+                col = RED
+                pending = get_pending_outgoing_event(htlc)
+                if pending:
+                    c.pending_htlcs.remove(pending)
+                    c.local_balance += pending.amount
+            else:
+                self.anim_outgoing()
+                if settle:
+                    audio_manager.play_send_settle()
+                    pending = get_pending_outgoing_event(htlc)
+                    if pending:
+                        c.pending_htlcs.remove(pending)
+                else:
+                    out_amt_sat = int(
+                        htlc.event_outcome_info["outgoing_amt_msat"] / 1_000
+                    )
+                    phtlc = dict2obj(
+                        dict(
+                            incoming=False,
+                            amount=out_amt_sat,
+                            outgoing_htlc_id=htlc.outgoing_htlc_id,
+                        )
+                    )
+                    c.pending_htlcs.append(phtlc)
+                    c.local_balance -= out_amt_sat
         elif receive:
             self.anim_incoming()
         elif forward:
+            if forward_fail:
+                col = RED
             if outgoing:
+                if forward_fail:
+                    pass
+                else:
+                    if settle:
+                        audio_manager.play_forward_settle()
+                        event = next(
+                            (
+                                x
+                                for x in c.pending_htlcs
+                                if (not x.incoming)
+                                and hasattr(x, "outgoing_htlc_id")
+                                and x.outgoing_htlc_id == htlc.outgoing_htlc_id
+                            ),
+                            None,
+                        )
+                        if event:
+                            c.pending_htlcs.remove(event)
+                    else:
+                        out_amt_sat = int(
+                            htlc.event_outcome_info["outgoing_amt_msat"] / 1_000
+                        )
+                        phtlc = dict2obj(
+                            dict(
+                                incoming=False,
+                                amount=out_amt_sat,
+                                outgoing_htlc_id=htlc.outgoing_htlc_id,
+                            )
+                        )
+                        self.channel.pending_htlcs.append(phtlc)
+                        self.channel.local_balance -= out_amt_sat
                 self.anim_outgoing()
             else:
                 self.anim_incoming()
 
-        if send and settle:
-            audio_manager.play_send_settle()
-        elif (forward or receive) and settle:
-            if forward:
-                audio_manager.play_forward_settle()
-        elif fail:
+        if link_fail:
+            col = RED
             if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                 if htlc.incoming_channel_id and htlc.outgoing_channel_id:
                     print("FAIL!")
@@ -190,17 +252,11 @@ class ChannelWidget(Widget):
                     if htlc.failure_detail != "HTLC_EXCEEDS_MAX":
                         audio_manager.play_link_fail_event()
 
+        # cols = {"forward_fail_event": RED, "link_fail_event": RED}
+        # col = cols.get(htlc.event_outcome, WHITE)
+        self.flash(col)
         self.update_rect()
 
-        cols = {"forward_fail_event": RED, "link_fail_event": RED}
-        col = cols.get(htlc.event_outcome, WHITE)
-        (Animation(rgba=col, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
-            self.line_remote.color
-        )
-
-        (Animation(rgba=col, duration=0.2) + Animation(rgba=GREEN, duration=1)).start(
-            self.line_local.color
-        )
 
     def flash(self, rgba):
         (Animation(rgba=rgba, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(

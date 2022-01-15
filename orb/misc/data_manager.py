@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 18:09:50
+# @Last Modified time: 2022-01-15 16:23:01
 
 from pathlib import Path
 
@@ -46,7 +46,6 @@ class DataManager(EventDispatcher):
         user_data_dir = App.get_running_app().user_data_dir
         self.store = JsonStore(Path(user_data_dir) / pref("path.json") / "orb.json")
         from orb.store import db_create_tables
-        from orb.logic.htlc import create_htlcs_tables
 
         for db in [
             forwarding_events_db_name,
@@ -65,7 +64,6 @@ class DataManager(EventDispatcher):
         db_create_tables.create_fowarding_tables()
         db_create_tables.create_aliases_tables()
         db_create_tables.create_invoices_tables()
-        create_htlcs_tables()
 
     @property
     def cert_path(self):

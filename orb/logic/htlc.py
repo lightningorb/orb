@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 10:15:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 09:45:41
+# @Last Modified time: 2022-01-15 16:54:19
 try:
     from grpc_generated import router_pb2 as lnrouter
     from grpc_generated import lightning_pb2 as lnrpc
@@ -16,86 +16,32 @@ from orb.store.db_meta import htlcs_db_name, get_db
 from orb.misc.prefs import is_rest
 
 
-class Htlc(Model):
-    incoming_channel = CharField(default="")
-    incoming_channel_id = IntegerField(default=0)
-    incoming_channel_capacity = IntegerField(default=0)
-    incoming_channel_local_balance = IntegerField(default=0)
-    incoming_channel_remote_balance = IntegerField(default=0)
-    incoming_channel_pending_htlcs = JSONField(
-        default={"pending_in": 0, "pending_out": 0}
-    )
-    outgoing_channel = CharField(default="")
-    outgoing_channel_id = IntegerField(default=0)
-    outgoing_channel_capacity = IntegerField(default=0)
-    outgoing_channel_local_balance = IntegerField(default=0)
-    outgoing_channel_remote_balance = IntegerField(default=0)
-    outgoing_channel_pending_htlcs = JSONField(
-        default={"pending_in": 0, "pending_out": 0}
-    )
-    timestamp = IntegerField()
-    event_type = CharField()
-    event_outcome = CharField()
-    event_outcome_info = JSONField(default={"pending_in": 0, "pending_out": 0})
-
-    def __init__(self, inst, lnd, htlc):
-        super(Htlc, self).__init__()
-        inst.channels.get()
-        channels = inst.channels.channels.values()
-        if getattr(htlc, "incoming_channel_id") != 0:
-            ic = next(
-                iter(c for c in channels if c.chan_id == htlc.incoming_channel_id), None
-            )
-            if ic:
-                self.incoming_channel = lnd.get_alias_from_channel_id(
-                    htlc.incoming_channel_id
-                )
-                self.incoming_channel_obj = ic
-                self.incoming_channel_id = htlc.incoming_channel_id
-                self.incoming_channel_capacity = ic.capacity
-                self.incoming_channel_remote_balance = ic.remote_balance
-                self.incoming_channel_local_balance = ic.local_balance
-                self.incoming_channel_pending_htlcs = dict(
-                    pending_in=sum(
-                        int(p.amount) for p in ic.pending_htlcs if p.incoming
-                    ),
-                    pending_out=sum(
-                        int(p.amount) for p in ic.pending_htlcs if not p.incoming
-                    ),
-                )
-        else:
-            self.incoming_channel = lnd.get_own_alias()
-        if getattr(htlc, "outgoing_channel_id") != 0:
-            self.outgoing_channel = lnd.get_alias_from_channel_id(
-                htlc.outgoing_channel_id
-            )
+class Htlc:
+    def __init__(self, htlc):
+        self.orig_htlc = htlc
+        self.incoming_channel_id = None
+        self.outgoing_channel_id = None
+        self.incoming_htlc_id = None
+        self.outgoing_htlc_id = None
+        self.timestamp = None
+        self.event_type = None
+        self.event_outcome = None
+        self.event_outcome_info = None
+        st = htlc.__str__()
+        if htlc.incoming_channel_id:
+            self.incoming_channel_id = htlc.incoming_channel_id
+            self.incoming_htlc_id = htlc.incoming_htlc_id
+        if htlc.outgoing_channel_id:
             self.outgoing_channel_id = htlc.outgoing_channel_id
-            oc = next(
-                iter(c for c in channels if c.chan_id == htlc.outgoing_channel_id), None
-            )
-            if oc:
-                self.outgoing_channel_obj = oc
-                self.outgoing_channel_capacity = oc.capacity
-                self.outgoing_channel_remote_balance = oc.remote_balance
-                self.outgoing_channel_local_balance = oc.local_balance
-                self.outgoing_channel_pending_htlcs = dict(
-                    pending_in=sum(
-                        int(p.amount) for p in oc.pending_htlcs if p.incoming
-                    ),
-                    pending_out=sum(
-                        int(p.amount) for p in oc.pending_htlcs if not p.incoming
-                    ),
-                )
-        else:
-            self.outgoing_channel = lnd.get_own_alias()
+            self.outgoing_htlc_id = htlc.outgoing_htlc_id
 
         self.timestamp = int(int(htlc.timestamp_ns) / 1e9)
-        if hasattr(htlc, "EventType"):
+        if is_rest():
+            self.event_type = htlc.event_type
+        else:
             self.event_type = self.get_enum_name_from_value(
                 htlc.EventType.items(), htlc.event_type
             )
-        else:
-            self.event_type = htlc.event_type
 
         if is_rest():
             # RESTFUL HTLCs not fully implemented, so just pretend
@@ -124,14 +70,16 @@ class Htlc(Model):
 
     @staticmethod
     def get_enum_name_from_value(descriptor_items, value):
-        for item_key, item_value in descriptor_items:
-            if (
-                hasattr(item_value, "number")
+        return next(
+            iter(
+                item_key
+                for item_key, item_value in descriptor_items
+                if hasattr(item_value, "number")
                 and item_value.number == value
                 or item_value == value
-            ):
-                return item_key
-        return None
+            ),
+            None,
+        )
 
     @staticmethod
     def get_event_info_enum_names_from_values(htlc_event):
@@ -144,11 +92,3 @@ class Htlc(Model):
 
     class Meta:
         database = get_db(htlcs_db_name)
-
-
-def create_htlcs_tables():
-    db = get_db(htlcs_db_name)
-    try:
-        db.create_tables([Htlc])
-    except:
-        pass

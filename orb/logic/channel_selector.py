@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 17:16:42
+# @Last Modified time: 2022-01-15 19:39:06
 
 from random import choice
 from orb.misc import data_manager
@@ -15,7 +15,7 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
     chans = []
     # TODO: switch this to data_manager.data_man.channels
     # but make sure they can be filtered for active channels only
-    channels = lnd.get_channels(active_only=True)
+    channels = data_manager.data_man.channels
     for chan in channels:
         if chan.remote_pubkey in pk_ignore:
             continue
@@ -52,7 +52,7 @@ def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
     chans = []
     # TODO: switch this to data_manager.data_man.channels
     # but make sure they can be filtered for active channels only
-    channels = lnd.get_channels(active_only=True)
+    channels = data_manager.data_man.channels
     for chan in channels:
         if chan.remote_pubkey in pk_ignore:
             continue

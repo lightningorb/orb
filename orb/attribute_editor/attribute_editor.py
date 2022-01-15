@@ -377,11 +377,12 @@ class AttributeEditor(BoxLayout):
                 height=dp(60),
             )
         )
+        text = str(data_manager.data_man.store.get("balanced_ratio", {}).get(
+                    str(self.channel.chan_id if self.channel else ""), "0.5"
+                ))
         self.ids.md_list.add_widget(
             MDTextField(
-                text=data_manager.data_man.store.get("balanced_ratio", {}).get(
-                    str(self.channel.chan_id if self.channel else ""), "0.5"
-                ),
+                text=text,
                 helper_text="balanced ratio (local / capacity)",
                 helper_text_mode="persistent",
                 on_text_validate=self.on_balanced_ratio,

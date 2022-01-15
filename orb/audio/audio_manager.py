@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 17:31:40
+# @Last Modified time: 2022-01-16 06:28:21
 from kivy.utils import platform
 from orb.misc.utils import pref
 
@@ -37,26 +37,30 @@ class AudioManager:
             for sample in self.samples:
                 sample.volume = pref("audio.volume")
 
+    def play(self, sound):
+        if not ios:
+            if sound.state == "play":
+                sound.stop()
+            sound.seek(0)
+            sound.play()
+
     def play_send_settle(self):
         """
         Play the audio for send HTLC.
         """
-        if not ios:
-            self.send_settle.play()
+        self.play(self.send_settle)
 
     def play_forward_settle(self):
         """
         Play the audio for forward HTLC.
         """
-        if not ios:
-            self.forward_settle.play()
+        self.play(self.forward_settle)
 
     def play_link_fail_event(self):
         """
         Play the audio for failed HTLC.
         """
-        if not ios:
-            self.link_fail_event.play()
+        self.play(self.link_fail_event)
 
 
 audio_manager = AudioManager()
