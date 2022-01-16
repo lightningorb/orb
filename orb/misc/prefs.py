@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 18:10:10
+# @Last Modified time: 2022-01-16 13:18:20
 
 from orb.misc.utils import *
 from pathlib import Path
@@ -16,8 +16,10 @@ def is_mock():
 def is_rest():
     return pref("lnd.protocol") == "rest"
 
+
 def is_grpc():
-    return pref("lnd.protocol") == "rest"
+    return pref("lnd.protocol") == "grpc"
+
 
 def hostname():
     app = App.get_running_app()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 05:50:45
+# @Last Modified time: 2022-01-16 11:16:15
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -176,20 +176,33 @@ class ChannelWidget(Widget):
             None,
         )
 
+        get_pending_incoming_event = lambda html: next(
+            (
+                x
+                for x in c.pending_htlcs
+                if (x.incoming)
+                and hasattr(x, "incoming_htlc_id")
+                and x.incoming_htlc_id == htlc.incoming_htlc_id
+            ),
+            None,
+        )
+
         if send and outgoing:
             if htlc.event_outcome == "forward_fail_event":
-                col = RED
+                col = RED_FULL
                 pending = get_pending_outgoing_event(htlc)
                 if pending:
                     c.pending_htlcs.remove(pending)
                     c.local_balance += pending.amount
             else:
+                col = BLUE_FULL
                 self.anim_outgoing()
                 if settle:
                     audio_manager.play_send_settle()
                     pending = get_pending_outgoing_event(htlc)
                     if pending:
                         c.pending_htlcs.remove(pending)
+                        c.remote_balance += pending.amount
                 else:
                     out_amt_sat = int(
                         htlc.event_outcome_info["outgoing_amt_msat"] / 1_000
@@ -207,25 +220,20 @@ class ChannelWidget(Widget):
             self.anim_incoming()
         elif forward:
             if forward_fail:
-                col = RED
+                col = RED_FULL
             if outgoing:
                 if forward_fail:
-                    pass
+                    pending = get_pending_outgoing_event(htlc)
+                    if pending:
+                        c.pending_htlcs.remove(pending)
+                        c.local_balance += pending.amount
                 else:
                     if settle:
                         audio_manager.play_forward_settle()
-                        event = next(
-                            (
-                                x
-                                for x in c.pending_htlcs
-                                if (not x.incoming)
-                                and hasattr(x, "outgoing_htlc_id")
-                                and x.outgoing_htlc_id == htlc.outgoing_htlc_id
-                            ),
-                            None,
-                        )
-                        if event:
-                            c.pending_htlcs.remove(event)
+                        pending = get_pending_outgoing_event(htlc)
+                        if pending:
+                            c.pending_htlcs.remove(pending)
+                            c.remote_balance += pending.amount
                     else:
                         out_amt_sat = int(
                             htlc.event_outcome_info["outgoing_amt_msat"] / 1_000
@@ -241,10 +249,34 @@ class ChannelWidget(Widget):
                         self.channel.local_balance -= out_amt_sat
                 self.anim_outgoing()
             else:
+                if forward_fail:
+                    pending = get_pending_incoming_event(htlc)
+                    if pending:
+                        c.pending_htlcs.remove(pending)
+                        c.remote_balance += pending.amount
+                else:
+                    if settle:
+                        pending = get_pending_incoming_event(htlc)
+                        if pending:
+                            c.pending_htlcs.remove(pending)
+                            c.local_balance += pending.amount
+                    else:
+                        in_amt_sat = int(
+                            htlc.event_outcome_info["incoming_amt_msat"] / 1_000
+                        )
+                        phtlc = dict2obj(
+                            dict(
+                                incoming=True,
+                                amount=in_amt_sat,
+                                incoming_htlc_id=htlc.incoming_htlc_id,
+                            )
+                        )
+                        self.channel.pending_htlcs.append(phtlc)
+                        self.channel.remote_balance -= in_amt_sat
                 self.anim_incoming()
 
         if link_fail:
-            col = RED
+            col = RED_FULL
             if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                 if htlc.incoming_channel_id and htlc.outgoing_channel_id:
                     print("FAIL!")
@@ -256,7 +288,6 @@ class ChannelWidget(Widget):
         # col = cols.get(htlc.event_outcome, WHITE)
         self.flash(col)
         self.update_rect()
-
 
     def flash(self, rgba):
         (Animation(rgba=rgba, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(

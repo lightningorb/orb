@@ -1,6 +1,8 @@
-0.4.1
+0.4.2
 ----
 
+partial commit: no longer calling get_channels non-stop
+patch version bump
 fixed regression: ios app can be paused / resumed again
 fixed player regression (path needs to be posix string)
 display full release notes in app #139

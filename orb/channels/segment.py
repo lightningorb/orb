@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:03:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 01:07:41
+# @Last Modified time: 2022-01-16 12:59:55
 
 from math import ceil
+from threading import Lock
 
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
@@ -28,6 +29,7 @@ class Segment(Widget):
         self.amt_sat = amt_sat
         self.diameter = 3
         self.radius = self.diameter / 2
+        self.lock = Lock()
         # the color is given to use by the caller, we are just
         # in charge of setting its opacity
         color[-1] = float(pref("display.channel_opacity"))
@@ -42,18 +44,20 @@ class Segment(Widget):
         b = lerp_2d(self.line.points[:2], self.line.points[2:], 0.98)
         n = ceil(amt_sat / 1e6)
         diff = n - len(self.ig)
-        for _ in range(abs(diff)):
-            if diff > 0:
-                ig = InstructionGroup()
-                ig.add(Color(*prefs_col("display.1m_color")))
-                ig.add(Ellipse(pos=[0, 0], size=[self.diameter, self.diameter]))
-                self.ig.append(ig)
-                self.canvas.add(ig)
-            else:
-                self.canvas.remove(self.ig.pop())
-        for i, e in enumerate(self.ig):
-            e.children[2].pos = lerp_2d(
-                [a[0] - self.radius, a[1] - self.radius],
-                [b[0] - self.radius, b[1] - self.radius],
-                i / len(self.ig),
-            )
+        with self.lock:
+            for _ in range(abs(diff)):
+                if diff > 0:
+                    ig = InstructionGroup()
+                    ig.add(Color(*prefs_col("display.1m_color")))
+                    ig.add(Ellipse(pos=[0, 0], size=[self.diameter, self.diameter]))
+                    self.ig.append(ig)
+                    self.canvas.add(ig)
+                else:
+                    if self.ig:
+                        self.canvas.remove(self.ig.pop())
+            for i, e in enumerate(self.ig):
+                e.children[2].pos = lerp_2d(
+                    [a[0] - self.radius, a[1] - self.radius],
+                    [b[0] - self.radius, b[1] - self.radius],
+                    i / len(self.ig),
+                )
