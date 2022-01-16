@@ -1,6 +1,8 @@
-HEAD
+0.4.1
 ----
 
+fixed player regression (path needs to be posix string)
+display full release notes in app #139
 Move printing / console output to the consumable pattern #138
 'on-chain > send coins' now working as expected over REST #137
 
