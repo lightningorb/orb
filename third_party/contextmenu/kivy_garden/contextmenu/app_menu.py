@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-01-17 07:23:11
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-01-17 07:23:33
+
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.behaviors import ToggleButtonBehavior
@@ -6,7 +12,12 @@ from kivy.lang import Builder
 import kivy.properties as kp
 import os
 
-from .context_menu import AbstractMenu, AbstractMenuItem, AbstractMenuItemHoverable, HIGHLIGHT_COLOR
+from .context_menu import (
+    AbstractMenu,
+    AbstractMenuItem,
+    AbstractMenuItemHoverable,
+    HIGHLIGHT_COLOR,
+)
 
 
 class AppMenu(StackLayout, AbstractMenu):
@@ -38,35 +49,46 @@ class AppMenu(StackLayout, AbstractMenu):
         # Iterate all siblings and all children
         for widget in self.menu_item_widgets:
             widget_pos = widget.to_window(0, 0)
-            if widget.collide_point(x - widget_pos[0], y - widget_pos[1]) and not widget.disabled:
+            if (
+                widget.collide_point(x - widget_pos[0], y - widget_pos[1])
+                and not widget.disabled
+            ):
                 if self.hovered_menu_item is None:
                     self.hovered_menu_item = widget
 
                 if self.hovered_menu_item != widget:
                     self.hovered_menu_item = widget
                     for sibling in widget.siblings:
-                        sibling.state = 'normal'
+                        sibling.state = "normal"
 
-                    if widget.state == 'normal':
-                        widget.state = 'down'
+                    if widget.state == "normal":
+                        widget.state = "down"
                         widget.on_release()
 
                     for sib in widget.siblings:
                         sib.hovered = False
             elif widget.get_submenu() is not None and not widget.get_submenu().visible:
-                widget.state = 'normal'
+                widget.state = "normal"
 
         return collide_widget
 
     def close_all(self):
-        for submenu in [w.get_submenu() for w in self.menu_item_widgets if w.get_submenu() is not None]:
+        for submenu in [
+            w.get_submenu()
+            for w in self.menu_item_widgets
+            if w.get_submenu() is not None
+        ]:
             submenu.hide()
         for w in self.menu_item_widgets:
-            w.state = 'normal'
+            w.state = "normal"
 
     def hide_app_menus(self, obj, pos):
         if not self.collide_point(pos.x, pos.y):
-            for w in [w for w in self.menu_item_widgets if not w.disabled and w.get_submenu().visible]:
+            for w in [
+                w
+                for w in self.menu_item_widgets
+                if not w.disabled and w.get_submenu().visible
+            ]:
                 submenu = w.get_submenu()
                 if submenu.self_or_submenu_collide_with_point(pos.x, pos.y) is None:
                     self.close_all()
@@ -75,7 +97,7 @@ class AppMenu(StackLayout, AbstractMenu):
 
 class AppMenuTextItem(ToggleButton, AbstractMenuItem):
     label = kp.ObjectProperty(None)
-    text = kp.StringProperty('')
+    text = kp.StringProperty("")
     font_size = kp.NumericProperty(14)
     color = kp.ListProperty([1, 1, 1, 1])
     hl_color = kp.ListProperty(HIGHLIGHT_COLOR)
@@ -83,16 +105,18 @@ class AppMenuTextItem(ToggleButton, AbstractMenuItem):
     def on_release(self):
         submenu = self.get_submenu()
 
-        if self.state == 'down':
+        if self.state == "down":
             root = self._root_parent
-            submenu.bounding_box_widget = root.bounding_box if root.bounding_box else root.parent
+            submenu.bounding_box_widget = (
+                root.bounding_box if root.bounding_box else root.parent
+            )
 
             submenu.bind(visible=self.on_visible)
             submenu.show(self.x, self.y - 1)
 
             for sibling in self.siblings:
                 if sibling.get_submenu() is not None:
-                    sibling.state = 'normal'
+                    sibling.state = "normal"
                     sibling.get_submenu().hide()
 
             self.parent._setup_hover_timer()
@@ -107,7 +131,7 @@ class AppMenuTextItem(ToggleButton, AbstractMenuItem):
 
     def _check_submenu(self):
         super(AppMenuTextItem, self)._check_submenu()
-        self.disabled = (self.get_submenu() is None)
+        self.disabled = self.get_submenu() is None
 
     # def on_mouse_down(self):
     #     print('on_mouse_down')
@@ -115,4 +139,4 @@ class AppMenuTextItem(ToggleButton, AbstractMenuItem):
 
 
 _path = os.path.dirname(os.path.realpath(__file__))
-Builder.load_file(os.path.join(_path, 'app_menu.kv'))
+Builder.load_file(os.path.join(_path, "app_menu.kv"))

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-01-17 07:23:11
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-01-17 07:23:38
+
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.core.window import Window
@@ -58,7 +64,9 @@ class AbstractMenu(object):
 
     def _setup_hover_timer(self):
         if self.clock_event is None:
-            self.clock_event = Clock.schedule_interval(partial(self._check_mouse_hover), 0.05)
+            self.clock_event = Clock.schedule_interval(
+                partial(self._check_mouse_hover), 0.05
+            )
 
     def _check_mouse_hover(self, obj):
         self.self_or_submenu_collide_with_point(*Window.mouse_pos)
@@ -74,7 +82,6 @@ class ContextMenu(GridLayout, AbstractMenu):
     spacer = kp.ObjectProperty(None)
     hl_color = kp.ListProperty(HIGHLIGHT_COLOR)
 
-
     def __init__(self, *args, **kwargs):
         super(ContextMenu, self).__init__(*args, **kwargs)
         self.orig_parent = None
@@ -88,7 +95,11 @@ class ContextMenu(GridLayout, AbstractMenu):
         self._add_to_parent()
         self.hide_submenus()
 
-        root_parent = self.bounding_box_widget if self.bounding_box_widget is not None else self.get_context_menu_root_parent()
+        root_parent = (
+            self.bounding_box_widget
+            if self.bounding_box_widget is not None
+            else self.get_context_menu_root_parent()
+        )
         if root_parent is None:
             return
 
@@ -124,7 +135,10 @@ class ContextMenu(GridLayout, AbstractMenu):
                 queue += submenu.menu_item_widgets
 
             widget_pos = widget.to_window(0, 0)
-            if widget.collide_point(x - widget_pos[0], y - widget_pos[1]) and not widget.disabled:
+            if (
+                widget.collide_point(x - widget_pos[0], y - widget_pos[1])
+                and not widget.disabled
+            ):
                 widget.hovered = True
 
                 collide_widget = widget
@@ -146,12 +160,12 @@ class ContextMenu(GridLayout, AbstractMenu):
         elif self.parent and not new_visibility:
             self.orig_parent = self.parent
 
-            '''
+            """
             We create a set that holds references to all context menus in the parent widget.
             It's necessary to keep at least one reference to this context menu. Otherwise when
             removed from parent it might get de-allocated by GC.
-            '''
-            if not hasattr(self.parent, '_ContextMenu__context_menus'):
+            """
+            if not hasattr(self.parent, "_ContextMenu__context_menus"):
                 self.parent.__context_menus = set()
             self.parent.__context_menus.add(self)
 
@@ -171,7 +185,11 @@ class ContextMenu(GridLayout, AbstractMenu):
     def get_max_width(self):
         max_width = 0
         for widget in self.menu_item_widgets:
-            width = widget.content_width if widget.content_width is not None else widget.width
+            width = (
+                widget.content_width
+                if widget.content_width is not None
+                else widget.width
+            )
             if width is not None and width > max_width:
                 max_width = width
 
@@ -184,20 +202,28 @@ class ContextMenu(GridLayout, AbstractMenu):
         if self.bounding_box_widget is not None:
             return self.bounding_box_widget
         root_context_menu = self._get_root_context_menu()
-        return root_context_menu.bounding_box_widget if root_context_menu.bounding_box_widget else root_context_menu.parent
+        return (
+            root_context_menu.bounding_box_widget
+            if root_context_menu.bounding_box_widget
+            else root_context_menu.parent
+        )
 
     def _get_root_context_menu(self):
         """
         Return the outer most context menu object
         """
         root = self
-        while issubclass(root.parent.__class__, ContextMenuItem) \
-                or issubclass(root.parent.__class__, ContextMenu):
+        while issubclass(root.parent.__class__, ContextMenuItem) or issubclass(
+            root.parent.__class__, ContextMenu
+        ):
             root = root.parent
         return root
 
     def hide_app_menus(self, obj, pos):
-        return self.self_or_submenu_collide_with_point(pos.x, pos.y) is None and self.hide()
+        return (
+            self.self_or_submenu_collide_with_point(pos.x, pos.y) is None
+            and self.hide()
+        )
 
 
 class AbstractMenuItem(object):
@@ -218,15 +244,23 @@ class AbstractMenuItem(object):
 
     def _check_submenu(self):
         if self.parent is not None and len(self.children) > 0:
-            submenus = [w for w in self.children if issubclass(w.__class__, ContextMenu)]
+            submenus = [
+                w for w in self.children if issubclass(w.__class__, ContextMenu)
+            ]
             if len(submenus) > 1:
-                raise Exception('Menu item (ContextMenuItem) can have maximum one submenu (ContextMenu)')
+                raise Exception(
+                    "Menu item (ContextMenuItem) can have maximum one submenu (ContextMenu)"
+                )
             elif len(submenus) == 1:
                 self.submenu = submenus[0]
 
     @property
     def siblings(self):
-        return [w for w in self.parent.children if issubclass(w.__class__, AbstractMenuItem) and w != self]
+        return [
+            w
+            for w in self.parent.children
+            if issubclass(w.__class__, AbstractMenuItem) and w != self
+        ]
 
     @property
     def content_width(self):
@@ -261,10 +295,10 @@ class AbstractMenuItemHoverable(object):
 
 class ContextMenuText(ContextMenuItem):
     label = kp.ObjectProperty(None)
-    submenu_postfix = kp.StringProperty(' ...')
-    text = kp.StringProperty('')
+    submenu_postfix = kp.StringProperty(" ...")
+    text = kp.StringProperty("")
     font_size = kp.NumericProperty(14)
-    color = kp.ListProperty([1,1,1,1])
+    color = kp.ListProperty([1, 1, 1, 1])
 
     def __init__(self, *args, **kwargs):
         super(ContextMenuText, self).__init__(*args, **kwargs)
@@ -284,4 +318,4 @@ class ContextMenuTextItem(ButtonBehavior, ContextMenuText, AbstractMenuItemHover
 
 
 _path = os.path.dirname(os.path.realpath(__file__))
-Builder.load_file(os.path.join(_path, 'context_menu.kv'))
+Builder.load_file(os.path.join(_path, "context_menu.kv"))
