@@ -1,6 +1,7 @@
 0.4.2
 ----
 
+no longer calling get_channels in HTLC class working well for GRPC
 partial commit: no longer calling get_channels non-stop
 patch version bump
 fixed regression: ios app can be paused / resumed again
