@@ -1,6 +1,7 @@
 0.4.2
 ----
 
+HTLC class better REST support
 no longer calling get_channels in HTLC class working well for GRPC
 partial commit: no longer calling get_channels non-stop
 patch version bump
