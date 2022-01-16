@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 07:26:58
+# @Last Modified time: 2022-01-17 04:17:25
 import math
 
 from kivy.app import App
@@ -18,14 +18,12 @@ from kivy.gesture import Gesture
 
 
 class CNWidget(Widget):
-    attribute_editor = ObjectProperty(None)
 
-    def __init__(self, c, caps, attribute_editor, *args):
+    def __init__(self, c, caps, *args):
         super(CNWidget, self).__init__(*args)
-        self.attribute_editor = attribute_editor
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
         self.c = c
-        self.b = Node(text="", channel=c, attribute_editor=attribute_editor)
+        self.b = Node(text="", channel=c)
         self.gesture_in = None
         self.gesture_out = None
         self.show_sent_received = (

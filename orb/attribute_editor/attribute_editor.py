@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 08:24:31
+# @Last Modified time: 2022-01-17 04:39:29
 
 from threading import Thread
 
@@ -18,6 +18,7 @@ from kivymd.uix.selectioncontrol import MDSwitch
 from kivymd.uix.textfield import MDTextField
 from kivy.metrics import dp
 from kivy.clock import mainthread
+from kivy.app import App
 
 from orb.misc.decorators import guarded
 from orb.misc.prefs import is_rest
@@ -77,14 +78,18 @@ class AttributeEditor(BoxLayout):
         Class constructor.
         """
         super(AttributeEditor, self).__init__(*args, **kwargs)
-        lnd = Lnd()
         try:
-            info = lnd.get_info()
+            info = Lnd().get_info()
             self.alias = info.alias
             self.identity_pubkey = info.identity_pubkey
         except:
             self.alias = "offline"
             self.identity_pubkey = "offline"
+
+        def update_channel(inst, channel):
+            self.channel = channel
+
+        App.get_running_app().bind(selection=update_channel)
 
     def clear(self):
         """
@@ -135,6 +140,8 @@ class AttributeEditor(BoxLayout):
                     update(policy_to)
 
             Thread(target=get_fees).start()
+        else:
+            self.clear()
 
     @guarded
     def fee_rate_milli_msat_changed(self, val, *args):
@@ -377,9 +384,11 @@ class AttributeEditor(BoxLayout):
                 height=dp(60),
             )
         )
-        text = str(data_manager.data_man.store.get("balanced_ratio", {}).get(
-                    str(self.channel.chan_id if self.channel else ""), "0.5"
-                ))
+        text = str(
+            data_manager.data_man.store.get("balanced_ratio", {}).get(
+                str(self.channel.chan_id if self.channel else ""), "0.5"
+            )
+        )
         self.ids.md_list.add_widget(
             MDTextField(
                 text=text,

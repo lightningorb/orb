@@ -2,13 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 12:28:39
+# @Last Modified time: 2022-01-17 04:17:49
 
 from time import time
 from kivy.properties import ObjectProperty
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
 from kivy.properties import NumericProperty
+from kivy.app import App
 
 
 from orb.logic.htlcs_thread import HTLCsThread
@@ -25,7 +26,6 @@ from orb.misc import data_manager
 
 
 class ChannelsWidget(ScatterLayout):
-    attribute_editor = ObjectProperty(None)
     mode = NumericProperty(0)
 
     @guarded
@@ -56,7 +56,6 @@ class ChannelsWidget(ScatterLayout):
             self.add_channel(channel=c, caps=caps, update_rect=False)
         self.node = Node(
             text=self.info.alias,
-            attribute_editor=self.attribute_editor,
             round=pref("display.round_central_node"),
         )
         self.ids.relative_layout.add_widget(self.node)
@@ -75,7 +74,7 @@ class ChannelsWidget(ScatterLayout):
     def add_channel(self, channel, caps=None, update_rect=True):
         if not caps:
             caps = self.get_caps(self.channels)
-        cn = CNWidget(c=channel, caps=caps, attribute_editor=self.attribute_editor)
+        cn = CNWidget(c=channel, caps=caps)
         self.cn[channel.chan_id] = cn
         self.ids.relative_layout.add_widget(cn)
         if update_rect:
@@ -125,8 +124,7 @@ class ChannelsWidget(ScatterLayout):
             if s:
                 self.apply_transform(Matrix().scale(s, s, s), anchor=touch.pos)
         else:
-            if self.attribute_editor:
-                self.attribute_editor.clear()
+            App.get_running_app().selection = None
             if self.node:
                 self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
             for cn in self.cn.values():

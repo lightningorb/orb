@@ -2,20 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 16:50:11
+# @Last Modified time: 2022-01-17 04:24:52
 
 from threading import Thread
 
 from kivy.animation import Animation
 from kivy.properties import ListProperty, ObjectProperty, BooleanProperty
 from kivy.uix.button import Button
+from kivy.app import App
 
 from orb.misc.utils import prefs_col, pref
 from orb.lnd import Lnd
 
 
 class Node(Button):
-    attribute_editor = ObjectProperty(None)
     col = ListProperty([0, 0, 0, 0])
     channel = ObjectProperty(None)
     touch_start = ListProperty([0, 0])
@@ -38,7 +38,7 @@ class Node(Button):
     def on_release(self):
         self.col = prefs_col("display.node_selected_background_color")
         if self.channel:
-            self.attribute_editor.channel = self.channel
+            App.get_running_app().selection = self.channel
 
     def on_press(self):
         self.col = prefs_col("display.node_selected_background_color")

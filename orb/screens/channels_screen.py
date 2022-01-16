@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 12:28:07
+# @Last Modified time: 2022-01-17 04:34:26
 
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.clock import mainthread
 from kivymd.uix.screen import MDScreen
+from kivy.app import App
 
 from orb.channels.channels_widget import ChannelsWidget
 from orb.misc.decorators import guarded
@@ -39,13 +40,12 @@ class ChannelsScreen(MDScreen):
         def delayed():
             self.gestures_delegate = GesturesDelegate(overlay=self.ids.gestures_overlay)
             self.channels_widget = ChannelsWidget(
-                attribute_editor=self.ids.content_drawer,
                 gestures_delegate=self.gestures_delegate,
             )
             self.ids.cw_layout.add_widget(self.channels_widget)
-            self.ids.content_drawer.bind(
-                channel=lambda *_: self.ids.nav_drawer.set_state(
-                    "open" if self.ids.content_drawer.channel else "close"
+            App.get_running_app().bind(
+                selection=lambda *_: self.ids.nav_drawer.set_state(
+                    "open" if App.get_running_app().selection else "close"
                 )
             )
 

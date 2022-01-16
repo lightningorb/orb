@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 14:11:29
+# @Last Modified time: 2022-01-17 04:13:37
 
 import os
 import sys
@@ -42,6 +42,7 @@ is_dev = "main.py" in sys.argv[0]
 class OrbApp(MDApp):
     title = "Orb"
     consumables = deque()
+    selection = ObjectProperty(allownone=True)
 
     def get_application_config(self, defaultpath=f"{os.getcwd()}/orb.ini"):
         """
