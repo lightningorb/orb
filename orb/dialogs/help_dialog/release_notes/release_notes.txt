@@ -1,14 +1,29 @@
-0.4.2
+0.4.3
 ----
 
+output is shown in the console once again
+[dev] missing fields in htlc rest
+
+
+v0.4.2
+------
+
+release notes
 HTLC class better REST support
 no longer calling get_channels in HTLC class working well for GRPC
 partial commit: no longer calling get_channels non-stop
 patch version bump
+[dev] fabric monkeypatch, and combo command for ios deploy
+[dev] in release notes, display head as current version
 fixed regression: ios app can be paused / resumed again
 fixed player regression (path needs to be posix string)
 display full release notes in app #139
 Move printing / console output to the consumable pattern #138
+[dev] stop autobalancing from throwing errors if file is empty
+[dev] updated release notes
+[dev] load user scripts from source if running on desktop
+[dev] platform is macosx not 'osx'
+[dev] include tags in fabfile
 'on-chain > send coins' now working as expected over REST #137
 
 
