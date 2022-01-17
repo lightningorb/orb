@@ -2,19 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 05:59:01
+# @Last Modified time: 2022-01-17 08:15:30
 
 import os
 import math
 from time import sleep
 from threading import Lock, Thread
 from copy import copy
+from pathlib import Path
 
 import yaml
 
 from kivy.clock import Clock
 
-from orb.misc.utils import pref
+from orb.misc.utils import pref_path
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.channel_selector import *
 from orb.misc.stoppable_thread import StoppableThread
@@ -141,6 +142,7 @@ class Setter:
 
 class Rebalance(StoppableThread):
     def schedule(self):
+        Clock.schedule_once(lambda _: Thread(target=self.do_rebalancing).start(), 10)
         Clock.schedule_interval(
             lambda _: Thread(target=self.do_rebalancing).start(), 60
         )
@@ -159,9 +161,11 @@ class Rebalance(StoppableThread):
             return
         self.lock.acquire()
         lnd = Lnd()
-        if not os.path.exists("autobalance.yaml"):
+        path = (pref_path("yaml") / "autobalance.yaml").as_posix()
+
+        if not os.path.exists(path):
             return
-        obj = yaml.load(open("autobalance.yaml", "r"), Loader=get_loader())
+        obj = yaml.load(open(path, "r"), Loader=get_loader())
         if not obj:
             return
         chans = lnd.get_channels()

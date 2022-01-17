@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 10:57:46
+# @Last Modified time: 2022-01-17 08:31:58
 
 import os
 import re
@@ -38,15 +38,40 @@ def copy_files(c):
     )
 
 
+def get_auto_balance():
+    return """
+#rules:
+#- !Ignore
+#  alias: LOOP
+#  any:
+#  - channel.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
+#- !To
+#  alias: SeasickDiver
+#  fee_rate: 800
+#  num_sats: 10_000
+#  all:
+#  - channel.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
+#  - channel.local_balance / channel.capacity < 0.5
+#- !To
+#  alias: bfx-lnd0
+#  num_sats: 100_000
+#  fee_rate: 400
+#  all:
+#  - channel.remote_pubkey == '033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025'
+#  - channel.local_balance / channel.capacity < 0.5"""
+
+
 def prep_user_scripts(c):
     def comment_out(content):
         return "\n".join(f"# {l}" for l in content.split("\n"))
 
     user_scripts = {}
-    for g in ["user/scripts/*.py", "fees.yaml", "autobalance.yaml"]:
+    for g in ["user/scripts/*.py", "fees.yaml"]:
         for f in glob(g):
             content = open(f).read()
             user_scripts[f] = comment_out(content) if ".yaml" in g else content
+
+    user_scripts["autobalance.yaml"] = get_auto_balance()
 
     with open("user_scripts.json", "w") as f:
         f.write(json.dumps(user_scripts, indent=4))

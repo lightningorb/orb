@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 04:13:37
+# @Last Modified time: 2022-01-17 08:40:44
 
 import os
 import sys
@@ -107,10 +107,13 @@ class OrbApp(MDApp):
         if os.path.exists("user_scripts.json"):
             with open("user_scripts.json") as f:
                 user_scripts = json.loads(f.read())
-                scripts_dir = pref_path("script")
-                for path in user_scripts:
-                    with open(scripts_dir / os.path.basename(path), "w") as f:
-                        f.write(user_scripts[path])
+                ext_path = {".py": pref_path("script"), ".yaml": pref_path("yaml")}
+                for name in user_scripts:
+                    with open(
+                        ext_path[os.path.splitext(name)[1]] / os.path.basename(name),
+                        "w",
+                    ) as f:
+                        f.write(user_scripts[name])
 
     def load_user_scripts(self):
         if ios:
@@ -141,36 +144,9 @@ class OrbApp(MDApp):
         """
         for key in ["video", "yaml", "json", "db", "cert", "script"]:
             path = pref_path(key)
+            print(path)
             if not path.is_dir():
                 os.makedirs(path)
-
-    def upgrade_tasks(self):
-        """
-        Perform tasks that need to be run from one version to another.
-        Avoid doing this as it most likely leads to breaking backward
-        compatability.
-        """
-
-        data_dir = Path(self.user_data_dir)
-
-        if ios:
-            old_data_dir = Path(self.user_data_dir) / "orb"
-            if old_data_dir.is_dir():
-                data_dir = old_data_dir
-
-        # move db files into a dbs directory
-        def do_move(pattern, key):
-            for f in data_dir.glob(pattern):
-                shutil.move(f, pref_path(key) / f.parts[-1])
-
-        for pattern, key in [
-            ["*.db", "db"],
-            ["*.mp4", "video"],
-            ["*.yaml", "yaml"],
-            ["*.json", "json"],
-            ["*.cert", "cert"],
-        ]:
-            do_move(pattern, key)
 
     def on_start(self):
         """
@@ -232,7 +208,6 @@ class OrbApp(MDApp):
         """
         self.override_stdout()
         self.make_dirs()
-        self.upgrade_tasks()
         self.save_user_scripts()
 
         data_manager.DataManager.ensure_cert()
