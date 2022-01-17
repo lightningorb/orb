@@ -1,0 +1,928 @@
+{
+    "1": {
+        "control_points": [
+            [0, "1/2", 1],
+            [0, 1, 0]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-2, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #1, #14, #21 and #24."
+    },
+    "2": {
+        "control_points": [
+            ["9/8", "5/8", "1/8"],
+            ["1/2", "-1/2", "1/2"]
+        ],
+        "implicitized": [
+            [25, 0, 0],
+            [-32, 0, 1],
+            [-80, 1, 0],
+            [64, 2, 0]
+        ]
+    },
+    "3": {
+        "control_points": [
+            [0, "3/2", 3],
+            [0, 3, 0]
+        ],
+        "implicitized": [
+            [3, 0, 1],
+            [-6, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "This curve is #1 scaled up by a factor of 3."
+    },
+    "4": {
+        "control_points": [
+            [3, "21/8", "-3/4"],
+            ["3/2", "-29/32", "39/16"]
+        ],
+        "implicitized": [
+            [14301, 0, 0],
+            [-9252, 0, 1],
+            [-10233, 1, 0],
+            [576, 0, 2],
+            [2208, 1, 1],
+            [2116, 2, 0]
+        ]
+    },
+    "5": {
+        "control_points": [
+            [0, "1/2", 1],
+            ["3/4", "-1/4", "3/4"]
+        ],
+        "implicitized": [
+            [3, 0, 0],
+            [-4, 0, 1],
+            [-8, 1, 0],
+            [8, 2, 0]
+        ]
+    },
+    "6": {
+        "control_points": [
+            [0, "1/2", 1],
+            [1, 0, 1]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-1, 0, 1],
+            [-2, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #6 and #15."
+    },
+    "7": {
+        "control_points": [
+            [0, "1/2", 1],
+            ["17/64", "15/64", "17/64"]
+        ],
+        "implicitized": [
+            [17, 0, 0],
+            [-64, 0, 1],
+            [-4, 1, 0],
+            [4, 2, 0]
+        ]
+    },
+    "8": {
+        "control_points": [
+            [0, 1],
+            ["3/8", "3/8"]
+        ],
+        "implicitized": [
+            [3, 0, 0],
+            [-8, 0, 1]
+        ]
+    },
+    "9": {
+        "control_points": [
+            ["1/2", "1/2"],
+            [0, "3/4"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-2, 1, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #9 and #34."
+    },
+    "10": {
+        "control_points": [
+            [0, "9/2", 9],
+            [0, 9, 0]
+        ],
+        "implicitized": [
+            [9, 0, 1],
+            [-18, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "This curve is #1 scaled up by a factor of 9."
+    },
+    "11": {
+        "control_points": [
+            [0, 6],
+            [8, 0]
+        ],
+        "implicitized": [
+            [24, 0, 0],
+            [-3, 0, 1],
+            [-4, 1, 0]
+        ]
+    },
+    "13": {
+        "control_points": [
+            [0, "1/4", "1/2", "3/4", 1],
+            [0, 2, -2, 2, 0]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-8, 1, 0],
+            [36, 2, 0],
+            [-56, 3, 0],
+            [28, 4, 0]
+        ]
+    },
+    "14": {
+        "control_points": [
+            [0, "3/8", "3/4"],
+            [0, "3/4", "3/8"]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-2, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #1, #14, #21 and #24."
+    },
+    "15": {
+        "control_points": [
+            ["1/4", "5/8", 1],
+            ["5/8", "1/4", 1]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-1, 0, 1],
+            [-2, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #6 and #15."
+    },
+    "16": {
+        "control_points": [
+            ["1/4", "5/8", 1],
+            ["9/16", "3/16", "15/16"]
+        ],
+        "implicitized": [
+            [15, 0, 0],
+            [-16, 0, 1],
+            [-32, 1, 0],
+            [32, 2, 0]
+        ]
+    },
+    "17": {
+        "control_points": [
+            [11, 7, 3],
+            [8, 10, 4]
+        ],
+        "implicitized": [
+            [13, 0, 0],
+            [8, 0, 1],
+            [-18, 1, 0],
+            [1, 2, 0]
+        ]
+    },
+    "18": {
+        "control_points": [
+            [1, "3/2", 2],
+            [0, -1, 0]
+        ],
+        "implicitized": [
+            [4, 0, 0],
+            [-1, 0, 1],
+            [-6, 1, 0],
+            [2, 2, 0]
+        ]
+    },
+    "19": {
+        "control_points": [
+            [2, "3/2", 1],
+            [0, 1, 0]
+        ],
+        "implicitized": [
+            [4, 0, 0],
+            [1, 0, 1],
+            [-6, 1, 0],
+            [2, 2, 0]
+        ]
+    },
+    "20": {
+        "control_points": [
+            [1, -1, 1],
+            [0, "1/4", "1/2"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-8, 0, 1],
+            [-1, 1, 0],
+            [16, 0, 2]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #20 and #22."
+    },
+    "21": {
+        "control_points": [
+            ["-1/8", "1/2", "9/8"],
+            ["-9/32", "41/32", "-9/32"]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-2, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #1, #14, #21 and #24."
+    },
+    "22": {
+        "control_points": [
+            ["25/16", "-25/16", "25/16"],
+            ["-1/16", "1/4", "9/16"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-8, 0, 1],
+            [-1, 1, 0],
+            [16, 0, 2]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #20 and #22."
+    },
+    "23": {
+        "control_points": [
+            [3, 8],
+            ["9/2", "9/2"]
+        ],
+        "implicitized": [
+            [9, 0, 0],
+            [-2, 0, 1]
+        ],
+        "note": "This curve is #8 scaled up by a factor of 5 and shifted by [3, 21/8]."
+    },
+    "24": {
+        "control_points": [
+            ["1/4", "3/4", "5/4"],
+            ["3/8", "7/8", "-5/8"]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-2, 1, 0],
+            [2, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #1, #14, #21 and #24. This is coincident with #1: curve1([1/4, 1]) == curve24([0, 3/4])."
+    },
+    "25": {
+        "control_points": [
+            [0, "1/4", "3/4", 1],
+            ["1/2", 1, "3/2", "1/2"]
+        ],
+        "implicitized": [
+            [17, 0, 0],
+            [348, 0, 1],
+            [-180, 1, 0],
+            [-732, 0, 2],
+            [1800, 1, 1],
+            [-1728, 2, 0],
+            [-64, 0, 3],
+            [576, 1, 2],
+            [-1728, 2, 1],
+            [1728, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve has a self-crossing at [22/27, 17/18] when the parameters are (-1 +/- sqrt(33)) / 6."
+    },
+    "26": {
+        "control_points": [
+            ["3/8", "17/8", "31/8", "45/8"],
+            [7, 8, 0, 1]
+        ],
+        "implicitized": [
+            [6834, 0, 0],
+            [-1029, 0, 1],
+            [1398, 1, 0],
+            [-1152, 2, 0],
+            [128, 3, 0]
+        ]
+    },
+    "27": {
+        "control_points": [
+            ["1/8", "3/8", "5/8", "7/8"],
+            ["1/4", "3/4", 0, "3/16"]
+        ],
+        "implicitized": [
+            [395, 0, 0],
+            [3456, 0, 1],
+            [-13512, 1, 0],
+            [29760, 2, 0],
+            [-17920, 3, 0]
+        ]
+    },
+    "28": {
+        "control_points": [
+            [0, "-1/2", 1],
+            [0, "3/2", 1]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [3, 1, 0],
+            [-1, 0, 2],
+            [-2, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "This curve is #1 rotated about the origin by 45 degrees counterclockwise and scaled up by a factor of sqrt(2)."
+    },
+    "29": {
+        "control_points": [
+            [-1, "1/2", 0],
+            [1, "1/2", 2]
+        ],
+        "implicitized": [
+            [2, 0, 0],
+            [-3, 0, 1],
+            [-1, 1, 0],
+            [1, 0, 2],
+            [2, 1, 1],
+            [1, 2, 0]
+        ],
+        "note": "This curve is #6 rotated about the origin by 45 degrees counterclockwise and scaled up by a factor of sqrt(2)."
+    },
+    "30": {
+        "control_points": [
+            ["1/2", "-1/4"],
+            ["1/2", "5/4"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-1, 0, 1],
+            [-1, 1, 0]
+        ],
+        "note": "This curve is #9 rotated about the origin by 45 degrees counterclockwise and scaled up by a factor of sqrt(2)."
+    },
+    "31": {
+        "control_points": [
+            ["1/4", "49/4"],
+            ["67/4", "3/4"]
+        ],
+        "implicitized": [
+            [205, 0, 0],
+            [-12, 0, 1],
+            [-16, 1, 0]
+        ],
+        "note": "This curve is #11 scaled up by a factor of 2 and shifted by [1/4, 3/4]."
+    },
+    "32": {
+        "control_points": [
+            ["-1/4", "3/16", "5/8"],
+            ["-1/4", "-1/4", "-1/4"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [4, 0, 1]
+        ],
+        "note": "This is a degree-elevated version of the line segment y = -1/4 for -1/4 <= x <= 5/8."
+    },
+    "33": {
+        "control_points": [
+            ["-1/8", "1/16", 0],
+            [0, "-1/2", -1]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [3, 0, 1],
+            [8, 1, 0],
+            [2, 0, 2]
+        ]
+    },
+    "34": {
+        "control_points": [
+            ["1/2", "1/2"],
+            ["15/8", "21/8"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-2, 1, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #9 and #34."
+    },
+    "35": {
+        "control_points": [
+            ["5/8", "-5/8"],
+            ["21/8", "21/8"]
+        ],
+        "implicitized": [
+            [21, 0, 0],
+            [-8, 0, 1]
+        ]
+    },
+    "36": {
+        "control_points": [
+            ["1/2", 0],
+            ["-3/8", "-3/4"]
+        ],
+        "implicitized": [
+            [3, 0, 0],
+            [4, 0, 1],
+            [-3, 1, 0]
+        ]
+    },
+    "37": {
+        "control_points": [
+            ["-1/2", "5/4"],
+            ["-7/8", 0]
+        ],
+        "implicitized": [
+            [5, 0, 0],
+            [8, 0, 1],
+            [-4, 1, 0]
+        ]
+    },
+    "38": {
+        "control_points": [
+            ["1/2", "5/4", 2],
+            ["1/8", "-1/4", "1/2"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-2, 0, 1],
+            [-2, 1, 0],
+            [1, 2, 0]
+        ]
+    },
+    "39": {
+        "control_points": [
+            ["1/2", 1, "3/2"],
+            ["-1/8", "1/8", "-1/8"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [2, 0, 1],
+            [-2, 1, 0],
+            [1, 2, 0]
+        ]
+    },
+    "40": {
+        "control_points": [
+            ["-0x1.1f2347525aff1p-2", "-0x1.3912a66009422p-2"],
+            ["-0x1.b10f43da717d8p-3", "-0x1.263d62f131d03p-4"]
+        ],
+        "note": "This curve and #41 are from a real-world failure, so the values do not have a rational or algebraic representation."
+    },
+    "41": {
+        "control_points": [
+            ["-0x1.25a8a28e98475p-2", "-0x1.7daf3df0a049ep-2"],
+            ["-0x1.692bd46818fe8p-3", "-0x1.1361ffff031f1p-2"]
+        ],
+        "note": "This curve and #40 are from a real-world failure, so the values do not have a rational or algebraic representation."
+    },
+    "42": {
+        "control_points": [
+            [0, "-1/2", "-1/4", "-3/32"],
+            [2, 1, "3/4", "53/64"]
+        ],
+        "implicitized": [
+            [16, 0, 0],
+            [-40, 0, 1],
+            [16, 1, 0],
+            [32, 0, 2],
+            [-24, 1, 1],
+            [20, 2, 0],
+            [-8, 0, 3],
+            [12, 1, 2],
+            [-6, 2, 1],
+            [1, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #42, #43, #44, #45, #46 and #47. The algebraic curve has a self-crossing at [-1/4, 11/8] when the parameters are (3 +/- sqrt(5)) / 3."
+    },
+    "43": {
+        "control_points": [
+            ["-3/32", "1/16", "1/8", "-3/4"],
+            ["53/64", "29/32", "21/16", "13/8"]
+        ],
+        "implicitized": [
+            [16, 0, 0],
+            [-40, 0, 1],
+            [16, 1, 0],
+            [32, 0, 2],
+            [-24, 1, 1],
+            [20, 2, 0],
+            [-8, 0, 3],
+            [12, 1, 2],
+            [-6, 2, 1],
+            [1, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #42, #43, #44, #45, #46 and #47. This is coincident with #42: curve43([0, 1]) == curve42([1, 2]), and the shared (parent) algebraic curve has a self-crossing."
+    },
+    "44": {
+        "control_points": [
+            [0, "-1/4", "-5/16", "-75/256"],
+            [2, "3/2", "19/16", "517/512"]
+        ],
+        "implicitized": [
+            [16, 0, 0],
+            [-40, 0, 1],
+            [16, 1, 0],
+            [32, 0, 2],
+            [-24, 1, 1],
+            [20, 2, 0],
+            [-8, 0, 3],
+            [12, 1, 2],
+            [-6, 2, 1],
+            [1, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #42, #43, #44, #45, #46 and #47. This is coincident with #42: curve44([0, 1]) == curve42([0, 1/2]), and the shared (parent) algebraic curve has a self-crossing."
+    },
+    "45": {
+        "control_points": [
+            ["-75/256", "-35/128", "-11/64", "-3/32"],
+            ["517/512", "213/256", "101/128", "53/64"]
+        ],
+        "implicitized": [
+            [16, 0, 0],
+            [-40, 0, 1],
+            [16, 1, 0],
+            [32, 0, 2],
+            [-24, 1, 1],
+            [20, 2, 0],
+            [-8, 0, 3],
+            [12, 1, 2],
+            [-6, 2, 1],
+            [1, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #42, #43, #44, #45, #46 and #47. This is coincident with #42: curve45([0, 1]) == curve42([1/2, 1]), and the shared (parent) algebraic curve has a self-crossing."
+    },
+    "46": {
+        "control_points": [
+            ["-3/32", "-1/64", "5/128", "-9/256"],
+            ["53/64", "111/128", "253/256", "583/512"]
+        ],
+        "implicitized": [
+            [16, 0, 0],
+            [-40, 0, 1],
+            [16, 1, 0],
+            [32, 0, 2],
+            [-24, 1, 1],
+            [20, 2, 0],
+            [-8, 0, 3],
+            [12, 1, 2],
+            [-6, 2, 1],
+            [1, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #42, #43, #44, #45, #46 and #47. This is coincident with #42: curve46([0, 1]) == curve42([1, 3/2]), and the shared (parent) algebraic curve has a self-crossing."
+    },
+    "47": {
+        "control_points": [
+            ["-9/256", "-7/64", "-5/16", "-3/4"],
+            ["583/512", "165/128", "47/32", "13/8"]
+        ],
+        "implicitized": [
+            [16, 0, 0],
+            [-40, 0, 1],
+            [16, 1, 0],
+            [32, 0, 2],
+            [-24, 1, 1],
+            [20, 2, 0],
+            [-8, 0, 3],
+            [12, 1, 2],
+            [-6, 2, 1],
+            [1, 3, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #42, #43, #44, #45, #46 and #47. This is coincident with #42: curve47([0, 1]) == curve42([3/2, 2]), and the shared (parent) algebraic curve has a self-crossing."
+    },
+    "48": {
+        "control_points": [
+            [1, 1],
+            [-3, 3]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-1, 1, 0]
+        ]
+    },
+    "49": {
+        "control_points": [
+            [10, 0],
+            [0, 0]
+        ],
+        "implicitized": [
+            [1, 0, 1]
+        ]
+    },
+    "50": {
+        "control_points": [
+            ["9/4", "17/8"],
+            ["97/32", "23/8"]
+        ],
+        "implicitized": [
+            [7, 0, 0],
+            [-32, 0, 1],
+            [40, 1, 0]
+        ],
+        "note": "Curve #52 is a degree-elevated version of this curve."
+    },
+    "51": {
+        "control_points": [
+            ["17/8", "37/16"],
+            ["23/8", "91/32"]
+        ],
+        "implicitized": [
+            [155, 0, 0],
+            [-48, 0, 1],
+            [-8, 1, 0]
+        ],
+        "note": "Curve #53 is a degree-elevated version of this curve."
+    },
+    "52": {
+        "control_points": [
+            ["9/4", "35/16", "17/8"],
+            ["97/32", "189/64", "23/8"]
+        ],
+        "implicitized": [
+            [7, 0, 0],
+            [-32, 0, 1],
+            [40, 1, 0]
+        ],
+        "note": "This is a degree-elevated version of curve #50."
+    },
+    "53": {
+        "control_points": [
+            ["17/8", "71/32", "37/16"],
+            ["23/8", "183/64", "91/32"]
+        ],
+        "implicitized": [
+            [155, 0, 0],
+            [-48, 0, 1],
+            [-8, 1, 0]
+        ],
+        "note": "This is a degree-elevated version of curve #51."
+    },
+    "54": {
+        "control_points": [
+            ["269/128", "553/256", "1137/512"],
+            ["23/8", "23/8", "23/8"]
+        ],
+        "implicitized": [
+            [23, 0, 0],
+            [-8, 0, 1]
+        ],
+        "note": "This curve has a ``bad'' parameterization. It is a line, but the curve appears quadratic: `x(s) = ((s + 30)^2 + 176) / 512, y(s) = 23 / 8`. If `553/256 = 2212/1024` were changed to `2213/1024` then the curve would present as a line: `x(s) = (61 s + 1076) / 512, y(s) = 23 / 8`. There are no self-intersections or cusps on the interval [0, 1], but the curve is still ``bad'' since it has a ``false'' degree of 2 (rather than the actual degree of 1). The quadratic curve behaves badly around `s = -30` because it will lead to duplicate values of `x`, for example `x(-31) = x(-29)` and in general `x(-30 + d) = x(-30 - d)`."
+    },
+    "55": {
+        "control_points": [
+            [0, 1],
+            ["1/2", "1/2"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [-2, 0, 1]
+        ]
+    },
+    "56": {
+        "control_points": [
+            [12, -4, -4],
+            [4, -4, 4]
+        ],
+        "implicitized": [
+            [16, 0, 1],
+            [-1, 0, 2],
+            [2, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #56 and #61."
+    },
+    "57": {
+        "control_points": [
+            [6, -2, -2],
+            [1, -1, 1]
+        ],
+        "implicitized": [
+            [16, 0, 1],
+            [-4, 0, 2],
+            [4, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #57 and #62."
+    },
+    "58": {
+        "control_points": [
+            [1, 1, 0],
+            [0, 1, 1]
+        ],
+        "implicitized": [
+            [3, 0, 0],
+            [-2, 0, 1],
+            [-2, 1, 0],
+            [-1, 0, 2],
+            [2, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #58 and #60. This is the first edge from triangle 20Q."
+    },
+    "59": {
+        "control_points": [
+            [1, 1, "-1/2"],
+            [0, "3/2", "3/2"]
+        ],
+        "implicitized": [
+            [5, 0, 0],
+            [-2, 0, 1],
+            [-4, 1, 0],
+            [-1, 0, 2],
+            [2, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "This is the first edge from triangle 21Q."
+    },
+    "60": {
+        "control_points": [
+            ["15/16", "19/16", "7/16"],
+            ["-9/16", "11/16", "15/16"]
+        ],
+        "implicitized": [
+            [3, 0, 0],
+            [-2, 0, 1],
+            [-2, 1, 0],
+            [-1, 0, 2],
+            [2, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #58 and #60. This is the first edge from triangle 41Q. It is a specialized version of #58: curve60 = curve58([-1/4, 3/4])."
+    },
+    "61": {
+        "control_points": [
+            [12, -12, 0],
+            [4, -8, 16]
+        ],
+        "implicitized": [
+            [16, 0, 1],
+            [-1, 0, 2],
+            [2, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #56 and #61. This is an extension of #56: curve61 = curve56([0, 1.5])."
+    },
+    "62": {
+        "control_points": [
+            [6, -6, 0],
+            [1, -2, 4]
+        ],
+        "implicitized": [
+            [16, 0, 1],
+            [-4, 0, 2],
+            [4, 1, 1],
+            [-1, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #57 and #62. This is an extension of #56: curve62 = curve57([0, 1.5])."
+    },
+    "63": {
+        "control_points": [
+            [0, "1/2", 1],
+            [0, 2, 0]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-4, 1, 0],
+            [4, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #63 and #65."
+    },
+    "64": {
+        "control_points": [
+            [1, "-0x1.58313256a7433p-1", 1],
+            ["1/10", "1/2", 1]
+        ],
+        "note": "This curve is intended to be tangent to #63, but only up to machine precision. The imprecise value is a root of `18432000u^5 - 56499200u^4 + 49932800u^3 + 5153760u^2 - 26269760u + 9250403 = 0`."
+    },
+    "65": {
+        "control_points": [
+            ["-1/2", "1/2", "3/2"],
+            [-3, 5, -3]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-4, 1, 0],
+            [4, 2, 0]
+        ],
+        "note": "The algebraic curve that contains this curve contains curves #63 and #65."
+    },
+    "66": {
+        "control_points": [
+            [4, "-3/2", 1],
+            ["-33/8", "11/8", "7/8"]
+        ],
+        "implicitized": [
+            [203, 0, 0],
+            [-392, 0, 1],
+            [-536, 1, 0],
+            [256, 0, 2],
+            [384, 1, 1],
+            [144, 2, 0]
+        ]
+    },
+    "67": {
+        "control_points": [
+            [0, 1],
+            [0, 1]
+        ],
+        "implicitized": [
+            [1, 0, 1],
+            [-1, 1, 0]
+        ]
+    },
+    "68": {
+        "control_points": [
+            ["1/256", "255/256"],
+            ["-1/256", "257/256"]
+        ],
+        "implicitized": [
+            [1, 0, 0],
+            [127, 0, 1],
+            [-129, 1, 0]
+        ]
+    },
+    "69": {
+        "control_points": [
+            [0, 1, 1],
+            [0, 0, 1]
+        ],
+        "implicitized": [
+            [4, 0, 1],
+            [-1, 0, 2],
+            [-2, 1, 1],
+            [-1, 2, 0]
+        ]
+    },
+    "70": {
+        "control_points": [
+            ["1/256", "257/256", "255/256"],
+            ["-1/256", "-1/256", "257/256"]
+        ],
+        "implicitized": [
+            [2, 0, 0],
+            [512, 0, 1],
+            [-129, 0, 2],
+            [-258, 1, 1],
+            [-129, 2, 0]
+        ]
+    },
+    "71": {
+        "control_points": [
+            ["0x1.002f11833164ap-1", "0x1.c516e980c0ce0p-2", "0x1.89092ee6e6df4p-2"],
+            ["-0x1.32718972d77a1p-1", "-0x1.5e002a95d165ep-1", "-0x1.8640e302433dfp-1"]
+        ],
+        "note": "This curve and #72 are from a real-world failure, so the values do not have a rational or algebraic representation."
+    },
+    "72": {
+        "control_points": [
+            ["0x1.fbb8cfd966f05p-2", "0x1.c6cd0e74ae3ecp-2", "0x1.8c4a283f3c04dp-2"],
+            ["-0x1.325bc2f4e012cp-1", "-0x1.614b060a21ebap-1", "-0x1.8192083f28f11p-1"]
+        ],
+        "note": "This curve and #71 are from a real-world failure, so the values do not have a rational or algebraic representation."
+    },
+    "73": {
+        "control_points": [
+            ["0x1.63e1b4c544d3ap-1", "0x1.6c074b46d2b9ep-1", "0x1.740dd73c29145p-1"],
+            ["-0x1.424da10fb674dp-1", "-0x1.3a7d6b25aa9edp-1", "-0x1.32aa53fca29dep-1"]
+        ],
+        "note": "This curve and #74 are from a real-world failure, so the values do not have a rational or algebraic representation. This is the first edge of triangle 48Q."
+    },
+    "74": {
+        "control_points": [
+            ["0x1.6924a2e5e142fp-1", "0x1.5b8b094c47a96p-1"],
+            ["-0x1.3d3d1ffab5baep-1", "-0x1.4ad6b9944f548p-1"]
+        ],
+        "note": "This curve and #73 are from a real-world failure, so the values do not have a rational or algebraic representation. This is the second edge of triangle 14L."
+    },
+    "75": {
+        "control_points": [
+            ["0x1.bf84f70f66400p-1", "0x1.bfa4807c92afap-1", "0x1.bfc409e9bf1f5p-1"],
+            ["0x1.6017a1182b9b6p-3", "0x1.725d85f3802ebp-3", "0x1.84a36aced4c22p-3"]
+        ],
+        "note": "This curve and #76 are from a real-world failure, so the values do not have a rational or algebraic representation. This is the first edge of triangle 49Q."
+    },
+    "76": {
+        "control_points": [
+            ["0x1.bf8ad4846373bp-1", "0x1.bf8ad4846373bp-1"],
+            ["0x1.67983f1ad5bc2p-3", "0x1.3131d8b46f55bp-3"]
+        ],
+        "note": "This curve and #75 are from a real-world failure, so the values do not have a rational or algebraic representation. This is the third edge of triangle 15L."
+    },
+    "77": {
+        "control_points": [
+            ["0x1.61c71f073cc01p-3", "0x1.535f028b90c2ap-3", "0x1.44fb2fb54d6abp-3", "0x1.369ba68472b75p-3"],
+            ["-0x1.f58f3b1c0f41dp-1", "-0x1.f595446c5b8acp-1", "-0x1.f59969b819c1cp-1", "-0x1.f59baaff49e70p-1"]
+        ],
+        "note": "This curve and #78 are from a real-world failure, so the values do not have a rational or algebraic representation. This is the third edge of triangle 3C."
+    },
+    "78": {
+        "control_points": [
+            ["0x1.3f0307d1786cbp-3", "0x1.4e89fba3680cfp-3", "0x1.5e123b961ee05p-3", "0x1.6d9bc7a99ce60p-3"],
+            ["-0x1.f59d6d6ec1001p-1", "-0x1.f59660a5e7ca4p-1", "-0x1.f590228da381dp-1", "-0x1.f58ab325f427fp-1"]
+        ],
+        "note": "This curve and #77 are from a real-world failure, so the values do not have a rational or algebraic representation. This is the third edge of triangle 4C."
+    }
+}

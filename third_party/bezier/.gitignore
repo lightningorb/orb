@@ -1,0 +1,38 @@
+*.py[cod]
+
+# Python packages
+*.egg
+*.egg-info
+__pycache__
+build
+dist
+
+# Python unit test / coverage reports
+.cache
+.coverage
+.nox/
+.pytest_cache
+
+# macOS
+.DS_Store
+
+# Generated files
+docs/abi/example
+scripts/macos/dist_wheels/
+scripts/macos/fixed_wheels/
+scripts/macos/test-venv/
+scripts/manylinux/fixed_wheels/
+src/fortran/*.o
+src/fortran/quadpack/*.o
+src/python/bezier/_speedup*.so
+tests/fortran/*.gcda
+tests/fortran/*.gcno
+tests/fortran/*.mod
+tests/fortran/*.o
+tests/fortran/coverage.info
+tests/fortran/functional-test-bin
+tests/fortran/functional-test-bin.dSYM/
+tests/fortran/lcov-html/
+tests/fortran/unit-test-bin
+tests/fortran/unit-test-bin.dSYM/
+wheelhouse/

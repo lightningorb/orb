@@ -1,0 +1,995 @@
+[
+    {
+        "curve1": "1",
+        "curve2": "2",
+        "id": 1,
+        "type": "standard",
+        "intersections": [
+            ["0x1.b7537f52e7c79p-3", "0x1.d22b202b460e2p-1"],
+            ["0x1.59159015a3071p-2", "0x1.4dd4dfd4b9f1ep-3"]
+        ],
+        "curve1_params": [
+            "0x1.b7537f52e7c79p-3",
+            "0x1.d22b202b460e2p-1"
+        ],
+        "curve1_polys": [
+            [25, -144, 128],
+            [25, -144, 128]
+        ],
+        "curve2_params": [
+            "0x1.d22b202b460e2p-1",
+            "0x1.b7537f52e7c79p-3"
+        ],
+        "curve2_polys": [
+            [25, -144, 128],
+            [25, -144, 128]
+        ]
+    }, {
+        "curve1": "3",
+        "curve2": "4",
+        "id": 2,
+        "type": "standard",
+        "intersections": [
+            ["3/4", "21/8"],
+            ["9/8", "21/32"]
+        ],
+        "curve1_params": [
+            "1/4",
+            "7/8"
+        ],
+        "curve2_params": [
+            "3/4",
+            "1/4"
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "5",
+        "id": 3,
+        "type": "standard",
+        "intersections": [
+            ["1/4", "3/4"],
+            ["3/8", "3/8"]
+        ],
+        "curve1_params": [
+            "1/4",
+            "3/4"
+        ],
+        "curve2_params": [
+            "1/4",
+            "3/4"
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "6",
+        "id": 4,
+        "type": "tangent",
+        "intersections": [
+            ["1/2"],
+            ["1/2"]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "7",
+        "id": 5,
+        "type": "standard",
+        "intersections": [
+            ["0x1.36fa590b4b85dp-3", "0x1.b24169bd2d1e9p-1"],
+            ["0x1.07c1f07c1f07cp-2", "0x1.07c1f07c1f07cp-2"]
+        ],
+        "curve1_params": [
+            "0x1.36fa590b4b85dp-3",
+            "0x1.b24169bd2d1e9p-1"
+        ],
+        "curve1_polys": [
+            [17, -132, 132],
+            [17, -132, 132]
+        ],
+        "curve2_params": [
+            "0x1.36fa590b4b85dp-3",
+            "0x1.b24169bd2d1e9p-1"
+        ],
+        "curve2_polys": [
+            [17, -132, 132],
+            [17, -132, 132]
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "8",
+        "id": 6,
+        "type": "standard",
+        "intersections": [
+            ["1/4", "3/4"],
+            ["3/8", "3/8"]
+        ],
+        "curve1_params": [
+            "1/4",
+            "3/4"
+        ],
+        "curve2_params": [
+            "1/4",
+            "3/4"
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "9",
+        "id": 7,
+        "type": "standard",
+        "intersections": [
+            ["1/2"],
+            ["1/2"]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "2/3"
+        ]
+    }, {
+        "curve1": "10",
+        "curve2": "11",
+        "id": 8,
+        "type": "standard",
+        "intersections": [
+            [3],
+            [4]
+        ],
+        "curve1_params": [
+            "1/3"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "8",
+        "curve2": "9",
+        "id": 9,
+        "type": "standard",
+        "intersections": [
+            ["1/2"],
+            ["3/8"]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "13",
+        "id": 10,
+        "type": "standard",
+        "intersections": [
+            [0, "0x1.3e7b70cac040dp-2", "0x1.60c2479a9fdfap-1", 1],
+            [0, "0x1.b6db6db6db6dbp-2", "0x1.b6db6db6db6dbp-2", 0]
+        ],
+        "curve1_params": [
+            0,
+            "0x1.3e7b70cac040dp-2",
+            "0x1.60c2479a9fdfap-1",
+            1
+        ],
+        "curve1_polys": [
+            [0, 1],
+            [3, -14, 14],
+            [3, -14, 14],
+            [-1, 1]
+        ],
+        "curve2_params": [
+            0,
+            "0x1.3e7b70cac040dp-2",
+            "0x1.60c2479a9fdfap-1",
+            1
+        ],
+        "curve2_polys": [
+            [0, 1],
+            [3, -14, 14],
+            [3, -14, 14],
+            [-1, 1]
+        ]
+    }, {
+        "curve1": "14",
+        "curve2": "15",
+        "id": 11,
+        "type": "tangent",
+        "intersections": [
+            ["1/2"],
+            ["1/2"]
+        ],
+        "curve1_params": [
+            "2/3"
+        ],
+        "curve2_params": [
+            "1/3"
+        ]
+    }, {
+        "curve1": "14",
+        "curve2": "16",
+        "id": 12,
+        "type": "standard",
+        "intersections": [
+            ["3/8", "5/8"],
+            ["15/32", "15/32"]
+        ],
+        "curve1_params": [
+            "1/2",
+            "5/6"
+        ],
+        "curve2_params": [
+            "1/6",
+            "1/2"
+        ]
+    }, {
+        "curve1": "10",
+        "curve2": "17",
+        "id": 13,
+        "type": "standard",
+        "intersections": [
+            [3],
+            [4]
+        ],
+        "curve1_params": [
+            "1/3"
+        ],
+        "curve2_params": [
+            1
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "18",
+        "id": 14,
+        "type": "tangent",
+        "intersections": [
+            [1],
+            [0]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve2_params": [
+            0
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "19",
+        "id": 15,
+        "type": "standard",
+        "intersections": [
+            [1],
+            [0]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve2_params": [
+            1
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "20",
+        "id": 16,
+        "type": "standard",
+        "intersections": [
+            ["0x1.8722191a02d61p-4", "1/4", "0x1.4f1bbcdcbfa54p-1", 1],
+            ["0x1.61c8864680b58p-3", "3/8", "0x1.cf1bbcdcbfa54p-2", 0]
+        ],
+        "curve1_params": [
+            "0x1.8722191a02d61p-4",
+            "1/4",
+            "0x1.4f1bbcdcbfa54p-1",
+            1
+        ],
+        "curve1_polys": [
+            [1, -12, 16],
+            [-1, 4],
+            [1, -12, 16],
+            [-1, 1]
+        ],
+        "curve2_params": [
+            "0x1.61c8864680b58p-2",
+            "3/4",
+            "0x1.cf1bbcdcbfa54p-1",
+            0
+        ],
+        "curve2_polys": [
+            [5, -20, 16],
+            [-3, 4],
+            [5, -20, 16],
+            [0, 1]
+        ]
+    }, {
+        "curve1": "20",
+        "curve2": "21",
+        "id": 17,
+        "type": "standard",
+        "intersections": [
+            [1, "0x1.8722191a02d61p-4", "1/4", "0x1.4f1bbcdcbfa54p-1"],
+            [0, "0x1.61c8864680b58p-3", "3/8", "0x1.cf1bbcdcbfa54p-2"]
+        ],
+        "curve1_params": [
+            0,
+            "0x1.61c8864680b58p-2",
+            "3/4",
+            "0x1.cf1bbcdcbfa54p-1"
+        ],
+        "curve1_polys": [
+            [0, 1],
+            [5, -20, 16],
+            [-3, 4],
+            [5, -20, 16]
+        ],
+        "curve2_params": [
+            "9/10",
+            "0x1.6940d6d73455ap-3",
+            "3/10",
+            "0x1.3f4963e3cc843p-1"
+        ],
+        "curve2_polys": [
+            [-9, 10],
+            [11, -80, 100],
+            [-3, 10],
+            [11, -80, 100]
+        ]
+    }, {
+        "curve1": "21",
+        "curve2": "22",
+        "id": 18,
+        "type": "standard",
+        "intersections": [
+            ["0x1.8722191a02d61p-4", "1/4", "0x1.4f1bbcdcbfa54p-1", 1],
+            ["0x1.61c8864680b58p-3", "3/8", "0x1.cf1bbcdcbfa54p-2", 0]
+        ],
+        "curve1_params": [
+            "0x1.6940d6d73455ap-3",
+            "3/10",
+            "0x1.3f4963e3cc843p-1",
+            "9/10"
+        ],
+        "curve1_polys": [
+            [11, -80, 100],
+            [-3, 10],
+            [11, -80, 100],
+            [-9, 10]
+        ],
+        "curve2_params": [
+            "0x1.816d383866f7ap-2",
+            "7/10",
+            "0x1.a5afca4a32eaap-1",
+            "1/10"
+        ],
+        "curve2_polys": [
+            [31, -120, 100],
+            [-7, 10],
+            [31, -120, 100],
+            [-1, 10]
+        ]
+    }, {
+        "curve1": "10",
+        "curve2": "23",
+        "id": 19,
+        "type": "tangent",
+        "intersections": [
+            ["9/2"],
+            ["9/2"]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "3/10"
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "24",
+        "id": 20,
+        "type": "coincident",
+        "note": "The curves in this intersection are coincident: curve1([1/4, 1]) == curve24([0, 3/4]).",
+        "intersections": [
+            ["1/4", 1],
+            ["3/8", 0]
+        ],
+        "curve1_params": [
+            "1/4",
+            1
+        ],
+        "curve2_params": [
+            0,
+            "3/4"
+        ]
+    }, {
+        "curve1": "15",
+        "curve2": "25",
+        "id": 21,
+        "type": "standard",
+        "intersections": [
+            ["0x1.c9c6769baeb4bp-1"],
+            ["0x1.9f09401c281dep-1"]
+        ],
+        "curve1_params": [
+            "0x1.b7b348cf939b9p-1"
+        ],
+        "curve1_polys": [
+            [1231, 6213, -18405, 13905, -3726, 486]
+        ],
+        "curve2_params": [
+            "0x1.bf3536665a0cdp-1"
+        ],
+        "curve2_polys": [
+            [4, -28, 25, 13, -16, 4]
+        ]
+    }, {
+        "curve1": "11",
+        "curve2": "26",
+        "id": 22,
+        "type": "standard",
+        "intersections": [
+            ["0x1.5eb412d9d98cep-1", 3, "0x1.54297da4c4ce6p+2"],
+            ["0x1.c58ca7865bbdep+2", 4, "0x1.d39ac3cd22113p-1"]
+        ],
+        "curve1_params": [
+            "0x1.d39ac3cd22113p-4",
+            "1/2",
+            "0x1.c58ca7865bbdep-1"
+        ],
+        "curve1_polys": [
+            [233, -2304, 2304],
+            [-1, 2],
+            [233, -2304, 2304]
+        ],
+        "curve2_params": [
+            "0x1.e3aae41e04b98p-5",
+            "1/2",
+            "0x1.e1c551be1fb46p-1"
+        ],
+        "curve2_polys": [
+            [1, -18, 18],
+            [-1, 2],
+            [1, -18, 18]
+        ]
+    }, {
+        "curve1": "8",
+        "curve2": "27",
+        "id": 23,
+        "type": "standard",
+        "intersections": [
+            ["0x1.ae0b02accd842p-3", "0x1.cb0f15070e256p-2"],
+            ["3/8", "3/8"]
+        ],
+        "curve1_params": [
+            "0x1.ae0b02accd842p-3",
+            "0x1.cb0f15070e256p-2"
+        ],
+        "curve1_polys": [
+            [-1691, 13512, -29760, 17920],
+            [-1691, 13512, -29760, 17920]
+        ],
+        "curve2_params": [
+            "0x1.d01d5c7779605p-4",
+            "0x1.b969715ebd872p-2"
+        ],
+        "curve2_polys": [
+            [-2, 24, -60, 35],
+            [-2, 24, -60, 35]
+        ]
+    }, {
+        "curve1": "28",
+        "curve2": "29",
+        "id": 24,
+        "type": "tangent",
+        "intersections": [
+            [0],
+            [1]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "29",
+        "curve2": "30",
+        "id": 25,
+        "type": "standard",
+        "intersections": [
+            [0],
+            [1]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "2/3"
+        ]
+    }, {
+        "curve1": "8",
+        "curve2": "23",
+        "id": 26,
+        "type": "no-intersection",
+        "intersections": [[], []],
+        "curve1_params": [],
+        "curve2_params": []
+    }, {
+        "curve1": "11",
+        "curve2": "31",
+        "id": 27,
+        "type": "no-intersection",
+        "intersections": [[], []],
+        "curve1_params": [],
+        "curve2_params": []
+    }, {
+        "curve1": "32",
+        "curve2": "33",
+        "id": 28,
+        "type": "standard",
+        "intersections": [
+            ["-3/64"],
+            ["-1/4"]
+        ],
+        "curve1_params": [
+            "13/56"
+        ],
+        "curve2_params": [
+            "1/4"
+        ]
+    }, {
+        "curve1": "34",
+        "curve2": "35",
+        "id": 29,
+        "type": "standard",
+        "intersections": [
+            ["1/2"],
+            ["21/8"]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve2_params": [
+            "1/10"
+        ]
+    }, {
+        "curve1": "36",
+        "curve2": "37",
+        "id": 30,
+        "type": "standard",
+        "intersections": [
+            ["1/2"],
+            ["-3/8"]
+        ],
+        "curve1_params": [
+            0
+        ],
+        "curve2_params": [
+            "4/7"
+        ]
+    }, {
+        "curve1": "38",
+        "curve2": "39",
+        "id": 31,
+        "type": "tangent",
+        "intersections": [
+            [1],
+            [0]
+        ],
+        "curve1_params": [
+            "1/3"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "40",
+        "curve2": "41",
+        "id": 32,
+        "type": "no-intersection",
+        "intersections": [[], []],
+        "curve1_params": [],
+        "curve2_params": []
+    }, {
+        "curve1": "42",
+        "curve2": "43",
+        "id": 33,
+        "type": "coincident",
+        "note": "The curves in this intersection are coincident: curve42([1, 2]) == curve43([0, 1]). The algebraic curve that contains them both also has a self-crossing present on these curves.",
+        "intersections": [
+            ["-1/4", "-3/32"],
+            ["11/8", "53/64"]
+        ],
+        "curve1_params": [
+            "0x1.04c1661157396p-2",
+            1
+        ],
+        "curve1_polys": [
+            [4, -18, 9],
+            [-1, 1]
+        ],
+        "curve2_params": [
+            "0x1.7d9f4cf754635p-1",
+            0
+        ],
+        "curve2_polys": [
+            [-5, 0, 9],
+            [0, 1]
+        ]
+    }, {
+        "curve1": "44",
+        "curve2": "45",
+        "id": 34,
+        "type": "coincident",
+        "note": "The curves in this intersection are coincident: curve44([1, 2]) == curve45([0, 1]).",
+        "intersections": [
+            ["-75/256"],
+            ["517/512"]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve2_params": [
+            0
+        ]
+    }, {
+        "curve1": "46",
+        "curve2": "47",
+        "id": 35,
+        "type": "coincident",
+        "note": "The curves in this intersection are coincident: curve46([1, 2]) == curve47([0, 1]).",
+        "intersections": [
+            ["-9/256"],
+            ["583/512"]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve2_params": [
+            0
+        ]
+    }, {
+        "curve1": "48",
+        "curve2": "49",
+        "id": 36,
+        "type": "standard",
+        "intersections": [
+            [1],
+            [0]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "9/10"
+        ]
+    }, {
+        "curve1": "50",
+        "curve2": "54",
+        "id": 37,
+        "type": "standard",
+        "intersections": [
+            ["17/8"],
+            ["23/8"]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve1_polys": [
+            [-1, 1]
+        ],
+        "curve2_params": [
+            "0x1.983e62b67adeep-3"
+        ],
+        "curve2_polys": [
+            [-12, 60, 1]
+        ]
+    }, {
+        "curve1": "51",
+        "curve2": "54",
+        "id": 38,
+        "type": "standard",
+        "intersections": [
+            ["17/8"],
+            ["23/8"]
+        ],
+        "curve1_params": [
+            0
+        ],
+        "curve1_polys": [
+            [0, 1]
+        ],
+        "curve2_params": [
+            "0x1.983e62b67adeep-3"
+        ],
+        "curve2_polys": [
+            [-12, 60, 1]
+        ]
+    }, {
+        "curve1": "52",
+        "curve2": "54",
+        "id": 39,
+        "type": "standard",
+        "intersections": [
+            ["17/8"],
+            ["23/8"]
+        ],
+        "curve1_params": [
+            1
+        ],
+        "curve1_polys": [
+            [-1, 1]
+        ],
+        "curve2_params": [
+            "0x1.983e62b67adeep-3"
+        ],
+        "curve2_polys": [
+            [-12, 60, 1]
+        ]
+    }, {
+        "curve1": "53",
+        "curve2": "54",
+        "id": 40,
+        "type": "standard",
+        "intersections": [
+            ["17/8"],
+            ["23/8"]
+        ],
+        "curve1_params": [
+            0
+        ],
+        "curve1_polys": [
+            [0, 1]
+        ],
+        "curve2_params": [
+            "0x1.983e62b67adeep-3"
+        ],
+        "curve2_polys": [
+            [-12, 60, 1]
+        ]
+    }, {
+        "curve1": "1",
+        "curve2": "55",
+        "id": 41,
+        "type": "tangent",
+        "intersections": [
+            ["1/2"],
+            ["1/2"]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "56",
+        "curve2": "57",
+        "id": 42,
+        "type": "tangent",
+        "note": "The curves in this intersection are not only tangent, they also have the same curvature (-1/8) at this point. This corresponds to the parameters being a triple root of the functions `f_0(t) = Resultant_s(x_0(s) - x_1(t), y_0(s) - y_1(t)) = 256 (2 t - 9) (2 t - 1)^3` and `f_1(s) = Resultant_t(x_1(t) - x_0(s), y_1(t) - y_0(s)) = 256 (2 s + 3) (2 s - 1)^3`",
+        "intersections": [
+            [0],
+            [0]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "58",
+        "curve2": "59",
+        "id": 43,
+        "type": "tangent",
+        "note": "This intersection is uniquely challenging, it is both a point of tangency **and** an endpoint of both edges.",
+        "intersections": [
+            [1],
+            [0]
+        ],
+        "curve1_params": [
+            0
+        ],
+        "curve2_params": [
+            0
+        ]
+    }, {
+        "curve1": "60",
+        "curve2": "59",
+        "id": 44,
+        "type": "tangent",
+        "note": "This intersection is similar to #43, but the intersection occurs on the ``interior'' of the first curve, rather than at an endpoint.",
+        "intersections": [
+            [1],
+            [0]
+        ],
+        "curve1_params": [
+            "1/4"
+        ],
+        "curve2_params": [
+            0
+        ]
+    }, {
+        "curve1": "61",
+        "curve2": "62",
+        "id": 45,
+        "type": "tangent",
+        "note": "The curves in this intersection are not only tangent, they also have the same curvature. This intersection is the same as #42, but the curves have been reparameterized so that the intersection occurs at (1/3, 1/3).",
+        "intersections": [
+            [0],
+            [0]
+        ],
+        "curve1_params": [
+            "1/3"
+        ],
+        "curve2_params": [
+            "1/3"
+        ]
+    }, {
+        "curve1": "63",
+        "curve2": "64",
+        "id": 46,
+        "type": "tangent",
+        "note": "These curves are tangent, but only up to machine precision. The x-value of the 2nd control point in curve #64 is constructed from an algebraic value that would make these curves **exactly** tangent.",
+        "intersections": [
+            ["0x1.6225dd18931fap-3", "0x1.554d9c7c45942p-1", "0x1.f1f7f111bebcap-1"],
+            ["0x1.24e845765f417p-1", "0x1.c726bd1beec42p-1", "0x1.b4b3bf983a05ep-4"]
+        ],
+        "curve1_params": [
+            "0x1.6225dd18931fap-3",
+            "0x1.554d9c7c45942p-1",
+            "0x1.f1f7f111bebcap-1"
+        ],
+        "curve1_polys": [
+            [-297, 2574, -5880, 5840, -2880, 640],
+            [2718441, -10007712, 35492904, -89404128, 118148976, -141239040, 219477760, -215449600, 92550400, -14592000,  2304000],
+            [2718441, -10007712, 35492904, -89404128, 118148976, -141239040, 219477760, -215449600, 92550400, -14592000,  2304000]
+        ],
+        "curve2_params": [
+            "0x1.1aa1c972f3091p-1",
+            "0x1.c681757f704adp-1",
+            "0x1.0ebde6aa68c39p-7"
+        ],
+        "curve2_polys": [
+            [9, -35, -65, 165, 25, 1],
+            [40, -4280, -66551, -170260, 491504, -404620, 228094, -51020, 10024, -540, 9],
+            [40, -4280, -66551, -170260, 491504, -404620, 228094, -51020, 10024, -540, 9]
+        ]
+    }, {
+        "curve1": "65",
+        "curve2": "66",
+        "id": 47,
+        "type": "tangent",
+        "note": "These curves are **exactly** tangent at the apex of curve #66.",
+        "intersections": [
+            ["1/4", "0x1.49e81d355d4adp-1", "0x1.3b0bf165515aap+0"],
+            ["3/4", "0x1.d55399c5397a4p-1", "-0x1.22a9cce29cbd2p+0"]
+        ],
+        "curve1_params": [
+            "3/8",
+            "0x1.24f40e9aaea56p-1",
+            "0x1.bb0bf165515aap-1"
+        ],
+        "curve1_polys": [
+            [3, -8],
+            [507, -1472, 1024],
+            [507, -1472, 1024]
+        ],
+        "curve2_params": [
+            "3/4",
+            "0x1.d617e2caa2b53p-1",
+            "0x1.53d03a6aba959p-2"
+        ],
+        "curve2_polys": [
+            [3, -4],
+            [39, -160, 128],
+            [39, -160, 128]
+        ]
+    }, {
+        "curve1": "67",
+        "curve2": "68",
+        "id": 48,
+        "type": "standard",
+        "note": "These curves (actually lines) are **very** close to identical, but only intersect once.",
+        "intersections": [
+            ["1/2"],
+            ["1/2"]
+        ],
+        "curve1_params": [
+            "1/2"
+        ],
+        "curve2_params": [
+            "1/2"
+        ]
+    }, {
+        "curve1": "69",
+        "curve2": "70",
+        "id": 49,
+        "type": "standard",
+        "note": "These curves are **very** close to identical, but only intersect once.",
+        "intersections": [
+            ["0x1.d413cccfe7799p-1"],
+            ["1/2"]
+        ],
+        "curve1_params": [
+            "0x1.6a09e667f3bcdp-1"
+        ],
+        "curve1_polys": [
+            [-1, 0, 2]
+        ],
+        "curve2_params": [
+            "0x1.6a09e667f3bcdp-1"
+        ],
+        "curve2_polys": [
+            [-1, 0, 2]
+        ]
+    }, {
+        "curve1": "71",
+        "curve2": "72",
+        "id": 50,
+        "type": "standard",
+        "note": "These curves are **very** close to identical and close to linear, and they intersect twice.",
+        "intersections": [
+            ["0x1.dbb45f3a33413p-2", "0x1.a7a1e6d182739p-2"],
+            ["-0x1.4d03a7a539fe4p-1", "-0x1.717f0642f61dfp-1"]
+        ],
+        "curve1_params": [
+            "0x1.3c07c30226a3cp-2",
+            "0x1.7d5b269eb3fecp-1"
+        ],
+        "curve2_params": [
+            "0x1.30f6f2bdde113p-2",
+            "0x1.8700df9eac93bp-1"
+        ]
+    }, {
+        "curve1": "73",
+        "curve2": "74",
+        "id": 51,
+        "type": "standard",
+        "note": "This is a problematic edge-edge intersection that occurs in triangle-triangle intersection case #49. This intersection is from a real-world case, so the intersection values do not have a rational or algebraic representation. However, the intersection was computed in high-precision.",
+        "intersections": [
+            ["0x1.6900a8d9a4a7ep-1"],
+            ["-0x1.3d611a06f255fp-1"]
+        ],
+        "curve1_params": [
+            "0x1.42968093ddf88p-2"
+        ],
+        "curve2_params": [
+            "0x1.529acd85b333ep-7"
+        ]
+    }, {
+        "curve1": "75",
+        "curve2": "76",
+        "id": 52,
+        "type": "standard",
+        "note": "This is a problematic edge-edge intersection that occurs in triangle-triangle intersection case #50. This intersection is from a real-world case, so the intersection values do not have a rational or algebraic representation. However, the intersection was computed in high-precision.",
+        "intersections": [
+            ["0x1.bf8ad4846373bp-1"],
+            ["0x1.637d99fa68cacp-3"]
+        ],
+        "curve1_params": [
+            "0x1.7ce08ef2b6425p-4"
+        ],
+        "curve2_params": [
+            "0x1.350363e3ce847p-4"
+        ]
+    }, {
+        "curve1": "77",
+        "curve2": "78",
+        "id": 53,
+        "type": "standard",
+        "note": "This is a problematic edge-edge intersection that occurs in triangle-triangle intersection case #51. This intersection is from a real-world case, so the intersection values do not have a rational or algebraic representation. However, the intersection was computed in high-precision.",
+        "intersections": [
+            ["0x1.537baa83c36dap-3"],
+            ["-0x1.f5949a0ad50f6p-1"]
+        ],
+        "curve1_params": [
+            "0x1.52cfc17cd81b6p-2"
+        ],
+        "curve2_params": [
+            "0x1.c1f44f818b884p-2"
+        ]
+    }
+]

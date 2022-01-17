@@ -1,0 +1,16 @@
+---
+# Don't build any extra formats, HTML and JSON will
+# always be built by default.
+formats:
+  - none
+
+requirements_file: docs/requirements.txt
+
+build:
+  image: latest
+
+python:
+  pip_install: true
+  setup_py_install: false
+  # See: https://github.com/dhermes/bezier/issues/250 (waiting on Python 3.9)
+  version: 3.8

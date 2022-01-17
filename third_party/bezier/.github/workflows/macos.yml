@@ -1,0 +1,35 @@
+---
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    env:
+      VIRTUALENV_NO_DOWNLOAD: 'true'
+      PY_VERSION: '${{ matrix.python-version }}'
+      PY_BIN_DIR: '/Library/Frameworks/Python.framework/Versions/${{ matrix.python-version }}/bin'
+    strategy:
+      matrix:
+        os:
+        - macos-latest
+        python-version:
+        - '3.7'
+        - '3.8'
+        - '3.9'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install `gcc`
+      run: |
+        brew install gcc
+        brew unlink gcc
+        brew link gcc
+    - name: Run "install" to setup Python environment and tooling
+      run: scripts/macos/setup.sh
+    - name: Run tests
+      run: scripts/macos/test.sh

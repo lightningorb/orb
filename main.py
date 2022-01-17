@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 20:02:28
+# @Last Modified time: 2022-01-17 20:39:34
 
 import sys
 import os
@@ -22,6 +22,7 @@ sys.path.append(str(Path("third_party/contextmenu")))
 sys.path.append(str(Path("third_party/arrow")))
 sys.path.append(str(Path("third_party/python-qrcode/")))
 sys.path.append(str(Path("third_party/forex-python/")))
+sys.path.append(str(Path("third_party/bezier/src/python/")))
 
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")

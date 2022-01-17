@@ -8,7 +8,6 @@ kivy_garden.graph
 humanize
 currency-symbols
 colour
-bezier
 PyYaml
 ffpyplayer
 
@@ -19,6 +18,7 @@ ffpyplayer
 # https://github.com/arrow-py/arrow.git
 # https://github.com/lincolnloop/python-qrcode
 # https://github.com/MicroPyramid/forex-python/tree/v1.8
+# https://github.com/dhermes/bezier/tree/2021.2.12
 
 #certifi==2021.10.8
 #charset-normalizer==2.0.10
