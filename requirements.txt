@@ -5,7 +5,6 @@ grpcio
 kivymd
 pygments
 peewee
-arrow
 kivy_garden.graph
 humanize
 currency-symbols
@@ -15,7 +14,13 @@ bezier
 PyYaml
 ffpyplayer
 
-#arrow==1.2.1
+# requirements are slowly being copied to the third_party directory
+# for security reasons.
+
+# https://github.com/kivy-garden/garden.contextmenu
+# https://github.com/arrow-py/arrow.git
+
+
 #certifi==2021.10.8
 #charset-normalizer==2.0.10
 #colour==0.1.5

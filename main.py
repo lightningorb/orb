@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 04:40:15
+# @Last Modified time: 2022-01-17 19:26:22
 
 import sys
 import os
@@ -19,6 +19,7 @@ from kivy.core.window import Window
 sys.path.append(str(Path("orb/lnd")))
 sys.path.append(str(Path("orb/lnd/grpc_generated")))
 sys.path.append(str(Path("third_party/contextmenu")))
+sys.path.append(str(Path("third_party/arrow")))
 
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")
