@@ -2,9 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:45:18
+# @Last Modified time: 2022-01-17 21:10:39
 
-import humanize
 import arrow
 from datetime import timedelta
 from traceback import print_exc
@@ -40,8 +39,8 @@ class Invoice(BoxLayout):
         if delta < zero:
             self.ids.expiry_label.text = "expired"
         else:
-            self.ids.expiry_label.text = humanize.precisedelta(
-                delta, minimum_unit="seconds"
+            self.ids.expiry_label.text = delta.humanize().humanize(
+                granularity=["hour", "minute", "second"]
             )
 
     def dismiss(self):

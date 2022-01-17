@@ -5,7 +5,6 @@ kivymd
 pygments
 peewee
 kivy_garden.graph
-humanize
 currency-symbols
 PyYaml
 ffpyplayer
@@ -28,7 +27,6 @@ ffpyplayer
 #et-xmlfile==1.1.0
 #ffpyplayer==4.2.0
 #forex-python==1.8
-#humanize==3.13.1
 #idna==3.3
 #ios==1.1
 #Kivy==2.1.0.dev0
