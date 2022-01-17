@@ -7,7 +7,6 @@ peewee
 kivy_garden.graph
 humanize
 currency-symbols
-forex-python
 colour
 bezier
 PyYaml
@@ -19,7 +18,7 @@ ffpyplayer
 # https://github.com/kivy-garden/garden.contextmenu
 # https://github.com/arrow-py/arrow.git
 # https://github.com/lincolnloop/python-qrcode
-
+# https://github.com/MicroPyramid/forex-python/tree/v1.8
 
 #certifi==2021.10.8
 #charset-normalizer==2.0.10
