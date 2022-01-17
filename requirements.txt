@@ -7,13 +7,13 @@ peewee
 kivy_garden.graph
 humanize
 currency-symbols
-colour
 PyYaml
 ffpyplayer
 
 # requirements are slowly being copied to the third_party directory
 # for security reasons.
 
+# https://github.com/vaab/colour/tree/0.1.5
 # https://github.com/kivy-garden/garden.contextmenu
 # https://github.com/arrow-py/arrow.git
 # https://github.com/lincolnloop/python-qrcode
