@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 08:56:56
+# @Last Modified time: 2022-01-17 09:59:46
 
 import os
 import sys
@@ -78,7 +78,7 @@ class OrbApp(MDApp):
             data_dir = os.path.expanduser(f"~/Library/Application Support/{self.name}")
         else:
             data_dir = os.path.expanduser(
-                join(os.environ.get("XDG_CONFIG_HOME", "~/.config"), self.name)
+                os.path.join(os.environ.get("XDG_CONFIG_HOME", "~/.config"), self.name)
             )
         if not os.path.exists(data_dir):
             os.mkdir(data_dir)
