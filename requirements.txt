@@ -1,6 +1,5 @@
 google-api-python-client
 kivy
-qrcode
 grpcio
 kivymd
 pygments
@@ -19,6 +18,7 @@ ffpyplayer
 
 # https://github.com/kivy-garden/garden.contextmenu
 # https://github.com/arrow-py/arrow.git
+# https://github.com/lincolnloop/python-qrcode
 
 
 #certifi==2021.10.8

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 19:26:22
+# @Last Modified time: 2022-01-17 19:48:43
 
 import sys
 import os
@@ -20,6 +20,7 @@ sys.path.append(str(Path("orb/lnd")))
 sys.path.append(str(Path("orb/lnd/grpc_generated")))
 sys.path.append(str(Path("third_party/contextmenu")))
 sys.path.append(str(Path("third_party/arrow")))
+sys.path.append(str(Path("third_party/python-qrcode/")))
 
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")
