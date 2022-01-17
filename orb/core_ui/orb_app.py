@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 08:40:44
+# @Last Modified time: 2022-01-17 08:56:56
 
 import os
 import sys
@@ -109,11 +109,15 @@ class OrbApp(MDApp):
                 user_scripts = json.loads(f.read())
                 ext_path = {".py": pref_path("script"), ".yaml": pref_path("yaml")}
                 for name in user_scripts:
-                    with open(
-                        ext_path[os.path.splitext(name)[1]] / os.path.basename(name),
-                        "w",
-                    ) as f:
-                        f.write(user_scripts[name])
+                    ok_to_overwrite = True
+                    if "autobalance.yaml" in name or "fees.yaml" in name:
+                        ok_to_overwrite = False
+                    if ok_to_overwrite:
+                        path = ext_path[os.path.splitext(name)[1]] / os.path.basename(
+                            name
+                        )
+                        with open(path, "w") as f:
+                            f.write(user_scripts[name])
 
     def load_user_scripts(self):
         if ios:
