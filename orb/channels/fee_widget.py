@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 06:54:28
+# @Last Modified time: 2022-01-18 04:39:53
 
 from threading import Thread
 
@@ -38,6 +38,7 @@ class FeeWidget(Widget):
     c = ListProperty([0, 0])
     to_fee = NumericProperty(0)
     to_fee_norm = NumericProperty(0)
+    new_fee = 0
 
     def __init__(self, **kwargs):
         super(FeeWidget, self).__init__(**kwargs)
