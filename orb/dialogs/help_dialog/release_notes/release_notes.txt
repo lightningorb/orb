@@ -1,6 +1,16 @@
-0.4.3
+0.4.4
 ----
 
+[dev] in ios app startup, place yaml files in correct directory, and don't overwrite if they already exist
+[dev] provide sensible autobalance example file
+[dev] formatting
+[dev] better selection handling via main app object
+
+
+v0.4.3
+------
+
+[dev] patch bump
 output is shown in the console once again
 [dev] missing fields in htlc rest
 
