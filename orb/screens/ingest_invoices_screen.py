@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 21:10:39
+# @Last Modified time: 2022-01-18 06:35:48
 
 import arrow
 from datetime import timedelta
@@ -34,13 +34,14 @@ class Invoice(BoxLayout):
         self.schedule = Clock.schedule_interval(self.update, 1)
 
     def update(self, *args):
-        zero = timedelta(hours=0, minutes=0, seconds=0)
-        delta = arrow.get(int(self.timestamp) + int(self.expiry)) - arrow.now()
-        if delta < zero:
+        delta = int(self.timestamp) + int(self.expiry) - int(arrow.utcnow().timestamp())
+        if delta < 0:
             self.ids.expiry_label.text = "expired"
         else:
-            self.ids.expiry_label.text = delta.humanize().humanize(
-                granularity=["hour", "minute", "second"]
+            self.ids.expiry_label.text = (
+                arrow.utcnow()
+                .shift(seconds=delta)
+                .humanize(granularity=["hour", "minute", "second"])
             )
 
     def dismiss(self):
