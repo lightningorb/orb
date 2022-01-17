@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-26 10:15:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 02:47:32
+# @Last Modified time: 2022-01-17 10:32:40
 
 
 class HtlcRest:
@@ -23,7 +23,8 @@ class HtlcRest:
         elif hasattr(htlc, "forward_fail_event"):
             self.event_outcome = "forward_fail_event"
         elif hasattr(htlc, "link_fail_event"):
+            print(st)
             self.event_outcome = "link_fail_event"
-            self.event_outcome_info = htlc.forward_event.info
+            self.event_outcome_info = htlc.link_fail_event.info
         elif hasattr(htlc, "settle_event"):
             self.event_outcome = "settle_event"
