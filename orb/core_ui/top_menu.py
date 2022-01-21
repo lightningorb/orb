@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 06:17:16
+# @Last Modified time: 2022-01-21 10:11:54
 
 from traceback import format_exc
 
@@ -106,8 +106,6 @@ class TopMenu(AppMenu):
 
         self.view_widgets = [
             ContextMenuTextItem(text="Run", on_release=cbs.run),
-            ContextMenuTextItem(text="Install", on_release=cbs.install),
-            ContextMenuTextItem(text="Delete", on_release=cbs.delete),
             ContextMenuDivider(),
             ContextMenuTextItem(text="Load", on_release=cbs.open_file),
             ContextMenuDivider(),
