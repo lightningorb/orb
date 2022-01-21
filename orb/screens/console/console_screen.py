@@ -96,5 +96,5 @@ class ConsoleScreen(Screen):
                             self.lines.append(line)
                     for _ in range(max(0, len(self.lines) - 500)):
                         self.lines.popleft()
-                    last_line = text_lines[-1]
+                    last_line = next((x for x in reversed(text_lines) if x != ''), '')
                 self.update_output("\n".join(self.lines), last_line)
