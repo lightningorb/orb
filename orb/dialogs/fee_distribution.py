@@ -61,14 +61,19 @@ class FeeDistribution(PopupDropShadow):
         nd = NormalDistribution()
         nd.data = [x.ppm for x in chan_routing_data.vals]
         nd.calculate_prob_dist()
+
+        # multiply probability by 100 to match graph
+        for i in range(len(nd.probability_distribution)):
+            nd.probability_distribution[i]['probability']*=100
+
         self.ids.table.clear_widgets()
         self.ids.table.add_widget(
             MDDataTable(
                 use_pagination=False,
                 check=False,
                 column_data=[
-                    ("Value", dp(10)),
-                    ("Prob.", dp(20)),
+                    ("PPM", dp(10)),
+                    ("Prob. %", dp(20)),
                     ("Norm Prob.", dp(20)),
                     ("Freq.", dp(10)),
                     ("Norm Freq.", dp(20)),
@@ -80,7 +85,7 @@ class FeeDistribution(PopupDropShadow):
 
         self.ids.alias.text = chan_routing_data.alias
         values = [int(item["value"]) for item in nd.probability_distribution]
-        probs = [int(item["probability"] * 100) for item in nd.probability_distribution]
+        probs = [int(item["probability"]) for item in nd.probability_distribution]
 
         graph = Graph(
             size_hint=[1, 1],
