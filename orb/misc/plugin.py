@@ -2,12 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 06:12:40
+# @Last Modified time: 2022-01-21 11:42:45
 
-from textwrap import dedent
-import os
 from abc import ABC, abstractmethod
-
 from kivy.app import App
 
 

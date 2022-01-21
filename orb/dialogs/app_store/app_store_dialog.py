@@ -2,7 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 06:55:10
+# @Last Modified time: 2022-01-21 15:26:35
+
+from threading import Thread
 
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.tab import MDTabsBase
@@ -11,6 +13,7 @@ from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
 from kivy.app import App as KivyApp
+from kivy.clock import mainthread
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
@@ -80,11 +83,17 @@ class AppStoreDialog(PopupDropShadow):
         Open the AppStore.
         """
         super(AppStoreDialog, self).open(self, *args)
-        authenticate()
+        self.available = []
+
+        def get_remote_apps(*_):
+            authenticate()
+            self.available = KivyApp.get_running_app().apps.get_remote_apps()
+            self.load_available()
+
+        Thread(target=get_remote_apps).start()
         self.load_installed()
 
     def load_installed(self):
-        # phew!
         apps = KivyApp.get_running_app().apps.apps
         for app in apps.values():
             app_summary = AppSummary(app)
@@ -102,11 +111,12 @@ class AppStoreDialog(PopupDropShadow):
             self.ids.installed.clear_widgets()
             self.load_installed()
         elif tab_text == "Available":
-            self.ids.available.clear_widgets()
             self.load_available()
 
+    @mainthread
     def load_available(self):
-        for app in KivyApp.get_running_app().apps.get_remote_apps():
+        self.ids.available.clear_widgets()
+        for app in self.available:
             app_summary = AppSummary(app)
             app_summary.bind(selected=self.on_selected)
             self.ids.available.add_widget(app_summary)

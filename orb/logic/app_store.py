@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 06:52:37
+# @Last Modified time: 2022-01-21 15:30:18
 
 import os
 import sys
@@ -45,6 +45,7 @@ class Apps(EventDispatcher):
             # app.add_to_ui()
 
     def get_remote_apps(self):
+        print("Requesting available apps")
         remote_apps = []
         for app in API().list_apps().apps:
             installed_app = KivyApp.get_running_app().apps.apps.get(app.uuid)
@@ -52,6 +53,7 @@ class Apps(EventDispatcher):
                 remote_apps.append(installed_app)
             else:
                 remote_apps.append(RemoteApp(app))
+        print("Got remote apps.")
         return remote_apps
 
     def uninstall(self, app):
@@ -154,7 +156,7 @@ class App(EventDispatcher):
             None,
         )
         if not cls:
-            print(f"class for not be determined for plugin {self.name}")
+            print(f"class could not be determined for plugin {self.name}")
         else:
             inst = cls()
             self.classname = cls.__name__

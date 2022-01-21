@@ -1,5 +1,18 @@
-0.5.0
+0.5.1
 ----
+
+removed telegram bots from workflows as they don't seem to work [dev]
+Merge pull request #146 from bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution
+When returning from the console, the 'view' menu isn't updated #144
+output doesn't appear in status line when line ends in a new line
+keysend over REST #145
+matched table with graph values
+fixed regression in console due to save / install menu items being removed
+fixed module zero error in fee distribution dialog #140
+
+
+v0.5.0
+------
 
 app store #143
 fixed regression with invoice ingest dialog
