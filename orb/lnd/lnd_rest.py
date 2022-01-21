@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-19 05:02:58
+# @Last Modified time: 2022-01-21 12:54:34
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -302,6 +302,42 @@ class LndREST(LndBase):
         of the node identity private key.
         """
         return self.__post(f"/v1/signmessage", data=dict(msg=msg)).signature
+
+    def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
+        import secrets
+        from hashlib import sha256
+
+        secret = secrets.token_bytes(32)
+        hashed_secret = sha256(secret).digest()
+        custom_records = {5482373484: base64.b64encode(secret).decode()}
+        msg = str(msg)
+        if len(msg) > 0:
+            custom_records[34349334] = base64.b64encode(msg.encode("utf-8")).decode()
+
+        data = {
+            "amt": amount,
+            "dest": encode_pk(target_pubkey),
+            "timeout_seconds": timeout,
+            "dest_custom_records": custom_records,
+            "fee_limit_sat": fee_limit,
+            "payment_hash": base64.b64encode(hashed_secret).decode(),
+        }
+
+        jdata = json.dumps(data)
+
+        r = requests.post(
+            f"{self.fqdn}/v2/router/send",
+            headers=self.headers,
+            verify=self.cert_path,
+            stream=True,
+            data=jdata,
+        )
+
+        for raw_response in r.iter_lines():
+            response = dict2obj(json.loads(raw_response)).result
+            print(response.status)
+            if response.status == 'FAILED':
+                print(response.failure_reason)
 
     def __get(self, url):
         """
