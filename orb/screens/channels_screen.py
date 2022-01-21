@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 04:34:26
+# @Last Modified time: 2022-01-21 14:25:51
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -26,10 +26,8 @@ class ChannelsScreen(MDScreen):
         def delayed():
             app = App.get_running_app()
             app.root.ids.app_menu.add_channels_menu()
-            self.menu_built = True
 
-        if not self.menu_built:
-            delayed()
+        delayed()
 
         if not self.channels_widget:
             Clock.schedule_once(self.build, 2)
