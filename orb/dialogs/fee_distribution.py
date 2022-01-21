@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:35:26
+# @Last Modified time: 2022-01-21 10:04:02
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -44,8 +44,11 @@ class FeeDistribution(PopupDropShadow):
         """
         Callback, when the 'Next' button is clicked.
         """
-        self.graph_channel(self.channel_n % len(self.chan_routing_data))
-        self.channel_n += 1
+        if self.chan_routing_data:
+            self.graph_channel(self.channel_n % len(self.chan_routing_data))
+            self.channel_n += 1
+        else:
+            print("no routing data available")
 
     @guarded
     def graph_channel(self, i):
