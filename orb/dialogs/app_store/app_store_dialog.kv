@@ -1,0 +1,160 @@
+#:import dp kivy.metrics.dp
+#:import pref orb.misc.utils.pref
+#:import Window kivy.core.window.Window
+#:import TipDialog orb.dialogs.app_store.TipDialog
+
+
+<StarButton@MDIconButton>
+    icon: "star"
+    on_release: self.icon = "star-outline" if self.icon == "star" else "star"
+
+<AppSummary>:
+    orientation: "vertical"
+    size_hint: .5, None
+    height: box_top.height + box_bottom.height
+    focus_behavior: True
+    ripple_behavior: True
+    pos_hint: {"center_x": .5, "center_y": .5}
+
+    MDBoxLayout:
+        id: box_top
+        spacing: "20dp"
+        adaptive_height: True
+
+        MDBoxLayout:
+            id: text_box
+            orientation: "vertical"
+            adaptive_height: True
+            spacing: "10dp"
+            padding: 0, "10dp", "10dp", "10dp"
+            MDLabel:
+                text: root.app.name
+                theme_text_color: "Primary"
+                font_style: "H5"
+                bold: True
+                adaptive_height: True
+            MDLabel:
+                text: root.app.description
+                adaptive_height: True
+                theme_text_color: "Primary"
+
+    MDSeparator:
+
+    MDBoxLayout:
+        id: box_bottom
+        adaptive_height: True
+        padding: "10dp", 0, 0, 0
+
+        MDLabel:
+            text: "Rate this app"
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Primary"
+
+        StarButton:
+        StarButton:
+        StarButton:
+        StarButton:
+        StarButton:
+
+
+<AppDetails>:
+    orientation: "vertical"
+    size_hint: 1, None
+    height: box_top.height + box_center.height + box_bottom.height
+    focus_behavior: True
+    ripple_behavior: True
+    pos_hint: {"center_x": .5, "center_y": .5}
+
+    MDBoxLayout:
+        id: box_top
+        spacing: "20dp"
+        adaptive_height: True
+
+        MDBoxLayout:
+            id: text_box
+            orientation: "vertical"
+            adaptive_height: True
+            spacing: "10dp"
+            padding: 0, "10dp", "10dp", "10dp"
+            MDLabel:
+                text: root.app.name
+                theme_text_color: "Primary"
+                font_style: "H5"
+                bold: True
+                adaptive_height: True
+            MDLabel:
+                text: root.app.description
+                adaptive_height: True
+                theme_text_color: "Primary"
+
+    MDSeparator:
+
+    MDBoxLayout:
+        id: box_center
+        adaptive_height: True
+        padding: "10dp", 0, 0, 0
+
+        MDLabel:
+            text: "Rate this app"
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Primary"
+
+        StarButton:
+        StarButton:
+        StarButton:
+        StarButton:
+        StarButton:
+
+    MDSeparator:
+
+    MDBoxLayout:
+        id: box_bottom
+        adaptive_height: True
+        padding: "10dp"
+        spacing: "10dp"
+
+        MDRaisedButton:
+            id: install_button
+            text: "Uninstall" if root.app.installed else "Install"
+            on_release: root.install_uninstall()
+
+        MDRaisedButton:
+            id: tip_button
+            text: "Tip author.."
+            on_release: TipDialog(app=root.app).open()
+            disabled: root.app.is_remote
+
+
+<AppStoreDialog>:
+    title: 'App Store'
+    size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    MDTabs:
+        id: tabs
+        on_tab_switch: root.on_tab_switch(*args)
+        Tab:
+            title: 'Installed'
+            ScrollView:
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: False
+                MDList:
+                    padding: dp(50)
+                    id: installed
+        Tab:
+            title: 'Available'
+            ScrollView:
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: False
+                MDList:
+                    padding: dp(50)
+                    id: available
+        Tab:
+            title: 'Details'
+            id: details
+
+
+<Tab>

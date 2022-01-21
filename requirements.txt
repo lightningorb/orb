@@ -2,11 +2,11 @@ google-api-python-client
 kivy
 grpcio
 kivymd
-pygments
 peewee
 kivy_garden.graph
 PyYaml
 ffpyplayer
+simplejson
 
 # requirements are slowly being copied to the third_party directory
 # for security reasons.

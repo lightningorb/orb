@@ -261,10 +261,10 @@
    },
    {
       "type":"string",
-      "title":"script",
-      "desc":"Path where scripts are stored",
+      "title":"apps",
+      "desc":"Path where apps are stored",
       "section":"path",
-      "key":"script"
+      "key":"app"
    },
    {
       "type":"string",
@@ -272,5 +272,19 @@
       "desc":"Path where data is exported",
       "section":"path",
       "key":"export"
+   },
+   {
+      "type":"string",
+      "title":"app archive",
+      "desc":"Path where app archives are saved before upload",
+      "section":"path",
+      "key":"app_archive"
+   },
+   {
+      "type":"string",
+      "title":"trash",
+      "desc":"Path where deleted files go",
+      "section":"path",
+      "key":"trash"
    }
 ]

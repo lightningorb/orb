@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 03:13:07
+# @Last Modified time: 2022-01-21 06:16:48
 
 import uuid
 from traceback import print_exc
@@ -18,7 +18,6 @@ from kivy.uix.popup import Popup
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc import data_manager
-from orb.store.scripts import load_scripts, Script, save_scripts
 
 ios = platform == "ios"
 
@@ -26,10 +25,6 @@ ios = platform == "ios"
 class ConsoleFileChooser(PopupDropShadow):
 
     selected_path = StringProperty("")
-
-
-class InstallScript(Popup):
-    pass
 
 
 class ConsoleInput(CodeInput):
@@ -66,60 +61,6 @@ class ConsoleInput(CodeInput):
             self.text = open(path).read()
 
         dialog.bind(selected_path=do_open)
-
-    def install(self, *_):
-        inst = InstallScript()
-        inst.open()
-
-        def do_install(_, *__):
-            script_name = ">".join(
-                x.strip() for x in inst.ids.script_name.text.split(">")
-            )
-            code = self.text
-            scripts = load_scripts()
-            existing = next(
-                iter([x for x in scripts if scripts[x].menu == script_name]), None
-            )
-            if existing:
-                scripts[existing.uuid].code = code
-            else:
-
-                uid = str(uuid.uuid4())
-                scripts[uid] = Script(code=code, menu=script_name, uuid=uid)
-
-            save_scripts()
-            app = App.get_running_app()
-            app.root.ids.app_menu.populate_scripts()
-            inst.dismiss()
-
-        inst.ids.install.bind(on_release=do_install)
-        app = App.get_running_app()
-        app.root.ids.app_menu.close_all()
-
-    def delete(self, *_):
-        inst = LoadScript()
-
-        try:
-            sc = data_manager.data_man.store.get("scripts")
-        except:
-            pass
-
-        def do_delete(button, *args):
-            sc = data_manager.data_man.store.get("scripts", {})
-            del sc[button.text]
-            data_manager.data_man.store.put("scripts", **sc)
-            app = App.get_running_app()
-            app.root.ids.app_menu.populate_scripts()
-            inst.dismiss()
-
-        for name in sc:
-            button = Button(text=name, size_hint=(None, None), size=(480, 40))
-            button.bind(on_release=do_delete)
-            inst.ids.grid.add_widget(button)
-
-        inst.open()
-        app = App.get_running_app()
-        app.root.ids.app_menu.close_all()
 
     def clear_input(self, *_):
         self.text = ""

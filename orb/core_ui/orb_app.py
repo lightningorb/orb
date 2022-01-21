@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 09:59:46
+# @Last Modified time: 2022-01-20 12:21:40
 
 import os
 import sys
@@ -18,13 +18,14 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.utils import platform
 from kivy.properties import ObjectProperty
+from kivy.properties import ListProperty
 
+from orb.logic.app_store import Apps
 from orb.misc.monkey_patch import do_monkey_patching
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
-from orb.misc.plugin import Plugin
 from orb.logic import thread_manager
 from orb.misc.utils import pref_path
 
@@ -43,6 +44,7 @@ class OrbApp(MDApp):
     title = "Orb"
     consumables = deque()
     selection = ObjectProperty(allownone=True)
+    apps = None
 
     def get_application_config(self, defaultpath=f"{os.getcwd()}/orb.ini"):
         """
@@ -98,57 +100,22 @@ class OrbApp(MDApp):
         # Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
         # Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
 
-    def save_user_scripts(self):
-        """
-        Load the scripts from 'user_scripts.json' and save the
-        scripts in the users's user_data_dir.
-        """
-
-        if os.path.exists("user_scripts.json"):
-            with open("user_scripts.json") as f:
-                user_scripts = json.loads(f.read())
-                ext_path = {".py": pref_path("script"), ".yaml": pref_path("yaml")}
-                for name in user_scripts:
-                    ok_to_overwrite = True
-                    if "autobalance.yaml" in name or "fees.yaml" in name:
-                        ok_to_overwrite = False
-                    if ok_to_overwrite:
-                        path = ext_path[os.path.splitext(name)[1]] / os.path.basename(
-                            name
-                        )
-                        with open(path, "w") as f:
-                            f.write(user_scripts[name])
-
-    def load_user_scripts(self):
-        if ios:
-            scripts_dir = pref_path("script")
-        else:
-            scripts_dir = Path("user/scripts")
-        plugins = {}
-        for plugin_file_path in scripts_dir.glob("*.py"):
-            plugin_module_name = os.path.basename(os.path.splitext(plugin_file_path)[0])
-            try:
-                plugins[plugin_module_name] = __import__(plugin_module_name)
-            except:
-                print_exc()
-                print(f"Unable to load {plugin_module_name}")
-
-        for cls in Plugin.__subclasses__():
-            print(f"Loading plugin: {cls.__name__} (from {cls.__module__})")
-            plugin_instance = cls()
-            plugin_instance.install(
-                script_name=f"{cls.__module__}.py", class_name=cls.__name__
-            )
-            if plugin_instance.autorun:
-                plugin_instance.main()
-
     def make_dirs(self):
         """
         Create data directories if required
         """
-        for key in ["video", "yaml", "json", "db", "cert", "script"]:
+        for key in [
+            "video",
+            "yaml",
+            "json",
+            "db",
+            "cert",
+            "app",
+            "app_archive",
+            "trash",
+            "download",
+        ]:
             path = pref_path(key)
-            print(path)
             if not path.is_dir():
                 os.makedirs(path)
 
@@ -156,12 +123,10 @@ class OrbApp(MDApp):
         """
         Perform required tasks before app exists.
         """
-        if ios:
-            sys.path.append(pref_path("script").as_posix())
-        else:
-            sys.path.append(Path("user/scripts").as_posix())
         audio_manager.set_volume()
-        self.load_user_scripts()
+        self.apps = Apps()
+        self.apps.load_from_disk()
+        self.apps.load_all_apps()
 
     def override_stdout(self):
         """
@@ -212,7 +177,6 @@ class OrbApp(MDApp):
         """
         self.override_stdout()
         self.make_dirs()
-        self.save_user_scripts()
 
         data_manager.DataManager.ensure_cert()
         self.load_kvs()

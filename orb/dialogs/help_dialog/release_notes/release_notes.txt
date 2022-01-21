@@ -1,6 +1,26 @@
-0.4.4
+0.5.0
 ----
 
+fixed regression with invoice ingest dialog
+Create TelegramBridge.yml
+Create tg-notify.yml
+orb crashes when starting a fresh node [bug] #142
+moved currency-symbols to third_party directory [dev]
+removed humanize third-party dependency (using arrow instead) [dev]
+moved colour to third_party directory [dev]
+moved bezier to third_party directory [dev]
+moved forex-python to third_party directory [dev]
+moved qrcode to third_party directory [dev]
+moved arrow to third_party directory [dev]
+added debug info for link_fail_event [dev]
+[dev] _get_user_data_dir missing full os.path.join call
+bringing back old requirements.txt
+
+
+v0.4.4
+------
+
+version bump
 [dev] in ios app startup, place yaml files in correct directory, and don't overwrite if they already exist
 [dev] provide sensible autobalance example file
 [dev] formatting

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 07:20:44
+# @Last Modified time: 2022-01-19 16:17:22
 
 import json
 
@@ -68,13 +68,17 @@ class AutoObj(object):
     """
 
     def __init__(self, dict1):
-        self.__dict__.update(dict1)
+        if dict1:
+            self.__dict__.update(dict1)
 
     def __str__(self):
         return self.toJSON()
 
     def __getitem__(self, key):
         return self.__dict__[key]
+
+    def __bool__(self):
+        return bool(self.__dict__)
 
     def get(self, key, default=None):
         return self.__dict__.get(key, default)
@@ -92,8 +96,12 @@ def dict2obj(dict1):
     >>> dict2obj(dict(a='1')).a
     1
     """
-    to_num(dict1)
-    return json.loads(json.dumps(dict1), object_hook=AutoObj)
+    if dict1:
+        if type(dict1) is list:
+            dict1 = {i: v for i, v in enumerate(dict1)}
+        to_num(dict1)
+        return json.loads(json.dumps(dict1), object_hook=AutoObj)
+    return {}
 
 
 def todict(obj, classkey=None):
@@ -128,6 +136,26 @@ def todict(obj, classkey=None):
 
 
 if __name__ == "__main__":
-    import doctest
+    # import doctest
 
-    doctest.testmod()
+    # doctest.testmod()
+    print(
+        dict2obj(
+            [
+                {
+                    "id": 2,
+                    "uuid": "3aa44f15-0afa-407f-8e11-2b5bfadb2ad4",
+                    "name": "Todo",
+                    "owner_id": 1,
+                    "description": "A simple todo app",
+                },
+                {
+                    "id": 3,
+                    "uuid": "05d24c8e-b6eb-4f0a-937d-d5dce68a89d4",
+                    "name": "Today Top",
+                    "owner_id": 1,
+                    "description": "App that displays today's top earning routes",
+                },
+            ]
+        )
+    )

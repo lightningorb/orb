@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 15:54:16
+# @Last Modified time: 2022-01-20 12:16:58
 
 
 def set_conf_defaults(config):
@@ -45,5 +45,8 @@ def set_conf_defaults(config):
     config.set("path", "yaml", "store/yaml")
     config.set("path", "json", "store/json")
     config.set("path", "cert", "certs")
-    config.set("path", "script", "scripts")
+    config.set("path", "app", "apps")
     config.set("path", "export", "exports")
+    config.set("path", "app_archive", "exports/archives")
+    config.set("path", "trash", ".trash")
+    config.set("path", "download", ".downloads")

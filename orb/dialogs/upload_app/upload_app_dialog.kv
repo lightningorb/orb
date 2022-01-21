@@ -1,0 +1,57 @@
+#:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<IconListItem>
+    IconLeftWidget:
+        icon: root.icon
+
+
+
+<UploadAppDialog>:
+    title: 'Upload App'
+    size_hint: .5, .5
+    BoxLayout:
+        orientation: "vertical"
+        padding: "10dp"
+        spacing: "10dp"
+        adaptive_height: True
+        Label:
+            text: "Please select app you wish to upload."
+            size_hint_y: 0.1
+        MDDropDownItem:
+            id: drop_item
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            text: 'Select App'
+            on_release: root.menu.open()
+        ScrollView:
+            size_hint_x: 0.8
+            padding: dp(50)
+            spacing: dp(50)
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            Label:
+                id: output
+                size_hint: None, None
+                size: self.texture_size
+                multiline: True
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: '10dp'
+            padding: '10dp'
+            size_hint_y: 0.1
+            MDRaisedButton:
+                text: "Sign"
+                on_release: root.sign()
+                disabled: True
+                md_bg_color_disabled: .2,.2,.2,1
+            MDRaisedButton:
+                id: archive_button
+                text: "Archive"
+                on_release: root.archive()
+                disabled: True
+                md_bg_color_disabled: .2,.2,.2,1
+            MDRaisedButton:
+                id: upload_button
+                text: "Upload"
+                on_release: root.upload()
+                disabled: True
+                md_bg_color_disabled: .2,.2,.2,1

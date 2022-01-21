@@ -66,35 +66,3 @@
             id: console_output
         # BoxLayout:
         #     id: vid_box
-
-
-<InstallScript>
-    size: (500,250)
-    size_hint: (None, None)
-    title: 'Install Script'
-    BoxLayout:
-        orientation: 'vertical'
-        TextInput:
-            id: script_name
-            text: 'example'
-        BoxLayout:
-            orientation: 'horizontal'
-            Button:
-                id: install
-                text: 'Install'
-
-<DeleteScript>
-    size: (600,800)
-    size_hint: (None, None)
-    title: 'Delete Script'
-    ScrollView:
-        size_hint: 1, 1
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        GridLayout:
-            id: grid
-            cols: 1
-            padding: 10
-            spacing: 10
-            size_hint: None, None
-            height: self.minimum_height
-            do_scroll_x: False

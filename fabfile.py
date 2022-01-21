@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 08:15:21
+# @Last Modified time: 2022-01-20 08:49:39
 
 import re
 import os
@@ -19,6 +19,7 @@ from build_system import submodules
 from build_system import documentation
 from build_system import test
 from build_system import release_notes
+from build_system import appstore
 
 
 @task
@@ -39,4 +40,5 @@ namespace = Collection(
     test,
     release_notes,
     tags,
+    appstore,
 )

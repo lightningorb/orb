@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 05:31:18
+# @Last Modified time: 2022-01-19 05:02:58
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -290,6 +290,18 @@ class LndREST(LndBase):
             "sat_per_vbyte": sat_per_vbyte,  # A manual fee rate set in sat/vbyte that should be used when crafting the transaction.
         }
         return self.__post(url, data=data)
+
+    def sign_message(self, msg):
+        """
+        SignMessage signs a message with the key specified in
+        the key locator. The returned signature is fixed-size
+        LN wire format encoded.
+
+        The main difference to SignMessage in the main RPC is
+        that a specific key is used to sign the message instead
+        of the node identity private key.
+        """
+        return self.__post(f"/v1/signmessage", data=dict(msg=msg)).signature
 
     def __get(self, url):
         """

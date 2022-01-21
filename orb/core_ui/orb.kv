@@ -22,6 +22,8 @@
 #:import ReleaseNotes orb.dialogs.help_dialog.release_notes.release_notes.ReleaseNotes
 #:import Rankings orb.screens.rankings.Rankings
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
+#:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
+#:import UploadAppDialog orb.dialogs.upload_app.UploadAppDialog
 
 #: import webbrowser webbrowser
 ########################################################################################
@@ -128,7 +130,7 @@
                     on_press: app_menu.close_all()
                     on_release: SendCoins().open()
         AppMenuTextItem:
-            text: "App"
+            text: "Orb"
             ContextMenu:
                 id: app_context_menu
                 ContextMenuTextItem:
@@ -139,6 +141,16 @@
                     text: "Connection Settings"
                     on_press: ConnectionSettings().open()
                     on_release: app_menu.close_all()
+                ContextMenuDivider
+                ContextMenuTextItem:
+                    text: "App Store"
+                    on_press: AppStoreDialog().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Upload App"
+                    on_press: UploadAppDialog().open()
+                    on_release: app_menu.close_all()
+                ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Files"
                     on_press: app_menu.close_all()
@@ -151,12 +163,13 @@
                     text: "Player"
                     on_press:  app_menu.close_all()
                     on_release: PlayerDialog().open()
+                ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Quit"
                     on_press: app_menu.close_all()
                     on_release: app.get_running_app().stop()
         AppMenuTextItem:
-            text: "Scripts"
+            text: "Apps"
             id: scripts
             ContextMenu:
                 id: scripts_context_menu

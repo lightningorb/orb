@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 08:31:58
+# @Last Modified time: 2022-01-21 08:07:10
 
 import os
 import re
@@ -34,7 +34,7 @@ def copy_files(c):
     c.run("rm -rf /tmp/lnorb/")
     c.run("mkdir -p /tmp/lnorb/")
     c.run(
-        "cp -r third_party main.py images/ln.png images docs/docsbuild orb user video_library.yaml fees.yaml autobalance.yaml images/orb.png user_scripts.json /tmp/lnorb/"
+        "cp -r third_party main.py images/ln.png images docs/docsbuild orb user video_library.yaml images/orb.png /tmp/lnorb/"
     )
 
 
@@ -61,31 +61,12 @@ def get_auto_balance():
 #  - channel.local_balance / channel.capacity < 0.5"""
 
 
-def prep_user_scripts(c):
-    def comment_out(content):
-        return "\n".join(f"# {l}" for l in content.split("\n"))
-
-    user_scripts = {}
-    for g in ["user/scripts/*.py", "fees.yaml"]:
-        for f in glob(g):
-            content = open(f).read()
-            user_scripts[f] = comment_out(content) if ".yaml" in g else content
-
-    user_scripts["autobalance.yaml"] = get_auto_balance()
-
-    with open("user_scripts.json", "w") as f:
-        f.write(json.dumps(user_scripts, indent=4))
-
-    print("user_scripts.json should be good")
-
-
 @task()
 def update(c, env=dict(PATH=os.environ["PATH"])):
     """
     Update the xcode project with the latest changes.
     """
     update_version(c)
-    prep_user_scripts(c)
     copy_files(c)
     with c.cd("build"):
         c.run("toolchain update lnorb-ios", env=env)
@@ -96,9 +77,20 @@ def create(c, env=dict(PATH=os.environ["PATH"])):
     """
     Create the xcode project.
     """
-    prep_user_scripts(c)
     copy_files(c)
     c.run("rm -rf build/lnorb-ios")
     with c.cd("build"):
         c.run("toolchain create lnorb /tmp/lnorb/", env=env)
     update_version(c)
+
+
+@task
+def install_stack(c, env=dict(PATH=os.environ["PATH"])):
+    with c.cd("build"):
+        c.run("toolchain build kivy", env=env)
+        c.run("toolchain build python3", env=env)
+        c.run("toolchain build pillow", env=env)
+        c.run("toolchain build sdl2", env=env)
+        c.run("toolchain build sdl2_mixer", env=env)
+        c.run("toolchain build ffpyplayer", env=env)
+        c.run("toolchain build libzbar", env=env)

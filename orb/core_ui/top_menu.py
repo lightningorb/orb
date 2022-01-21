@@ -2,19 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 09:26:57
+# @Last Modified time: 2022-01-21 06:17:16
 
 from traceback import format_exc
 
-from kivy.app import App
+from kivy.app import App as KivyApp
 from kivy_garden.contextmenu import AppMenu
 from kivy_garden.contextmenu import ContextMenuTextItem
 from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
 from kivy.properties import ObjectProperty
 
-from orb.store.scripts import load_scripts
 from orb.misc import data_manager
+from orb.misc.plugin import Plugin
 
 
 class TopMenu(AppMenu):
@@ -28,18 +28,13 @@ class TopMenu(AppMenu):
         super(TopMenu, self).__init__(*args, **kwargs)
 
     def populate_scripts(self):
-        scripts = load_scripts()
-        scripts = {
-            ">".join([x.strip() for x in v.menu.split(">")]): v
-            for v in scripts.values()
-            if v.menu
-        }
-        menu = [x for x in self.children if x.text.lower() == "scripts"][0]
+        apps = KivyApp.get_running_app().apps.apps.values()
+        menu = [x for x in self.children if x.text.lower() == "apps"][0]
 
         for widget in self.script_widgets:
             menu.submenu.remove_widget(widget)
 
-        def add_to_tree(d, c, t, p):
+        def add_to_tree(d, c, t, p, app):
             if len(c[d:]) > 1:
                 if not t.get(c[d]):
                     widget = ContextMenuTextItem(text=c[d])
@@ -51,25 +46,24 @@ class TopMenu(AppMenu):
                         self.script_widgets.append(widget)
                 else:
                     widget = t[c[d]]
-                add_to_tree(d + 1, c, t[c[d]], widget.submenu)
+                add_to_tree(d + 1, c, t[c[d]], widget.submenu, app=app)
             else:
-                tm = self
 
-                def run(self, *_):
-                    app = App.get_running_app()
-                    app.root.ids.app_menu.close_all()
-                    tm.exec(scripts[self.full_name].code)
+                def run(widget):
+                    kivyApp = KivyApp.get_running_app()
+                    kivyApp.root.ids.app_menu.close_all()
+                    self.exec(widget.app.menu_run_code)
                     return True
 
                 widget = ContextMenuTextItem(text=c[d], on_release=run)
-                widget.full_name = ">".join(c)
+                widget.app = app
                 p.add_widget(widget)
                 self.script_widgets.append(widget)
 
         tree = {}
-        for script in scripts:
-            components = [x.strip() for x in script.split(">")]
-            add_to_tree(d=0, c=components, t=tree, p=menu.submenu)
+        for app in apps:
+            components = [x.strip() for x in app.menu.split(">")]
+            add_to_tree(d=0, c=components, t=tree, p=menu.submenu, app=app)
         menu.submenu._on_visible(False)
 
     def on_hovered_menu_item(self, *_, **__):
@@ -91,7 +85,7 @@ class TopMenu(AppMenu):
                 print(exc)
 
     def add_channels_menu(self):
-        app = App.get_running_app()
+        app = KivyApp.get_running_app()
         menu = [x for x in self.children if x.text.lower() == "view"][0]
 
         for widget in self.view_widgets:
