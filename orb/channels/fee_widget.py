@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-18 04:39:53
+# @Last Modified time: 2022-01-22 05:02:24
 
 from threading import Thread
 
@@ -36,7 +36,6 @@ class FeeWidget(Widget):
     a = ListProperty([0, 0])
     b = ListProperty([0, 0])
     c = ListProperty([0, 0])
-    to_fee = NumericProperty(0)
     to_fee_norm = NumericProperty(0)
     new_fee = 0
 
@@ -48,17 +47,15 @@ class FeeWidget(Widget):
         self.touch_pos = None
 
         def update():
-            self.policy_to = self.lnd.get_policy_to(self.channel.chan_id)
-            self.policy_from = self.lnd.get_policy_from(self.channel.chan_id)
-            if self.policy_to:
+            policy_to = self.lnd.get_policy_to(self.channel.chan_id)
+            self.channel.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+            if policy_to:
 
                 @mainthread
                 def update_attrs():
-                    self.to_fee = self.policy_to.fee_rate_milli_msat
                     self.to_fee_norm = min(
-                        int(self.policy_to.fee_rate_milli_msat) / 1000 * 30, 30
+                        int(policy_to.fee_rate_milli_msat) / 1000 * 30, 30
                     )
-                    self.from_fee = self.policy_from.fee_rate_milli_msat
 
                 update_attrs()
 
@@ -74,11 +71,12 @@ class FeeWidget(Widget):
         self.bind(a=self.update_rect)
         self.bind(b=self.update_rect)
         self.bind(c=self.update_rect)
-        self.bind(to_fee_norm=self.update_rect)
+        self.channel.bind(fee_rate_milli_msat=self.update_rect)
 
         Thread(target=update).start()
 
     def update_rect(self, *args):
+        self.to_fee_norm = min(int(self.channel.fee_rate_milli_msat) / 1000 * 30, 30)
         A = Vector(*self.a)
         B = Vector(*self.c)
         AB = B - A
@@ -107,16 +105,16 @@ class FeeWidget(Widget):
     def on_touch_up(self, touch):
         if self.touch_pos:
             self.touch_pos = None
-            self.to_fee = self.new_fee
+            self.channel.fee_rate_milli_msat = self.new_fee
             self.label.hide()
 
             def update_fees(*args):
-                print(f"Setting fees to: {self.to_fee / 1e6}")
+                print(f"Setting fees to: {self.channel.fee_rate_milli_msat / 1e6}")
                 Lnd().update_channel_policy(
                     channel=self.channel,
-                    fee_rate=self.to_fee / 1e6,
-                    base_fee_msat=self.policy_to.fee_base_msat,
-                    time_lock_delta=self.policy_to.time_lock_delta,
+                    fee_rate=self.channel.fee_rate_milli_msat / 1e6,
+                    base_fee_msat=self.channel.fee_base_msat,
+                    time_lock_delta=self.channel.time_lock_delta,
                 )
 
             Thread(target=update_fees).start()
@@ -131,7 +129,7 @@ class FeeWidget(Widget):
             mid = self.P1.mid(self.P2)
             self.to_fee_norm = C.dist(mid)
             diff = self.to_fee_norm / self.orig_to_fee_norm
-            self.new_fee = self.to_fee * diff
+            self.new_fee = self.channel.fee_rate_milli_msat * diff
             self.label.pos = (mid.x, mid.y)
             self.label.text = str(int(self.new_fee))
             return True

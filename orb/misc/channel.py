@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 09:22:40
+# @Last Modified time: 2022-01-22 05:23:47
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 from kivy.properties import ListProperty
 from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
+
+from orb.lnd import Lnd
 
 
 class Channel(EventDispatcher):
@@ -46,12 +48,33 @@ class Channel(EventDispatcher):
     #: The channel's initiator
     initiator = BooleanProperty(False)
 
+    # POLICY
+
+    #: the fee_rate_milli_msat as a NumericProperty
+    fee_rate_milli_msat = NumericProperty(0)
+    #: the time_lock_delta as a NumericProperty
+    time_lock_delta = NumericProperty(0)
+    #: the min_htlc as a NumericProperty
+    min_htlc = NumericProperty(0)
+    #: the max_htlc_msat as a NumericProperty
+    max_htlc_msat = NumericProperty(0)
+    #: the fee_base_msat as a NumericProperty
+    fee_base_msat = NumericProperty(0)
+
     def __init__(self, channel, *args, **kwargs):
         """
         Channel constructor.
         """
         super(Channel, self).__init__(*args, **kwargs)
         self.update(channel)
+
+    def update_lnd_with_policies(self):
+        Lnd().update_channel_policy(
+            channel=self,
+            fee_rate=self.fee_rate_milli_msat / 1e6,
+            base_fee_msat=self.fee_base_msat,
+            time_lock_delta=self.time_lock_delta,
+        )
 
     def update(self, channel):
         """

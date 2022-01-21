@@ -1,6 +1,7 @@
 0.5.1
 ----
 
+attempt to speed up app-store with async loading
 removed telegram bots from workflows as they don't seem to work [dev]
 Merge pull request #146 from bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution
 When returning from the console, the 'view' menu isn't updated #144

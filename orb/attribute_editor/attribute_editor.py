@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 04:39:29
+# @Last Modified time: 2022-01-22 04:57:33
 
 from threading import Thread
 
@@ -60,16 +60,6 @@ class AttributeEditor(BoxLayout):
 
     #: The currently selected channel object.
     channel = ObjectProperty(None, allownone=True)
-    #: the fee_rate_milli_msat as a NumericProperty
-    fee_rate_milli_msat = NumericProperty(0)
-    #: the time_lock_delta as a NumericProperty
-    time_lock_delta = NumericProperty(0)
-    #: the min_htlc as a NumericProperty
-    min_htlc = NumericProperty(0)
-    #: the max_htlc_msat as a NumericProperty
-    max_htlc_msat = NumericProperty(0)
-    #: the fee_base_msat as a NumericProperty
-    fee_base_msat = NumericProperty(0)
     #: the last_update as a NumericProperty
     last_update = NumericProperty(0)
 
@@ -106,12 +96,12 @@ class AttributeEditor(BoxLayout):
 
             @mainthread
             def update(policy_to):
-                self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-                self.time_lock_delta = policy_to.time_lock_delta
-                self.min_htlc = policy_to.min_htlc
-                self.max_htlc_msat = policy_to.max_htlc_msat
+                self.channel.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+                self.channel.time_lock_delta = policy_to.time_lock_delta
+                self.channel.min_htlc = policy_to.min_htlc
+                self.channel.max_htlc_msat = policy_to.max_htlc_msat
                 self.last_update = policy_to.last_update
-                self.fee_base_msat = policy_to.fee_base_msat
+                self.channel.fee_base_msat = policy_to.fee_base_msat
                 self.size_hint_y = None
                 if self.channel:
                     self.ids.md_list.clear_widgets()
@@ -149,14 +139,14 @@ class AttributeEditor(BoxLayout):
         Invoked whenever the fee rate is changed.
         """
         val = int(val.text)
-        if val != self.fee_rate_milli_msat:
+        if val != self.channel.fee_rate_milli_msat:
             Lnd().update_channel_policy(
                 channel=self.channel,
                 fee_rate=val / 1e6,
-                base_fee_msat=self.fee_base_msat,
-                time_lock_delta=self.time_lock_delta,
+                base_fee_msat=self.channel.fee_base_msat,
+                time_lock_delta=self.channel.time_lock_delta,
             )
-            self.fee_rate_milli_msat = val
+            self.channel.fee_rate_milli_msat = val
 
     @guarded
     def fee_base_msat_changed(self, val):
@@ -164,14 +154,14 @@ class AttributeEditor(BoxLayout):
         Invoked whenever the fee base rate is changed.
         """
         val = int(val.text)
-        if val != self.fee_base_msat:
+        if val != self.channel.fee_base_msat:
             Lnd().update_channel_policy(
                 channel=self.channel,
-                fee_rate=self.fee_rate_milli_msat / 1e6,
+                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
                 base_fee_msat=val,
-                time_lock_delta=self.time_lock_delta,
+                time_lock_delta=self.channel.time_lock_delta,
             )
-            self.fee_base_msat = val
+            self.channel.fee_base_msat = val
 
     @guarded
     def min_htlc_changed(self, val):
@@ -179,16 +169,16 @@ class AttributeEditor(BoxLayout):
         Invoked whenever the min HTLC is changed.
         """
         val = int(val.text)
-        if val != self.min_htlc:
+        if val != self.channel.min_htlc:
             Lnd().update_channel_policy(
                 channel=self.channel,
-                time_lock_delta=self.time_lock_delta,
-                fee_rate=self.fee_rate_milli_msat / 1e6,
-                base_fee_msat=self.fee_base_msat,
+                time_lock_delta=self.channel.time_lock_delta,
+                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
+                base_fee_msat=self.channel.fee_base_msat,
                 min_htlc_msat=val,
                 min_htlc_msat_specified=True,
             )
-            self.min_htlc = val
+            self.channel.min_htlc = val
 
     @guarded
     def max_htlc_msat_changed(self, val):
@@ -196,15 +186,15 @@ class AttributeEditor(BoxLayout):
         Invoked whenever the max HTLC is changed.
         """
         val = int(val.text)
-        if val != self.max_htlc_msat:
+        if val != self.channel.max_htlc_msat:
             Lnd().update_channel_policy(
                 channel=self.channel,
-                time_lock_delta=self.time_lock_delta,
-                fee_rate=self.fee_rate_milli_msat / 1e6,
-                base_fee_msat=self.fee_base_msat,
+                time_lock_delta=self.channel.time_lock_delta,
+                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
+                base_fee_msat=self.channel.fee_base_msat,
                 max_htlc_msat=val,
             )
-            self.max_htlc_msat = val
+            self.channel.max_htlc_msat = val
 
     @guarded
     def time_lock_delta_changed(self, val):
@@ -212,14 +202,14 @@ class AttributeEditor(BoxLayout):
         Invoked whenever timelock delta is changed.
         """
         val = int(val.text)
-        if val != self.time_lock_delta:
+        if val != self.channel.time_lock_delta:
             Lnd().update_channel_policy(
                 channel=self.channel,
                 time_lock_delta=val,
-                fee_rate=self.fee_rate_milli_msat / 1e6,
-                base_fee_msat=self.fee_base_msat,
+                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
+                base_fee_msat=self.channel.fee_base_msat,
             )
-            self.time_lock_delta = val
+            self.channel.time_lock_delta = val
 
     def populate_rest(self, c):
         """
@@ -317,7 +307,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.fee_rate_milli_msat),
+                text=str(self.channel.fee_rate_milli_msat),
                 helper_text="Fee Rate Milli Msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.fee_rate_milli_msat_changed,
@@ -325,7 +315,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.fee_base_msat),
+                text=str(self.channel.fee_base_msat),
                 helper_text="Fee Base Msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.fee_base_msat_changed,
@@ -333,7 +323,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.min_htlc),
+                text=str(self.channel.min_htlc),
                 helper_text="Min HTLC msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.min_htlc_changed,
@@ -341,7 +331,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.max_htlc_msat),
+                text=str(self.channel.max_htlc_msat),
                 helper_text="Max HTLC msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.max_htlc_msat_changed,
@@ -349,7 +339,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.time_lock_delta),
+                text=str(self.channel.time_lock_delta),
                 helper_text="Time Lock Delta",
                 helper_text_mode="persistent",
                 on_text_validate=self.time_lock_delta_changed,
