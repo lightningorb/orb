@@ -286,5 +286,16 @@
       "desc":"Path where deleted files go",
       "section":"path",
       "key":"trash"
+   },
+   {
+      "type":"title",
+      "title":"URLs"
+   },
+   {
+      "type":"string",
+      "title":"App Store",
+      "desc":"URL for the App Store",
+      "section":"url",
+      "key":"appstore"
    }
 ]

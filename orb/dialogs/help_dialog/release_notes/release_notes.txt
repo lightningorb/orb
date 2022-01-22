@@ -1,6 +1,27 @@
-0.5.1
+0.6.0
 ----
 
+appstore app icons, and appstore login dialog
+added
+added
+added
+added
+updated
+updated
+login dialog
+updated
+updated
+updated
+updated
+updated
+updated
+updated
+updated
+updated
+updated
+wip
+wip
+Changing channel fees isn't reflected in fee gizmo #27
 attempt to speed up app-store with async loading
 removed telegram bots from workflows as they don't seem to work [dev]
 Merge pull request #146 from bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution

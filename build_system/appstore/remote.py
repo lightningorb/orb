@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 07:52:51
+# @Last Modified time: 2022-01-22 14:55:16
 
 from invoke import task
 import os
 
+# ./build.py -H ubuntu@18.118.53.220 -i orbdb.cer appstore.remote.clone
 # ./build.py -H ubuntu@18.118.53.220 -i orbdb.cer appstore.remote.install-service
+# ./build.py -H ubuntu@18.118.53.220 -i orbdb.cer appstore.remote.drop-tables
 
 
 @task
@@ -39,7 +41,7 @@ def clone(c):
         )
     with c.cd("orb"):
         c.run("git pull")
-        c.run("git checkout appstore")
+        c.run("git checkout appstore3")
 
 
 @task
@@ -57,6 +59,12 @@ def create_user(c):
 def create_tables(c):
     with c.cd("orb/server"):
         c.run("python3 create_db.py")
+
+
+@task
+def drop_tables(c):
+    with c.cd("orb/server"):
+        c.run("python3 drop_db.py")
 
 
 @task

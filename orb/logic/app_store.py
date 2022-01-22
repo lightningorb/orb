@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 15:30:18
+# @Last Modified time: 2022-01-22 13:19:50
 
 import os
 import sys
@@ -87,6 +87,9 @@ class Apps(EventDispatcher):
             print("appinfo.yaml is missing - aborting")
             return None
 
+    def delete_from_store(self, app):
+        API().delete_from_store(app.uuid)
+
 
 class RemoteApp(EventDispatcher):
 
@@ -97,6 +100,7 @@ class RemoteApp(EventDispatcher):
         self.description = remote_app.description
         self.uuid = remote_app.uuid
         self.is_remote = True
+        self.icon = API().get_icon_path(self.uuid)
 
 
 class App(EventDispatcher):
@@ -118,6 +122,8 @@ class App(EventDispatcher):
             self.info_file.parent.glob("*.py"), None
         )
         self.directory = self.info_file.parent
+        if self.plugin_info.get("icon"):
+            self.icon = (self.directory / self.plugin_info.get("icon")).as_posix()
         self.module_name = os.path.basename(os.path.splitext(self.py)[0])
         self.__import = None
         self.instance = None

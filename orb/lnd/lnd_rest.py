@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 12:54:34
+# @Last Modified time: 2022-01-21 18:15:07
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -334,9 +334,13 @@ class LndREST(LndBase):
         )
 
         for raw_response in r.iter_lines():
-            response = dict2obj(json.loads(raw_response)).result
+            json_data = json.loads(raw_response)
+            if json_data.get("error"):
+                print(json_data["error"])
+                break
+            response = dict2obj(json_data)
             print(response.status)
-            if response.status == 'FAILED':
+            if response.status == "FAILED":
                 print(response.failure_reason)
 
     def __get(self, url):

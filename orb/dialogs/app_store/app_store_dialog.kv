@@ -22,21 +22,36 @@
         adaptive_height: True
 
         MDBoxLayout:
-            id: text_box
-            orientation: "vertical"
+            orientation: 'horizontal'
             adaptive_height: True
             spacing: "10dp"
             padding: 0, "10dp", "10dp", "10dp"
-            MDLabel:
-                text: root.app.name
-                theme_text_color: "Primary"
-                font_style: "H5"
-                bold: True
+            AnchorLayout:
+                size_hint_x: .2
+                anchor_x: 'center'
+                anchor_y: 'center'
+                AsyncImage:
+                    size_hint: None, None
+                    size: "80dp", "60dp"
+                    keep_ratio: True
+                    source: root.app.icon if hasattr(root.app, 'icon') else ''
+            MDBoxLayout:
+                id: text_box
+                size_hint_x: .8
+                orientation: "vertical"
                 adaptive_height: True
-            MDLabel:
-                text: root.app.description
-                adaptive_height: True
-                theme_text_color: "Primary"
+                spacing: "10dp"
+                padding: 0, "10dp", "10dp", "10dp"
+                MDLabel:
+                    text: root.app.name
+                    theme_text_color: "Primary"
+                    font_style: "H5"
+                    bold: True
+                    adaptive_height: True
+                MDLabel:
+                    text: root.app.description
+                    adaptive_height: True
+                    theme_text_color: "Primary"
 
     MDSeparator:
 
@@ -73,20 +88,33 @@
 
         MDBoxLayout:
             id: text_box
-            orientation: "vertical"
+            orientation: "horizontal"
             adaptive_height: True
-            spacing: "10dp"
-            padding: 0, "10dp", "10dp", "10dp"
-            MDLabel:
-                text: root.app.name
-                theme_text_color: "Primary"
-                font_style: "H5"
-                bold: True
+            AnchorLayout:
+                size_hint_x: .2
+                anchor_x: 'center'
+                anchor_y: 'center'
+                AsyncImage:
+                    size_hint: None, None
+                    size: "80dp", "60dp"
+                    keep_ratio: True
+                    source: root.app.icon if hasattr(root.app, 'icon') else ''
+            MDBoxLayout:
+                id: text_box
+                orientation: "vertical"
                 adaptive_height: True
-            MDLabel:
-                text: root.app.description
-                adaptive_height: True
-                theme_text_color: "Primary"
+                spacing: "10dp"
+                padding: 0, "10dp", "10dp", "10dp"
+                MDLabel:
+                    text: root.app.name
+                    theme_text_color: "Primary"
+                    font_style: "H5"
+                    bold: True
+                    adaptive_height: True
+                MDLabel:
+                    text: root.app.description
+                    adaptive_height: True
+                    theme_text_color: "Primary"
 
     MDSeparator:
 
@@ -125,6 +153,11 @@
             text: "Tip author.."
             on_release: TipDialog(app=root.app).open()
             disabled: root.app.is_remote
+
+        # MDRaisedButton:
+        #     id: delete_button
+        #     text: "Delete app from store"
+        #     on_release: root.delete_app()
 
 
 <AppStoreDialog>:

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:26:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-19 18:48:33
+# @Last Modified time: 2022-01-22 11:19:10
 
 import base64
 import time
@@ -18,7 +18,6 @@ from kivymd.uix.list import OneLineIconListItem
 
 from orb.lnd import Lnd
 from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.logic.app_store_authenticate import authenticate
 from orb.logic.upload_app import UploadApp
 
 
@@ -36,11 +35,6 @@ class UploadAppDialog(PopupDropShadow):
         super(UploadAppDialog, self).open(self, *args)
         self.app = None
         self.upload_app = None
-
-        def get_auth():
-            self.creds = authenticate()
-
-        Thread(target=get_auth).start()
 
         # phew!
         apps = App.get_running_app().apps.apps

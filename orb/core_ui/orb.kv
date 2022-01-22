@@ -23,6 +23,7 @@
 #:import Rankings orb.screens.rankings.Rankings
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
 #:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
+#:import LoginDialog orb.dialogs.app_store.LoginDialog
 #:import UploadAppDialog orb.dialogs.upload_app.UploadAppDialog
 
 #: import webbrowser webbrowser
@@ -142,6 +143,10 @@
                     on_press: ConnectionSettings().open()
                     on_release: app_menu.close_all()
                 ContextMenuDivider
+                ContextMenuTextItem:
+                    text: "App Store Login"
+                    on_press: LoginDialog().open()
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "App Store"
                     on_press: AppStoreDialog().open()

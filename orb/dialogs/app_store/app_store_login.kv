@@ -1,0 +1,35 @@
+#:import TipDialogContent orb.dialogs.app_store.TipDialogContent
+#:import Lnd orb.lnd.Lnd
+
+<LoginDialogContent>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        hint_text: "Pubkey"
+        text: root.pk
+        # disabled: True
+
+    MDTextField:
+        hint_text: "Password"
+        text: root.password
+        # disabled: True
+
+    MDTextField:
+        hint_text: "Token"
+        text: root.token
+        # disabled: True
+
+<LoginDialog>
+    title: 'App Store Login'
+    type: 'custom'
+    md_bg_color: .1, .1, .15, .9
+    overlay_color: 0, 0, 0, 0
+    canvas.before:
+        BorderImage:
+            source: 'orb/images/shadow_inverted.png'
+            border: 0,0,0,0
+            pos: self.x + 10, self.y - 30
+            size: self.width * 1.025, self.height * 1.025

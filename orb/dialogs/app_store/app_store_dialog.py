@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 15:26:35
+# @Last Modified time: 2022-01-22 11:18:42
 
 from threading import Thread
 
@@ -17,7 +17,6 @@ from kivy.clock import mainthread
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
-from orb.logic.app_store_authenticate import authenticate
 
 
 class AppSummary(BoxLayout):
@@ -51,6 +50,11 @@ class AppDetails(BoxLayout):
     def __init__(self, app, *args, **kwargs):
         self.app = app
         super(AppDetails, self).__init__(*args, **kwargs)
+
+    def delete_app(self):
+        print("deleting app from appstore")
+        kivy_app = KivyApp.get_running_app()
+        kivy_app.apps.delete_from_store(self.app)
 
     def install_uninstall(self):
         kivy_app = KivyApp.get_running_app()
@@ -86,7 +90,6 @@ class AppStoreDialog(PopupDropShadow):
         self.available = []
 
         def get_remote_apps(*_):
-            authenticate()
             self.available = KivyApp.get_running_app().apps.get_remote_apps()
             self.load_available()
 
