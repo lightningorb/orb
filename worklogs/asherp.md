@@ -1,3 +1,4 @@
+* ignoring hourly config
 
 # 2022-01-22 15:01:03.682659: clock-in
 

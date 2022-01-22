@@ -12,3 +12,4 @@ tutes
 .DS_Store
 .idea
 docs/docsbuild/
+hourly.yaml
