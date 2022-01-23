@@ -34,6 +34,8 @@ def download_forwarding_history(*args, **kwargs):
         i = 0
         start_time = int(last.timestamp) if last else None
         while True:
+            # fwd returns object with forwarding_events and last_offset_index attributes
+            print('downloading from offset {}'.format(i))
             fwd = Lnd().get_forwarding_history(
                 start_time=start_time, index_offset=i, num_max_events=100
             )
@@ -57,7 +59,8 @@ def download_forwarding_history(*args, **kwargs):
                     timestamp_ns=int(f.timestamp_ns),
                 )
                 ev.save()
-            i += 100
+            # i += 100
+            i = fwd.last_offset_index
             if not fwd.forwarding_events:
                 break
 

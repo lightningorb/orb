@@ -1,11 +1,64 @@
-* renaming foward->forward
-Reconnecting to playground
+* using last_offset_index from lnd, still getting discrepancy
+<!-- #region -->
+Writing forwarding events to log file. Run the following from the Orb console
+```python
+from orb.store import model
+
+with open('forwarding_events.csv', 'w') as f:
+	f.write('timestamp_ns,amt_in,amt_out,fee\n') 
+	for event in model.ForwardEvent().select():
+		f.write('{},{},{},{}\n'.format(event.timestamp_ns, event.amt_in, event.amt_out, event.fee))
+print('wrote events to forwarding_events.csv')
+```
+<!-- #endregion -->
+
+<!-- #region -->
+Direct from LND
 
 ```python
-import codecs
-codecs.encode(open("/path/to/bitcoin/signet/admin.macaroon", "rb").read(), "hex").decode()
-
+print('\n\nopening forwarding_events_lnd.csv')
+with open('forwarding_events_lnd.csv', 'w') as file_:
+	i = 0
+	file_.write('timestamp_ns,amt_in,amt_out,fee\n')
+	while True:
+		fwd = Lnd().get_forwarding_history(start_time=None, index_offset=i, num_max_events=100)
+		print('got forwarding history')
+		for j, f in enumerate(fwd.forwarding_events):
+			file_.write('{},{},{},{}\n'.format(f.timestamp_ns, f.amt_in, f.amt_out, f.fee))
+		i = fwd.last_offset_index
+		print('last index: {}'.format(i))
+		if not fwd.forwarding_events:
+			break
+print('wrote forwarding_events_lnd.csv\n\n\n')
 ```
+<!-- #endregion -->
+
+```python
+import numpy as np
+import pandas as pd
+```
+
+```python
+fwd = pd.read_csv('../forwarding_events_lnd.csv', index_col=0)
+fwd.index = pd.to_datetime(forwarding_events.index)
+```
+
+These amounts still aren't adding up when pulling from the database.
+
+```python
+fwd.sum() # matches what is shown in Total Routing dialogue
+```
+
+```python
+(fwd.amt_in - fwd.amt_out).sum() # 968
+```
+
+```python
+fwd.fee.sum() # 965
+```
+
+* renaming foward->forward
+Reconnecting to playground
 
 
 ### 2022-01-23 13:37:16.617105: clock-in
