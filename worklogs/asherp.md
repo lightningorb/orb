@@ -1,3 +1,5 @@
+### 2022-01-23 15:48:14.240432: clock-out
+
 * using last_offset_index from lnd, still getting discrepancy
 <!-- #region -->
 Writing forwarding events to log file. Run the following from the Orb console
