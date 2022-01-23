@@ -16,10 +16,10 @@ def create_invoices_tables():
         pass
 
 
-def create_fowarding_tables():
+def create_forwarding_tables():
     db = get_db(forwarding_events_db_name)
     try:
-        db.create_tables([FowardEvent])
+        db.create_tables([ForwardEvent])
     except:
         pass
 

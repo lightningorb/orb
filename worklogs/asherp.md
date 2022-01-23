@@ -1,3 +1,12 @@
+* renaming foward->forward
+Reconnecting to playground
+
+```python
+import codecs
+codecs.encode(open("/path/to/bitcoin/signet/admin.macaroon", "rb").read(), "hex").decode()
+
+```
+
 
 ### 2022-01-23 13:37:16.617105: clock-in
 

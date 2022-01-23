@@ -17,7 +17,7 @@ from orb.misc.utils import pref
 path_finding_db_name = "path_finding"
 aliases_db_name = "aliases"
 invoices_db_name = "invoices"
-forwarding_events_db_name = "forwarding_events_v2"
+forwarding_events_db_name = "forwarding_events_v3"
 htlcs_db_name = "htlcs"
 
 
