@@ -1,0 +1,87 @@
+
+
+<AppDetails>:
+    orientation: "vertical"
+    size_hint: 1, None
+    height: box_top.height + box_center.height + box_bottom.height
+    focus_behavior: True
+    ripple_behavior: True
+    pos_hint: {"center_x": .5, "center_y": .5}
+
+    MDBoxLayout:
+        id: box_top
+        spacing: "20dp"
+        adaptive_height: True
+
+        MDBoxLayout:
+            id: text_box
+            orientation: "horizontal"
+            adaptive_height: True
+            AnchorLayout:
+                size_hint_x: .2
+                anchor_x: 'center'
+                anchor_y: 'center'
+                AsyncImage:
+                    size_hint: None, None
+                    size: "80dp", "60dp"
+                    keep_ratio: True
+                    source: root.app.icon if hasattr(root.app, 'icon') else ''
+            MDBoxLayout:
+                id: text_box
+                orientation: "vertical"
+                adaptive_height: True
+                spacing: "10dp"
+                padding: 0, "10dp", "10dp", "10dp"
+                MDLabel:
+                    text: root.app.name
+                    theme_text_color: "Primary"
+                    font_style: "H5"
+                    bold: True
+                    adaptive_height: True
+                MDLabel:
+                    text: root.app.description
+                    adaptive_height: True
+                    theme_text_color: "Primary"
+
+    MDSeparator:
+
+    MDBoxLayout:
+        id: box_center
+        adaptive_height: True
+        padding: "10dp", 0, 0, 0
+
+        MDLabel:
+            text: "Rate this app"
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Primary"
+
+        StarButton:
+        StarButton:
+        StarButton:
+        StarButton:
+        StarButton:
+
+    MDSeparator:
+
+    MDBoxLayout:
+        id: box_bottom
+        adaptive_height: True
+        padding: "10dp"
+        spacing: "10dp"
+
+        MDRaisedButton:
+            id: install_button
+            text: "Uninstall" if root.app.installed else "Install"
+            on_release: root.install_uninstall()
+
+        MDRaisedButton:
+            id: tip_button
+            text: "Tip author.."
+            on_release: TipDialog(app=root.app).open()
+            disabled: root.app.is_remote
+
+        # MDRaisedButton:
+        #     id: delete_button
+        #     text: "Delete app from store"
+        #     on_release: root.delete_app()
