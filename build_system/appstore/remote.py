@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 14:55:16
+# @Last Modified time: 2022-01-24 10:19:21
 
 from invoke import task
 import os
@@ -34,14 +34,15 @@ def install_stack(c):
 
 
 @task
-def clone(c):
+def clone(c, branch=None):
     if c.run("test -d orb", warn=True).failed:
         c.run(
             f"git clone https://{open('.gittoken').read().strip()}@github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb.git"
         )
     with c.cd("orb"):
         c.run("git pull")
-        c.run("git checkout appstore3")
+        if branch:
+            c.run("git checkout appstore3")
 
 
 @task
