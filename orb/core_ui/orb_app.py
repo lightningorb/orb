@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-20 12:21:40
+# @Last Modified time: 2022-01-24 13:51:02
 
 import os
 import sys
@@ -27,7 +27,7 @@ from orb.audio.audio_manager import audio_manager
 from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.logic import thread_manager
-from orb.misc.utils import pref_path
+from orb.misc.utils import pref_path, desktop
 
 from orb.misc import data_manager
 
@@ -109,7 +109,6 @@ class OrbApp(MDApp):
             "yaml",
             "json",
             "db",
-            "cert",
             "app",
             "app_archive",
             "trash",
@@ -118,6 +117,20 @@ class OrbApp(MDApp):
             path = pref_path(key)
             if not path.is_dir():
                 os.makedirs(path)
+
+        if desktop:
+            # only bother creating the certs
+            # directory on desktop, as on mobile it goes
+            # into a temp directory (which belongs to the app
+            # so is fairly secure)
+            path = pref_path("cert")
+            if not path.is_dir():
+                os.makedirs(path)
+        else:
+            path = pref_path("cert")
+            if (path / "tls.cert").is_file():
+                print("Deleting cert from data dir, as it's no longer needed")
+                shutil.rmtree(path.as_posix())
 
     def on_start(self):
         """
@@ -178,7 +191,6 @@ class OrbApp(MDApp):
         self.override_stdout()
         self.make_dirs()
 
-        data_manager.DataManager.ensure_cert()
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager()
         window_sizes = Window.size
@@ -210,8 +222,6 @@ class OrbApp(MDApp):
         """
         if f"{section}.{key}" == "audio.volume":
             audio_manager.set_volume()
-        elif key == "tls_certificate":
-            data_manager.DataManager.save_cert(value)
         self.main_layout.do_layout()
 
     @guarded

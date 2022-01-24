@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 16:04:11
+# @Last Modified time: 2022-01-24 12:17:20
 
 from orb.misc.utils import pref
 from traceback import print_exc
@@ -37,7 +37,7 @@ def Lnd():
             from orb.lnd.lnd_grpc import LndGRPC
 
             try:
-                cert = Certificate.init_from_str(pref("lnd.tls_certificate"))
+                cert = Certificate.init_from_str(cert_path())
                 lnd[protocol] = LndGRPC(
                     tls_certificate=cert.reformat(),
                     server=pref("lnd.hostname"),

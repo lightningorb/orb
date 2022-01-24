@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 16:23:01
+# @Last Modified time: 2022-01-24 12:16:54
 
 from pathlib import Path
 
@@ -15,6 +15,7 @@ from orb.store.db_meta import *
 from orb.misc.channels import Channels
 from orb.lnd.lnd import Lnd
 from orb.misc.utils import pref
+from orb.misc.prefs import cert_path
 
 
 class DataManager(EventDispatcher):
@@ -39,6 +40,7 @@ class DataManager(EventDispatcher):
         super(DataManager, self).__init__(*args, **kwargs)
         self.menu_visible = False
         self.disable_shortcuts = False
+        self.save_cert()
         self.lnd = Lnd()
 
         self.channels = Channels(self.lnd)
@@ -65,30 +67,12 @@ class DataManager(EventDispatcher):
         db_create_tables.create_aliases_tables()
         db_create_tables.create_invoices_tables()
 
-    @property
-    def cert_path(self):
-        """
-        Get the cert path, as specified by our user config.
-        """
-        user_data_dir = App.get_running_app().user_data_dir
-        return (Path(user_data_dir) / pref("path.cert") / "tls.cert").as_posix()
-
-    def save_cert(self, cert):
+    def save_cert(self):
         """
         Save the certificate to an file. This is required for
         requests over rest.
         """
-        user_data_dir = App.get_running_app().user_data_dir
-        with open(DataManager().cert_path, "w") as f:
-            f.write(cert)
-
-    @staticmethod
-    def ensure_cert():
-        """
-        Make sure the cert's formatting is kosher.
-        """
-        user_data_dir = App.get_running_app().user_data_dir
-        with open(DataManager().cert_path, "w") as f:
+        with open(cert_path(), "w") as f:
             f.write(pref("lnd.tls_certificate"))
 
 

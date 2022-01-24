@@ -2,11 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 13:18:20
+# @Last Modified time: 2022-01-24 13:36:02
 
 from orb.misc.utils import *
 from pathlib import Path
+import tempfile
 from orb.misc.utils import pref
+from functools import lru_cache
+from orb.misc.utils import desktop
 
 
 def is_mock():
@@ -41,9 +44,18 @@ def cert():
     return app.config["lnd"]["tls_certificate"].encode()
 
 
+@lru_cache(maxsize=None)
 def cert_path():
-    app = App.get_running_app()
-    return (Path(app.user_data_dir) / pref("path.cert") / "tls.cert").as_posix()
+    """
+    Get the path to the temp TLS cert file.
+    On mobile we store it in the temp diretory, since it's only accessible by the
+    app, while on desktop we keep the cert in the user's app data dir.
+    """
+    if desktop:
+        app = App.get_running_app()
+        return (Path(app.user_data_dir) / pref("path.cert") / "tls.cert").as_posix()
+    else:
+        return (Path(tempfile.gettempdir()) / "f66d6b24ccfb").as_posix()
 
 
 def inverted_channels():
