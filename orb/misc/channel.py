@@ -2,8 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 05:23:47
+# @Last Modified time: 2022-01-24 11:42:47
 
+from threading import Thread
+
+from kivy.clock import Clock
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 from kivy.properties import ListProperty
@@ -15,8 +18,8 @@ from orb.lnd import Lnd
 
 class Channel(EventDispatcher):
     """
-    This class is still a bit experimental. It intends to host
-    all channel related data in Kivy properties.
+    This class intends to host all channel related data in Kivy properties,
+    including channel policies.
 
     This means the class object should not be replaced, as other
     objects in memory should be allowed to refer to it.
@@ -53,9 +56,9 @@ class Channel(EventDispatcher):
     #: the fee_rate_milli_msat as a NumericProperty
     fee_rate_milli_msat = NumericProperty(0)
     #: the time_lock_delta as a NumericProperty
-    time_lock_delta = NumericProperty(0)
+    time_lock_delta = NumericProperty(40)
     #: the min_htlc as a NumericProperty
-    min_htlc = NumericProperty(0)
+    min_htlc_msat = NumericProperty(0)
     #: the max_htlc_msat as a NumericProperty
     max_htlc_msat = NumericProperty(0)
     #: the fee_base_msat as a NumericProperty
@@ -68,13 +71,72 @@ class Channel(EventDispatcher):
         super(Channel, self).__init__(*args, **kwargs)
         self.update(channel)
 
-    def update_lnd_with_policies(self):
-        Lnd().update_channel_policy(
+        self._policies_are_bound = False
+
+        self.schedule_updates()
+
+    def schedule_updates(self):
+        def get_policies(*_):
+            """
+            Get the channel policies from LND on a thread,
+            and bind them to update_lnd_with_policies. This means whenever
+            a fee policy is changed in Orb, it immediately gets updated
+            in LND.
+            """
+            policy_to = Lnd().get_policy_to(self.chan_id)
+            self.unbind_policies()
+            self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+            self.fee_base_msat = policy_to.fee_base_msat
+            self.time_lock_delta = policy_to.time_lock_delta
+            self.max_htlc_msat = policy_to.max_htlc_msat
+            self.min_htlc_msat = policy_to.min_htlc
+            self.bind_policies()
+
+        # get the policies now
+        Clock.schedule_once(lambda *_: Thread(target=get_policies).start(), 0)
+
+        # and update the policies every 5 minutes, in case they change
+        # in LND
+        Clock.schedule_interval(lambda *_: Thread(target=get_policies).start(), 5 * 60)
+
+    def bind_policies(self):
+        """
+        Bind local policy updates to the channel to LND
+        """
+        if not self._policies_are_bound:
+            self.bind(fee_rate_milli_msat=self.update_lnd_with_policies)
+            self.bind(fee_base_msat=self.update_lnd_with_policies)
+            self.bind(time_lock_delta=self.update_lnd_with_policies)
+            self.bind(max_htlc_msat=self.update_lnd_with_policies)
+            self.bind(min_htlc_msat=self.update_lnd_with_policies)
+            self._policies_are_bound = True
+
+    def unbind_policies(self):
+        """
+        Unbind local policy updates to the channel to LND
+        """
+        if self._policies_are_bound:
+            self.unbind(fee_rate_milli_msat=self.update_lnd_with_policies)
+            self.unbind(fee_base_msat=self.update_lnd_with_policies)
+            self.unbind(time_lock_delta=self.update_lnd_with_policies)
+            self.unbind(max_htlc_msat=self.update_lnd_with_policies)
+            self.unbind(min_htlc_msat=self.update_lnd_with_policies)
+            self._policies_are_bound = False
+
+    def update_lnd_with_policies(self, *_):
+        """
+        Update LND with the channel policies specified
+        in tbis object.
+        """
+        result = Lnd().update_channel_policy(
             channel=self,
             fee_rate=self.fee_rate_milli_msat / 1e6,
             base_fee_msat=self.fee_base_msat,
             time_lock_delta=self.time_lock_delta,
+            max_htlc_msat=self.max_htlc_msat,
+            min_htlc_msat=self.min_htlc_msat,
         )
+        print(result)
 
     def update(self, channel):
         """
@@ -96,3 +158,15 @@ class Channel(EventDispatcher):
         self.unsettled_balance = channel.unsettled_balance
         self.channel_point = channel.channel_point
         self.channel = channel
+
+    @property
+    def local_balance_include_pending(self):
+        """
+        Get the channel's local balance, plus its pending outgoing HTLCs.
+        This is because the local balance does not including the pending HTLCs,
+        which means the local balance changes based on HTLC activity. This
+        may not always be desireable.
+        """
+        return self.local_balance + sum(
+            int(p.amount) for p in self.channel.pending_htlcs if not p.incoming
+        )

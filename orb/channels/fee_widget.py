@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 05:02:24
+# @Last Modified time: 2022-01-24 10:38:48
 
 from threading import Thread
 
@@ -46,19 +46,6 @@ class FeeWidget(Widget):
         self.P2 = Vector()
         self.touch_pos = None
 
-        def update():
-            policy_to = self.lnd.get_policy_to(self.channel.chan_id)
-            self.channel.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-            if policy_to:
-
-                @mainthread
-                def update_attrs():
-                    self.to_fee_norm = min(
-                        int(policy_to.fee_rate_milli_msat) / 1000 * 30, 30
-                    )
-
-                update_attrs()
-
         with self.canvas.before:
             Color(0.5, 1, 0.5, 1)
             self.circle_1 = Line(circle=(150, 150, 50))
@@ -72,8 +59,6 @@ class FeeWidget(Widget):
         self.bind(b=self.update_rect)
         self.bind(c=self.update_rect)
         self.channel.bind(fee_rate_milli_msat=self.update_rect)
-
-        Thread(target=update).start()
 
     def update_rect(self, *args):
         self.to_fee_norm = min(int(self.channel.fee_rate_milli_msat) / 1000 * 30, 30)
@@ -110,12 +95,7 @@ class FeeWidget(Widget):
 
             def update_fees(*args):
                 print(f"Setting fees to: {self.channel.fee_rate_milli_msat / 1e6}")
-                Lnd().update_channel_policy(
-                    channel=self.channel,
-                    fee_rate=self.channel.fee_rate_milli_msat / 1e6,
-                    base_fee_msat=self.channel.fee_base_msat,
-                    time_lock_delta=self.channel.time_lock_delta,
-                )
+                self.channel.update_lnd_with_policies()
 
             Thread(target=update_fees).start()
             return True

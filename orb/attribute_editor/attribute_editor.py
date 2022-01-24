@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 04:57:33
+# @Last Modified time: 2022-01-24 11:03:29
 
 from threading import Thread
 
@@ -23,7 +23,6 @@ from kivy.app import App
 from orb.misc.decorators import guarded
 from orb.misc.prefs import is_rest
 from orb.misc.auto_obj import AutoObj, todict
-from orb.lnd import Lnd
 
 from orb.misc import data_manager
 
@@ -60,8 +59,6 @@ class AttributeEditor(BoxLayout):
 
     #: The currently selected channel object.
     channel = ObjectProperty(None, allownone=True)
-    #: the last_update as a NumericProperty
-    last_update = NumericProperty(0)
 
     def __init__(self, *args, **kwargs):
         """
@@ -95,41 +92,17 @@ class AttributeEditor(BoxLayout):
         if channel:
 
             @mainthread
-            def update(policy_to):
-                self.channel.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-                self.channel.time_lock_delta = policy_to.time_lock_delta
-                self.channel.min_htlc = policy_to.min_htlc
-                self.channel.max_htlc_msat = policy_to.max_htlc_msat
-                self.last_update = policy_to.last_update
-                self.channel.fee_base_msat = policy_to.fee_base_msat
+            def update(*_):
                 self.size_hint_y = None
                 if self.channel:
                     self.ids.md_list.clear_widgets()
                     self.populate_fees()
-
                     if is_rest():
                         self.populate_rest(c=self.channel.channel.__dict__)
                     else:
                         self.populate_grpc()
 
-            def get_fees():
-                @mainthread
-                def loading():
-                    self.ids.md_list.add_widget(
-                        ItemDrawer(
-                            icon="cloud-sync-outline",
-                            text="Fetching...",
-                            size_hint_y=None,
-                            height=dp(60),
-                        )
-                    )
-
-                loading()
-                policy_to = Lnd().get_policy_to(channel.chan_id)
-                if policy_to:
-                    update(policy_to)
-
-            Thread(target=get_fees).start()
+            Thread(target=update).start()
         else:
             self.clear()
 
@@ -140,12 +113,6 @@ class AttributeEditor(BoxLayout):
         """
         val = int(val.text)
         if val != self.channel.fee_rate_milli_msat:
-            Lnd().update_channel_policy(
-                channel=self.channel,
-                fee_rate=val / 1e6,
-                base_fee_msat=self.channel.fee_base_msat,
-                time_lock_delta=self.channel.time_lock_delta,
-            )
             self.channel.fee_rate_milli_msat = val
 
     @guarded
@@ -155,12 +122,6 @@ class AttributeEditor(BoxLayout):
         """
         val = int(val.text)
         if val != self.channel.fee_base_msat:
-            Lnd().update_channel_policy(
-                channel=self.channel,
-                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
-                base_fee_msat=val,
-                time_lock_delta=self.channel.time_lock_delta,
-            )
             self.channel.fee_base_msat = val
 
     @guarded
@@ -169,16 +130,8 @@ class AttributeEditor(BoxLayout):
         Invoked whenever the min HTLC is changed.
         """
         val = int(val.text)
-        if val != self.channel.min_htlc:
-            Lnd().update_channel_policy(
-                channel=self.channel,
-                time_lock_delta=self.channel.time_lock_delta,
-                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
-                base_fee_msat=self.channel.fee_base_msat,
-                min_htlc_msat=val,
-                min_htlc_msat_specified=True,
-            )
-            self.channel.min_htlc = val
+        if val != self.channel.min_htlc_msat:
+            self.channel.min_htlc_msat = val
 
     @guarded
     def max_htlc_msat_changed(self, val):
@@ -187,13 +140,6 @@ class AttributeEditor(BoxLayout):
         """
         val = int(val.text)
         if val != self.channel.max_htlc_msat:
-            Lnd().update_channel_policy(
-                channel=self.channel,
-                time_lock_delta=self.channel.time_lock_delta,
-                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
-                base_fee_msat=self.channel.fee_base_msat,
-                max_htlc_msat=val,
-            )
             self.channel.max_htlc_msat = val
 
     @guarded
@@ -203,12 +149,6 @@ class AttributeEditor(BoxLayout):
         """
         val = int(val.text)
         if val != self.channel.time_lock_delta:
-            Lnd().update_channel_policy(
-                channel=self.channel,
-                time_lock_delta=val,
-                fee_rate=self.channel.fee_rate_milli_msat / 1e6,
-                base_fee_msat=self.channel.fee_base_msat,
-            )
             self.channel.time_lock_delta = val
 
     def populate_rest(self, c):
@@ -323,7 +263,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.channel.min_htlc),
+                text=str(self.channel.min_htlc_msat),
                 helper_text="Min HTLC msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.min_htlc_changed,

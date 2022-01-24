@@ -2,13 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-09 08:21:39
+# @Last Modified time: 2022-01-24 11:10:42
 
 from traceback import print_exc
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
-from kivy.properties import ObjectProperty
+from kivy.properties import DictProperty
 
 from orb.misc.channel import Channel
 
@@ -35,8 +35,8 @@ class Channels(EventDispatcher):
     Please note this class is iterable.
     """
 
-    #: the channels as a ListProperty
-    channels = ObjectProperty({})
+    #: the channels as a DictProperty
+    channels = DictProperty({})
     #: the sorted channels chan_ids
     sorted_chan_ids = ListProperty([])
 
