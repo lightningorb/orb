@@ -12,5 +12,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   orb.screens.console.console_input
+   orb.screens.console.console_output
    orb.screens.console.console_screen
    orb.screens.console.console_splitter

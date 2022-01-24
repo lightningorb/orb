@@ -1,12 +1,19 @@
+# IOS and DESKTOP
+
+kivymd==0.104.2
+peewee==3.14.8
+python-dateutil==2.8.2
+kivy_garden.graph==0.4.0
+PyYaml==6.0
+simplejson==3.17.6
+
+# DESKTOP ONLY
+
+Kivy==2.1.0.dev0
 google-api-python-client
-kivy
 grpcio
-kivymd
-peewee
-kivy_garden.graph
-PyYaml
-ffpyplayer
-simplejson
+ffpyplayer==4.2.0
+
 
 # requirements are slowly being copied to the third_party directory
 # for security reasons.
@@ -18,31 +25,3 @@ simplejson
 # https://github.com/MicroPyramid/forex-python/tree/v1.8
 # https://github.com/dhermes/bezier/tree/2021.2.12
 # https://github.com/arshadkazmi42/currency-symbols/tree/v2.0.1
-
-#certifi==2021.10.8
-#charset-normalizer==2.0.10
-#colour==0.1.5
-#currency-symbols==2.0.1
-#docutils==0.18.1
-#et-xmlfile==1.1.0
-#ffpyplayer==4.2.0
-#forex-python==1.8
-#idna==3.3
-#ios==1.1
-#Kivy==2.1.0.dev0
-#Kivy-Garden==0.1.4
-##kivy-garden.contextmenu==0.1.0.dev1
-#kivy-garden.graph==0.4.0
-#kivymd==0.104.2
-#openpyxl==3.0.9
-#peewee==3.14.8
-#Pillow==8.2.0
-#Pygments==2.11.2
-#pyobjus==1.2.0
-#python-dateutil==2.8.2
-#PyYAML==6.0
-#qrcode==7.3.1
-#requests==2.27.1
-#simplejson==3.17.6
-#six==1.16.0
-urllib3==1.26.7

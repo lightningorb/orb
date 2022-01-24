@@ -6,6 +6,16 @@ orb.dialogs package
    :undoc-members:
    :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   orb.dialogs.app_store
+   orb.dialogs.help_dialog
+   orb.dialogs.upload_app
+
 Submodules
 ----------
 

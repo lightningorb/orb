@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-20 08:49:39
+# @Last Modified time: 2022-01-24 09:20:20
 
 import re
 import os
@@ -26,6 +26,7 @@ from build_system import appstore
 def deploy_ios(c, bump: bool = False):
     if bump:
         versioning.bump_patch(c)
+    documentation.build(c)
     release_notes.create(c)
     ios.update(c)
 

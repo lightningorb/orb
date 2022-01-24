@@ -18,6 +18,7 @@ Submodules
    orb.misc.channels
    orb.misc.colors
    orb.misc.conf_defaults
+   orb.misc.data_manager
    orb.misc.decorators
    orb.misc.enums
    orb.misc.forex
@@ -28,5 +29,4 @@ Submodules
    orb.misc.plugin
    orb.misc.prefs
    orb.misc.stoppable_thread
-   orb.misc.ui_actions
    orb.misc.utils

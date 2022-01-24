@@ -16,7 +16,7 @@ Whilst allowing external IPs to connect to your LND node may sound like a liabil
 Which leads us onto the next part.
 
 TLS cert and Macaroon use
-.........................
+-------------------------
 
 Orb does not require any specialized software installed on your LND node. It can connect to an LND node 'out of the box' (this is meant literally - you can create a testnet node on https://voltage.cloud/ and connect to it via Orb in under 2 minutes).
 

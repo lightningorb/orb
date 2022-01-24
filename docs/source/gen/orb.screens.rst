@@ -20,7 +20,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   orb.screens.about
    orb.screens.batch_open_screen
    orb.screens.channels_screen
    orb.screens.close_channel
