@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 06:16:48
+# @Last Modified time: 2022-01-26 05:42:54
 
 import uuid
-from traceback import print_exc
+from traceback import format_exc
 
 from pygments.lexers import CythonLexer
 
@@ -47,7 +47,7 @@ class ConsoleInput(CodeInput):
         try:
             exec(text)
         except:
-            print_exc()
+            print(format_exc())
 
     def run(self, *_):
         self.exec(self.text)
@@ -74,8 +74,17 @@ class ConsoleInput(CodeInput):
             "console", input_height=None, output_height=None
         )
 
+    def keyboard_on_key_up(self, window, keycode):
+        data_manager.data_man.store.put("console_input", text=self.text)
+        if self.do_eval:
+            self.exec(self.selection_text)
+            return True
+        return super(ConsoleInput, self).keyboard_on_key_up(window, keycode)
+
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         meta = "meta" in modifiers
+        if meta and keycode[1] == "q":
+            return False
         direction = (
             keycode[1]
             if keycode and keycode[1] in ("left", "right", "up", "down")
@@ -91,15 +100,9 @@ class ConsoleInput(CodeInput):
             elif direction == "right":
                 line = self.text.split("\n")[self.cursor_row]
                 self._cursor = (len(line) - 1, self._cursor[1])
-
-        if text != "\u0135":
-            to_save = self.text + (text or "")
-            do_eval = keycode[1] == "enter" and self.selection_text
-
-            data_manager.data_man.store.put("console_input", text=to_save)
-            if do_eval:
-                self.exec(self.selection_text)
-                return True
+        self.do_eval = keycode[1] == "enter" and self.selection_text
+        if self.do_eval:
+            return False
         return super(ConsoleInput, self).keyboard_on_key_down(
             window, keycode, text, modifiers
         )
