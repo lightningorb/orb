@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 11:03:29
+# @Last Modified time: 2022-01-26 03:50:08
 
 from threading import Thread
 
@@ -23,6 +23,7 @@ from kivy.app import App
 from orb.misc.decorators import guarded
 from orb.misc.prefs import is_rest
 from orb.misc.auto_obj import AutoObj, todict
+from orb.lnd import Lnd
 
 from orb.misc import data_manager
 
