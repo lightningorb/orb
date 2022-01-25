@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 07:48:41
+# @Last Modified time: 2022-01-26 03:00:32
 
 from pathlib import Path
 
@@ -73,7 +73,7 @@ class DataManager(EventDispatcher):
         Save the certificate to an file. This is required for
         requests over rest.
         """
-        with open(cert_path(), "w") as f:
+        with open(cert_path().as_posix(), "w") as f:
             cert_secure = CertificateSecure.init_from_encrypted(
                 pref("lnd.tls_certificate").encode()
             )

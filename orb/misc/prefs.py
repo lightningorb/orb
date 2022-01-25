@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 13:36:02
+# @Last Modified time: 2022-01-26 03:03:22
 
 from orb.misc.utils import *
 from pathlib import Path
@@ -53,9 +53,9 @@ def cert_path():
     """
     if desktop:
         app = App.get_running_app()
-        return (Path(app.user_data_dir) / pref("path.cert") / "tls.cert").as_posix()
+        return Path(app.user_data_dir) / pref("path.cert") / "tls.cert"
     else:
-        return (Path(tempfile.gettempdir()) / "f66d6b24ccfb").as_posix()
+        return Path(tempfile.gettempdir()) / "f66d6b24ccfb"
 
 
 def inverted_channels():

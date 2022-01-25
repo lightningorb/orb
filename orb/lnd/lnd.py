@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 17:21:19
+# @Last Modified time: 2022-01-26 03:00:23
 
 from orb.misc.utils import pref
 from traceback import print_exc
@@ -70,7 +70,7 @@ def Lnd():
             app = App.get_running_app()
             data_dir = app.user_data_dir
             lnd[protocol] = LndREST(
-                tls_certificate=cert_path(),
+                tls_certificate=cert_path().as_posix(),
                 server=pref("lnd.hostname"),
                 network=pref("lnd.network"),
                 macaroon=mac,

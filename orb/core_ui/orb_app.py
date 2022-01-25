@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 20:08:13
+# @Last Modified time: 2022-01-26 03:01:09
 
 import os
 import sys
@@ -29,6 +29,7 @@ from orb.misc.decorators import guarded
 from orb.core_ui.main_layout import MainLayout
 from orb.logic import thread_manager
 from orb.misc.utils import pref_path, desktop
+from orb.misc.prefs import cert_path
 
 from orb.misc import data_manager
 
@@ -169,6 +170,9 @@ class OrbApp(MDApp):
         """
         Perform required tasks before app exists.
         """
+        if cert_path().is_file():
+            print("Deleting TLS cert")
+            os.unlink(cert_path().as_posix())
         thread_manager.thread_manager.stop_threads()
 
     def on_pause(self):
