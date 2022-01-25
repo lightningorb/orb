@@ -8,7 +8,6 @@ import os
 import sys
 from traceback import print_exc
 from textwrap import dedent
-from pathlib import Path
 import shutil
 
 from kivy.properties import BooleanProperty
@@ -35,7 +34,7 @@ class Apps(EventDispatcher):
     def load_from_disk(self):
         apps_dir = pref_path("app")
         for plugin_info_file in apps_dir.glob("*/appinfo.yaml"):
-            app = App(plugin_info_file)
+            app = LocalApp(plugin_info_file)
             self.apps[app.uuid] = app
 
     def load_all_apps(self):
@@ -77,7 +76,7 @@ class Apps(EventDispatcher):
             file.extractall(dest_path.as_posix())
         info_file = dest_path / "appinfo.yaml"
         if info_file.is_file():
-            app = App(info_file)
+            app = LocalApp(info_file)
             app._import()
             app.load()
             print(f"Installed.")
@@ -103,7 +102,7 @@ class RemoteApp(EventDispatcher):
         self.icon = API().get_icon_path(self.uuid)
 
 
-class App(EventDispatcher):
+class LocalApp(EventDispatcher):
 
     installed = BooleanProperty(True)
 
