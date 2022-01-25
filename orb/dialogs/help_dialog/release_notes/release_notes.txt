@@ -1,5 +1,27 @@
-0.6.0
+0.7.0
 ----
+
+when quitting the app from the console, it saves the 'q' character in the buffer #166 the console doesn't save the last input #165
+When in the console, trouble going back to channels screen #161
+[dev] import Lnd in attributes editor to resolve "offline" label being displayed
+mouse down event in the channels widget overrides node background color #98
+Update issue templates
+delete tls.cert on app exit #162
+likely forgot to check in [dev]
+removed old code [dev]
+updated build system [dev]
+updated SECURITY.md
+encrypt tls cert and macroon in orb.ini file #152
+save tls.cert into a temp file, not main data directory #151
+channel policies now entirely managed by the Channel class [dev]
+in app store server, repo ref before use [dev]
+docs
+write SECURITY.md #154
+organizing files in appstore [dev]
+
+
+v0.6.0
+------
 
 appstore app icons, and appstore login dialog
 Changing channel fees isn't reflected in fee gizmo #27

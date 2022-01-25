@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 03:00:23
+# @Last Modified time: 2022-01-26 06:00:40
 
 from orb.misc.utils import pref
 from traceback import print_exc
@@ -38,7 +38,6 @@ def Lnd():
             pref("lnd.macaroon_admin").encode()
         )
         mac = mac_secure.as_plain_macaroon().macaroon.decode()
-        print(mac)
 
     if lnd.get(protocol) is None:
         if protocol == None:

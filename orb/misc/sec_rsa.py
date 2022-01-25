@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 19:57:36
+# @Last Modified time: 2022-01-26 06:39:55
 
 
 import uuid
@@ -14,11 +14,7 @@ import os
 import random
 from traceback import format_exc
 from orb.misc.utils import desktop
-
-try:
-    import plyer
-except:
-    pass
+import plyer
 
 
 def read_random_bits(nbits: int) -> bytes:
@@ -73,11 +69,9 @@ def decrypt_long(encrypted_message, private_key):
 
 
 def get_sec_keys():
-    if desktop:
-        node = uuid.getnode()
-    else:
-        node = plyer.uniqueid.id
-    random.seed(f"{node}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
+    random.seed(
+        f"{plyer.uniqueid.id}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b"
+    )
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)
     return priv.save_pkcs1(), pub.save_pkcs1()
 

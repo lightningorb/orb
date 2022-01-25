@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 18:06:25
+# @Last Modified time: 2022-01-26 05:59:44
 
 
 import base64
@@ -58,7 +58,6 @@ class ConnectionSettings(PopupDropShadow):
     def validate_cert(self, text):
         cert_secure = CertificateSecure.init_from_encrypted(text.encode())
         cert = cert_secure.as_plain_certificate()
-        print(cert.cert)
         self.ids.feedback.text = cert.debug()
 
     def save_cert(self, text):
@@ -93,7 +92,6 @@ class ConnectionSettings(PopupDropShadow):
     def validate_macaroon(self, text):
         mac_secure = MacaroonSecure.init_from_encrypted(text.encode())
         mac = mac_secure.as_plain_macaroon()
-        print(mac.macaroon.decode())
         self.ids.mac_feedback.text = mac.debug()
 
     @guarded
