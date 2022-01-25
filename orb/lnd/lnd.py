@@ -2,14 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 12:17:20
+# @Last Modified time: 2022-01-25 17:21:19
 
 from orb.misc.utils import pref
 from traceback import print_exc
 from kivy.app import App
 import os
 
-from orb.misc.certificate import Certificate
+from orb.misc.certificate_secure import CertificateSecure
+from orb.misc.macaroon_secure import MacaroonSecure
 from orb.misc.prefs import cert_path
 
 lnd = {}
@@ -21,12 +22,23 @@ class Protocol:
     grpc = "grpc"
 
 
+mac = None
+
+
 def Lnd():
     """
     Return the appropriate Lnd class based on protocol.
     """
+    global mac
 
     protocol = pref("lnd.protocol")
+
+    if not mac:
+        mac_secure = MacaroonSecure.init_from_encrypted(
+            pref("lnd.macaroon_admin").encode()
+        )
+        mac = mac_secure.as_plain_macaroon().macaroon.decode()
+        print(mac)
 
     if lnd.get(protocol) is None:
         if protocol == None:
@@ -37,7 +49,10 @@ def Lnd():
             from orb.lnd.lnd_grpc import LndGRPC
 
             try:
-                cert = Certificate.init_from_str(cert_path())
+                cert_secure = CertificateSecure.init_from_encrypted(
+                    pref("lnd.tls_certificate").encode()
+                )
+                cert = cert_secure.as_plain_certificate()
                 lnd[protocol] = LndGRPC(
                     tls_certificate=cert.reformat(),
                     server=pref("lnd.hostname"),
@@ -58,7 +73,7 @@ def Lnd():
                 tls_certificate=cert_path(),
                 server=pref("lnd.hostname"),
                 network=pref("lnd.network"),
-                macaroon=pref("lnd.macaroon_admin"),
+                macaroon=mac,
                 port=int(pref("lnd.rest_port")),
             )
         elif pref("lnd.protocol") == Protocol.mock:

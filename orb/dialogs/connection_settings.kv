@@ -130,7 +130,7 @@
                 MDIconButton:
                     icon: "content-copy"
                     size_hint_y: 0.2
-                    on_release: Clipboard.copy("""python3 -c 'import base64; print(base64.b64encode(open(".lnd/tls.cert").read().encode()).decode())'""")
+                    on_release: root.copy_cert_encrypt_command()
                 TextInput:
                     id: tls_cert
                     text: root.get_cert()
@@ -165,7 +165,7 @@
                 MDIconButton:
                     icon: "content-copy"
                     size_hint_y: 0.2
-                    on_release: Clipboard.copy("""python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'""")
+                    on_release: root.copy_mac_encrypt_command()
                 TextInput:
                     id: macaroon
                     text: root.get_macaroon()

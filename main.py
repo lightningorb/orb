@@ -2,11 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 21:15:48
+# @Last Modified time: 2022-01-25 17:37:11
 
 import sys
 import os
 from pathlib import Path
+
+# os.environ["KIVY_AUDIO"] = "ffpyplayer"
+# os.environ["KIVY_VIDEO"] = "ffpyplayer"
+
 from kivy.utils import platform
 
 if platform == "macosx":
@@ -82,4 +86,23 @@ keep(HUDS)
 keep(ConnectionSettings)
 
 if __name__ == "__main__":
+    import unittest
+
+    print("TESTING CERTIFICATE")
+    from tests.test_certificate import TestCertificate
+
+    print("TESTING MACAROON")
+    from tests.test_macaroon import TestMacaroon
+
+    print("TESTING RSA")
+    from tests.test_sec_rsa import TestSec
+
+    print("TESTING MACAROON RSA")
+    from tests.test_macaroon_secure import TestMacaroonSecure
+
+    print("TESTING CERTIFICATE RSA")
+    from tests.test_certificate_secure import TestCertificateSecure
+
+    unittest.main(exit=False)
+
     OrbApp().run()

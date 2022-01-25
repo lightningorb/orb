@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 13:51:02
+# @Last Modified time: 2022-01-25 20:08:13
 
 import os
 import sys
@@ -20,6 +20,7 @@ from kivy.utils import platform
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 
+from orb.misc.utils import pref
 from orb.logic.app_store import Apps
 from orb.misc.monkey_patch import do_monkey_patching
 from orb.misc.conf_defaults import set_conf_defaults
@@ -175,14 +176,33 @@ class OrbApp(MDApp):
         Perform required tasks before app goes on pause
         e.g saving to disk.
         """
-        pass
+        return True
 
     def on_resume(self):
         """
         Perform required tasks before app resumes
         e.g restoring data from disk.
         """
-        pass
+        return True
+
+    def check_cert_and_mac(self):
+        from orb.misc.certificate import Certificate
+        from orb.misc.certificate_secure import CertificateSecure
+
+        from orb.misc.macaroon import Macaroon
+        from orb.misc.macaroon_secure import MacaroonSecure
+
+        cert = Certificate.init_from_str(pref("lnd.tls_certificate"))
+        if cert.is_well_formed():
+            cert_secure = CertificateSecure.init_from_plain(cert.cert)
+            self.config["lnd"]["tls_certificate"] = cert_secure.cert_secure.decode()
+            self.config.write()
+
+        mac = Macaroon.init_from_str(pref("lnd.macaroon_admin"))
+        if mac.is_well_formed():
+            mac_secure = MacaroonSecure.init_from_plain(mac.macaroon.encode())
+            self.config["lnd"]["macaroon_admin"] = mac_secure.macaroon_secure.decode()
+            self.config.write()
 
     def build(self):
         """
@@ -190,16 +210,14 @@ class OrbApp(MDApp):
         """
         self.override_stdout()
         self.make_dirs()
-
+        self.check_cert_and_mac()
         self.load_kvs()
         data_manager.data_man = data_manager.DataManager()
         window_sizes = Window.size
-
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
         self.icon = "orb.png"
         self.main_layout = MainLayout()
-
         return self.main_layout
 
     def build_config(self, config):

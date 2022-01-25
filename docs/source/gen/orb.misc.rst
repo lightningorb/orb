@@ -14,6 +14,7 @@ Submodules
 
    orb.misc.auto_obj
    orb.misc.certificate
+   orb.misc.certificate_secure
    orb.misc.channel
    orb.misc.channels
    orb.misc.colors
@@ -23,10 +24,13 @@ Submodules
    orb.misc.enums
    orb.misc.forex
    orb.misc.macaroon
+   orb.misc.macaroon_secure
    orb.misc.mempool
    orb.misc.monkey_patch
    orb.misc.output
    orb.misc.plugin
    orb.misc.prefs
+   orb.misc.sec
+   orb.misc.sec_rsa
    orb.misc.stoppable_thread
    orb.misc.utils

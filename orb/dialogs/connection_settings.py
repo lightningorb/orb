@@ -2,18 +2,27 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-13 08:09:11
+# @Last Modified time: 2022-01-25 18:06:25
+
+
+import base64
+import binascii
+
 
 from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.app import App
+from kivy.core.clipboard import Clipboard
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 from orb.misc.utils import pref
 from orb.misc.utils import mobile
 from orb.misc.certificate import Certificate
+from orb.misc.certificate_secure import CertificateSecure
 from orb.misc.macaroon import Macaroon
+from orb.misc.macaroon_secure import MacaroonSecure
+from orb.misc.sec_rsa import get_sec_keys, get_cert_command, get_mac_command
 
 
 class Tab(MDFloatLayout, MDTabsBase):
@@ -47,39 +56,57 @@ class ConnectionSettings(PopupDropShadow):
             self.ids.mock.active = False
 
     def validate_cert(self, text):
-        cert = Certificate.init_from_not_sure(text)
+        cert_secure = CertificateSecure.init_from_encrypted(text.encode())
+        cert = cert_secure.as_plain_certificate()
+        print(cert.cert)
         self.ids.feedback.text = cert.debug()
 
     def save_cert(self, text):
         key = "lnd.tls_certificate"
-        cert = Certificate.init_from_not_sure(text)
+        cert_secure = CertificateSecure.init_from_encrypted(text.encode())
+        cert = cert_secure.as_plain_certificate()
         if cert.is_well_formed():
-            self.set_and_save(key, cert.reformat())
+            self.set_and_save(key, cert_secure.cert_secure.decode())
         else:
             self.ids.feedback.text = cert.debug()
 
     def get_cert(self):
-        cert = Certificate.init_from_str(pref("lnd.tls_certificate"))
+        cert_secure = CertificateSecure.init_from_encrypted(
+            pref("lnd.tls_certificate").encode()
+        )
+        cert = cert_secure.as_plain_certificate()
         if cert.is_well_formed():
-            return cert.reformat()
+            return cert_secure.cert_secure.decode()
         else:
             self.ids.feedback.text = cert.debug()
             return ""
 
     def get_macaroon(self):
-        mac = Macaroon.init_from_str(pref("lnd.macaroon_admin"))
-        return mac.macaroon
+        mac = MacaroonSecure.init_from_encrypted(pref("lnd.macaroon_admin").encode())
+        return mac.macaroon_secure
 
     def save_macaroon(self, text):
         key = "lnd.macaroon_admin"
-        mac = Macaroon.init_from_not_sure(text)
-        self.set_and_save(key, mac.macaroon)
+        mac_secure = MacaroonSecure.init_from_encrypted(text.encode())
+        self.set_and_save(key, mac_secure.macaroon_secure.decode())
 
     def validate_macaroon(self, text):
-        mac = Macaroon.init_from_not_sure(text)
+        mac_secure = MacaroonSecure.init_from_encrypted(text.encode())
+        mac = mac_secure.as_plain_macaroon()
+        print(mac.macaroon.decode())
         self.ids.mac_feedback.text = mac.debug()
 
     @guarded
     def on_tab_switch(self, instance_tabs, instance_tab, instance_tab_label, tab_text):
         if tab_text == "TLS Certificate":
             self.validate_cert(pref("lnd.tls_certificate"))
+        if tab_text == "Macaroon":
+            self.validate_macaroon(pref("lnd.macaroon_admin"))
+
+    def copy_cert_encrypt_command(self):
+        _, public_key = get_sec_keys()
+        Clipboard.copy(get_cert_command(public_key))
+
+    def copy_mac_encrypt_command(self):
+        _, public_key = get_sec_keys()
+        Clipboard.copy(get_mac_command(public_key))

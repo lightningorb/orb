@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 12:16:54
+# @Last Modified time: 2022-01-25 07:48:41
 
 from pathlib import Path
 
@@ -16,6 +16,7 @@ from orb.misc.channels import Channels
 from orb.lnd.lnd import Lnd
 from orb.misc.utils import pref
 from orb.misc.prefs import cert_path
+from orb.misc.certificate_secure import CertificateSecure
 
 
 class DataManager(EventDispatcher):
@@ -73,7 +74,11 @@ class DataManager(EventDispatcher):
         requests over rest.
         """
         with open(cert_path(), "w") as f:
-            f.write(pref("lnd.tls_certificate"))
+            cert_secure = CertificateSecure.init_from_encrypted(
+                pref("lnd.tls_certificate").encode()
+            )
+            cert = cert_secure.as_plain_certificate()
+            f.write(cert.cert)
 
 
 data_man = None
