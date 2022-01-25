@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 03:00:32
+# @Last Modified time: 2022-01-26 04:24:24
 
 from pathlib import Path
 
@@ -30,6 +30,7 @@ class DataManager(EventDispatcher):
     """
 
     show_chords = BooleanProperty(False)
+    menu_visible = BooleanProperty(False)
     show_chord = NumericProperty(0)
     chords_direction = NumericProperty(0)
     channels_widget_ux_mode = NumericProperty(0)

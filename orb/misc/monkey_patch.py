@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-19 05:19:20
+# @Last Modified time: 2022-01-26 04:33:16
 
 from orb.misc import data_manager
 
@@ -190,4 +190,3 @@ def do_monkey_patching():
     patch_kv_settings()
     patch_datatables()
     patch_text_input()
-    patch_context_menu()
