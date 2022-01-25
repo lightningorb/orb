@@ -1,7 +1,7 @@
 SECURITY.md
 ===========
 
-Orb is currently considered secure; there are however some further improvements that can be made; they're covered at the end of this document.
+Orb takes significant steps to ensure safety for its users and their node, and is, as such, deemed secure; there are however some further improvements that can be made; they're covered at the end of this document.
 
 Responsibilities that fall on the user
 --------------------------------------
@@ -68,23 +68,25 @@ An issue has been logged for integrating the remaining third-party libraries:
 
 move remaining third party python modules into the code repo and audit them #153
 
-Macaroon copy
--------------
+Cert and Macaroon Encryption
+----------------------------
 
-Currently the macaroon is saved in ascii form in orb.ini. This is an area that needs improving, and has been logged under issue:
+Orb takes significant steps to store your TLS certificate and macaroon securely.
 
-encrypt tls cert and macroon in orb.ini file #152
+The TLS certificate, and Macaroon are encrypted (and stored in orb.ini) with an RSA key that is unique to your device. As such, in the highly unlikely event a bad actor were to acquire your orb.ini file, directly from your device, they would still be unable to decrypt your certificate and macaroon without the private key, which is internal to Orb, and not stored anywhere.
 
-Ideally the macaroon ought to be encrypted using the device's mac address and some entropy, for example.
+This however means a sophisticated bad actor with an intimate knowledge of Orb's source-code (which is available in the app via inspection) and of your device's hardware IDs would still be capable of generating the private key.
+
+This makes attacks via app-store apps still, unfortunately, feasible. App store app attacks are covered later in this document.
 
 Cert copy
 ---------
 
-Currently the tls certificate is saved in ascii form in orb.ini, as well as in its own tls.cert file in Orb's app-data folder. This is an area that needs improvement, and has been logged under issues:
+Unfortunately the python requests library requires the TLS certificate to be stored on disk. This is a known weakness / vulnerability with no clear or easy workaround.
 
-save tls.cert into a temp file, not main data directory #151
-encrypt tls cert and macroon in orb.ini file #152
+Orb only creates the file at startup, and deletes it on exit. On mobile it creates it in a temporary folder that is only accessible by Orb.
 
+On Desktop this tls.cert file is stored in the user's data directory/certs and is also deleted on exit.
 
 App-Store
 ---------
