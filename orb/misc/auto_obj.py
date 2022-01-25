@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-19 16:17:22
+# @Last Modified time: 2022-01-25 16:33:12
 
 import json
 
@@ -133,29 +133,3 @@ def todict(obj, classkey=None):
         return data
     else:
         return obj
-
-
-if __name__ == "__main__":
-    # import doctest
-
-    # doctest.testmod()
-    print(
-        dict2obj(
-            [
-                {
-                    "id": 2,
-                    "uuid": "3aa44f15-0afa-407f-8e11-2b5bfadb2ad4",
-                    "name": "Todo",
-                    "owner_id": 1,
-                    "description": "A simple todo app",
-                },
-                {
-                    "id": 3,
-                    "uuid": "05d24c8e-b6eb-4f0a-937d-d5dce68a89d4",
-                    "name": "Today Top",
-                    "owner_id": 1,
-                    "description": "App that displays today's top earning routes",
-                },
-            ]
-        )
-    )
