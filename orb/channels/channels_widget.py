@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 04:17:49
+# @Last Modified time: 2022-01-26 03:26:44
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -16,7 +16,7 @@ from orb.logic.htlcs_thread import HTLCsThread
 from orb.channels.channels_thread import ChannelsThread
 from orb.channels.CN_widget import CNWidget
 from orb.widgets.node import Node
-from orb.misc.utils import pref
+from orb.misc.utils import pref, prefs_col
 from orb.misc.prefs import is_mock
 from orb.misc.decorators import guarded
 from orb.widgets.chord_widget import ChordWidget
@@ -111,6 +111,9 @@ class ChannelsWidget(ScatterLayout):
         return super(ChannelsWidget, self).on_touch_up(touch)
 
     def on_touch_down(self, touch):
+        """
+        Touch down event in the channels widget.
+        """
         if data_manager.data_man.menu_visible:
             return False
         if self.mode == ChannelsWidgetUXMode.gestures:
@@ -126,7 +129,7 @@ class ChannelsWidget(ScatterLayout):
         else:
             App.get_running_app().selection = None
             if self.node:
-                self.node.col = [80 / 255, 80 / 255, 80 / 255, 1]
+                self.node.col = prefs_col("display.node_background_color")
             for cn in self.cn.values():
-                cn.b.col = [80 / 255, 80 / 255, 80 / 255, 1]
+                cn.b.col = prefs_col("display.node_background_color")
         super(ChannelsWidget, self).on_touch_down(touch)
