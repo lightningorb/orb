@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 10:19:21
+# @Last Modified time: 2022-01-24 10:21:55
 
 from invoke import task
 import os
@@ -43,6 +43,10 @@ def clone(c, branch=None):
         c.run("git pull")
         if branch:
             c.run("git checkout appstore3")
+            c.run("git pull")
+        else:
+            c.run("git checkout main")
+            c.run("git pull")
 
 
 @task

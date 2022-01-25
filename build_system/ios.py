@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 08:07:10
+# @Last Modified time: 2022-01-25 20:53:11
 
 import os
 import re
@@ -34,7 +34,7 @@ def copy_files(c):
     c.run("rm -rf /tmp/lnorb/")
     c.run("mkdir -p /tmp/lnorb/")
     c.run(
-        "cp -r third_party main.py images/ln.png images docs/docsbuild orb user video_library.yaml images/orb.png /tmp/lnorb/"
+        "cp -r tests third_party main.py images/ln.png images docs orb user video_library.yaml images/orb.png /tmp/lnorb/"
     )
 
 
@@ -85,12 +85,36 @@ def create(c, env=dict(PATH=os.environ["PATH"])):
 
 
 @task
-def install_stack(c, env=dict(PATH=os.environ["PATH"])):
+def toolchain_pip(c, env=dict(PATH=os.environ["PATH"])):
     with c.cd("build"):
+        c.run("toolchain pip3 install kivymd==0.104.2", env=env)
+        c.run("toolchain pip3 install peewee==3.14.8", env=env)
+        c.run("toolchain pip3 install python-dateutil==2.8.2", env=env)
+        c.run("toolchain pip3 install kivy_garden.graph==0.4.0", env=env)
+        c.run("toolchain pip3 install PyYaml==6.0", env=env)
+        c.run("toolchain pip3 install simplejson==3.17.6", env=env)
+        c.run("toolchain pip3 install pycryptodome", env=env)
+
+
+@task
+def toolchain_build(c, env=dict(PATH=os.environ["PATH"])):
+    with c.cd("build"):
+        c.run("toolchain build openssl", env=env)
+        c.run("toolchain build ffmpeg", env=env)
         c.run("toolchain build kivy", env=env)
         c.run("toolchain build python3", env=env)
         c.run("toolchain build pillow", env=env)
-        c.run("toolchain build sdl2", env=env)
-        c.run("toolchain build sdl2_mixer", env=env)
         c.run("toolchain build ffpyplayer", env=env)
         c.run("toolchain build libzbar", env=env)
+        c.run("toolchain build audiostream", env=env)
+        c.run("toolchain build pyyaml", env=env)
+        c.run("toolchain build plyer", env=env)
+
+
+@task
+def toolchain(c, env=dict(PATH=os.environ["PATH"], clean=False)):
+    if clean:
+        with c.cd("build"):
+            c.run("toolchain distclean", en=env)
+    toolchain_build(c, env)
+    toolchain_pip(c, env)
