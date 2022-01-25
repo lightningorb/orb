@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 04:33:16
+# @Last Modified time: 2022-01-26 05:58:10
 
 from orb.misc import data_manager
 
@@ -182,6 +182,16 @@ def patch_text_input():
             data_manager.data_man.disable_shortcuts = False
 
     TextInput.on_focus = on_focus
+
+    TextInput._orig_draw_selection = TextInput._draw_selection
+
+    def draw_selection(self, *largs):
+        try:
+            self._orig_draw_selection(*largs)
+        except:
+            pass
+
+    TextInput._draw_selection = draw_selection
 
 
 def do_monkey_patching():
