@@ -185,7 +185,7 @@
          "capacity",
          "total-sent",
          "total-received",
-         "out-ppm",
+         "out-ppm"
       ]
    },
    {
