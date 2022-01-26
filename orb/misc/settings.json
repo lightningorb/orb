@@ -176,6 +176,20 @@
    },
    {
       "type":"options",
+      "title":"Channel Sort Criteria",
+      "desc":"Sort channels by",
+      "section":"display",
+      "key":"channel_sort_criteria",
+      "options":[
+         "ratio",
+         "capacity",
+         "total-sent",
+         "total-received",
+         "out-ppm",
+      ]
+   },
+   {
+      "type":"options",
       "title":"Primary Palette",
       "desc":"Primary UI Palette",
       "section":"display",

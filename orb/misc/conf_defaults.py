@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 19:05:21
+# @Last Modified time: 2022-01-26 09:21:53
 
 
 def set_conf_defaults(config):
@@ -20,6 +20,7 @@ def set_conf_defaults(config):
     config.set("display", "show_sent_received", 1)
     config.set("display", "channel_opacity", 0.3)
     config.set("display", "channels_background_color", "#000003")
+    config.set("display", "channel_sort_criteria", "ratio")
     config.set("display", "1m_color", "#64ff64ff")
     config.set("display", "node_background_color", "#505050")
     config.set("display", "node_selected_background_color", "#969696")

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-20 12:19:14
+# @Last Modified time: 2022-01-26 09:25:46
 
 from pathlib import Path
 
@@ -32,6 +32,14 @@ def pref(name):
             return float(app.config[section][key])
         except:
             return app.config[section][key]
+
+
+def set_string_pref(name, val):
+    app = App.get_running_app()
+    if app:
+        section, key = name.split(".")
+    app.config[section][key] = val
+    app.config.write()
 
 
 def pref_path(name):

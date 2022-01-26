@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 11:10:42
+# @Last Modified time: 2022-01-26 09:35:23
 
 from traceback import print_exc
 
@@ -11,6 +11,7 @@ from kivy.properties import ListProperty
 from kivy.properties import DictProperty
 
 from orb.misc.channel import Channel
+from orb.misc.utils import pref
 
 
 class Channels(EventDispatcher):
@@ -69,14 +70,20 @@ class Channels(EventDispatcher):
         """
         Sort channel data based on channel ratio.
         """
-        pending_out = lambda x: sum(
-            int(p.amount) for p in x.pending_htlcs if not p.incoming
-        )
+
+        sorter = {
+            "ratio": (
+                lambda x: self.channels[x].local_balance_include_pending
+                / self.channels[x].capacity
+            ),
+            "capacity": lambda x: self.channels[x].capacity,
+            "total-sent": lambda x: self.channels[x].total_satoshis_sent,
+            "total-received": lambda x: self.channels[x].total_satoshis_received,
+            "out-ppm": lambda x: self.channels[x].fee_rate_milli_msat,
+        }
+
         self.sorted_chan_ids.sort(
-            key=lambda x: (
-                int(self.channels[x].local_balance) + pending_out(self.channels[x])
-            )
-            / int(self.channels[x].capacity),
+            key=sorter[pref("display.channel_sort_criteria")],
             reverse=True,
         )
 

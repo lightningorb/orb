@@ -15,6 +15,7 @@
 #:import CloseChannel orb.screens.close_channel.CloseChannel
 #:import Rebalance orb.screens.rebalance.Rebalance
 #:import prefs_col orb.misc.utils.prefs_col
+#:import set_string_pref orb.misc.utils.set_string_pref
 #:import view_forwarding_history orb.dialogs.forwarding_history.view_forwarding_history
 #:import graph_fees_earned orb.dialogs.forwarding_history.graph_fees_earned
 #:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
@@ -118,6 +119,26 @@
                         ContextMenuTextItem:
                             text: "Fee Distribution"
                             on_release: (app_menu.close_all(), FeeDistribution().open())
+                ContextMenuTextItem:
+                    text: "Sort Channels"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "ratio"
+                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                        ContextMenuTextItem:
+                            text: "capacity"
+                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
+                        ContextMenuTextItem:
+                            text: "total-sent"
+                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
+                        ContextMenuTextItem:
+                            text: "total-received"
+                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
+                        ContextMenuTextItem:
+                            text: "out-ppm"
+                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
+
+
         AppMenuTextItem:
             text: "On-Chain"
             ContextMenu:
