@@ -1,6 +1,14 @@
-0.7.0
+0.8.0
 ----
 
+Feature Request - Channel sort options #167
+
+
+v0.7.0
+------
+
+version bump
+Kivy selection handles crash orb #157
 when quitting the app from the console, it saves the 'q' character in the buffer #166 the console doesn't save the last input #165
 When in the console, trouble going back to channels screen #161
 [dev] import Lnd in attributes editor to resolve "offline" label being displayed

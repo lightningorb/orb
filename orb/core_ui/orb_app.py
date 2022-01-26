@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 03:01:09
+# @Last Modified time: 2022-01-26 10:31:04
 
 import os
 import sys
@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from traceback import print_exc
 from importlib import __import__
+from threading import Thread
 import shutil
 from collections import deque
 
@@ -180,6 +181,7 @@ class OrbApp(MDApp):
         Perform required tasks before app goes on pause
         e.g saving to disk.
         """
+        print("pausing")
         return True
 
     def on_resume(self):
@@ -187,6 +189,16 @@ class OrbApp(MDApp):
         Perform required tasks before app resumes
         e.g restoring data from disk.
         """
+        print("resuming")
+        print("fast forwarding events")
+        self.main_layout.do_layout()
+
+        def update_chans():
+            print("updating channels")
+            data_manager.data_man.channels.get()
+            print("channels updated")
+
+        Thread(target=update_chans).start()
         return True
 
     def check_cert_and_mac(self):
