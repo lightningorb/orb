@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 09:20:20
+# @Last Modified time: 2022-01-26 18:42:08
 
 import re
 import os
@@ -14,6 +14,7 @@ fix_annotations()
 from build_system import third_party
 from build_system import versioning
 from build_system import ios
+from build_system import osx
 from build_system import tags
 from build_system import submodules
 from build_system import documentation
@@ -36,6 +37,7 @@ namespace = Collection(
     third_party,
     versioning,
     ios,
+    osx,
     submodules,
     documentation,
     test,

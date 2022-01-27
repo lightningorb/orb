@@ -1,3 +1,7 @@
+pyarmor*
+*.spec
+*.dmg
+dist
 icons
 tmp
 *.cer

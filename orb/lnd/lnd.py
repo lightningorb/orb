@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 06:00:40
+# @Last Modified time: 2022-01-27 13:19:32
 
 from orb.misc.utils import pref
 from traceback import print_exc
@@ -56,7 +56,7 @@ def Lnd():
                     tls_certificate=cert.reformat(),
                     server=pref("lnd.hostname"),
                     network=pref("lnd.network"),
-                    macaroon=pref("lnd.macaroon_admin"),
+                    macaroon=mac,
                 )
             except:
                 print(print_exc())

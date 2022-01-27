@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 18:42:45
+# @Last Modified time: 2022-01-27 13:26:00
 import sys
 import base64
 import os
 from functools import lru_cache
 from traceback import print_exc
+from threading import Lock
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
 from orb.misc.channel import Channel
@@ -28,6 +29,9 @@ except:
     print_exc()
 
 MESSAGE_SIZE_MB = 50 * 1024 * 1024
+
+
+edge_mutex = Lock()
 
 
 class LndGRPC(LndBase):
@@ -162,7 +166,8 @@ class LndGRPC(LndBase):
 
     # @lru_cache(maxsize=None)
     def get_edge(self, channel_id):
-        return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
+        with edge_mutex:
+            return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
 
     def get_policy_to(self, channel_id):
         edge = self.get_edge(channel_id)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 17:37:11
+# @Last Modified time: 2022-01-27 17:25:06
 
 import sys
 import os
@@ -16,6 +16,10 @@ from kivy.utils import platform
 if platform == "macosx":
     os.environ["KIVY_DPI"] = "240"
     os.environ["KIVY_METRICS_DENSITY"] = "1.5"
+    # import fabric
+    # import pandas
+    # import numpy
+    # import matplotlib
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -54,11 +58,21 @@ from orb.dialogs.connection_settings import ConnectionSettings
 from orb.lnd import Lnd
 from orb.widgets.hud.HUD import HUD
 from orb.widgets.hud import HUDS
-
+from orb.dialogs.app_store import TipDialog
+from orb.dialogs.mail_dialog import MailDialog
 from orb.core_ui.main_layout import MainLayout
 from orb.status_line.status_line import StatusLine
+
 from orb.core_ui.top_menu import TopMenu
 from orb.logic.cron import cron
+from orb.screens.new_address_screen import NewAddress
+from orb.screens.batch_open_screen import BatchOpenScreen
+from orb.dialogs.fee_distribution import FeeDistribution
+from orb.dialogs.help_dialog.about.about import About
+from orb.dialogs.upload_app import UploadAppDialog
+
+import colour
+from kivymd.effects.stiffscroll import StiffScrollEffect
 
 keep = lambda _: _
 
@@ -84,25 +98,34 @@ keep(AttributeEditor)
 keep(HUD)
 keep(HUDS)
 keep(ConnectionSettings)
+keep(StiffScrollEffect)
+keep(colour)
+keep(TipDialog)
+keep(MailDialog)
+keep(NewAddress)
+keep(BatchOpenScreen)
+keep(FeeDistribution)
+keep(About)
+keep(UploadAppDialog)
 
 if __name__ == "__main__":
-    import unittest
+    # import unittest
 
-    print("TESTING CERTIFICATE")
-    from tests.test_certificate import TestCertificate
+    # print("TESTING CERTIFICATE")
+    # from tests.test_certificate import TestCertificate
 
-    print("TESTING MACAROON")
-    from tests.test_macaroon import TestMacaroon
+    # print("TESTING MACAROON")
+    # from tests.test_macaroon import TestMacaroon
 
-    print("TESTING RSA")
-    from tests.test_sec_rsa import TestSec
+    # print("TESTING RSA")
+    # from tests.test_sec_rsa import TestSec
 
-    print("TESTING MACAROON RSA")
-    from tests.test_macaroon_secure import TestMacaroonSecure
+    # print("TESTING MACAROON RSA")
+    # from tests.test_macaroon_secure import TestMacaroonSecure
 
-    print("TESTING CERTIFICATE RSA")
-    from tests.test_certificate_secure import TestCertificateSecure
+    # print("TESTING CERTIFICATE RSA")
+    # from tests.test_certificate_secure import TestCertificateSecure
 
-    unittest.main(exit=False)
+    # unittest.main(exit=False)
 
     OrbApp().run()

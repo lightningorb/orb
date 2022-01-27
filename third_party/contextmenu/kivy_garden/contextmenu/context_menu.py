@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 07:23:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 07:23:38
+# @Last Modified time: 2022-01-27 09:44:38
 
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.relativelayout import RelativeLayout
@@ -318,4 +318,4 @@ class ContextMenuTextItem(ButtonBehavior, ContextMenuText, AbstractMenuItemHover
 
 
 _path = os.path.dirname(os.path.realpath(__file__))
-Builder.load_file(os.path.join(_path, "context_menu.kv"))
+# Builder.load_file(os.path.join(_path, "context_menu.kv"))

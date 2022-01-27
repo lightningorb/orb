@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 06:39:55
+# @Last Modified time: 2022-01-26 22:47:42
 
 
 import uuid
@@ -48,9 +48,9 @@ def decrypt(encrypted_message, private_key):
     try:
         return rsa.decrypt(base64.b64decode(encrypted_message), priv)
     except:
-        print(format_exc())
-        print(encrypted_message)
-        print("decryption failed")
+        # print(format_exc())
+        # print(encrypted_message)
+        # print("decryption failed")
         return b""
 
 
@@ -69,9 +69,11 @@ def decrypt_long(encrypted_message, private_key):
 
 
 def get_sec_keys():
-    random.seed(
-        f"{plyer.uniqueid.id}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b"
-    )
+    try:
+        uid = plyer.uniqueid.id
+    except NotImplementedError:
+        uid = uuid.getnode()
+    random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)
     return priv.save_pkcs1(), pub.save_pkcs1()
 

@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 10:31:04
+# @Last Modified time: 2022-01-27 17:57:04
 
 import os
 import sys
 import json
 from pathlib import Path
+from textwrap import dedent
 from traceback import print_exc
 from importlib import __import__
 from threading import Thread
@@ -20,6 +21,7 @@ from kivy.core.window import Window
 from kivy.utils import platform
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
+from kivy.uix.button import Button
 
 from orb.misc.utils import pref
 from orb.logic.app_store import Apps
@@ -42,6 +44,8 @@ sys.path.append("orb/lnd")
 do_monkey_patching()
 is_dev = "main.py" in sys.argv[0]
 
+print(f"sys.argv[0] is {sys.argv[0]}")
+
 
 class OrbApp(MDApp):
     title = "Orb"
@@ -49,7 +53,7 @@ class OrbApp(MDApp):
     selection = ObjectProperty(allownone=True)
     apps = None
 
-    def get_application_config(self, defaultpath=f"{os.getcwd()}/orb.ini"):
+    def get_application_config(self, defaultpath=f"~/orb.ini"):
         """
         Get location of the orb.ini file. This may differ from
         one OS to the next.
@@ -60,10 +64,13 @@ class OrbApp(MDApp):
             defaultpath = "~/Documents/%(appname)s.ini"
         elif platform == "win":
             defaultpath = defaultpath.replace("/", "//")
+        elif platform == "macosx":
+            defaultpath = f"{self._get_user_data_dir()}/%(appname)s.ini"
         path = os.path.expanduser(defaultpath) % {
             "appname": self.name,
             "appdir": self.directory,
         }
+        print(f"Application config: {path}")
         return path
 
     def _get_user_data_dir(self):
@@ -90,18 +97,20 @@ class OrbApp(MDApp):
         return data_dir
 
     def load_kvs(self):
-        for path in [str(x) for x in Path(".").rglob("*.kv")]:
-            if any(
-                x in path for x in ["kivy_garden", "build/", "tutes/", "dist/", "user/"]
-            ):
-                continue
-            if "orb.kv" in path:
-                continue
-            print(f"Loading: {path}")
-            Builder.load_file(path)
-        # if not is_dev:
-        # Builder.load_file("kivy_garden/contextmenu/app_menu.kv")
-        # Builder.load_file("kivy_garden/contextmenu/context_menu.kv")
+        if is_dev:
+            kvs = ["from kivy.lang import Builder"]
+            main_dir = Path(sys.argv[0]).parent
+
+            def load_kvs_from(d):
+                for path in d.rglob("*.kv"):
+                    kv = path.open().read().replace("\\n", "\\\n")
+                    kvs.append(f"Builder.load_string('''\n{kv}\n''')")
+
+            load_kvs_from(main_dir / "orb")
+            load_kvs_from(main_dir / "third_party")
+            open(main_dir / "orb/kvs.py", "w").write("\n".join(kvs))
+
+        import orb.kvs
 
     def make_dirs(self):
         """
@@ -246,7 +255,9 @@ class OrbApp(MDApp):
         """
         Configuration screen for the app.
         """
-        settings.add_json_panel("Orb", self.config, filename="orb/misc/settings.json")
+        path = Path(__file__).parent.parent.parent / "orb/misc/settings.json"
+        print(f"Settings file: {path.as_posix()}")
+        settings.add_json_panel("Orb", self.config, filename=path.as_posix())
 
     def on_config_change(self, config, section, key, value):
         """

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 07:23:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 07:23:33
+# @Last Modified time: 2022-01-27 09:55:38
 
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.stacklayout import StackLayout
@@ -139,4 +139,4 @@ class AppMenuTextItem(ToggleButton, AbstractMenuItem):
 
 
 _path = os.path.dirname(os.path.realpath(__file__))
-Builder.load_file(os.path.join(_path, "app_menu.kv"))
+# Builder.load_file(os.path.join(_path, "app_menu.kv"))

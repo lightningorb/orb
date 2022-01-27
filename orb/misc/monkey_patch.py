@@ -2,44 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 05:58:10
+# @Last Modified time: 2022-01-27 08:17:12
 
 from orb.misc import data_manager
-
-
-def patch_context_menu():
-    from kivy_garden.contextmenu.app_menu import AppMenuTextItem
-
-    def on_touch_down(self, touch):
-        if self.collide_point(touch.x, touch.y):
-            data_manager.data_man.menu_visible = True
-        return super(AppMenuTextItem, self).on_touch_down(touch)
-
-    def on_release(self):
-        data_manager.data_man.menu_visible = False
-        submenu = self.get_submenu()
-
-        if self.state == "down":
-            root = self._root_parent
-            submenu.bounding_box_widget = (
-                root.bounding_box if root.bounding_box else root.parent
-            )
-
-            submenu.bind(visible=self.on_visible)
-            submenu.show(self.x, self.y - 1)
-
-            for sibling in self.siblings:
-                if sibling.get_submenu() is not None:
-                    sibling.state = "normal"
-                    sibling.get_submenu().hide()
-
-            self.parent._setup_hover_timer()
-        else:
-            self.parent._cancel_hover_timer()
-            submenu.hide()
-
-    AppMenuTextItem.on_touch_down = on_touch_down
-    AppMenuTextItem.on_release = on_release
 
 
 def patch_datatables():
