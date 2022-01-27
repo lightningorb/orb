@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 05:46:56
+# @Last Modified time: 2022-01-28 07:19:42
 
 from invoke import task
 from pathlib import Path
@@ -11,7 +11,12 @@ name = "lnorb"
 
 
 @task
-def pyarmor(c, env=dict(PATH=os.environ["PATH"])):
+def register(c, env=dict(PATH=os.environ["PATH"])):
+    c.run("pyarmor register pyarmor-regcode-2364.txt", env=env)
+
+
+@task
+def build(c, env=dict(PATH=os.environ["PATH"])):
     c.run("rm -rf dist")
     paths = " ".join(
         [

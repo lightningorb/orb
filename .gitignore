@@ -4,7 +4,6 @@ pyarmor*
 dist
 icons
 tmp
-*.cer
 .gittoken
 __pycache__
 *.pyc

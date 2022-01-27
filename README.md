@@ -29,23 +29,59 @@ pip3 install fabric
 
 The above command lists out the available build commands. At the time of writing these are:
 
-    ./build.py -l
     Available tasks:
-      documentation.build     Build the docs. Requires sphinx.
-      documentation.clean     Delete the built docs. Useful when renaming modules etc.
-      documentation.view      View docs in the browser.
-      ios.create              Create the xcode project.
-      ios.update              Update the xcode project with the latest changes.
-      submodules.remove-all   Delete the relevant section from the .gitmodules file.
-      test.test               Run the unit tests and doctests.
-      third-party.clean       Stub.
-      third-party.clone       Stub.
-      versioning.bump-build   Bump the build number using semver and store in VERSION.
-      versioning.bump-major   Bump the major version using semver and store in VERSION.
-      versioning.bump-minor   Bump the minor version using semver and store in VERSION.
-      versioning.bump-patch   Bump the patch version using semver and store in VERSION.
-      versioning.bump-pre     Bump the pre-release using semver and store in VERSION.
 
+      deploy-ios
+      appstore.local.create-db
+      appstore.local.start
+      appstore.remote.certbot
+      appstore.remote.clone
+      appstore.remote.create-db
+      appstore.remote.create-tables
+      appstore.remote.create-user
+      appstore.remote.drop-tables
+      appstore.remote.install-nginx-conf
+      appstore.remote.install-service
+      appstore.remote.install-stack
+      appstore.remote.requirements
+      appstore.remote.start
+      appstore.remote.start-dev
+      documentation.build                  Build the docs. Requires sphinx.
+      documentation.clean                  Delete the built docs. Useful when renaming modules etc.
+      documentation.view                   View docs in the browser.
+      host.ssh
+      ios.create                           Create the xcode project.
+      ios.toolchain
+      ios.toolchain-build
+      ios.toolchain-pip
+      ios.update                           Update the xcode project with the latest changes.
+      osx.dmg
+      osx.gen-license
+      osx.requirements
+      osx.run
+      osx.upload
+      release-notes.create
+      submodules.remove-all                Delete the relevant section from the .gitmodules file.
+      tags.push
+      tags.tag
+      test.test                            Run the unit tests and doctests.
+      third-party.clean                    Stub.
+      third-party.clone                    Stub.
+      ubuntu.requirements
+      versioning.bump-build                Bump the build number using semver and store in VERSION.
+      versioning.bump-major                Bump the major version using semver and store in VERSION.
+      versioning.bump-minor                Bump the minor version using semver and store in VERSION.
+      versioning.bump-patch                Bump the patch version using semver and store in VERSION.
+      versioning.bump-pre                  Bump the pre-release using semver and store in VERSION.
+
+## Building on Ubuntu
+
+```bash
+
+pip3 install fabric
+python3 build.py ubuntu.requirements
+
+```
 
 # Connecting your node
 
