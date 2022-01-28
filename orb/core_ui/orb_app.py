@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 12:14:30
+# @Last Modified time: 2022-01-28 14:07:28
 
 import os
 import sys
@@ -98,18 +98,25 @@ class OrbApp(MDApp):
         return data_dir
 
     def load_kvs(self):
+        """
+        Compile all the kvs into an orb/kvs.py file.
+        This greatly simplifies deployment.
+        """
         if is_dev:
             kvs = ["from kivy.lang import Builder"]
+            kvs_found = False
             main_dir = Path(sys.argv[0]).parent
 
             def load_kvs_from(d):
                 for path in d.rglob("*.kv"):
+                    kvs_found = True
                     kv = path.open().read().replace("\\n", "\\\n")
                     kvs.append(f"Builder.load_string('''\n{kv}\n''')")
 
             load_kvs_from(main_dir / "orb")
             load_kvs_from(main_dir / "third_party")
-            open(main_dir / "orb/kvs.py", "w").write("\n".join(kvs))
+            if kvs_found:
+                open(main_dir / "orb/kvs.py", "w").write("\n".join(kvs))
 
         import orb.kvs
 
