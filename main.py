@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-27 17:25:06
+# @Last Modified time: 2022-01-28 13:35:20
 
 import sys
 import os
@@ -39,8 +39,6 @@ Config.set("graphics", "fullscreen", "auto")
 
 Window.maximize()
 
-from orb.core_ui.orb_app import OrbApp
-
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.screens.close_channel import CloseChannel
@@ -73,6 +71,8 @@ from orb.dialogs.upload_app import UploadAppDialog
 
 import colour
 from kivymd.effects.stiffscroll import StiffScrollEffect
+
+from orb.core_ui.orb_app import OrbApp
 
 keep = lambda _: _
 
