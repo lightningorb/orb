@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 05:52:44
+# @Last Modified time: 2022-01-28 08:04:50
 
 import re
 import os
@@ -23,6 +23,7 @@ from build_system import test
 from build_system import release_notes
 from build_system import appstore
 from build_system import host
+from build_system import armor
 
 
 @task
@@ -48,4 +49,5 @@ namespace = Collection(
     appstore,
     host,
     ubuntu,
+    armor,
 )

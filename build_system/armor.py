@@ -2,10 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 07:19:42
+# @Last Modified time: 2022-01-28 13:05:12
 
 from invoke import task
 from pathlib import Path
+
+import os
 
 name = "lnorb"
 
@@ -13,6 +15,21 @@ name = "lnorb"
 @task
 def register(c, env=dict(PATH=os.environ["PATH"])):
     c.run("pyarmor register pyarmor-regcode-2364.txt", env=env)
+
+
+@task
+def obf(c, env=dict(PATH=os.environ["PATH"])):
+    print("rm -rf dist tmp;")
+    print("mkdir -p tmp;")
+    print("cp -r main.py tmp/;")
+    print("cp -r third_party tmp/;")
+    print("cp -r orb tmp/;")
+    print("cd tmp;")
+    print(
+        "pyarmor obfuscate --with-license ../licenses/r003/license.lic --recursive main.py;"
+    )
+    print("tar czvf orb.tar.gz dist;")
+    print("cd -;")
 
 
 @task

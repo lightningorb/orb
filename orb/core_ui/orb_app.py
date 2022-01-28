@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-27 17:57:04
+# @Last Modified time: 2022-01-28 12:14:30
 
 import os
 import sys
@@ -23,6 +23,7 @@ from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.uix.button import Button
 
+import orb.kvs
 from orb.misc.utils import pref
 from orb.logic.app_store import Apps
 from orb.misc.monkey_patch import do_monkey_patching
