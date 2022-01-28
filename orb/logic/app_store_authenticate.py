@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:47:33
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 11:49:46
+# @Last Modified time: 2022-01-28 12:04:35
 
 import requests
 import json
@@ -56,6 +56,7 @@ def login(username, password):
     resp = r.json()
     print("Login request response:")
     print(resp)
+    set_creds(resp)
     return resp
 
 
