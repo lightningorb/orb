@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-27 13:19:32
+# @Last Modified time: 2022-01-28 11:32:29
 
 from orb.misc.utils import pref
-from traceback import print_exc
+from traceback import format_exc
 from kivy.app import App
 import os
 
@@ -23,6 +23,7 @@ class Protocol:
 
 
 mac = None
+mac_invalid = False
 
 
 def Lnd():
@@ -30,20 +31,19 @@ def Lnd():
     Return the appropriate Lnd class based on protocol.
     """
     global mac
+    global mac_invalid
 
     protocol = pref("lnd.protocol")
 
-    if not mac:
+    if not mac and not mac_invalid:
         mac_secure = MacaroonSecure.init_from_encrypted(
             pref("lnd.macaroon_admin").encode()
         )
         mac = mac_secure.as_plain_macaroon().macaroon.decode()
+        if not mac:
+            mac_invalid = True
 
     if lnd.get(protocol) is None:
-        if protocol == None:
-            from orb.lnd.lnd_mock import LndMock
-
-            lnd[protocol] = LndMock()
         if protocol == Protocol.grpc:
             from orb.lnd.lnd_grpc import LndGRPC
 
@@ -52,17 +52,15 @@ def Lnd():
                     pref("lnd.tls_certificate").encode()
                 )
                 cert = cert_secure.as_plain_certificate()
-                lnd[protocol] = LndGRPC(
-                    tls_certificate=cert.reformat(),
-                    server=pref("lnd.hostname"),
-                    network=pref("lnd.network"),
-                    macaroon=mac,
-                )
+                if cert.is_well_formed():
+                    lnd[protocol] = LndGRPC(
+                        tls_certificate=cert.reformat(),
+                        server=pref("lnd.hostname"),
+                        network=pref("lnd.network"),
+                        macaroon=mac,
+                    )
             except:
-                print(print_exc())
-                from orb.lnd.lnd_mock import LndMock
-
-                lnd[protocol] = LndMock()
+                print(format_exc())
         elif pref("lnd.protocol") == Protocol.rest:
             from orb.lnd.lnd_rest import LndREST
 
@@ -75,9 +73,10 @@ def Lnd():
                 macaroon=mac,
                 port=int(pref("lnd.rest_port")),
             )
-        elif pref("lnd.protocol") == Protocol.mock:
-            from orb.lnd.lnd_mock import LndMock
 
-            lnd[protocol] = LndMock()
+    if not lnd.get(protocol):
+        from orb.lnd.lnd_mock import LndMock
+
+        lnd[protocol] = LndMock()
 
     return lnd[protocol]

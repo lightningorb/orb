@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 09:34:12
+# @Last Modified time: 2022-01-28 11:37:05
 
 from collections import namedtuple
 from dataclasses import dataclass
@@ -151,8 +151,8 @@ class LndMock(object):
     def get_pending_channels(self):
         m = M(
             pending_open_channels=[
-                M(
-                    channel=M(
+                dict(
+                    channel=dict(
                         capacity=1000000,
                         pending_htlcs=[],
                         local_balance=500000,
@@ -197,4 +197,7 @@ class LndMock(object):
         pass
 
     def get_htlc_events(self):
-        pass
+        return []
+
+    def get_channel_events(self):
+        return []

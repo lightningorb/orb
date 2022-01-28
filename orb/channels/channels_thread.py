@@ -2,13 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:26:50
+# @Last Modified time: 2022-01-28 11:33:26
 
 import threading
 from time import sleep
 
 from orb.lnd import Lnd
 from orb.logic.thread_manager import thread_manager
+from traceback import format_exc
 
 
 class ChannelsThread(threading.Thread):
@@ -51,7 +52,7 @@ class ChannelsThread(threading.Thread):
                                 self.inst.remove_channel(e.closed_channel)
             except:
                 print("Exception getting Channels - let's sleep")
-                # print_exc()
+                print(format_exc())
                 sleep(10)
             sleep(10)
 
