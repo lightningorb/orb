@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 11:38:41
+# @Last Modified time: 2022-01-28 17:27:08
 
 
 import uuid
@@ -15,6 +15,15 @@ import random
 from traceback import format_exc
 from orb.misc.utils import desktop
 import plyer
+import random
+import sys
+
+if (sys.version_info.major, sys.version_info.minor) < (3, 9):
+
+    def randbytes(n):
+        return random.getrandbits(n * 8).to_bytes(n, "little")
+
+    random.randbytes = randbytes
 
 
 def read_random_bits(nbits: int) -> bytes:
