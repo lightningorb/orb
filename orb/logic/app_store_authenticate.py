@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:47:33
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 11:12:24
+# @Last Modified time: 2022-01-28 11:49:46
 
 import requests
 import json
@@ -59,7 +59,7 @@ def login(username, password):
     return resp
 
 
-def get_pasword():
+def get_password():
     return Lnd().sign_message("orb_password")
 
 

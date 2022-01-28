@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-20 16:08:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 11:16:26
+# @Last Modified time: 2022-01-28 11:53:07
 
 from threading import Thread
 
@@ -15,7 +15,7 @@ from kivy.properties import ObjectProperty
 
 from orb.lnd import Lnd
 from orb.misc.decorators import guarded
-from orb.logic.app_store_authenticate import get_pasword, register, login, get_creds
+from orb.logic.app_store_authenticate import get_password, register, login, get_creds
 
 
 class LoginDialogContent(BoxLayout):
@@ -26,14 +26,14 @@ class LoginDialogContent(BoxLayout):
     def __init__(self, *args, **kwargs):
         super(LoginDialogContent, self).__init__(*args, **kwargs)
 
-        def get_pk(*args):
+        def get_pk():
             self.pk = Lnd().get_info().identity_pubkey
 
-        def get_password(*args):
-            self.password = get_pasword()
+        def get_store_password():
+            self.password = get_password()
 
         Thread(target=get_pk).start()
-        Thread(target=get_password).start()
+        Thread(target=get_store_password).start()
 
         creds = get_creds()
         if "access_token" in creds:
