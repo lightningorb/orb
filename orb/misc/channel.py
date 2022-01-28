@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 11:42:47
+# @Last Modified time: 2022-01-29 04:08:42
 
 from threading import Thread
 
@@ -146,7 +146,6 @@ class Channel(EventDispatcher):
         self.local_balance = channel.local_balance
         self.capacity = channel.capacity
         self.remote_pubkey = channel.remote_pubkey
-        self.local_balance = channel.local_balance
         self.remote_balance = channel.remote_balance
         self.chan_id = int(channel.chan_id)
         self.pending_htlcs = channel.pending_htlcs
@@ -168,5 +167,5 @@ class Channel(EventDispatcher):
         may not always be desireable.
         """
         return self.local_balance + sum(
-            int(p.amount) for p in self.channel.pending_htlcs if not p.incoming
+            int(p.amount) for p in self.pending_htlcs if not p.incoming
         )
