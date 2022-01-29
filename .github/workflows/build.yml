@@ -1,7 +1,7 @@
 name: test and build
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   build_linux:
     runs-on: ubuntu-latest
