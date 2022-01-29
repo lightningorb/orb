@@ -3,7 +3,7 @@ on:
   push:
     branches: [ master ]
 jobs:
-  build:
+  build_linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +16,7 @@ jobs:
       - run: python ./build.py test.test
       - run: python ./build.py armor.register
       - run: python ./build.py armor.obf
-  build:
+  build_macosx:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
