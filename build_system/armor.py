@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-29 12:21:51
+# @Last Modified time: 2022-01-29 13:40:57
 
 from invoke import task
 from pathlib import Path
@@ -75,7 +75,7 @@ def obf(c, env=os.environ):
 
 
 @task
-def build(c, env=dict(PATH=os.environ["PATH"])):
+def build(c, env=os.environ):
     c.run("rm -rf dist")
     paths = " ".join(
         [
@@ -94,9 +94,35 @@ def build(c, env=dict(PATH=os.environ["PATH"])):
     ]
     data = " ".join(f"--add-data '{s}:{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
-    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "  #  --osx-bundle-identifier lnorb.com --codesign-identity C5B3E44CB245D5BF2A0EF5DD4948FF9C4BB42627
-    print(
+    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
+    c.run(
         f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
              -e " {pyinstall_flags}" \
-             -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py"""
+             -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
+        env=env,
+    )
+
+
+@task
+def dmg(c, env=os.environ):
+    c.run("rm -f *.dmg ")
+    c.run(
+        f"""
+        create-dmg \
+          --volname "Orb" \
+          --background "images/bg.jpeg" \
+          --window-pos 200 120 \
+          --window-size 800 400 \
+          --icon-size 100 \
+          --icon "lnorb.app" 200 190 \
+          --app-drop-link 600 185 \
+          "{name}.dmg" \
+          "dist/{name}.app"
+        """,
+        env=env,
+    )
+    c.run("chown `whoami` lnorb_com.cer", env=env)
+    c.run("chmod 400 lnorb_com.cer", env=env)
+    c.run(
+        f"rsync -e 'ssh -i lnorb_com.cer -o StrictHostKeyChecking=no' -azv --progress lnorb.dmg ubuntu@lnorb.com:/home/ubuntu/lnorb_com/releases/orb-{VERSION}-osx-x86_64.dmg"
     )

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:40:47
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 05:46:51
+# @Last Modified time: 2022-01-29 13:10:13
 
 from invoke import task
 import os
@@ -22,7 +22,7 @@ def run(c, env=dict(PATH=os.environ["PATH"])):
 
 
 @task
-def dmg(c, env=dict(PATH=os.environ["PATH"])):
+def dmg(c, env=os.environ):
     # c.run("hdiutil create orb-pre-release.dmg -srcfolder dist -ov")
     c.run("rm -f *.dmg ")
     c.run(
