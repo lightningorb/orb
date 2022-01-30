@@ -1731,10 +1731,10 @@ Builder.load_string('''
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
                     on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Player"
-                    on_press:  app_menu.close_all()
-                    on_release: PlayerDialog().open()
+                # ContextMenuTextItem:
+                #     text: "Player"
+                #     on_press:  app_menu.close_all()
+                #     on_release: PlayerDialog().open()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Quit"

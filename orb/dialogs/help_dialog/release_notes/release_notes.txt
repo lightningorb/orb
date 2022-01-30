@@ -1,6 +1,7 @@
 0.9.0
 ----
 
+release notes wider than dialog
 [dev] moved download_forwarding_history into logic package
 [dev] no need to call update_rect needlessly, significant speedup in
     rendering
