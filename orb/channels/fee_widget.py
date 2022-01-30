@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 10:38:48
+# @Last Modified time: 2022-01-30 16:41:43
 
 from threading import Thread
 
@@ -55,12 +55,12 @@ class FeeWidget(Widget):
         self.label = FeeWidgetLabel(text="", color=(0.5, 1, 0.5, 0))
         self.add_widget(self.label)
 
-        self.bind(a=self.update_rect)
-        self.bind(b=self.update_rect)
-        self.bind(c=self.update_rect)
-        self.channel.bind(fee_rate_milli_msat=self.update_rect)
+        self.bind(a=self.update)
+        self.bind(b=self.update)
+        self.bind(c=self.update)
+        self.channel.bind(fee_rate_milli_msat=self.update)
 
-    def update_rect(self, *args):
+    def update(self, *args):
         self.to_fee_norm = min(int(self.channel.fee_rate_milli_msat) / 1000 * 30, 30)
         A = Vector(*self.a)
         B = Vector(*self.c)

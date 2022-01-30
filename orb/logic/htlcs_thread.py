@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 13:13:28
+# @Last Modified time: 2022-01-30 16:47:52
 import json
 import threading
 from time import sleep
@@ -65,7 +65,7 @@ class HTLCsThread(threading.Thread):
                         self.inst.cn[cid].l.anim_htlc(htlc)
                         self.inst.ids.relative_layout.do_layout()
 
-                    self.inst.update_rect()
+                    self.inst.update()
 
             except:
                 print("Exception getting HTLCs - let's sleep")

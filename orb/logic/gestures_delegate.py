@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-11 06:55:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 13:19:06
+# @Last Modified time: 2022-01-30 16:47:29
 
 from kivy.graphics import Line, Ellipse, Color
 from kivy.gesture import Gesture, GestureDatabase
@@ -35,7 +35,7 @@ class GesturesDelegate:
         self.in_gdb, self.out_gdb = GestureDatabase(), GestureDatabase()
         self.in_channel, self.out_channel = None, None
         for i, chan_id in enumerate(channels_widget.channels.sorted_chan_ids):
-            channels_widget.cn[chan_id].update_rect(i, len(channels_widget.cn))
+            channels_widget.cn[chan_id].update(i, len(channels_widget.cn))
             self.in_gdb.add_gesture(channels_widget.cn[chan_id].gesture_in)
             self.out_gdb.add_gesture(channels_widget.cn[chan_id].gesture_out)
 

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:03:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 12:59:55
+# @Last Modified time: 2022-01-30 16:43:11
 
 from math import ceil
 from threading import Lock
@@ -38,7 +38,7 @@ class Segment(Widget):
             self.color = Color(*color)
             self.line = Line(points=[0, 0, 0, 0], width=width, cap="none")
 
-    def update_rect(self, amt_sat=0):
+    def update(self, amt_sat=0):
         amt_sat = int(amt_sat)
         a = lerp_2d(self.line.points[:2], self.line.points[2:], 0.02)
         b = lerp_2d(self.line.points[:2], self.line.points[2:], 0.98)

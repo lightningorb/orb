@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 04:17:25
+# @Last Modified time: 2022-01-30 16:44:38
 import math
 
 from kivy.app import App
@@ -18,7 +18,6 @@ from kivy.gesture import Gesture
 
 
 class CNWidget(Widget):
-
     def __init__(self, c, caps, *args):
         super(CNWidget, self).__init__(*args)
         self.l = ChannelWidget(points=[0, 0, 0, 0], channel=c, width=caps[c.chan_id])
@@ -36,7 +35,7 @@ class CNWidget(Widget):
         self.add_widget(self.l)
         self.add_widget(self.b)
 
-    def update_rect(self, i, n):
+    def update(self, i, n):
         self.radius = int(App.get_running_app().config["display"]["channel_length"])
         x = math.sin(i / n * 3.14378 * 2) * self.radius
         y = math.cos(i / n * 3.14378 * 2) * self.radius

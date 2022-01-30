@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 03:26:44
+# @Last Modified time: 2022-01-30 16:46:34
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -53,14 +53,14 @@ class ChannelsWidget(ScatterLayout):
         caps = self.get_caps(self.channels)
         self.info = self.lnd.get_info()
         for c in self.channels:
-            self.add_channel(channel=c, caps=caps, update_rect=False)
+            self.add_channel(channel=c, caps=caps, update=False)
         self.node = Node(
             text=self.info.alias,
             round=pref("display.round_central_node"),
         )
         self.ids.relative_layout.add_widget(self.node)
         self.ids.relative_layout.add_widget(self.chord_widget)
-        self.bind(pos=self.update_rect, size=self.update_rect)
+        self.bind(size=self.update)  # pos=self.update,
         self.apply_transform(
             Matrix().scale(0.5, 0.5, 0.5), anchor=(self.size[0] / 2, self.size[1] / 2)
         )
@@ -71,14 +71,14 @@ class ChannelsWidget(ScatterLayout):
 
         self.gestures_delegate.init_gdb(self)
 
-    def add_channel(self, channel, caps=None, update_rect=True):
+    def add_channel(self, channel, caps=None, update=True):
         if not caps:
             caps = self.get_caps(self.channels)
         cn = CNWidget(c=channel, caps=caps)
         self.cn[channel.chan_id] = cn
         self.ids.relative_layout.add_widget(cn)
-        if update_rect:
-            self.update_rect()
+        if update:
+            self.update()
 
     def remove_channel(self, channel, caps=None):
         pass
@@ -89,12 +89,12 @@ class ChannelsWidget(ScatterLayout):
         max_cap = max([int(c.capacity) for c in channels])
         return {c.chan_id: max(2, int(int(c.capacity) / max_cap) * 5) for c in channels}
 
-    def update_rect(self, *_):
+    def update(self, *_):
         if self.node:
             self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
         self.channels.sort_channels()
         for i, chan_id in enumerate(self.channels.sorted_chan_ids):
-            self.cn[chan_id].update_rect(i, len(self.cn))
+            self.cn[chan_id].update(i, len(self.cn))
 
     def on_touch_move(self, touch):
         if data_manager.data_man.menu_visible:

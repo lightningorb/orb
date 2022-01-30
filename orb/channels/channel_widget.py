@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 15:24:21
+# @Last Modified time: 2022-01-30 16:43:47
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -64,9 +64,9 @@ class ChannelWidget(Widget):
 
         self.a, self.b, self.c = [0, 0], [0, 0], [0, 0]
 
-        self.bind(points=self.update_rect)
+        self.bind(points=self.update)
 
-    def update_rect(self, *args):
+    def update(self, *args):
         """
         CAPACITY: 1,000,000
         LOCAL: 3,000,000
@@ -118,9 +118,9 @@ class ChannelWidget(Widget):
         self.line_remote.line.points = [cb[0], cb[1], b[0], b[1]]
         self.to_fee.set_points(a, b, c)
         self.a, self.b, self.c = a, b, c
-        self.line_local.update_rect(amt_sat=self.channel.local_balance)
-        self.line_pending.update_rect()
-        self.line_remote.update_rect()
+        self.line_local.update(amt_sat=self.channel.local_balance)
+        self.line_pending.update()
+        self.line_remote.update()
 
     def anim_outgoing(self, s=10):
         start, end = (
@@ -291,7 +291,7 @@ class ChannelWidget(Widget):
         # cols = {"forward_fail_event": RED, "link_fail_event": RED}
         # col = cols.get(htlc.event_outcome, WHITE)
         self.flash(col)
-        self.update_rect()
+        self.update()
 
     def flash(self, rgba):
         (Animation(rgba=rgba, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
