@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 13:35:20
+# @Last Modified time: 2022-01-30 11:11:41
 
 import sys
 import os
@@ -37,7 +37,8 @@ sys.path.append(str(Path("third_party/currency-symbols/")))
 Config.set("graphics", "window_state", "maximized")
 Config.set("graphics", "fullscreen", "auto")
 
-Window.maximize()
+if Window:
+    Window.maximize()
 
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
