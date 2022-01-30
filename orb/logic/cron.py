@@ -2,11 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:26:39
+# @Last Modified time: 2022-01-30 17:02:23
 
 from kivy.clock import Clock
 
-from orb.dialogs.forwarding_history import download_forwarding_history
+from orb.logic.forwarding_history import download_forwarding_history
 
 
 class Cron:
