@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-29 04:08:42
+# @Last Modified time: 2022-01-30 16:18:46
 
 from threading import Thread
 
@@ -169,3 +169,37 @@ class Channel(EventDispatcher):
         return self.local_balance + sum(
             int(p.amount) for p in self.pending_htlcs if not p.incoming
         )
+
+    @property
+    def profit(self):
+        """
+        Channel profit is how much the channel made in fees
+        minus how much was spent rebalancing towards it.
+        """
+        pass
+
+    @property
+    def debt(self):
+        """
+        How much was spent rebalancing towards that channel.
+        """
+        pass
+
+    @property
+    def earned(self):
+        """
+        How much the channel has earned in fees.
+        """
+        from orb.store import model
+
+        try:
+            return sum(
+                [
+                    x.fee
+                    for x in model.FowardEvent()
+                    .select()
+                    .where(model.FowardEvent.chan_id_out == str(self.chan_id))
+                ]
+            )
+        except:
+            return 0
