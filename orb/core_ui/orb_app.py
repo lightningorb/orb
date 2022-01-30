@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 13:04:33
+# @Last Modified time: 2022-01-30 16:16:55
 
 import os
 import sys
@@ -24,7 +24,6 @@ from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.uix.button import Button
 
-import orb.kvs
 from orb.misc.utils import pref
 from orb.logic.app_store import Apps
 from orb.misc.monkey_patch import do_monkey_patching
@@ -107,17 +106,23 @@ class OrbApp(MDApp):
             kvs = ["from kivy.lang import Builder"]
             kvs_found = False
             main_dir = Path(sys.argv[0]).parent
+            print(f"main_dir: {main_dir}")
 
             def load_kvs_from(d):
+                kvs_found = False
                 for path in d.rglob("*.kv"):
                     kvs_found = True
+                    print(f"compiling: {path}")
                     kv = path.open().read().replace("\\n", "\\\n")
                     kvs.append(f"Builder.load_string('''\n{kv}\n''')")
+                return kvs_found
 
-            load_kvs_from(main_dir / "orb")
-            load_kvs_from(main_dir / "third_party")
+            kvs_found = load_kvs_from(main_dir / "orb")
+            kvs_found |= load_kvs_from(main_dir / "third_party")
             if kvs_found:
-                open(main_dir / "orb/kvs.py", "w").write("\n".join(kvs))
+                path = main_dir / "orb/kvs.py"
+                print(f"Saving to: {path}")
+                open(path, "w").write("\n".join(kvs))
 
         import orb.kvs
 
