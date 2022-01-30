@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:55:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:39:08
+# @Last Modified time: 2022-01-31 05:13:52
 
 from dataclasses import dataclass
 from orb.math.normal_distribution import NormalDistribution
@@ -83,8 +83,13 @@ def get_normal_distribution(c):
         return nd
 
 
-def get_best_fee(c):
+def get_best_fee(c, include_zero):
+    """
+    Get the most frequent fee-rate. If include_zero is False
+    then filter out 0 ppms
+    """
     nd = get_normal_distribution(c)
     if nd:
         dist = nd.probability_distribution
-        return max(dist, key=lambda x: x["probability"])["value"]
+        probs = [x["probability"] for x in dist if not include_zero and x["probability"] != 0 else True]
+        return max(dist, key=lambda x: probs)["value"]

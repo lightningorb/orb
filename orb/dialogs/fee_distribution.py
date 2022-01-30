@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 10:04:02
+# @Last Modified time: 2022-01-31 05:01:50
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -64,13 +64,14 @@ class FeeDistribution(PopupDropShadow):
 
         # multiply probability by 100 to match graph
         for i in range(len(nd.probability_distribution)):
-            nd.probability_distribution[i]['probability']*=100
+            nd.probability_distribution[i]["probability"] *= 100
 
         self.ids.table.clear_widgets()
         self.ids.table.add_widget(
             MDDataTable(
                 use_pagination=False,
                 check=False,
+                rows_num=100,
                 column_data=[
                     ("PPM", dp(10)),
                     ("Prob. %", dp(20)),
