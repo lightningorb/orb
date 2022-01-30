@@ -1,7 +1,8 @@
 name: test and build
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
+
 jobs:
   build_linux:
     runs-on: ubuntu-latest
@@ -31,4 +32,18 @@ jobs:
       - run: python ./build.py armor.build
       - run: brew install create-dmg
       - run: python ./build.py armor.dmg
-
+  build_windows:
+    env:
+      KIVY_GL_BACKEND: 'angle_sdl2'
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python ./build.py armor.register
+      - run: python ./build.py armor.build-windows

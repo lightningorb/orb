@@ -1,2 +1,5 @@
+pyarmor==6.6.2
+fabric
 pyinstaller
 semver
+requests

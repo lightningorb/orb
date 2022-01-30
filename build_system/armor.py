@@ -2,15 +2,28 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-29 13:40:57
+# @Last Modified time: 2022-01-30 09:35:07
 
 from invoke import task
 from pathlib import Path
+import requests
+import zipfile
+from fabric import Connection
+
 
 import os
 
 name = "lnorb"
 VERSION = open("VERSION").read().strip()
+
+
+def zipdir(path, ziph):
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(
+                os.path.join(root, file),
+                os.path.relpath(os.path.join(root, file), path),
+            )
 
 
 @task
@@ -101,6 +114,49 @@ def build(c, env=os.environ):
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
     )
+
+
+@task
+def build_windows(c, env=os.environ):
+    paths = " ".join(
+        [
+            f"--paths={x.as_posix()}"
+            for x in Path("third_party/").glob("*")
+            if x.is_dir()
+        ]
+    )
+
+    data = [
+        ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+        ("orb/images/shadow_inverted.png", "orb/images/"),
+        ("orb/misc/settings.json", "orb/misc/"),
+        ("video_library.yaml", "."),
+        ("images/ln.png", "."),
+    ]
+    data = " ".join(f"--add-data '{s};{d}'" for s, d in data)
+    hidden_imports = "--hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
+    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
+    c.run(
+        f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
+             -e " {pyinstall_flags}" \
+             -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
+        env=env,
+    )
+    for f in Path("dist").glob("*"):
+        print(f.as_posix())
+    zipf = zipfile.ZipFile(
+        f"orb-{VERSION}-windows-x86_64.zip", "w", zipfile.ZIP_DEFLATED
+    )
+    zipdir("dist", zipf)
+    zipf.close()
+    for f in Path(".").glob("*"):
+        print(f.as_posix())
+    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    print(cert)
+    with Connection(
+        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
+    ) as con:
+        con.put(f"orb-{VERSION}-windows-x86_64.zip", "/home/ubuntu/lnorb_com/releases/")
 
 
 @task

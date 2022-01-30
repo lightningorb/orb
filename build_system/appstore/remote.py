@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-24 10:21:55
+# @Last Modified time: 2022-01-30 06:48:54
 
 from invoke import task
 import os
@@ -42,7 +42,7 @@ def clone(c, branch=None):
     with c.cd("orb"):
         c.run("git pull")
         if branch:
-            c.run("git checkout appstore3")
+            c.run("git checkout windows")
             c.run("git pull")
         else:
             c.run("git checkout main")
