@@ -3,3 +3,4 @@ fabric
 pyinstaller
 semver
 requests
+gitpython

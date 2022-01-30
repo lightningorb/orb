@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 09:35:07
+# @Last Modified time: 2022-01-30 14:52:48
 
 from invoke import task
 from pathlib import Path
@@ -62,8 +62,45 @@ pip3.9 install semver --user;
     """
 
 
+def upload(path):
+    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    with Connection(
+        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
+    ) as con:
+        con.put(path, "/home/ubuntu/lnorb_com/releases/")
+
+
+def build_common(c, env, sep=":"):
+    register(c)
+    paths = " ".join(
+        [
+            f"--paths={x.as_posix()}"
+            for x in Path("third_party/").glob("*")
+            if x.is_dir()
+        ]
+    )
+
+    data = [
+        ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+        ("orb/images/shadow_inverted.png", "orb/images/"),
+        ("orb/misc/settings.json", "orb/misc/"),
+        ("video_library.yaml", "."),
+        ("images/ln.png", "."),
+    ]
+    data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
+    hidden_imports = "--hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
+    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
+    c.run(
+        f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
+             -e " {pyinstall_flags}" \
+             -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
+        env=env,
+    )
+
+
 @task
-def obf(c, env=os.environ):
+def build_linux(c, env=os.environ):
+    register(c)
     c.run("rm -rf dist tmp;")
     c.run("mkdir -p tmp;")
     c.run("cp -r main.py tmp/;")
@@ -78,85 +115,25 @@ def obf(c, env=os.environ):
         c.run("mv dist orb")
         with open("tmp/orb/bootstrap.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
-        c.run(f"tar czvf orb-{VERSION}-linux-x86_64.tar.gz orb;")
-        c.run("chown `whoami` ../lnorb_com.cer", env=env)
-        c.run("chmod 400 ../lnorb_com.cer", env=env)
-        c.run(
-            f"rsync -e 'ssh -i ../lnorb_com.cer -o StrictHostKeyChecking=no' -azv --progress  orb-{VERSION}-linux-x86_64.tar.gz ubuntu@lnorb.com:/home/ubuntu/lnorb_com/releases/orb-{VERSION}-linux-x86_64.tar.gz",
-            env=env,
-        )
+        build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"
+        c.run(f"tar czvf {build_name} orb;")
+        upload(f"tmp/{build_name}")
 
 
 @task
-def build(c, env=os.environ):
-    c.run("rm -rf dist")
-    paths = " ".join(
-        [
-            f"--paths={x.as_posix()}"
-            for x in Path("third_party/").glob("*")
-            if x.is_dir()
-        ]
-    )
-
-    data = [
-        ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
-        ("orb/images/shadow_inverted.png", "orb/images/"),
-        ("orb/misc/settings.json", "orb/misc/"),
-        ("video_library.yaml", "."),
-        ("images/ln.png", "."),
-    ]
-    data = " ".join(f"--add-data '{s}:{d}'" for s, d in data)
-    hidden_imports = "--hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
-    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
-    c.run(
-        f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
-             -e " {pyinstall_flags}" \
-             -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
-        env=env,
-    )
+def build_osx(c, env=os.environ):
+    build_common(c, env, ":")
+    dmg(c)
 
 
 @task
 def build_windows(c, env=os.environ):
-    paths = " ".join(
-        [
-            f"--paths={x.as_posix()}"
-            for x in Path("third_party/").glob("*")
-            if x.is_dir()
-        ]
-    )
-
-    data = [
-        ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
-        ("orb/images/shadow_inverted.png", "orb/images/"),
-        ("orb/misc/settings.json", "orb/misc/"),
-        ("video_library.yaml", "."),
-        ("images/ln.png", "."),
-    ]
-    data = " ".join(f"--add-data '{s};{d}'" for s, d in data)
-    hidden_imports = "--hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
-    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
-    c.run(
-        f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
-             -e " {pyinstall_flags}" \
-             -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
-        env=env,
-    )
-    for f in Path("dist").glob("*"):
-        print(f.as_posix())
-    zipf = zipfile.ZipFile(
-        f"orb-{VERSION}-windows-x86_64.zip", "w", zipfile.ZIP_DEFLATED
-    )
+    build_common(c, env, ";")
+    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.zip"
+    zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
     zipdir("dist", zipf)
     zipf.close()
-    for f in Path(".").glob("*"):
-        print(f.as_posix())
-    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
-    print(cert)
-    with Connection(
-        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
-    ) as con:
-        con.put(f"orb-{VERSION}-windows-x86_64.zip", "/home/ubuntu/lnorb_com/releases/")
+    upload(build_name)
 
 
 @task
@@ -177,8 +154,6 @@ def dmg(c, env=os.environ):
         """,
         env=env,
     )
-    c.run("chown `whoami` lnorb_com.cer", env=env)
-    c.run("chmod 400 lnorb_com.cer", env=env)
-    c.run(
-        f"rsync -e 'ssh -i lnorb_com.cer -o StrictHostKeyChecking=no' -azv --progress lnorb.dmg ubuntu@lnorb.com:/home/ubuntu/lnorb_com/releases/orb-{VERSION}-osx-x86_64.dmg"
-    )
+    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.dmg"
+    os.rename(f"{name}.dmg", build_name)
+    upload(build_name)

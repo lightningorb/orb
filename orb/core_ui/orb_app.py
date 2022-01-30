@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 14:07:28
+# @Last Modified time: 2022-01-30 13:04:33
 
 import os
 import sys
@@ -19,6 +19,7 @@ from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.utils import platform
+from kivy.config import Config
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.uix.button import Button
@@ -241,6 +242,10 @@ class OrbApp(MDApp):
         """
         Main build method for the app.
         """
+        Config.set("graphics", "window_state", "maximized")
+        Config.set("graphics", "fullscreen", "auto")
+        if Window:
+            Window.maximize()
         self.override_stdout()
         self.make_dirs()
         self.check_cert_and_mac()

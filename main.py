@@ -2,14 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 11:11:41
+# @Last Modified time: 2022-01-30 13:04:07
 
+print("loading main")
+print("loading system libraries")
 import sys
 import os
 from pathlib import Path
 
 # os.environ["KIVY_AUDIO"] = "ffpyplayer"
 # os.environ["KIVY_VIDEO"] = "ffpyplayer"
+
+print("loading kivy libraries")
 
 from kivy.utils import platform
 
@@ -21,24 +25,19 @@ if platform == "macosx":
     # import numpy
     # import matplotlib
 
-from kivy.config import Config
-from kivy.core.window import Window
+print("setting up dependency paths")
 
-sys.path.append(str(Path("orb/lnd")))
-sys.path.append(str(Path("orb/lnd/grpc_generated")))
-sys.path.append(str(Path("third_party/contextmenu")))
-sys.path.append(str(Path("third_party/arrow")))
-sys.path.append(str(Path("third_party/python-qrcode/")))
-sys.path.append(str(Path("third_party/forex-python/")))
-sys.path.append(str(Path("third_party/bezier/src/python/")))
-sys.path.append(str(Path("third_party/colour/")))
-sys.path.append(str(Path("third_party/currency-symbols/")))
+sys.path.append(Path("orb/lnd").as_posix())
+sys.path.append(Path("orb/lnd/grpc_generated").as_posix())
+sys.path.append(Path("third_party/contextmenu").as_posix())
+sys.path.append(Path("third_party/arrow").as_posix())
+sys.path.append(Path("third_party/python-qrcode/").as_posix())
+sys.path.append(Path("third_party/forex-python/").as_posix())
+sys.path.append(Path("third_party/bezier/src/python/").as_posix())
+sys.path.append(Path("third_party/colour/").as_posix())
+sys.path.append(Path("third_party/currency-symbols/").as_posix())
 
-Config.set("graphics", "window_state", "maximized")
-Config.set("graphics", "fullscreen", "auto")
-
-if Window:
-    Window.maximize()
+print("loading orb modules")
 
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
@@ -129,4 +128,5 @@ if __name__ == "__main__":
 
     # unittest.main(exit=False)
 
+    print("loading main app")
     OrbApp().run()
