@@ -18,6 +18,7 @@ Submodules
    orb.logic.channel_selector
    orb.logic.cron
    orb.logic.download_thread
+   orb.logic.forwarding_history
    orb.logic.gestures_delegate
    orb.logic.htlc
    orb.logic.htlc_grpc

@@ -26,3 +26,11 @@ Subpackages
    orb.status_line
    orb.store
    orb.widgets
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   orb.kvs

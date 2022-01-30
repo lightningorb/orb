@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 20:53:11
+# @Last Modified time: 2022-01-30 17:16:51
 
 import os
 import re
@@ -34,7 +34,7 @@ def copy_files(c):
     c.run("rm -rf /tmp/lnorb/")
     c.run("mkdir -p /tmp/lnorb/")
     c.run(
-        "cp -r tests third_party main.py images/ln.png images docs orb user video_library.yaml images/orb.png /tmp/lnorb/"
+        "cp -r tests third_party main.py images/ln.png images docs orb user video_library.yaml /tmp/lnorb/"
     )
 
 
@@ -97,12 +97,12 @@ def toolchain_pip(c, env=dict(PATH=os.environ["PATH"])):
 
 
 @task
-def toolchain_build(c, env=dict(PATH=os.environ["PATH"])):
+def toolchain_build(c, env=os.environ):
     with c.cd("build"):
+        c.run("toolchain build python3", env=env)
         c.run("toolchain build openssl", env=env)
         c.run("toolchain build ffmpeg", env=env)
         c.run("toolchain build kivy", env=env)
-        c.run("toolchain build python3", env=env)
         c.run("toolchain build pillow", env=env)
         c.run("toolchain build ffpyplayer", env=env)
         c.run("toolchain build libzbar", env=env)
@@ -112,7 +112,7 @@ def toolchain_build(c, env=dict(PATH=os.environ["PATH"])):
 
 
 @task
-def toolchain(c, env=dict(PATH=os.environ["PATH"], clean=False)):
+def toolchain(c, env=dict(PATH=os.environ["PATH"]), clean=False):
     if clean:
         with c.cd("build"):
             c.run("toolchain distclean", en=env)

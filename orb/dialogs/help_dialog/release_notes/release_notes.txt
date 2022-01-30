@@ -1,6 +1,40 @@
-0.8.0
+0.9.0
 ----
 
+[dev] moved download_forwarding_history into logic package
+[dev] no need to call update_rect needlessly, significant speedup in
+    rendering
+[dev] add orb.kvs to hidden imports list
+Attributes Editor now shows fees earned
+[dev] added some windows debugging
+[dev] build automation
+
+
+v0.8.0
+------
+
+[dev] make sure Window object exists before maximizing
+[dev] build on main, not master
+[dev] build automation
+[dev] build on main - not master
+[dev] build targets need different names
+[dev] osx and linux builds automated
+[dev] linux build automated
+[dev] linux build
+[dev] cater for python < 3.9
+[dev] channel's local_balance_include_pending typo (not reading actual
+    pending pending htlcs)
+ubuntu build [dev]
+linux build [dev]
+linux build [dev]
+save app store credentials after login
+app store login dialog regression
+app is sluggish in mock mode
+linux build [dev]
+[dev] build system
+OSX build
+[dev] missed comma in settings.json (typo)
+fast-forward events on app resumption #168
 Feature Request - Channel sort options #167
 
 
@@ -9,10 +43,13 @@ v0.7.0
 
 version bump
 Kivy selection handles crash orb #157
-when quitting the app from the console, it saves the 'q' character in the buffer #166 the console doesn't save the last input #165
+when quitting the app from the console, it saves the 'q' character in
+    the buffer #166 the console doesn't save the last input #165
 When in the console, trouble going back to channels screen #161
-[dev] import Lnd in attributes editor to resolve "offline" label being displayed
-mouse down event in the channels widget overrides node background color #98
+[dev] import Lnd in attributes editor to resolve "offline" label being
+    displayed
+mouse down event in the channels widget overrides node background
+    color #98
 Update issue templates
 delete tls.cert on app exit #162
 likely forgot to check in [dev]
@@ -35,12 +72,14 @@ appstore app icons, and appstore login dialog
 Changing channel fees isn't reflected in fee gizmo #27
 attempt to speed up app-store with async loading
 removed telegram bots from workflows as they don't seem to work [dev]
-Merge pull request #146 from bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution
+Merge pull request #146 from
+    bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution
 When returning from the console, the 'view' menu isn't updated #144
 output doesn't appear in status line when line ends in a new line
 keysend over REST #145
 matched table with graph values
-fixed regression in console due to save / install menu items being removed
+fixed regression in console due to save / install menu items being
+    removed
 fixed module zero error in fee distribution dialog #140
 
 
@@ -68,7 +107,8 @@ v0.4.4
 ------
 
 version bump
-[dev] in ios app startup, place yaml files in correct directory, and don't overwrite if they already exist
+[dev] in ios app startup, place yaml files in correct directory, and
+    don't overwrite if they already exist
 [dev] provide sensible autobalance example file
 [dev] formatting
 [dev] better selection handling via main app object
@@ -116,7 +156,8 @@ bump minor version
 files are better organized
 init node to None, in case we fail to get channels
 'Forwarding History' submenu triggers a 'on_press' unexpectedly in IOS
-swiping up gives focus to the status output line, and brings up the keyboard #136
+swiping up gives focus to the status output line, and brings up the
+    keyboard #136
 Clicking on the menubar pans the channels view #135
 high resolution by default on desktop
 Make release notes available within the UI #134
@@ -128,7 +169,8 @@ Make video about documentation #129
 build
 by default, channels are now longer
 Make video about connecting to the node #127
-Add copy buttons to the Connection Settings dialog, to copy python commands #133
+Add copy buttons to the Connection Settings dialog, to copy python
+    commands #133
 GRPC should not be available in IOS #94
 add VERSION file with semver support #132
 
