@@ -2,12 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 06:28:21
-from kivy.utils import platform
-from orb.misc.utils import pref
+# @Last Modified time: 2022-02-01 06:39:01
 
-# ios = platform == "ios"
-ios = False
+from orb.misc.utils import pref
+from kivy.core.audio import SoundLoader
 
 
 class AudioManager:
@@ -21,46 +19,34 @@ class AudioManager:
         """
         Class constructor.
         """
-        if not ios:
-            from kivy.core.audio import SoundLoader
-
-            self.send_settle = SoundLoader.load("orb/audio/send_settle.wav")
-            self.forward_settle = SoundLoader.load("orb/audio/forward_settle.wav")
-            self.link_fail_event = SoundLoader.load("orb/audio/link_fail_event.wav")
-            self.samples = [self.send_settle, self.forward_settle, self.link_fail_event]
-
-    def set_volume(self):
-        """
-        Sets the volume based on the application settings.
-        """
-        if not ios:
-            for sample in self.samples:
-                sample.volume = pref("audio.volume")
+        self.volume = 1
+        self._current_sound = None
 
     def play(self, sound):
-        if not ios:
-            if sound.state == "play":
-                sound.stop()
-            sound.seek(0)
-            sound.play()
+        if self._current_sound:
+            self._current_sound.stop()
+            self._current_sound = None
+        self._current_sound = sound
+        sound.volume = float(pref("audio.volume"))
+        sound.play()
 
     def play_send_settle(self):
         """
         Play the audio for send HTLC.
         """
-        self.play(self.send_settle)
+        self.play(SoundLoader.load("orb/audio/send_settle.wav"))
 
     def play_forward_settle(self):
         """
         Play the audio for forward HTLC.
         """
-        self.play(self.forward_settle)
+        self.play(SoundLoader.load("orb/audio/forward_settle.wav"))
 
     def play_link_fail_event(self):
         """
         Play the audio for failed HTLC.
         """
-        self.play(self.link_fail_event)
+        self.play(SoundLoader.load("orb/audio/link_fail_event.wav"))
 
 
 audio_manager = AudioManager()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:16:55
+# @Last Modified time: 2022-02-01 06:24:27
 
 import os
 import sys
@@ -162,7 +162,6 @@ class OrbApp(MDApp):
         """
         Perform required tasks before app exists.
         """
-        audio_manager.set_volume()
         self.apps = Apps()
         self.apps.load_from_disk()
         self.apps.load_all_apps()
@@ -283,8 +282,6 @@ class OrbApp(MDApp):
         Currently we'd end up with multiple LND instances for example?
         Simply not an option.
         """
-        if f"{section}.{key}" == "audio.volume":
-            audio_manager.set_volume()
         self.main_layout.do_layout()
 
     @guarded
