@@ -14,7 +14,7 @@ Builder.load_string('''
             id: avatar
             size_hint: None, None
             size: "30dp", "30dp"
-            source: "ln.png"
+            source: "images/ln.png"
 
     MDLabel:
         text: root.alias

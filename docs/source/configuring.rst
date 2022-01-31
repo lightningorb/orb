@@ -1,60 +1,127 @@
+.. contents:: Table of Contents
+    :depth: 2
+
 Configuring
 ===========
 
-Connecting
-----------
+Orb needs to connect to your node from the outside world (from outside the node, unlike Umbrel which runs on the node itself). To do so, lnd.conf needs to be modified to allow outside connections.
 
-You'll need to be able to connect to your node externally to use Orb. To do so, you may need to add your node's IP to your lnd.conf, since by default, LND only serves requests on localhost.
+.. note::
+
+    Please note this is not a security liability, as Orb encrypts your certificate and macaroon using an RSA key unique to your device (unique to the device connecting to your node).
+
+LND
+---
+
+Step 1:
+.......
+
+SSH into your node.
+
+
+Step 2:
+.......
+
+Edit your `lnd.conf` and enter your node's externally visible IP as an entry:
 
 .. code:: bash
 
     tlsextraip=<your_node_ip>
 
+
 (please note the `tlsextraip=` line may appear multiple times).
 
-Then restart lnd.
+Step 3:
+.......
 
-Firewall
---------
+Shut down lnd.
 
-If you've opted for a direct connection, then on your node you'll need to open up port `10009` (or `8080` for IOS users).
+
+Step 4:
+.......
+
+Delete `.lnd/tls.cert`.
+
+
+Step 5:
+.......
+
+Start lnd.
+
+
+Umbrel
+------
+
+TODO.
+
+Raspblitz
+---------
+
+
+
+Step 1:
+.......
+
+SSH into your node.
+
+
+Step 2:
+.......
+
+Edit your `lnd.conf`, and enter your node's externally visible IP as an entry:
 
 .. code:: bash
 
-    sudo ufw allow 10009
-    sudo ufw allow 8080
-
-cert and macaroon
------------------
-
-Encode your macaroon to hex, by running this command in your node's terminal:
-
-.. code:: bash
-
-    python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
-
-Next cat your cert:
+    tlsextraip=<your_node_ip>
 
 
-.. code:: bash
-    
-    cat ~/.lnd/tls.cert
+(please note the `tlsextraip=` line may appear multiple times).
 
-And paste those into orb.
+Step 3:
+.......
 
-Next change the protocol from mock to grpc.
+Restart lnd.
 
-In orb now press 'refresh' to see your channels. If this doesn't work, you may need to restart the application to pick up the new config.
 
-App > Settings
---------------
+Connection Settings
+-------------------
 
 In Orb, now click on `app > settings`, and add the following information:
 
 
-.. image:: connection_config.png
-   :alt: main orb image
+IP Address
+..........
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-03-31.png
+   :alt: ip address
    :align: center
 
+Protocol
+........
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-15-39.png
+   :alt: protocol
+   :align: center
+
+Port
+........
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-24-25.png
+   :alt: protocol
+   :align: center
+
+TLS Certificate
+...............
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-25-55.png
+   :alt: protocol
+   :align: center
+
+Macaroon
+........
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-25-23.png
+   :alt: protocol
+   :align: center
 
 Click `close` and restart Orb.

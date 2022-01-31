@@ -55,10 +55,11 @@ If this mental model doesn't work for you, you can reverse it by toggling: ``app
 Sent / Received
 ---------------
 
-.. image:: sent_received.png
-   :align: center
-   :scale: 50%
 
-The lines extending out of the peers represent the total liquidty sent & received through those peers. 
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-42-50.png
+   :alt: sent received
+   :align: center
 
 Their visibity can be toggled via: `app > settings > display > show sent / received`.
+
+One green line indicates the channel made 10k sats in fees by routing out. One blue line indicates the channel routed in, and those routing events contributed to other channels making 100k sats in fees.

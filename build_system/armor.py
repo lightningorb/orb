@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 19:34:52
+# @Last Modified time: 2022-01-31 06:15:17
 
 from invoke import task
 from pathlib import Path
@@ -85,7 +85,7 @@ def build_common(c, env, sep=":"):
         ("orb/images/shadow_inverted.png", "orb/images/"),
         ("orb/misc/settings.json", "orb/misc/"),
         ("video_library.yaml", "."),
-        ("images/ln.png", "."),
+        ("images/ln.png", "images/"),
     ]
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"

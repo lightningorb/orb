@@ -1,0 +1,41 @@
+/*
+* @Author: lnorb.com
+* @Date:   2022-01-31 09:11:58
+* @Last Modified by:   lnorb.com
+* @Last Modified time: 2022-01-31 09:28:48
+*/
+
+/*@import "https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:700&amp;subset=latin-ext";
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    font-weight: 700;
+    font-family: "Saira Extra Condensed", Arial, sans-serif;
+}
+
+h1, h2, h3 {
+    text-transform: uppercase;
+}
+*/
+
+h1, h2, h3, h4, h5, h6 {
+    Font-Family: 'Work Sans', Sans-Serif;
+    Font-Size: 30px;
+}
+
+p, a, li {
+    Font-Family: 'Open Sans', Sans-Serif;
+    Font-Size: 18px;
+}
+
+header{
+    background-image: url("https://s3-us-east-2.amazonaws.com/lnorb/docs/bg.jpeg_2022-01-31_07-09-16.png");
+    background-size: cover;
+}
+
+@import https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans:300
+
+
+
+
+

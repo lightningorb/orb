@@ -161,18 +161,11 @@
       "key":"round_central_node"
    },
    {
-      "type":"options",
+      "type":"string",
       "title":"Display Currency",
-      "desc":"Display currency (in relevant components)",
+      "desc":"Display currency (ISO 4217) 'SAT' and 'BTC' also avaialble",
       "section":"display",
-      "key":"currency",
-      "options":[
-         "BTC",
-         "SAT",
-         "PHP",
-         "EUR",
-         "USD"
-      ]
+      "key":"currency"
    },
    {
       "type":"options",

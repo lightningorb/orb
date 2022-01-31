@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 17:16:51
+# @Last Modified time: 2022-01-31 06:16:12
 
 import os
 import re
@@ -34,7 +34,7 @@ def copy_files(c):
     c.run("rm -rf /tmp/lnorb/")
     c.run("mkdir -p /tmp/lnorb/")
     c.run(
-        "cp -r tests third_party main.py images/ln.png images docs orb user video_library.yaml /tmp/lnorb/"
+        "cp -r tests third_party main.py images docs orb user video_library.yaml /tmp/lnorb/"
     )
 
 

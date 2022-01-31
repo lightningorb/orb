@@ -1,4 +1,15 @@
 Installing
 ==========
 
-Currently Orb is only available to those with the `source <https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb>`_. Soon, there should be builds for all platforms, easily accessible.
+.. note::
+
+    Orb is currently in private beta-testing. If you'd like to become a tester, please email us at: testing-program at lnorb.com.
+
+
+Orb is currently available on:
+
+- IOS Testflight
+- `MacOSX <https://lnorb.com/releases>`_
+- `Linux <https://lnorb.com/releases>`_
+
+The `Windows build <https://lnorb.com/releases>`_ still needs more hands-on testing, and Android is in the works.

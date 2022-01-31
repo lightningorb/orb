@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:28:39
+# @Last Modified time: 2022-01-31 09:56:14
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -62,7 +62,7 @@ exclude_patterns = []
 # html_theme = "alabaster"
 # html_theme = "karma_sphinx_theme"
 # html_theme = "sphinxawesome_theme"
-html_theme = "python_docs_theme"
+html_theme = "karma_sphinx_theme"
 html_permalinks_icon = "<span>#</span>"
 # html_permalinks_icon = "<span>#</span>"
 
@@ -70,4 +70,11 @@ html_permalinks_icon = "<span>#</span>"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+templates_path = ["_templates"]
+html_css_files = ["custom.css"]
+html_favicon = "_static/orb_transparent_small.png"
 coverage_show_missing_items = True
+
+html_theme_options = {}
+
+html_show_sphinx = False

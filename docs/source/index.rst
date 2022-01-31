@@ -6,54 +6,67 @@
 Orb
 ===
 
-Orb is a cross-platform (Mac / Windows / OSX / Android) application for managing an LND lightning node. It features a basic IDE, and makes extending functionality, and sharing user scripts easy.
+Orb is a cross-platform (Mac / Windows / OSX / Android) application for managing an LND Lightning node. It features an awesome community, editor, API, App Store, full node automation engines and a lot more.
 
-It is actively developed, maintained and used by *top 100* node operators on `lightning terminal <https://terminal.lightning.engineering>`_.
-
-.. image:: main.png
-   :alt: main orb image
-   :align: center
+It is actively developed, maintained and used by *top 30* node operators on `lightning terminal <https://terminal.lightning.engineering>`_.
 
 
-Motivation
-==========
+Overview
+========
 
-Seeing is believing
--------------------
 
-Imagining / picturing the state of your channels and their liquidity isn't easy. Orb displays channels, peers, and their liquidity graphically and intuitively. It also displays animated HTLCs in realtime.
-
-Reducing information overload
------------------------------
-
-Another issue lightning node operators face is information overload. Orb tries to display information about your node visually whenever it can.
-
-Full node automation
---------------------
-
-The decisions that need to be made for keeping a node balanced and profitable can be fully automated given the right ideas, and tools. Orb aims to completely take peer selection, fee setting, and rebalancing out of the operator's hands with a sophisticated set of semiand fully automated fee and rebalacing engines.
-
-Community Scripts
+Fun & ease of use
 -----------------
 
-Many excellent pieces of software shine due to the scripts written and shared by their users. Orb provides an easy and well-documented way for users to write and share scripts amongst themselves.
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/orb_ipad.png
+   :align: left
+   :height: 150
 
-This blurs the barrier between 'user' and 'developer' and means users can solve their own problems while sharing their solutions with one other.
+Orb runs on your phone, and supports multi-touch gestures. Take your node wherever you go, and swipe channels to rebalance.
+
+Orb puts the power of a full Lightning Network node in the palms of your hands in a beautiful, portable and fun interface.
+
 
 Security
 --------
 
-Installing complex software stacks on your node has many (deleterious) security implications. Orb runs on your laptop or phone, and doesn't require any software to be installed on your node.
+.. image:: https://upload.wikimedia.org/wikipedia/commons/3/3b/RSA_logo_2008-to_present.jpg
+   :align: right
+   :width: 150
 
-Since orb doesn't run in a web-browser, the additional risks brought on by extensions and malicious javascript is entirely obviated.
 
-Multiplatform
--------------
+Convenience should never come at the cost of security. Orb runs on your phone, tablet and laptop–not on your node–and encrypts the certificate & macaroon with an **RSA encryption key tied to the device**.
 
-Orb runs on OSX and Windows. This gives operators a familiar and mature environment in which to operate.
 
-Orb also runs all IOS and Android. As such operators can operate their nodes while on the move.
+Automation
+----------
 
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Finding_Balance_Part_2_Examining_the_Shortcomings_of_Typical_Engine_Balancing_Techniques_-_OnAllCylinders_2022-01-31_10-05-19.p_2022-01-31_10-06-00.jpg
+   :align: left
+   :width: 150
+
+Setting fees and balancing a node by hand is time consuming. Orb provides fully automated fee-setting and rebalancing engines.
+
+Apps
+----
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Cross-Platform_Must_Have_Apps_For_The_College_Student_2022-01-31_10-11-48.png
+   :align: right
+   :width: 150
+
+
+The Lightning Network is constantly evolving and growing; so should its tools. Orb's API enables you to 'scratch your own itch', and the app store enables you to deploy tools securely and rapily.
+
+Data Science
+------------
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Data_science_concepts_you_need_to_know_Part_1__by_Michael_Barber__Towards_Data_Science_2022-01-31_10-15-17.jpg
+   :align: left
+   :width: 150
+
+Orb caches transactions and payments locally, and provides you with the information you actually want, such as how much channels are earning, their fee profiles etc. it also exposes this data conveniently to libraries like Numpy, Pandas, TensorFlow etc.
+
+The Lightning Network should be data-driven. Orb makes this goal easy to attain.
 
 .. toctree::
    :maxdepth: 3

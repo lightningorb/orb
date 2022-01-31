@@ -1,13 +1,22 @@
 Lightning
 =========
 
+In this section we'll cover the dialogs under the `lightning` menu.
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-30-55.png
+   :alt: lightning menu
+   :align: center
+
+Click `close` and restart Orb.
+
+
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
 
    channels
-   attribute_editor
-   hud
+   channel_editor
+   peeps
    invoice_ingestion
    pay
    rebalance

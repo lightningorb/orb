@@ -4,3 +4,5 @@ pyinstaller
 semver
 requests
 gitpython
+sphinx
+karma-sphinx-theme
