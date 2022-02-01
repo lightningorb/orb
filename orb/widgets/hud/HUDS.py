@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 13:30:27
+# @Last Modified time: 2022-02-01 04:15:17
 
 import threading
 import requests
@@ -278,7 +278,9 @@ class HUDProtocol(Button):
 
         if desktop and not data_manager.data_man.menu_visible:
             app = App.get_running_app()
-            app.config.set("lnd", "protocol", "grpc" if is_rest() else "rest")
+            opt = {"rest": "grpc", "grpc": "rest"}
+            app.config.set("lnd", "protocol", opt[pref("lnd.protocol")])
+            app.config.write()
             self.text = pref("lnd.protocol")
             return False
         return super(HUDProtocol, self).on_release(*args, **kwargs)
