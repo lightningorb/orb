@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-27 13:26:00
+# @Last Modified time: 2022-02-01 06:36:17
 import sys
 import base64
 import os
@@ -31,7 +31,31 @@ except:
 MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
 
-edge_mutex = Lock()
+class CountLock:
+    """
+    A Lock context manager, that locks the lock if
+    there are more than _num threads currently
+    within the context.
+    """
+
+    def __init__(self, num):
+        self._count = 0
+        self._num = num
+        self._lock = Lock()
+
+    def __enter__(self):
+        self._count += 1
+        if self._count > self._num:
+            self._lock.acquire()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._count -= 1
+        if self._lock.locked():
+            self._lock.release()
+
+
+edge_mutex = CountLock(5)
 
 
 class LndGRPC(LndBase):
@@ -164,7 +188,6 @@ class LndGRPC(LndBase):
         except:
             return None
 
-    # @lru_cache(maxsize=None)
     def get_edge(self, channel_id):
         with edge_mutex:
             return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
