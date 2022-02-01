@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 03:50:08
+# @Last Modified time: 2022-02-01 07:03:12
 
 from threading import Thread
 
@@ -99,6 +99,9 @@ class AttributeEditor(BoxLayout):
                     self.ids.md_list.clear_widgets()
                     self.populate_fees()
                     if is_rest():
+                        # TODO: calling channel.channel is a little problematic
+                        # ideally we should no longer refer to the channel.channel
+                        # object, and it should be removed from the Channel class
                         self.populate_rest(c=self.channel.channel.__dict__)
                     else:
                         self.populate_grpc()
@@ -172,7 +175,7 @@ class AttributeEditor(BoxLayout):
             elif type(c[field]) in [int, str]:
                 val = c[field]
                 if type(c[field]) is int:
-                    val = str(int(c[field]))
+                    val = f"{c[field]:_}"
                 widget = MDTextField(
                     helper_text=field,
                     helper_text_mode="persistent",
@@ -199,20 +202,28 @@ class AttributeEditor(BoxLayout):
                 )
                 try:
                     for f in field[1].DESCRIPTOR.fields:
+                        if f.type in [3, 4] and f.name != "chan_id":
+                            val = f"{getattr(field[1], f.name):_}"
+                        else:
+                            val = str(getattr(field[1], f.name))
                         widget = MDTextField(
                             helper_text=f.name,
                             helper_text_mode="persistent",
-                            text=str(getattr(field[1], f.name)),
+                            text=val,
                         )
                         self.ids.md_list.add_widget(widget)
                         widget.readonly = True
                 except:
                     pass
             else:
+                if field[0].type in [3, 4] and field[0].name != "chan_id":
+                    val = f"{field[1]:_}"
+                else:
+                    val = str(field[1])
                 widget = MDTextField(
                     helper_text=field[0].name,
                     helper_text_mode="persistent",
-                    text=str(field[1]),
+                    text=val,
                 )
                 widget.readonly = True
                 self.ids.md_list.add_widget(widget)
@@ -248,7 +259,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.channel.fee_rate_milli_msat),
+                text=f"{self.channel.fee_rate_milli_msat:_}",
                 helper_text="Fee Rate Milli Msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.fee_rate_milli_msat_changed,
@@ -256,7 +267,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.channel.fee_base_msat),
+                text=f"{self.channel.fee_base_msat:_}",
                 helper_text="Fee Base Msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.fee_base_msat_changed,
@@ -264,7 +275,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.channel.min_htlc_msat),
+                text=f"{self.channel.min_htlc_msat:_}",
                 helper_text="Min HTLC msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.min_htlc_changed,
@@ -272,7 +283,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.channel.max_htlc_msat),
+                text=f"{self.channel.max_htlc_msat:_}",
                 helper_text="Max HTLC msat",
                 helper_text_mode="persistent",
                 on_text_validate=self.max_htlc_msat_changed,
@@ -280,7 +291,7 @@ class AttributeEditor(BoxLayout):
         )
         self.ids.md_list.add_widget(
             MDTextField(
-                text=str(self.channel.time_lock_delta),
+                text=f"{self.channel.time_lock_delta:_}",
                 helper_text="Time Lock Delta",
                 helper_text_mode="persistent",
                 on_text_validate=self.time_lock_delta_changed,
