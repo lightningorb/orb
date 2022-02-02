@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 11:33:26
+# @Last Modified time: 2022-02-01 07:46:51
 
 import threading
 from time import sleep
@@ -35,6 +35,23 @@ class ChannelsThread(threading.Thread):
                         if self.stopped():
                             return
                         print(e)
+                        if e.inactive_channel:
+                            print(dir(e.inactive_channel))
+                            """
+                            inactive_channel {
+                              funding_txid_bytes: "\350\035\010\310\204WC}\341\301\r\345Fn\273>\326\366_\213\251E\334%\346$\2447\301\032\267,"
+                              output_index: 1
+                            }
+                            """
+                        if e.active_channel:
+                            print(dir(e.active_channel))
+                            """
+                            active_channel {
+                              funding_txid_bytes: "\230&\303o\r\\m\204G\322?N\241\243\336j\333(\333\t\203\']\363\320Y\370\361\005\216\302\313"
+                              output_index: 5
+                            }
+                            type: ACTIVE_CHANNEL
+                            """
                         if e.open_channel.chan_id:
                             self.inst.channels.channels.append(e.open_channel)
                             self.inst.add_channel(e.open_channel)

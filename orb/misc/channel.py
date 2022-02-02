@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:18:46
+# @Last Modified time: 2022-02-01 06:42:12
 
 from threading import Thread
 
@@ -157,6 +157,10 @@ class Channel(EventDispatcher):
         self.unsettled_balance = channel.unsettled_balance
         self.channel_point = channel.channel_point
         self.channel = channel
+
+    @property
+    def alias(self):
+        return Lnd().get_node_alias(self.chan_id)
 
     @property
     def local_balance_include_pending(self):

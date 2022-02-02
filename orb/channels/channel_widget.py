@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:43:47
+# @Last Modified time: 2022-02-01 06:42:35
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -284,6 +284,10 @@ class ChannelWidget(Widget):
                 if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                     if htlc.incoming_channel_id and htlc.outgoing_channel_id:
                         print("FAIL!")
+                        outgoing_channel = data_manager.data_man.channels.channels[
+                            htlc.outgoing_channel_id
+                        ]
+                        print(outgoing_channel.alias)
                         print(htlc.__dict__)
                         if htlc.failure_detail != "HTLC_EXCEEDS_MAX":
                             audio_manager.play_link_fail_event()

@@ -14,3 +14,4 @@ tutes
 .DS_Store
 .idea
 docs/docsbuild/
+*/node_modules
