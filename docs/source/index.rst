@@ -41,7 +41,7 @@ Convenience should never come at the cost of security. Orb runs on your phone, t
 Automation
 ----------
 
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Finding_Balance_Part_2_Examining_the_Shortcomings_of_Typical_Engine_Balancing_Techniques_-_OnAllCylinders_2022-01-31_10-05-19.p_2022-01-31_10-06-00.jpg
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/automation.jpeg
    :align: left
    :width: 150
 
@@ -50,7 +50,7 @@ Setting fees and balancing a node by hand is time consuming. Orb provides fully 
 Apps
 ----
 
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Cross-Platform_Must_Have_Apps_For_The_College_Student_2022-01-31_10-11-48.png
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/Cross-Platform_Must_Have_Apps_For_The_College_Student_2022-01-31_10-11-48.png
    :align: right
    :width: 150
 
@@ -60,7 +60,7 @@ The Lightning Network is constantly evolving and growing; so should its tools. O
 Data Science
 ------------
 
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Data_science_concepts_you_need_to_know_Part_1__by_Michael_Barber__Towards_Data_Science_2022-01-31_10-15-17.jpg
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/Data_science_concepts_you_need_to_know_Part_1__by_Michael_Barber__Towards_Data_Science_2022-01-31_10-15-17.jpeg
    :align: left
    :width: 150
 

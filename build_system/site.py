@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:20:45
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-02 09:26:00
+# @Last Modified time: 2022-02-02 11:51:26
 
 
 from fabric import Connection
@@ -35,6 +35,7 @@ def upload(c):
     ) as con:
         con.put("site.zip", "/home/ubuntu/lnorb_com/")
         with con.cd("/home/ubuntu/lnorb_com/"):
+            con.run("rm -rf build css fonts images scss")
             con.run("unzip -o site.zip")
 
 
