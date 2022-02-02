@@ -10,7 +10,6 @@ orb.ini
 build
 tmp.py
 tutes
-*.yaml
 .DS_Store
 .idea
 docs/docsbuild/
