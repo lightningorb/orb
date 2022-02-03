@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 06:48:54
+# @Last Modified time: 2022-02-03 16:18:10
 
 from invoke import task
 import os
 
-# ./build.py -H ubuntu@18.118.53.220 -i orbdb.cer appstore.remote.clone
-# ./build.py -H ubuntu@18.118.53.220 -i orbdb.cer appstore.remote.install-service
-# ./build.py -H ubuntu@18.118.53.220 -i orbdb.cer appstore.remote.drop-tables
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.clone
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.install-service
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.drop-tables
 
 
 @task
@@ -42,7 +42,7 @@ def clone(c, branch=None):
     with c.cd("orb"):
         c.run("git pull")
         if branch:
-            c.run("git checkout windows")
+            c.run(f"git checkout {branch}")
             c.run("git pull")
         else:
             c.run("git checkout main")
