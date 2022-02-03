@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 13:04:07
+# @Last Modified time: 2022-02-03 19:00:29
 
 print("loading main")
 print("loading system libraries")
@@ -60,6 +60,7 @@ from orb.dialogs.app_store import TipDialog
 from orb.dialogs.mail_dialog import MailDialog
 from orb.core_ui.main_layout import MainLayout
 from orb.status_line.status_line import StatusLine
+from orb.dialogs import forwarding_history
 
 from orb.core_ui.top_menu import TopMenu
 from orb.logic.cron import cron
@@ -107,6 +108,7 @@ keep(BatchOpenScreen)
 keep(FeeDistribution)
 keep(About)
 keep(UploadAppDialog)
+keep(forwarding_history)
 
 if __name__ == "__main__":
     # import unittest
