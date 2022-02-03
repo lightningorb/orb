@@ -6,3 +6,6 @@ requests
 gitpython
 sphinx
 karma-sphinx-theme
+boto3
+rsa
+gitpython

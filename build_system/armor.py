@@ -2,19 +2,45 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-31 06:15:17
+# @Last Modified time: 2022-02-03 15:35:39
 
-from invoke import task
-from pathlib import Path
-import requests
-import zipfile
-from fabric import Connection
-
-
-import os
+try:
+    # not all actions install all requirements
+    import os
+    from invoke import task
+    from pathlib import Path
+    import requests
+    import zipfile
+    from fabric import Connection
+    import git
+    import yaml
+    import logging
+    import boto3
+    from botocore.exceptions import ClientError
+    import rsa
+except:
+    pass
 
 name = "lnorb"
 VERSION = open("VERSION").read().strip()
+
+
+def upload_to_s3(env, file_name, bucket, object_name=None):
+    if object_name is None:
+        object_name = os.path.basename(file_name)
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=env["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=env["AWS_SECRET_ACCESS_KEY"],
+    )
+    try:
+        response = s3_client.upload_file(
+            file_name, bucket, object_name, ExtraArgs={"ACL": "public-read"}
+        )
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
 
 
 def zipdir(path, ziph):
@@ -120,10 +146,32 @@ def build_linux(c, env=os.environ):
         upload(f"tmp/{build_name}")
 
 
+def bind_mac_address(c, env):
+    """
+    Get the currently checked out tag, decrypt the mac address
+    and bind it to the license.
+    """
+    import codecs
+
+    repo = git.Repo(".")
+    c.run("git tag | xargs git tag -d")
+    repo.git.fetch("--tags")
+    tag = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
+    message = tag.tag.message
+    decoded = codecs.decode(message.encode(), "hex")
+    commit = yaml.safe_load(
+        rsa.decrypt(decoded, rsa.PrivateKey.load_pkcs1(env["RSA_PRIV"])).decode()
+    )
+    c.run(f"pyarmor licenses --bind-mac '{commit}' code-003", env=env)
+    return tag.name.split("_")[-1]
+
+
 @task
 def build_osx(c, env=os.environ):
-    build_common(c, env, ":")
-    dmg(c)
+    mac_hash = bind_mac_address(c, env)
+    build_common(c=c, env=env, sep=":")
+    file_name = dmg(c=c, env=env, mac_hash=mac_hash)
+    upload_to_s3(env, file_name, "lnorb", object_name=f"customer_builds/{file_name}")
 
 
 @task
@@ -136,8 +184,7 @@ def build_windows(c, env=os.environ):
     upload(build_name)
 
 
-@task
-def dmg(c, env=os.environ):
+def dmg(c, env=os.environ, mac_hash=None):
     c.run("rm -f *.dmg ")
     c.run(
         f"""
@@ -154,6 +201,6 @@ def dmg(c, env=os.environ):
         """,
         env=env,
     )
-    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.dmg"
+    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64_{mac_hash}.dmg"
     os.rename(f"{name}.dmg", build_name)
-    upload(build_name)
+    return build_name
