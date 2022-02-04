@@ -47,6 +47,8 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-          cache: 'pip'
+          # windows build no longer working for some reason.
+          # try disabling pip caching
+          # cache: 'pip'
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: python ./build.py armor.build-windows
