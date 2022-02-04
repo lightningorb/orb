@@ -1,3 +1,4 @@
+.envrc
 node_modules
 *.spec
 *.dmg
@@ -15,3 +16,4 @@ tutes
 .idea
 docs/docsbuild/
 */node_modules
+licenses
