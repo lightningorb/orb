@@ -25,3 +25,4 @@ passlib
 python-jose
 psycopg2-binary
 arrow
+nameko_sqlalchemy
