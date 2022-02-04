@@ -2,13 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-02-05 05:46:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 07:24:01
+# @Last Modified time: 2022-02-05 07:40:28
 
 """
 Everything related to recieving and processing licence payments on
 the LND node.
 
 ./build.py katching.deploy-katching
+./build.py katching.deploy-katching-service
 ./build.py katching.deploy-lnd-invoice-service
 
 """
@@ -40,15 +41,20 @@ def deploy_lnd_invoice_service(c, env=os.environ):
 @task
 def deploy_katching_service(c, env=os.environ):
     """
-    The Katching Service scans for SETTLED invoices on the
-    LND node, and dispatches them as jobs on RabbitMQ.
+    The Katching Service gets settled invoices from RabbitMQ
+    and updates the database.
     """
-    with c.cd("orb"):
-        c.run("git stash")
-        c.run("git pull")
-        c.put("build_system/katching.conf", "/tmp/")
-    c.sudo("mv /tmp/katching.conf /etc/supervisor/conf.d/")
-    c.sudo("supervisorctl update")
+    with Connection(
+        env["SERVER_HOSTNAME"],
+        connect_kwargs={"key_filename": env["SERVER_SSH_CERT"]},
+        user="ubuntu",
+    ) as con:
+        with con.cd("orb"):
+            con.run("git stash")
+            con.run("git pull")
+            con.put("build_system/katching_service.conf", "/tmp/")
+        con.sudo("mv /tmp/katching_service.conf /etc/supervisor/conf.d/")
+        con.sudo("supervisorctl update")
 
 
 @task
