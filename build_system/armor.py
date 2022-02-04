@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-04 19:21:25
+# @Last Modified time: 2022-02-04 19:54:44
 
 try:
     # not all actions install all requirements
@@ -117,7 +117,7 @@ def build_common(c, env, sep=":"):
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
-        f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
+        f"""pyarmor pack --with-license outer --name {name} \
              -e " {pyinstall_flags}" \
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
@@ -134,7 +134,7 @@ def build_linux(c, env=os.environ):
     c.run("cp -r orb tmp/;")
     with c.cd("tmp"):
         c.run(
-            "pyarmor obfuscate --with-license ../licenses/r003/license.lic --recursive main.py;",
+            "pyarmor obfuscate --with-license outer --recursive main.py;",
             env=env,
         )
         c.run("rm -rf orb main.py third_party")
@@ -143,7 +143,12 @@ def build_linux(c, env=os.environ):
             f.write(ubuntu_boostrap_3_9())
         build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"
         c.run(f"tar czvf {build_name} orb;")
-        upload(f"tmp/{build_name}")
+        upload_to_s3(
+            env,
+            f"tmp/{build_name}",
+            "lnorb",
+            object_name=f"customer_builds/{build_name}",
+        )
 
 
 @task
@@ -160,7 +165,7 @@ def build_windows(c, env=os.environ):
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
     zipdir("dist", zipf)
     zipf.close()
-    upload(build_name)
+    upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
 
 
 def dmg(c, env=os.environ):
