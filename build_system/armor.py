@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-03 15:35:39
+# @Last Modified time: 2022-02-04 19:21:25
 
 try:
     # not all actions install all requirements
@@ -146,31 +146,10 @@ def build_linux(c, env=os.environ):
         upload(f"tmp/{build_name}")
 
 
-def bind_mac_address(c, env):
-    """
-    Get the currently checked out tag, decrypt the mac address
-    and bind it to the license.
-    """
-    import codecs
-
-    repo = git.Repo(".")
-    c.run("git tag | xargs git tag -d")
-    repo.git.fetch("--tags")
-    tag = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
-    message = tag.tag.message
-    decoded = codecs.decode(message.encode(), "hex")
-    commit = yaml.safe_load(
-        rsa.decrypt(decoded, rsa.PrivateKey.load_pkcs1(env["RSA_PRIV"])).decode()
-    )
-    c.run(f"pyarmor licenses --bind-mac '{commit}' code-003", env=env)
-    return tag.name.split("_")[-1]
-
-
 @task
 def build_osx(c, env=os.environ):
-    mac_hash = bind_mac_address(c, env)
     build_common(c=c, env=env, sep=":")
-    file_name = dmg(c=c, env=env, mac_hash=mac_hash)
+    file_name = dmg(c=c, env=env)
     upload_to_s3(env, file_name, "lnorb", object_name=f"customer_builds/{file_name}")
 
 
@@ -184,7 +163,7 @@ def build_windows(c, env=os.environ):
     upload(build_name)
 
 
-def dmg(c, env=os.environ, mac_hash=None):
+def dmg(c, env=os.environ):
     c.run("rm -f *.dmg ")
     c.run(
         f"""
@@ -201,6 +180,6 @@ def dmg(c, env=os.environ, mac_hash=None):
         """,
         env=env,
     )
-    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64_{mac_hash}.dmg"
+    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.dmg"
     os.rename(f"{name}.dmg", build_name)
     return build_name

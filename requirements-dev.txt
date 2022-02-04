@@ -9,3 +9,19 @@ karma-sphinx-theme
 boto3
 rsa
 gitpython
+
+# site
+
+uvicorn
+fastapi
+orjson
+gitpython
+nameko
+sqlalchemy
+sqlalchemy_utils
+python-multipart
+toml
+passlib
+python-jose
+psycopg2-binary
+arrow

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-20 08:45:23
+# @Last Modified time: 2022-02-04 15:48:58
 
 from invoke import task
 import os
@@ -11,10 +11,11 @@ import os
 
 
 @task
-def start(c, env=os.environ["PATH"]):
-    uvcpath = "/Library/Frameworks/Python.framework/Versions/3.9/bin/uvicorn"
+def start(c, env=os.environ):
+    env["PYTHONPATH"] = "../"
+    uvcpath = "/Library/Frameworks/Python.framework/Versions/3.7/bin/uvicorn"
     with c.cd("server"):
-        c.run(f"{uvcpath} orb_server:app --reload")
+        c.run(f"{uvcpath} orb_server:app --reload", env=env)
 
 
 @task

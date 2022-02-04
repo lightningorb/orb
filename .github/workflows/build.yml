@@ -1,7 +1,10 @@
 name: test and build
 on:
   push:
-    branches: [ builds ]
+    branches: [ site ]
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 jobs:
   build_linux:
     runs-on: ubuntu-20.04
