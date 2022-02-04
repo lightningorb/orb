@@ -1,7 +1,7 @@
 name: test and build
 on:
   push:
-    branches: [ site ]
+    branches: [ build ]
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
