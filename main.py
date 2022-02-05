@@ -2,13 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-03 19:00:29
+# @Last Modified time: 2022-02-05 16:18:13
 
 print("loading main")
 print("loading system libraries")
 import sys
 import os
 from pathlib import Path
+from kivy.config import Config
+
+
+print(platform)
+
+if platform == "windows":
+    Config.set("graphics", "multisamples", "0")
 
 # os.environ["KIVY_AUDIO"] = "ffpyplayer"
 # os.environ["KIVY_VIDEO"] = "ffpyplayer"
