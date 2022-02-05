@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 16:51:57
+# @Last Modified time: 2022-02-05 17:10:12
 
 try:
     # not all actions install all requirements
@@ -158,6 +158,9 @@ def build_osx(c, env=os.environ):
     upload_to_s3(env, file_name, "lnorb", object_name=f"customer_builds/{file_name}")
 
 
+import shutil
+
+
 @task
 def build_windows(c, env=os.environ):
     build_common(c, env, ";")
@@ -165,7 +168,7 @@ def build_windows(c, env=os.environ):
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
     for p in Path(".").glob("*.spec"):
         print(p)
-        c.run(f"cp {p.as_posix()} dist/")
+        shutil.copyfile(p.as_posix(), "dist")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
