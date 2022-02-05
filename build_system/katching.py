@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-05 05:46:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 08:11:00
+# @Last Modified time: 2022-02-05 08:11:49
 
 """
 Everything related to recieving and processing licence payments on
@@ -75,4 +75,4 @@ def deploy_katching(c, env=os.environ):
             con.put("build_system/katching.conf", "/tmp/")
         con.sudo("mv /tmp/katching.conf /etc/supervisor/conf.d/")
         con.sudo("supervisorctl update")
-        con.sudo("supervisorctl restart")
+        con.sudo("supervisorctl restart katching")
