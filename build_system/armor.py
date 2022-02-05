@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 17:10:12
+# @Last Modified time: 2022-02-05 17:17:35
 
 try:
     # not all actions install all requirements
@@ -168,7 +168,8 @@ def build_windows(c, env=os.environ):
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
     for p in Path(".").glob("*.spec"):
         print(p)
-        shutil.copyfile(p.as_posix(), "dist")
+        print(p.open().read())
+        # shutil.copyfile(p.as_posix(), "dist")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
