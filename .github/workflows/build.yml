@@ -1,7 +1,10 @@
 name: test and build
 on:
   push:
-    branches: [ builds ]
+    branches: [ site ]
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 jobs:
   build_linux:
     runs-on: ubuntu-20.04
@@ -44,6 +47,8 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-          cache: 'pip'
+          # windows build no longer working for some reason.
+          # try disabling pip caching
+          # cache: 'pip'
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: python ./build.py armor.build-windows

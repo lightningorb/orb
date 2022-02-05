@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 06:01:00
+# @Last Modified time: 2022-02-04 21:04:00
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -193,6 +193,12 @@ class LndREST(LndBase):
 
     def get_htlc_events(self):
         url = f"{self.fqdn}/v2/router/htlcevents"
+        return requests.get(
+            url, headers=self.headers, verify=self.cert_path, stream=True
+        ).iter_lines()
+
+    def get_invoice_events(self):
+        url = f"{self.fqdn}/v1/invoices/subscribe"
         return requests.get(
             url, headers=self.headers, verify=self.cert_path, stream=True
         ).iter_lines()

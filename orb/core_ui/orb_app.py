@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-01 06:24:27
+# @Last Modified time: 2022-02-05 16:04:34
 
 import os
 import sys
@@ -38,6 +38,11 @@ from orb.misc.prefs import cert_path
 from orb.misc import data_manager
 
 ios = platform == "ios"
+
+print(platform)
+
+if platform == "windows":
+    Config.set("graphics", "multisamples", "0")
 
 sys.path.append("orb/lnd/grpc_generate")
 sys.path.append("orb/lnd")

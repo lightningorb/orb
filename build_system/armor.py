@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-03 15:35:39
+# @Last Modified time: 2022-02-05 17:46:56
 
 try:
     # not all actions install all requirements
@@ -117,7 +117,7 @@ def build_common(c, env, sep=":"):
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
-        f"""pyarmor pack --with-license licenses/r003/license.lic --name {name} \
+        f"""pyarmor pack -s lnorb-win-patched.spec --with-license outer --name {name} \
              -e " {pyinstall_flags}" \
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
@@ -134,7 +134,7 @@ def build_linux(c, env=os.environ):
     c.run("cp -r orb tmp/;")
     with c.cd("tmp"):
         c.run(
-            "pyarmor obfuscate --with-license ../licenses/r003/license.lic --recursive main.py;",
+            "pyarmor obfuscate --with-license outer --recursive main.py;",
             env=env,
         )
         c.run("rm -rf orb main.py third_party")
@@ -143,34 +143,18 @@ def build_linux(c, env=os.environ):
             f.write(ubuntu_boostrap_3_9())
         build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"
         c.run(f"tar czvf {build_name} orb;")
-        upload(f"tmp/{build_name}")
-
-
-def bind_mac_address(c, env):
-    """
-    Get the currently checked out tag, decrypt the mac address
-    and bind it to the license.
-    """
-    import codecs
-
-    repo = git.Repo(".")
-    c.run("git tag | xargs git tag -d")
-    repo.git.fetch("--tags")
-    tag = next((tag for tag in repo.tags if tag.commit == repo.head.commit), None)
-    message = tag.tag.message
-    decoded = codecs.decode(message.encode(), "hex")
-    commit = yaml.safe_load(
-        rsa.decrypt(decoded, rsa.PrivateKey.load_pkcs1(env["RSA_PRIV"])).decode()
-    )
-    c.run(f"pyarmor licenses --bind-mac '{commit}' code-003", env=env)
-    return tag.name.split("_")[-1]
+        upload_to_s3(
+            env,
+            f"tmp/{build_name}",
+            "lnorb",
+            object_name=f"customer_builds/{build_name}",
+        )
 
 
 @task
 def build_osx(c, env=os.environ):
-    mac_hash = bind_mac_address(c, env)
     build_common(c=c, env=env, sep=":")
-    file_name = dmg(c=c, env=env, mac_hash=mac_hash)
+    file_name = dmg(c=c, env=env)
     upload_to_s3(env, file_name, "lnorb", object_name=f"customer_builds/{file_name}")
 
 
@@ -179,12 +163,16 @@ def build_windows(c, env=os.environ):
     build_common(c, env, ";")
     build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.zip"
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
+    # for p in Path(".").glob("*.spec"):
+    #     print(p)
+    #     print(p.open().read())
+    # shutil.copyfile(p.as_posix(), "dist")
     zipdir("dist", zipf)
     zipf.close()
-    upload(build_name)
+    upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
 
 
-def dmg(c, env=os.environ, mac_hash=None):
+def dmg(c, env=os.environ):
     c.run("rm -f *.dmg ")
     c.run(
         f"""
@@ -201,6 +189,6 @@ def dmg(c, env=os.environ, mac_hash=None):
         """,
         env=env,
     )
-    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64_{mac_hash}.dmg"
+    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.dmg"
     os.rename(f"{name}.dmg", build_name)
     return build_name

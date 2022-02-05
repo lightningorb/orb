@@ -1,5 +1,6 @@
+.envrc
 node_modules
-*.spec
+#*.spec
 *.dmg
 dist
 icons
@@ -15,3 +16,4 @@ tutes
 .idea
 docs/docsbuild/
 */node_modules
+licenses
