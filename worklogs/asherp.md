@@ -1,3 +1,6 @@
+
+### 2022-02-05 13:44:47.727372: clock-in
+
 ### 2022-01-23 15:48:14.240432: clock-out
 
 * using last_offset_index from lnd, still getting discrepancy
@@ -42,7 +45,15 @@ import pandas as pd
 
 ```python
 fwd = pd.read_csv('../forwarding_events_lnd.csv', index_col=0)
-fwd.index = pd.to_datetime(forwarding_events.index)
+fwd.index = pd.to_datetime(fwd.index)
+```
+
+```python
+fwd['amt_delta'] = fwd.amt_in - fwd.amt_out
+```
+
+```python
+fwd[fwd.amt_delta != fwd.fee]
 ```
 
 These amounts still aren't adding up when pulling from the database.
