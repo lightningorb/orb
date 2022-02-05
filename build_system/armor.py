@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-04 19:54:44
+# @Last Modified time: 2022-02-05 16:51:57
 
 try:
     # not all actions install all requirements
@@ -117,7 +117,7 @@ def build_common(c, env, sep=":"):
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
-        f"""pyarmor pack --with-license outer --name {name} \
+        f"""pyarmor pack --debug --with-license outer --name {name} \
              -e " {pyinstall_flags}" \
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
@@ -163,6 +163,9 @@ def build_windows(c, env=os.environ):
     build_common(c, env, ";")
     build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.zip"
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
+    for p in Path(".").glob("*.spec"):
+        print(p)
+        c.run(f"cp {p.as_posix()} dist/")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
