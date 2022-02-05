@@ -1,12 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 from kivy_deps import glew, sdl2
-
+from pathlib import Path
 block_cipher = None
 
 a = Analysis(['main.py'],
              pathex=['third_party/arrow', 'third_party/bezier', 'third_party/colour', 'third_party/contextmenu', 'third_party/currency-symbols', 'third_party/forex-python', 'third_party/python-qrcode', 'dist\\obf\\temp'],
-             binaries=[(p,p) for p in (sdl2.dep_bins + glew.dep_bins)],
+             binaries=[(Path(p), '.') for p in (sdl2.dep_bins + glew.dep_bins)],
              datas=[('orb/lnd/grpc_generated', 'orb/lnd/grpc_generated'), ('orb/images/shadow_inverted.png', 'orb/images/'), ('orb/misc/settings.json', 'orb/misc/'), ('video_library.yaml', '.'), ('images/ln.png', 'images/')],
              hiddenimports=['orb.kvs', 'orb.misc', 'kivymd.effects.stiffscroll.StiffScrollEffect', 'pandas.plotting._matplotlib', 'pkg_resources', 'pytransform'],
              hookspath=['dist\\obf\\temp'],
