@@ -1,6 +1,6 @@
 .envrc
 node_modules
-*.spec
+#*.spec
 *.dmg
 dist
 icons

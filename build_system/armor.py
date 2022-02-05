@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 17:17:35
+# @Last Modified time: 2022-02-05 17:31:39
 
 try:
     # not all actions install all requirements
@@ -117,7 +117,7 @@ def build_common(c, env, sep=":"):
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
-        f"""pyarmor pack --debug --with-license outer --name {name} \
+        f"""pyarmor pack -s Orb-patched.spec --with-license outer --name {name} \
              -e " {pyinstall_flags}" \
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
@@ -158,18 +158,15 @@ def build_osx(c, env=os.environ):
     upload_to_s3(env, file_name, "lnorb", object_name=f"customer_builds/{file_name}")
 
 
-import shutil
-
-
 @task
 def build_windows(c, env=os.environ):
     build_common(c, env, ";")
     build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.zip"
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
-    for p in Path(".").glob("*.spec"):
-        print(p)
-        print(p.open().read())
-        # shutil.copyfile(p.as_posix(), "dist")
+    # for p in Path(".").glob("*.spec"):
+    #     print(p)
+    #     print(p.open().read())
+    # shutil.copyfile(p.as_posix(), "dist")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
