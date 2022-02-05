@@ -79,15 +79,15 @@ def view_forwarding_history():
     last_event = 0
 
     for f in fh.iterator():
-        total_out += f.amt_out
-        total_in += f.amt_in
-        total_fee += f.fee
+        total_out += f.amt_out_msat
+        total_in += f.amt_in_msat
+        total_fee += f.fee_msat
         last_event = f.timestamp
 
     text = f"""
-    total fees: {forex(total_fee)}
-    total out: {forex(total_out)} 
-    total in: {forex(total_in)}
+    total fees: {forex(round(total_fee/1000.))}
+    total out: {forex(round(total_out/1000.))} 
+    total in: {forex(round(total_in/1000.))}
 
     last event:
     {arrow.get(last_event).format('YYYY-MM-DD HH:mm:ss')}
