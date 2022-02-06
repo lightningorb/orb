@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 16:33:12
+# @Last Modified time: 2022-02-06 06:17:39
 
 import json
 
@@ -85,6 +85,9 @@ class AutoObj(object):
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+    def todict(self):
+        return todict(self)
 
 
 def dict2obj(dict1):

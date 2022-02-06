@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:47:52
+# @Last Modified time: 2022-02-06 06:06:24
 import json
 import threading
 from time import sleep
@@ -14,6 +14,7 @@ from orb.misc.prefs import is_rest
 from orb.logic.thread_manager import thread_manager
 from orb.misc.auto_obj import dict2obj
 from orb.misc import data_manager
+
 from orb.logic.htlc import Htlc
 
 db_lock = Lock()
@@ -50,7 +51,9 @@ class HTLCsThread(threading.Thread):
                     if rest:
                         e = dict2obj(json.loads(e)["result"])
 
-                    htlc = Htlc.init(e)
+                    with db_lock:
+                        htlc = Htlc.init(e)
+                        htlc.save()
 
                     # prevent routing from a low outbound channel to
                     # a channel with zero fees. or for example prevent

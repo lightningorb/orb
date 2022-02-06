@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2021-12-26 10:15:09
+# @Date:   2022-02-06 05:44:13
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-16 13:15:14
+# @Last Modified time: 2022-02-06 06:12:49
 
 try:
     from grpc_generated import router_pb2 as lnrouter
@@ -10,21 +10,14 @@ try:
 except:
     pass
 
-
+from orb.store.model import Htlc
 from orb.misc.prefs import is_rest
 
 
 class HtlcGrpc:
     def __init__(self, htlc):
-        self.orig_htlc = htlc
-        self.incoming_channel_id = None
-        self.outgoing_channel_id = None
-        self.incoming_htlc_id = None
-        self.outgoing_htlc_id = None
-        self.timestamp = None
-        self.event_type = None
-        self.event_outcome = None
-        self.event_outcome_info = None
+        super(HtlcGrpc, self).__init__()
+
         if htlc.incoming_channel_id:
             self.incoming_channel_id = htlc.incoming_channel_id
             self.incoming_htlc_id = htlc.incoming_htlc_id

@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-18 17:19:25
+# @Last Modified time: 2022-02-06 08:11:36
 import os
 import arrow
 from peewee import *
 
 from playhouse.hybrid import hybrid_property, hybrid_method
+from playhouse.sqlite_ext import *
 
 from kivy.app import App
 
@@ -114,3 +115,26 @@ class Invoice(Model):
 
     class Meta:
         database = get_db(invoices_db_name)
+
+
+class Htlc(Model):
+    incoming_channel_id = IntegerField(default=0)
+    outgoing_channel_id = IntegerField(default=0)
+    incoming_htlc_id = IntegerField(default=0)
+    outgoing_htlc_id = IntegerField(default=0)
+    timestamp = IntegerField(default=0)
+    event_type = CharField()
+    event_outcome = CharField()
+    event_outcome_info = JSONField(
+        default={
+            "incoming_amt_msat": 0,
+            "incoming_timelock": 0,
+            "outgoing_amt_msat": 0,
+            "outgoing_timelock": 0,
+        }
+    )
+    link_fail_event = JSONField(default={})
+
+    class Meta:
+        db_table = "htlc"
+        database = get_db(htlcs_db_name)

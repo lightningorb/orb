@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:46:34
+# @Last Modified time: 2022-02-06 05:56:11
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -12,7 +12,6 @@ from kivy.properties import NumericProperty
 from kivy.app import App
 
 
-from orb.logic.htlcs_thread import HTLCsThread
 from orb.channels.channels_thread import ChannelsThread
 from orb.channels.CN_widget import CNWidget
 from orb.widgets.node import Node
@@ -31,6 +30,10 @@ class ChannelsWidget(ScatterLayout):
     @guarded
     def __init__(self, gestures_delegate, *args, **kwargs):
         super(ChannelsWidget, self).__init__(*args, **kwargs)
+
+        # importing model related things before the tables are created
+        # is not allowed, which is why this is imported here
+        from orb.logic.htlcs_thread import HTLCsThread
 
         self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
         self.htlcs_thread.daemon = True

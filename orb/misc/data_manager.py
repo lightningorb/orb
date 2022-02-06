@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 04:24:24
+# @Last Modified time: 2022-02-06 08:08:04
 
 from pathlib import Path
 
@@ -68,6 +68,7 @@ class DataManager(EventDispatcher):
         db_create_tables.create_fowarding_tables()
         db_create_tables.create_aliases_tables()
         db_create_tables.create_invoices_tables()
+        db_create_tables.create_htlcs_tables()
 
     def save_cert(self):
         """
