@@ -1,6 +1,66 @@
-0.9.0
+0.10.0
 ----
 
+HTLCs now saved in a db, for later access
+added
+[dev] lightning payments through site now work
+restore site
+added
+added
+added
+added
+added
+added
+added
+added
+added
+added
+multisample stuff
+testing out switching off sampling for windows
+testing out switching off sampling for windows
+testing out switching off sampling for windows
+updated terms and privacy
+supply password to nameko sqlalchemy
+katching not working on node
+katching not working on node
+katching not working on node
+katching not working on node
+trying live setup
+rename lnd_worker to lnd_invoice_service
+lnd invoice service
+moving builds back to build branch
+katching service
+added katching
+windows build no longer working
+generating invoice should work on site
+upload all builds to s3
+licensing
+Merge branch 'tmp' into site
+[dev] added privacy policy and terms and conditions
+[dev] missing import
+[dev] api endpoint should not contain fqnd
+[dev] site requests should point to api
+[dev] download page and mac-address bound build automated
+[dev] gitignore
+[dev] debug messages
+[dev] site build automation and download page
+[dev] added site
+in the protocol HUD, clicking now saves the new protocol to config
+attribute editor show format ints with underscores
+[dev] changed lock to counted lock in lnd grpc get-edge to prevent
+    deadlocks
+[dev] allow 5 concurrent threads to get grpc lnd edge info, to avoid
+    deadlocks
+updated docs
+fee distribution dialog: show all rows in table. normalized events
+    added ability to exclude 0 ppm in best fee
+[dev] typo in armor command
+
+
+v0.9.0
+------
+
+version bump - removed player from menu
 release notes wider than dialog
 [dev] moved download_forwarding_history into logic package
 [dev] no need to call update_rect needlessly, significant speedup in
@@ -174,5 +234,125 @@ Add copy buttons to the Connection Settings dialog, to copy python
     commands #133
 GRPC should not be available in IOS #94
 add VERSION file with semver support #132
+
+
+v0.3.0-beta+build.1
+-------------------
+
+
+
+something
+---------
+
+
+
+customer_build_macos-11_dd484141292d4a85f385223b93cb0aeb1623fb457399b48721038f02e13b5d48
+----------------------------------------------------------------------------------------
+
+only keep hash part of tag
+set to public acl after upload
+remove task decorator
+typo
+typo
+use mac hash in filename
+updated
+updated
+[dev] updated
+[dev] updated
+[dev] updated
+[dev] wrong git command
+[dev] needs to be in steps
+[dev] needs to be in steps
+[dev] trying to get tags in various ways
+[dev] create tag event only works on pull requests
+[dev] missing os
+[dev] some actions don't have all requirements
+[dev] missing gitpython
+Merge branch 'customer_build' into site
+[dev] trigger build on tag push instead
+[dev] build on tag push instead
+[dev] download page now creates and pushes a tag for the customer
+    build
+2663699779f8ceaae6c9c1292292811d68f0ea9ddd917e4374ed31b31de735217b8f9c
+    37d9ddf8a67aaf6793241d6acf97935a01b4fc8cceb828ee90bd7f447a
+7f1406a3cc6d4dc98bdc0de493cd812c471b0d0f228648aab7b251120cfd9301476d0f
+    4910405a8c6cddfea3d830038c3e6b74dd6c2925de5f1128dfd357c952
+00bb68d1bd6ee7a3caa720b669c1fb2bff1f9010f327226913e1496158a6de2f77c26b
+    db666ea5f019a37249a21e07d54cb6e84205d21b5cc32028cba9d8e755
+18464a0eabb2fd264587f1ccafa82df223a2c63584353b93dfb8624ada9b2136b91951
+    94f0f7bbb46dae40443730f1952b3b22285f1e989e550ee953c27c8bca
+67c2c662eb04cd1ad1f95014386965fab61c07e9d5ce7ab8702b6c799e17ab19580589
+    84dfdcd0b6b188102334d47cfbf95557434e5e245c102cbf110faee9a4
+290721a6ef5a077ddb3db47dc4a9f8fb7e7b075c1aa706f82a79b80bf364d6e6d46ff6
+    8cc923a47b6bfcfc5866bff2a4383ad3c9733ae7fe7a7ea68f2f6896d8
+76ee90c1656aba0aaa0ab18652b5ca63c0c37608140ee62ae88497508aab1ec887090c
+    3752c43f5c6874986cc7280c3c5a2a7696102e1182c05208cbff0d707c
+10c983232327cecceb4f7946b94b2d1fe74afe12387aeabf5f64247e64ba5fca4b0b29
+    527506e6fc683cc28f956c748c9ab07df566e75961fda61e453f793d33
+76e255ba1ef9f6cf7398c2b77fa780e5a9297248b7c3a29cd07a24afdf76315b5d6617
+    754722e07aba9cf1826081da4104d87fd982a81f547a037af50b2b085a
+31eb4ddce2765aee0ab0e5d67d22dd14f16fe61c631c5900db4f5a3315937b337d2320
+    3f933d23073316a9a770f978ed973a24d7d4f083b189be0ca052833ded
+76568e2b2a0bd920eeff721df9eb5ec2b7a08db8d1afecbf1c1da35a9692f1e8ad7e33
+    d4c1b366ea0495e3b2888151ab328a2827b18bceb45622b6f343401523
+333216edc91094888cce72c02c791e246fbbbcf9bf84f32e73ca320e5d9da90902097a
+    4c30fabf83c62f8e59409316f4837e14a474b764789a983ef14da8f2a6
+[dev] gitignore
+[dev] debug messages
+[dev] site build automation and download page
+updated price grid
+added download page to site
+[dev] site do the actual building
+[dev] site do the actual building
+[dev] delete folders on target before unpacking
+[dev] removed subscribe blurb
+[dev] wrong link for docs
+[dev] use compressed images on site for fast loading
+[dev] added site
+in the protocol HUD, clicking now saves the new protocol to config
+attribute editor show format ints with underscores
+[dev] changed lock to counted lock in lnd grpc get-edge to prevent
+    deadlocks
+[dev] allow 5 concurrent threads to get grpc lnd edge info, to avoid
+    deadlocks
+updated docs
+fee distribution dialog: show all rows in table. normalized events
+    added ability to exclude 0 ppm in best fee
+[dev] typo in armor command
+version bump - removed player from menu
+release notes wider than dialog
+[dev] moved download_forwarding_history into logic package
+[dev] no need to call update_rect needlessly, significant speedup in
+    rendering
+[dev] add orb.kvs to hidden imports list
+Attributes Editor now shows fees earned
+[dev] added some windows debugging
+[dev] build automation
+[dev] make sure Window object exists before maximizing
+[dev] build on main, not master
+[dev] build automation
+[dev] build on main - not master
+[dev] build targets need different names
+[dev] osx and linux builds automated
+[dev] linux build automated
+
+
+1764754553_linux
+----------------
+
+tests
+tests
+
+
+1764723455_linux
+----------------
+
+tests
+
+
+1764718791_linux
+----------------
+
+tests
 
 
