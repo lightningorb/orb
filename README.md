@@ -85,47 +85,7 @@ python3 build.py ubuntu.requirements
 
 # Connecting your node
 
-## step 1/
-
-    get your node's IP address or domain name, as visible from the LAN / WAN
-
-## step 2/
-
-    set tlsextraip or tlsextradomain
-
-## step 3/
-
-    shut down LND
-
-## step 4/ 
-
-    $ mv ~/.lnd/tls.cert ~/.lnd/tls.cert.backup
-    $ mv ~/.lnd/tls.key ~/.lnd/tls.key.backup
-
-## step 5/
-
-    start LND
-
-## step 6/
-
-    encode TLS CERT
-
-    $ python3 -c 'import base64; print(base64.b64encode(open(".lnd/tls.cert").read().encode()).decode())'
-
-## step 7/ 
-
-    encode Macaroon
-
-    $ python3 -c 'import codecs; print(codecs.encode(open(".lnd/data/chain/bitcoin/mainnet/admin.macaroon", "rb").read(), "hex").decode())'
-
-## step 8/
-
-    copy and paste those strings into Orb
-
-## step 9/
-
-    restart Orb
-
+https://lnorb.com/docs/installing.html
 
 # Resolution
 
