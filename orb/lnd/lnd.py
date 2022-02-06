@@ -2,16 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 11:32:29
+# @Last Modified time: 2022-02-07 06:19:53
 
-from orb.misc.utils import pref
 from traceback import format_exc
-from kivy.app import App
 import os
 
 from orb.misc.certificate_secure import CertificateSecure
 from orb.misc.macaroon_secure import MacaroonSecure
-from orb.misc.prefs import cert_path
 
 lnd = {}
 
@@ -30,6 +27,10 @@ def Lnd():
     """
     Return the appropriate Lnd class based on protocol.
     """
+    from orb.misc.utils import pref
+    from kivy.app import App
+    from orb.misc.prefs import cert_path
+
     global mac
     global mac_invalid
 
