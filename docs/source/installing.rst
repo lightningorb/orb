@@ -9,7 +9,7 @@ Installing
 Orb is currently available on:
 
 - IOS Testflight
-- `MacOSX <https://lnorb.com/releases>`_
-- `Linux <https://lnorb.com/releases>`_
-
-The `Windows build <https://lnorb.com/releases>`_ still needs more hands-on testing, and Android is in the works.
+- `MacOS 11 build <https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.10.0-macos-11-x86_64.dmg>`_
+- `Ubuntu 20.04 build <https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.10.0-ubuntu-20.04-x86_64.tar.gz>`_
+- `Windows 2019 build <https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.10.0-windows-2019-x86_64.zip>`_
+- `Windows 2022 build <https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.10.0-windows-2019-x86_64.zip>`_
