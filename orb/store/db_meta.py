@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 15:36:21
+# @Last Modified time: 2022-02-06 06:14:07
 
 import os
 from pathlib import Path
@@ -18,7 +18,7 @@ path_finding_db_name = "path_finding"
 aliases_db_name = "aliases"
 invoices_db_name = "invoices"
 forwarding_events_db_name = "forwarding_events_v2"
-htlcs_db_name = "htlcs"
+htlcs_db_name = "htlcs_v4"
 
 
 @lru_cache(None)
