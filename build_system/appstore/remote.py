@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 09:32:25
+# @Last Modified time: 2022-02-07 13:48:54
 
 from invoke import task
 import os
@@ -12,7 +12,8 @@ import os
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.install-service
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.create-tables
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.drop-tables
-# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.stop-katching
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.stop-katching-service
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.start-katching-service
 
 
 @task
@@ -108,8 +109,13 @@ def certbot(c):
 
 
 @task
-def stop_katching(c):
+def stop_katching_service(c):
     c.sudo("supervisorctl stop katching_service")
+
+
+@task
+def start_katching_service(c):
+    c.sudo("supervisorctl start katching_service")
 
 
 @task
