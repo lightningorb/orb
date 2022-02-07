@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 08:29:39
+# @Last Modified time: 2022-02-08 03:16:16
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
 from kivy.properties import NumericProperty
 from kivy.graphics.vertex_instructions import RoundedRectangle
 from kivy.graphics.context_instructions import Color
-
+from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.animation import Animation
 
@@ -44,6 +44,7 @@ class ChannelWidget(Widget):
         self.to_fee = FeeWidget(channel=self.channel)
         self.add_widget(self.to_fee)
         self.anim_rectangles = []
+        self.selected = False
 
         self.pending_in = sum(
             int(p.amount) for p in self.channel.pending_htlcs if p.incoming
@@ -66,6 +67,26 @@ class ChannelWidget(Widget):
         self.a, self.b, self.c = [0, 0], [0, 0], [0, 0]
 
         self.bind(points=self.update)
+
+        App.get_running_app().bind(selection=self.set_selected)
+
+    @property
+    def remote_col(self):
+        return (BLUE, BLUE_SELECTED)[self.selected]
+
+    @property
+    def local_col(self):
+        return (GREEN, GREEN_SELECTED)[self.selected]
+
+    @property
+    def pending_col(self):
+        return (GREEN, GREEN_SELECTED)[self.selected]
+
+    def set_selected(self, widget, channel):
+        self.selected = channel == self.channel
+        (Animation(rgba=self.remote_col, duration=0.2)).start(self.line_remote.color)
+        (Animation(rgba=self.local_col, duration=0.2)).start(self.line_local.color)
+        (Animation(rgba=self.pending_col, duration=0.2)).start(self.line_pending.color)
 
     def update(self, *args):
         """
@@ -299,10 +320,17 @@ class ChannelWidget(Widget):
         self.update()
 
     def flash(self, rgba):
-        (Animation(rgba=rgba, duration=0.2) + Animation(rgba=BLUE, duration=1)).start(
-            self.line_remote.color
-        )
+        (
+            Animation(rgba=rgba, duration=0.2)
+            + Animation(rgba=self.remote_col, duration=1)
+        ).start(self.line_remote.color)
 
-        (Animation(rgba=rgba, duration=0.2) + Animation(rgba=GREEN, duration=1)).start(
-            self.line_local.color
-        )
+        (
+            Animation(rgba=rgba, duration=0.2)
+            + Animation(rgba=self.local_col, duration=1)
+        ).start(self.line_local.color)
+
+        (
+            Animation(rgba=rgba, duration=0.2)
+            + Animation(rgba=self.pending_col, duration=1)
+        ).start(self.line_pending.color)

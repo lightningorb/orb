@@ -1794,6 +1794,7 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import pref orb.misc.utils.pref
+#:import prefs_col orb.misc.utils.prefs_col
 
 
 <Node@Button>
@@ -1810,7 +1811,8 @@ Builder.load_string('''
             pos: [self.pos[0]-1, self.pos[1]-1]
             radius: [(8, 50)[bool(root.round)]]
         Color: 
-            rgba: root.col
+            group: 'b'
+            rgba: prefs_col("display.node_background_color")
         RoundedRectangle:
             size: self.size
             pos: self.pos

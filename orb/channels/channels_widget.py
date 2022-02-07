@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 05:56:11
+# @Last Modified time: 2022-02-08 02:03:26
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -133,6 +133,4 @@ class ChannelsWidget(ScatterLayout):
             App.get_running_app().selection = None
             if self.node:
                 self.node.col = prefs_col("display.node_background_color")
-            for cn in self.cn.values():
-                cn.b.col = prefs_col("display.node_background_color")
         super(ChannelsWidget, self).on_touch_down(touch)

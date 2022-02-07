@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 04:24:52
+# @Last Modified time: 2022-02-08 02:39:35
 
 from threading import Thread
 
@@ -16,7 +16,6 @@ from orb.lnd import Lnd
 
 
 class Node(Button):
-    col = ListProperty([0, 0, 0, 0])
     channel = ObjectProperty(None)
     touch_start = ListProperty([0, 0])
     touch_end = ListProperty([0, 0])
@@ -24,24 +23,36 @@ class Node(Button):
 
     def __init__(self, *args, **kwargs):
         super(Node, self).__init__(*args, **kwargs)
-        self.col = prefs_col("display.node_background_color")
         if self.channel:
             Thread(
                 target=lambda: setattr(
                     self, "text", Lnd().get_node_alias(self.channel.remote_pubkey)
                 )
             ).start()
+        App.get_running_app().bind(selection=self.set_selected)
+
+    def set_selected(self, widget, channel):
+        if self.channel:
+            sel = channel == self.channel
+            new_col_str = (
+                "display.node_background_color",
+                "display.node_selected_background_color",
+            )[sel]
+            new_col = prefs_col(new_col_str)
+            col = self.canvas.before.get_group("b")[0]
+            (
+                Animation(
+                    rgba=new_col,
+                    duration=0.2,
+                )
+            ).start(col)
 
     def anim_to_pos(self, pos):
         Animation(pos=pos, duration=1).start(self)
 
     def on_release(self):
-        self.col = prefs_col("display.node_selected_background_color")
         if self.channel:
             App.get_running_app().selection = self.channel
-
-    def on_press(self):
-        self.col = prefs_col("display.node_selected_background_color")
 
     def on_touch_down(self, touch):
         from orb.misc import data_manager

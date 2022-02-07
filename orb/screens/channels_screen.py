@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 14:25:51
+# @Last Modified time: 2022-02-08 02:52:18
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -42,10 +42,16 @@ class ChannelsScreen(MDScreen):
             )
             self.ids.cw_layout.add_widget(self.channels_widget)
             App.get_running_app().bind(
-                selection=lambda *_: self.ids.nav_drawer.set_state(
-                    "open" if App.get_running_app().selection else "close"
-                )
+                selection=lambda w, s: self.ids.nav_drawer.set_state("open")
+                if s
+                else None
             )
+
+            def state_change(w, s):
+                if s == "close":
+                    App.get_running_app().selection = None
+
+            self.ids.nav_drawer.bind(state=state_change)
 
         delayed()
 

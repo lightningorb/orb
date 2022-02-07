@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 01:21:49
+# @Last Modified time: 2022-02-08 02:27:08
 
 from threading import Thread
 
@@ -108,7 +108,7 @@ class AttributeEditor(BoxLayout):
                     else:
                         self.populate_grpc()
 
-            Clock.schedule_once(update, 0.2)
+            Clock.schedule_once(update, 0.25)
         else:
             self.clear()
 
