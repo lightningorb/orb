@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 17:46:56
+# @Last Modified time: 2022-02-07 08:35:50
 
 try:
     # not all actions install all requirements
@@ -113,11 +113,15 @@ def build_common(c, env, sep=":"):
         ("video_library.yaml", "."),
         ("images/ln.png", "images/"),
     ]
+    spec = ""
+    if spec == ";":
+        # windows detected
+        spec = "-s lnorb-win-patched.spec"
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
-        f"""pyarmor pack -s lnorb-win-patched.spec --with-license outer --name {name} \
+        f"""pyarmor pack {spec} --with-license outer --name {name} \
              -e " {pyinstall_flags}" \
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
