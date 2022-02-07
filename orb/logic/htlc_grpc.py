@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-06 05:44:13
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 06:12:49
+# @Last Modified time: 2022-02-07 08:14:49
 
 try:
     from grpc_generated import router_pb2 as lnrouter
@@ -12,9 +12,10 @@ except:
 
 from orb.store.model import Htlc
 from orb.misc.prefs import is_rest
+from orb.store.db_meta import *
 
 
-class HtlcGrpc:
+class HtlcGrpc(Htlc):
     def __init__(self, htlc):
         super(HtlcGrpc, self).__init__()
 
@@ -71,3 +72,7 @@ class HtlcGrpc:
                 if f1 == v2:
                     event_outcome_info[f2] = v1
         return event_outcome_info
+
+    class Meta:
+        db_table = "htlc"
+        database = get_db(htlcs_db_name)

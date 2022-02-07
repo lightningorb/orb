@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-04 21:04:00
+# @Last Modified time: 2022-02-07 07:19:11
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -347,6 +347,18 @@ class LndREST(LndBase):
             print(response.status)
             if response.status == "FAILED":
                 print(response.failure_reason)
+
+    def connect(self, addr):
+        """
+        lncli: connect ConnectPeer attempts to establish a connection
+        to a remote peer. This is at the networking level, and is
+        used for communication between nodes. This is distinct from
+        establishing a channel with a peer.
+        """
+        return self.__post(
+            "/v1/peers",
+            data={"addr": addr, "perm": False, "timeout": "30"},
+        )
 
     def __get(self, url):
         """

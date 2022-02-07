@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-01 06:42:35
+# @Last Modified time: 2022-02-07 08:29:39
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -19,6 +19,7 @@ from orb.channels.fee_widget import FeeWidget
 from orb.math.lerp import lerp_2d
 from orb.misc.colors import *
 from orb.misc.auto_obj import dict2obj
+from orb.misc import data_manager
 
 
 class ChannelWidget(Widget):
