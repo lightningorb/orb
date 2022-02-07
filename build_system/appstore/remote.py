@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 09:25:59
+# @Last Modified time: 2022-02-07 09:32:25
 
 from invoke import task
 import os
@@ -12,6 +12,7 @@ import os
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.install-service
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.create-tables
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.drop-tables
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.stop-katching
 
 
 @task
@@ -104,3 +105,20 @@ def certbot(c):
     c.sudo("pip3 install pip --upgrade")
     c.sudo("pip3 install certbot certbot-nginx")
     c.sudo("certbot --nginx -d lnappstore.com")
+
+
+@task
+def stop_katching(c):
+    c.sudo("supervisorctl stop katching_service")
+
+
+@task
+def stop_rabbit(c):
+    c.sudo("docker rm -f rabbit")
+
+
+@task
+def start_rabbit(c):
+    c.sudo(
+        "docker run -d --hostname rabbit -p 5672:5672 -p 15672:15672 --name rabbit -e RABBITMQ_DEFAULT_USER=orb -e RABBITMQ_DEFAULT_PASS=lightningjustgotwaymorefun rabbitmq:3-management"
+    )
