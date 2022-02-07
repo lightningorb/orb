@@ -29,7 +29,7 @@ Builder.load_string('''
         height: self.texture_size[1]
 
     MDTextField:
-        text: '{:_}'.format(root.channel.earned if root.channel else 0)
+        id: earned
         helper_text: 'Earned'
         helper_text_mode: 'persistent'
 

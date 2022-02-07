@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-01 07:03:12
+# @Last Modified time: 2022-02-08 01:21:49
 
 from threading import Thread
 
+from kivy.clock import Clock
 from kivymd.uix.label import MDLabel
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
@@ -97,6 +98,7 @@ class AttributeEditor(BoxLayout):
                 self.size_hint_y = None
                 if self.channel:
                     self.ids.md_list.clear_widgets()
+                    self.populate_earned()
                     self.populate_fees()
                     if is_rest():
                         # TODO: calling channel.channel is a little problematic
@@ -106,9 +108,22 @@ class AttributeEditor(BoxLayout):
                     else:
                         self.populate_grpc()
 
-            Thread(target=update).start()
+            Clock.schedule_once(update, 0.2)
         else:
             self.clear()
+
+    @guarded
+    def populate_earned(self):
+        @mainthread
+        def update(val):
+            self.ids.earned.text = val
+
+        self.ids.earned.text = ""
+        Thread(
+            target=lambda: update(
+                "{:_}".format(self.channel.earned if self.channel else 0)
+            )
+        ).start()
 
     @guarded
     def fee_rate_milli_msat_changed(self, val, *args):
