@@ -1,0 +1,16 @@
+name: tests
+on:
+  push:
+    branches: [ main ]
+jobs:
+  test_linux:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip -r requirements.txt
+      - run: pip -r requirements-dev.txt
+      - run: ./build.py test.test

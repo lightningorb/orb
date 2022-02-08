@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 06:06:24
+# @Last Modified time: 2022-02-09 07:25:14
 import json
 import threading
 from time import sleep
@@ -59,6 +59,12 @@ class HTLCsThread(threading.Thread):
                     # a channel with zero fees. or for example prevent
                     # routing from a low local channel to LOOP
                     # data_manager.data_man.lnd.htlc_interceptor(self, chan_id, htlc_id, action=1)
+
+                    for plugin in data_manager.data_man.plugin_registry.values():
+                        try:
+                            plugin.htlc_event(htlc)
+                        except:
+                            print(f"HTLCs error in plugin: {plugin}")
 
                     for cid in [
                         x for x in [e.outgoing_channel_id, e.incoming_channel_id] if x

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 11:42:45
+# @Last Modified time: 2022-02-08 17:53:14
 
 from abc import ABC, abstractmethod
 from kivy.app import App
@@ -23,3 +23,15 @@ class Plugin(ABC):
 
     def get_screen(self, name):
         return App.get_running_app().root.ids.sm.get_screen(name)
+
+    def cleanup(self):
+        """
+        Performs any required cleanup before reloading
+        """
+        pass
+
+    def htlc_event(self, event):
+        """
+        This method is called for every HTLC event
+        """
+        pass

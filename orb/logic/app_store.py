@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 13:19:50
+# @Last Modified time: 2022-02-08 17:08:29
 
 import os
 import sys
@@ -18,6 +18,7 @@ from orb.misc.plugin import Plugin
 from orb.logic.app_store_api import API
 import uuid
 import zipfile
+from orb.misc import data_manager
 
 from yaml import load
 
@@ -133,10 +134,18 @@ class LocalApp(EventDispatcher):
     def menu_run_code(self):
         code = dedent(
             f"""
+            import sys
+            from orb.misc import data_manager
+            dm = data_manager.data_man
+            if '{self.module_name}' in dm.plugin_registry:
+                dm.plugin_registry['{self.module_name}'].cleanup()
+                del dm.plugin_registry['{self.module_name}']
             import {self.module_name}
             from importlib import reload
             reload({self.module_name})
-            {self.module_name}.{self.classname}().main()
+            plug = {self.module_name}.{self.classname}()
+            dm.plugin_registry['{self.module_name}'] = plug
+            plug.main()
             """
         )
         return code

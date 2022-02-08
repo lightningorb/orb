@@ -15,7 +15,7 @@ from kivy.app import App
 from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
 
-from orb.misc.stoppable_thread import StoppableThread
+from orb.core.stoppable_thread import StoppableThread
 from orb.misc.utils import pref
 
 

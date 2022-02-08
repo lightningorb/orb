@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 08:08:04
-
-from pathlib import Path
+# @Last Modified time: 2022-02-08 17:02:39
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -44,6 +42,7 @@ class DataManager(EventDispatcher):
         self.disable_shortcuts = False
         self.save_cert()
         self.lnd = Lnd()
+        self.plugin_registry = {}
 
         self.channels = Channels(self.lnd)
 
