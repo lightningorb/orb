@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 10:01:29
+# @Last Modified time: 2022-02-08 05:33:50
 
 from invoke import task
 import os
@@ -30,5 +30,6 @@ def create_db(c, env=os.environ):
 def start_katching_service(c, env=os.environ):
     with c.cd("server"):
         c.run(
-            "nameko run workers.katching_service --config workers/nameko.yaml", env=env
+            "nameko run workers.katching_service --config workers/nameko-dev.yaml",
+            env=env,
         )
