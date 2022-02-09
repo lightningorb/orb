@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 17:08:29
+# @Last Modified time: 2022-02-09 07:38:49
 
 import os
 import sys
 from traceback import print_exc
+from pathlib import Path
 from textwrap import dedent
 import shutil
 
@@ -33,10 +34,10 @@ class Apps(EventDispatcher):
         self.apps = {}
 
     def load_from_disk(self):
-        apps_dir = pref_path("app")
-        for plugin_info_file in apps_dir.glob("*/appinfo.yaml"):
-            app = LocalApp(plugin_info_file)
-            self.apps[app.uuid] = app
+        for d in [pref_path("app"), Path("orb/apps")]:
+            for plugin_info_file in d.glob("*/appinfo.yaml"):
+                app = LocalApp(plugin_info_file)
+                self.apps[app.uuid] = app
 
     def load_all_apps(self):
         for app in self.apps.values():

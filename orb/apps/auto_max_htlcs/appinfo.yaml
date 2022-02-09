@@ -1,0 +1,6 @@
+name: Update Max HTLCs
+description: App that sets Max HTLCs to either local balance, or half cap
+author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
+uuid: update_max_htlcs
+menu: auto > Max HTLCs
+icon: update_max_htlcs.png

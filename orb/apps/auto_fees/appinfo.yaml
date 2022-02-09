@@ -1,0 +1,6 @@
+name: Auto Fees
+description: App that automatically adjusts fees
+author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
+uuid: auto_fees
+menu: auto > fees
+icon: autofees.png

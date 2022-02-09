@@ -11,6 +11,7 @@ from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.channel_selector import get_low_outbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.thread_manager import thread_manager
+from orb.misc import data_manager
 from orb.lnd import Lnd
 
 
@@ -56,8 +57,6 @@ class RebalanceThread(threading.Thread):
                 num_sats=self.amount,
             )
 
-        if self.last_hop_pubkey:
-            print(f"Last hop pubkey is: {self.last_hop_pubkey}")
         if not self.last_hop_pubkey:
             _, self.last_hop_pubkey = get_low_outbound_channel(
                 lnd=self.lnd,
@@ -65,7 +64,12 @@ class RebalanceThread(threading.Thread):
                 chan_ignore=[],
                 num_sats=self.amount,
             )
-            print(f"Last hop pubkey not set, so selected one: {self.last_hop_pubkey}")
+
+        from_pk = data_manager.data_man.channels.channels[self.chan_id].remote_pubkey
+        from_alias = Lnd().get_node_alias(from_pk)
+        to_alias = Lnd().get_node_alias(self.last_hop_pubkey)
+
+        print(f"Rebalancing {self.amount} from {from_alias} to {to_alias}")
 
         raw, payment_request = self.lnd.generate_invoice(
             memo="rebalance", amount=self.amount
