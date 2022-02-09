@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 21:04:49
+# @Last Modified time: 2022-02-10 07:29:28
 
 import os
 from time import sleep
@@ -205,6 +205,7 @@ class Rebalance(StoppableThread):
 
     def stop(self):
         Clock.unschedule(self.schedule)
+        super(Rebalance, self).stop()
 
     def run(self, *_):
         self.ratio = 0.5
@@ -212,8 +213,8 @@ class Rebalance(StoppableThread):
         self.setters = set([])
 
         self.schedule()
-        while True:
-            sleep(5)
+        while not self.stopped():
+            sleep(1)
 
     def do_rebalancing(self, *args):
         """
@@ -406,7 +407,7 @@ class IgnoreView(BaseView):
 
 class AutoBalance(Plugin):
     def main(self):
-        kv_path = (Path(__file__).parent / "autobalance.kv_").as_posix()
+        kv_path = (Path(__file__).parent / "autobalance.kv").as_posix()
         Builder.unload_file(kv_path)
         Builder.load_file(kv_path)
         ABView().open()

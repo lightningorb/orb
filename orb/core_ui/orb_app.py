@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 16:04:34
+# @Last Modified time: 2022-02-10 07:24:10
 
 import os
 import sys
@@ -117,11 +117,15 @@ class OrbApp(MDApp):
                 kvs_found = False
                 for path in d.rglob("*.kv"):
                     kvs_found = True
+                    if apps_path.as_posix() in path.as_posix():
+                        # apps handle their kvs themselves
+                        continue
                     print(f"compiling: {path}")
                     kv = path.open().read().replace("\\n", "\\\n")
                     kvs.append(f"Builder.load_string('''\n{kv}\n''')")
                 return kvs_found
 
+            apps_path = main_dir / "orb/apps"
             kvs_found = load_kvs_from(main_dir / "orb")
             kvs_found |= load_kvs_from(main_dir / "third_party")
             if kvs_found:

@@ -83,7 +83,7 @@
         text: root.rule.from_all[0]
         helper_text: 'From rule'
         helper_text_mode: "persistent"
-        on_text_validate: root.insert_todo(self.text)
+        on_text_validate: root.update_rule('from_all', [self.text])
 
     MDTextField:
         text: root.rule.to_all[0] if len(root.rule.to_all) else ''
@@ -121,14 +121,12 @@
         on_text_validate: root.update_rule('alias', self.text)
 
     MDTextField:
-        id: todo_input
         text: root.rule.all[0] if len(root.rule.all) else ''
         helper_text: 'rule'
         helper_text_mode: "persistent"
         on_text_validate: root.update_rule('all', [self.text])
 
     MDIconButton:
-        id: delete
         icon: "delete-forever"
         pos_hint: {"center_x": .5, "center_y": .5}
         on_release: root.parent_view.delete_rule(root.index)
