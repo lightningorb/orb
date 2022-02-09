@@ -2,17 +2,25 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 07:48:57
+# @Last Modified time: 2022-02-09 21:04:49
 
 import os
 from time import sleep
 from threading import Lock, Thread
 from copy import copy
 from random import shuffle
+from pathlib import Path
+from functools import cmp_to_key
 
 import yaml
 
+from kivy.lang import Builder
+from kivy.uix.popup import Popup
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
+from kivy.properties import NumericProperty
+from kivy.uix.boxlayout import BoxLayout
 
 from orb.misc.utils import pref_path
 from orb.core.stoppable_thread import StoppableThread
@@ -110,6 +118,37 @@ def get_loader():
     return loader
 
 
+def get_dumper():
+    safe_dumper = yaml.SafeDumper
+    safe_dumper.add_representer(
+        Ignore,
+        lambda dumper, inst: dumper.represent_mapping(
+            "!Ignore",
+            {
+                "all": inst.all,
+                "any": inst.any,
+                "alias": inst.alias,
+            },
+        ),
+    )
+    safe_dumper.add_representer(
+        FromTo,
+        lambda dumper, inst: dumper.represent_mapping(
+            "!FromTo",
+            {
+                "fee_rate": inst.fee_rate,
+                "num_sats": inst.num_sats,
+                "from_all": inst.from_all if hasattr(inst, "from_all") else [],
+                "to_all": inst.to_all if hasattr(inst, "to_all") else [],
+                "from_any": inst.from_any if hasattr(inst, "from_any") else [],
+                "to_any": inst.to_any if hasattr(inst, "to_any") else [],
+                "alias": inst.alias,
+            },
+        ),
+    )
+    return safe_dumper
+
+
 class RuleBase:
     def __init__(self, fee_rate, priority, num_sats):
         self.fee_rate = fee_rate
@@ -180,33 +219,17 @@ class Rebalance(StoppableThread):
         """
         This is the 'heart' of the rebalancer.
         """
-        # make sure we're only running of these at a time (why the lock?)
         with self.lock:
-            # path to the user yaml file
             path = (pref_path("yaml") / "autobalance.yaml").as_posix()
-            # return if it doesn't exist
             if not os.path.exists(path):
                 return
-            # load it
             obj = yaml.load(open(path, "r"), Loader=get_loader())
-            # bail if it's empty
             if not obj:
                 return
-
             num_threads = obj["threads"]
-
-            # get our channels
             chans = [*data_manager.data_man.channels.channels.values()]
-
-            # these are the pubkeys the user explicitely wants
-            # to ignore
             pk_ignore = set([])
-
-            # the 'setters' to the actual rebalancing work
-            # our job now is to populate 'setters'
             setters = {}
-
-            # for each of our channels
             for from_channel in chans:
                 if from_channel.chan_id in pk_ignore:
                     continue
@@ -252,7 +275,6 @@ class Rebalance(StoppableThread):
                                     priority=rule_copy.priority,
                                 )
 
-
             setters = [*setters.values()]
             shuffle(setters)
 
@@ -267,8 +289,124 @@ class Rebalance(StoppableThread):
             print("Autorebalance - done")
 
 
-class AutoBalance(Plugin):
-    def main(self):
+class ABView(Popup):
+    def open(self, *args, **kwargs):
+        """
+        This gets called when the popup is first opened.
+        """
+        super(ABView, self).open(*args, **kwargs)
+        self.path = (pref_path("yaml") / "autobalance.yaml").as_posix()
+        if not os.path.exists(self.path):
+            default = """
+rules:
+- !Ignore
+  alias: LOOP
+  all:
+  - channel.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
+  any: null
+- !FromTo
+  alias: From high outbound to low outbound
+  fee_rate: 500
+  from_all:
+  - channel.ratio > 0.5
+  from_any: []
+  num_sats: 100000
+  to_all:
+  - channel.ratio < 0.12
+  to_any: []
+- !FromTo
+  alias: From high outbound to bitfinex
+  fee_rate: 500
+  from_all:
+  - channel.ratio > 0.5
+  from_any: []
+  num_sats: 100000
+  to_all:
+  - channel.remote_pubkey == '033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025'
+  to_any: []
+threads: 5"""
+            with open(self.path, "w") as f:
+                f.write(default)
+        self.obj = yaml.load(open(self.path, "r"), Loader=get_loader())
+        if not self.obj:
+            return
+        self.populate_rules()
+
+    def add_from_to_rule(self):
+        self.obj["rules"].append(
+            FromTo(
+                "New",
+                100,
+                num_sats=100_000,
+                priority=0,
+                from_all=["False"],
+                to_all=["False"],
+            )
+        )
+        self.ids.rules.clear_widgets()
+        self.populate_rules()
+        self.save()
+
+    def add_ignore_rule(self):
+        self.obj["rules"].append(
+            Ignore(
+                alias="New",
+                all=["False"],
+                any=[],
+            )
+        )
+        self.obj["rules"].sort(key=lambda x: type(x) is not Ignore)
+        self.ids.rules.clear_widgets()
+        self.populate_rules()
+        self.save()
+
+    def populate_rules(self):
+        self.ids.rules.clear_widgets()
+        mapping = {FromTo: FromToView, Ignore: IgnoreView}
+        for index, rule in enumerate(self.obj["rules"]):
+            view = mapping[type(rule)](rule=rule, parent_view=self, index=index)
+            self.ids.rules.add_widget(view)
+
+    def delete_rule(self, index):
+        self.obj["rules"] = self.obj["rules"][:index] + self.obj["rules"][index + 1 :]
+        self.save()
+        self.populate_rules()
+
+    def update_obj(self, attr, value):
+        self.obj[attr] = value
+        self.save()
+
+    def save(self, *_):
+        with open(self.path, "w") as stream:
+            stream.write(yaml.dump(self.obj, Dumper=get_dumper()))
+
+    def start(self):
         autobalance = Rebalance()
         autobalance.daemon = True
         autobalance.start()
+
+
+class BaseView(BoxLayout):
+    rule = ObjectProperty()
+    parent_view = ObjectProperty()
+    index = NumericProperty()
+
+    def update_rule(self, attr, value):
+        setattr(self.rule, attr, value)
+        self.parent_view.save()
+
+
+class FromToView(BaseView):
+    pass
+
+
+class IgnoreView(BaseView):
+    pass
+
+
+class AutoBalance(Plugin):
+    def main(self):
+        kv_path = (Path(__file__).parent / "autobalance.kv_").as_posix()
+        Builder.unload_file(kv_path)
+        Builder.load_file(kv_path)
+        ABView().open()

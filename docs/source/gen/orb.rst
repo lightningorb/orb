@@ -16,6 +16,7 @@ Subpackages
    orb.audio
    orb.channels
    orb.components
+   orb.core
    orb.core_ui
    orb.dialogs
    orb.lnd

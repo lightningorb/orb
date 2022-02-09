@@ -30,7 +30,5 @@ Submodules
    orb.misc.output
    orb.misc.plugin
    orb.misc.prefs
-   orb.misc.sec
    orb.misc.sec_rsa
-   orb.misc.stoppable_thread
    orb.misc.utils

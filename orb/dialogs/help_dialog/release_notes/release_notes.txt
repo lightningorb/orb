@@ -1,6 +1,24 @@
-0.10.0
+0.11.0
 ----
 
+autofees and autobalance brought back into the main app
+[dev] added tests to main [dev] data_manager now has a plugin registry
+    [dev] plugins can receive htlcs
+changed site meta tags
+payment flow working well
+Channel spotlighting when node peer is selected #172
+Delay in Channel Editor when click on channel #174
+updated build file
+added licensing to checkout
+[dev] fix osx build
+[dev] bug fixes
+[dev] only import kivy related modules in Lnd class, since we're
+    dealing with __init__
+updated docs
+updated docs -version bump
+updated readme
+[dev] switch builds back to build branch
+version bump
 HTLCs now saved in a db, for later access
 added
 [dev] lightning payments through site now work
@@ -239,6 +257,52 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.10.0
+-------
+
+version bump
+HTLCs now saved in a db, for later access
+added
+[dev] lightning payments through site now work
+restore site
+added
+added
+added
+added
+added
+added
+added
+added
+added
+added
+multisample stuff
+testing out switching off sampling for windows
+testing out switching off sampling for windows
+testing out switching off sampling for windows
+updated terms and privacy
+supply password to nameko sqlalchemy
+katching not working on node
+katching not working on node
+katching not working on node
+katching not working on node
+trying live setup
+rename lnd_worker to lnd_invoice_service
+lnd invoice service
+moving builds back to build branch
+katching service
+added katching
+windows build no longer working
+generating invoice should work on site
+upload all builds to s3
+licensing
+Merge branch 'tmp' into site
+[dev] added privacy policy and terms and conditions
+[dev] missing import
+[dev] api endpoint should not contain fqnd
+[dev] site requests should point to api
+[dev] download page and mac-address bound build automated
 
 
 something

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 07:38:49
+# @Last Modified time: 2022-02-09 19:05:11
 
 import os
 import sys
@@ -119,10 +119,13 @@ class LocalApp(EventDispatcher):
         self.description = plugin_info.get("description", None)
         self.author = plugin_info.get("author", None)
         self.uuid = plugin_info.get("uuid", None)
-        self.py = self.plugin_info.get("main") or next(
-            self.info_file.parent.glob("*.py"), None
-        )
         self.directory = self.info_file.parent
+        self.py = self.plugin_info.get("main")
+        if not self.py:
+            for ft in ["*.py", "*.pyc"]:
+                self.py = next(self.directory.glob(ft), None)
+                if self.py:
+                    break
         if self.plugin_info.get("icon"):
             self.icon = (self.directory / self.plugin_info.get("icon")).as_posix()
         self.module_name = os.path.basename(os.path.splitext(self.py)[0])

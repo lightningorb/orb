@@ -1,0 +1,135 @@
+<ABView>:
+    title: 'Auto Balance'
+    size_hint: .9, .9
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        MDTextField:
+            id: num_threads
+            text: '5'
+            helper_text: 'Number of rebalances'
+            helper_text_mode: "persistent"
+            size_hint_x: None
+            width: dp(100)
+            on_text_validate: root.update_obj('threads', int(self.text))
+        ScrollView:
+            size_hint: 1, 1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            GridLayout:
+                id: rules
+                cols: 1
+                padding: 10
+                spacing: 10
+                size_hint: 1, None
+                height: self.minimum_height
+                do_scroll_x: False
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: self.minimum_height
+            MDIconButton:
+                icon: "check-network-outline"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.add_from_to_rule()
+            MDIconButton:
+                icon: "close-network-outline"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.add_ignore_rule()
+            MDIconButton:
+                icon: "clock-start"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.start()
+
+
+<FromToView@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    canvas:
+        Color:
+            rgba: .8, .9, .8, .025
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "Rule: from - to"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    MDTextField:
+        text: root.rule.alias
+        helper_text: 'Rule Name'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('alias', self.text)
+
+    MDTextField:
+        text: '{:_}'.format(root.rule.fee_rate)
+        helper_text: 'Fee Rate (PPM)'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('fee_rate', int(self.text))
+
+    MDTextField:
+        text: '{:_}'.format(root.rule.num_sats)
+        helper_text: 'Amount (SAT)'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('num_sats', int(self.text))
+
+    MDTextField:
+        text: root.rule.from_all[0]
+        helper_text: 'From rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.insert_todo(self.text)
+
+    MDTextField:
+        text: root.rule.to_all[0] if len(root.rule.to_all) else ''
+        helper_text: 'To rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('to_all', [self.text])
+
+    MDIconButton:
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.parent_view.delete_rule(root.index)
+
+
+<IgnoreView@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    canvas:
+        Color:
+            rgba: .8, .9, .8, .025
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "Rule: Ignore"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    MDTextField:
+        text: root.rule.alias
+        helper_text: 'Rule Name'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('alias', self.text)
+
+    MDTextField:
+        id: todo_input
+        text: root.rule.all[0] if len(root.rule.all) else ''
+        helper_text: 'rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('all', [self.text])
+
+    MDIconButton:
+        id: delete
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.parent_view.delete_rule(root.index)
+
