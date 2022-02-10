@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:41:43
+# @Last Modified time: 2022-02-10 10:33:11
 
 from threading import Thread
 
@@ -47,7 +47,7 @@ class FeeWidget(Widget):
         self.touch_pos = None
 
         with self.canvas.before:
-            Color(0.5, 1, 0.5, 1)
+            self.col = Color(0.5, 1, 0.5, 1)
             self.circle_1 = Line(circle=(150, 150, 50))
             self.circle_2 = Line(circle=(150, 150, 50))
             self.line = Line(points=[0, 0, 0, 0])
@@ -59,6 +59,13 @@ class FeeWidget(Widget):
         self.bind(b=self.update)
         self.bind(c=self.update)
         self.channel.bind(fee_rate_milli_msat=self.update)
+        self.channel.bind(fee_rate_milli_msat=self.flash)
+
+    def flash(self, *_):
+        (
+            Animation(rgba=(1, 1, 1, 1), duration=0.2)
+            + Animation(rgba=(0.5, 1, 0.5, 1), duration=0.2)
+        ).start(self.col)
 
     def update(self, *args):
         self.to_fee_norm = min(int(self.channel.fee_rate_milli_msat) / 1000 * 30, 30)
