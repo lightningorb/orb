@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 14:53:43
+# @Last Modified time: 2022-02-10 12:59:44
 
 from threading import Thread
 
@@ -48,7 +48,7 @@ class Channel(EventDispatcher):
     unsettled_balance = NumericProperty(0)
     #: The channel's commit_fee
     commit_fee = NumericProperty(0)
-    #: The channel's initiator
+    #: Whether we are the initiator
     initiator = BooleanProperty(False)
 
     # POLICY
@@ -84,13 +84,13 @@ class Channel(EventDispatcher):
             in LND.
             """
             policy_to = Lnd().get_policy_to(self.chan_id)
-            self.unbind_policies()
+            self._unbind_policies()
             self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
             self.fee_base_msat = policy_to.fee_base_msat
             self.time_lock_delta = policy_to.time_lock_delta
             self.max_htlc_msat = policy_to.max_htlc_msat
             self.min_htlc_msat = policy_to.min_htlc
-            self.bind_policies()
+            self._bind_policies()
 
         # get the policies now
         Clock.schedule_once(lambda *_: Thread(target=get_policies).start(), 0)
@@ -99,7 +99,7 @@ class Channel(EventDispatcher):
         # in LND
         Clock.schedule_interval(lambda *_: Thread(target=get_policies).start(), 5 * 60)
 
-    def bind_policies(self):
+    def _bind_policies(self):
         """
         Bind local policy updates to the channel to LND
         """
@@ -111,7 +111,7 @@ class Channel(EventDispatcher):
             self.bind(min_htlc_msat=self.update_lnd_with_policies)
             self._policies_are_bound = True
 
-    def unbind_policies(self):
+    def _unbind_policies(self):
         """
         Unbind local policy updates to the channel to LND
         """
@@ -160,7 +160,7 @@ class Channel(EventDispatcher):
 
     @property
     def alias(self):
-        return Lnd().get_node_alias(self.chan_id)
+        return Lnd().get_node_alias(self.remote_pubkey)
 
     @property
     def local_balance_include_pending(self):
@@ -179,10 +179,17 @@ class Channel(EventDispatcher):
         """
         Get the channels's ratio
         """
+        return self.local_balance / self.capacity
+
+    @property
+    def ratio_include_pending(self):
+        """
+        Get the channels's ratio
+        """
         return self.local_balance_include_pending / self.capacity
 
     @property
-    def profit(self):
+    def _profit(self):
         """
         Channel profit is how much the channel made in fees
         minus how much was spent rebalancing towards it.
@@ -190,7 +197,7 @@ class Channel(EventDispatcher):
         pass
 
     @property
-    def debt(self):
+    def _debt(self):
         """
         How much was spent rebalancing towards that channel.
         """

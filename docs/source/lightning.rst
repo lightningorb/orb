@@ -27,4 +27,5 @@ Click `close` and restart Orb.
    batch_open
    forwarding_history
    fee_distribution
-   fees
+   automated_fees
+   automated_rebalancing

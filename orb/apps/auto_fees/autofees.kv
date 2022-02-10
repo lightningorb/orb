@@ -1,0 +1,109 @@
+<AFView>:
+    title: 'Auto Fees'
+    size_hint: .9, .9
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        StackLayout:
+            size_hint_y: 0.1
+            MDTextField:
+                text: str(root.obj['frequency'])
+                helper_text: 'Run Frequency'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(100)
+                on_text_validate: root.update_obj('frequency', eval(self.text))
+            MDTextField:
+                text: str(root.obj['spam_prevention'])
+                helper_text: 'Time before next update'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(150)
+                on_text_validate: root.update_obj('spam_prevention', eval(self.text))
+            MDTextField:
+                text: str(root.obj['fee_drop_factor'])
+                helper_text: 'Fee drop factor'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(100)
+                on_text_validate: root.update_obj('fee_drop_factor', eval(self.text))
+            MDTextField:
+                text: str(root.obj['fee_bump_factor'])
+                helper_text: 'Fee bump factor'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(100)
+                on_text_validate: root.update_obj('fee_bump_factor', eval(self.text))
+        ScrollView:
+            size_hint: 1, 0.9
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            GridLayout:
+                id: rules
+                cols: 1
+                padding: 10
+                spacing: 10
+                size_hint: 1, None
+                height: self.minimum_height
+                do_scroll_x: False
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: self.minimum_height
+            MDIconButton:
+                icon: "check-network-outline"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.add_match_rule()
+            MDIconButton:
+                icon: "clock-start"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.start()
+
+
+<MatchView@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    canvas:
+        Color:
+            rgba: .8, .9, .8, .025
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "Rule: Match"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    MDTextField:
+        text: root.rule.alias
+        helper_text: 'Rule Name'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('alias', self.text)
+
+    MDTextField:
+        text: str(root.rule.priority)
+        helper_text: 'Priority'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('priority', int(self.text))
+
+    MDTextField:
+        text: '{}'.format(root.rule.fee_rate)
+        helper_text: 'Fee Rate (PPM)'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('fee_rate', self.text)
+
+    MDTextField:
+        text: root.rule.all[0]
+        helper_text: 'Match rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('all', [self.text])
+
+    MDIconButton:
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.parent_view.delete_rule(root.index)

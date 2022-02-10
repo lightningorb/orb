@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 07:42:50
+# @Last Modified time: 2022-02-10 17:54:17
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -19,6 +19,11 @@ import arrow
 from kivy.clock import Clock
 from threading import Thread
 from kivy.app import App
+from kivy.uix.popup import Popup
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
+from kivy.properties import NumericProperty
+from kivy.lang import Builder
 
 from orb.store import model
 from orb.math.lerp import lerp
@@ -28,6 +33,10 @@ from orb.core.stoppable_thread import StoppableThread
 from orb.misc.utils import pref_path
 from orb.lnd import Lnd
 from orb.misc import data_manager
+
+version = "0.0.4"
+yaml_name = f"auto_fees_v{version}.yaml"
+meta_yaml_name = f"fees_meta_v{version}.yaml"
 
 
 class Base:
@@ -119,6 +128,16 @@ class Match(Base):
         )
 
     @property
+    def min_fee(self):
+        found_min = [
+            ((x.fee / x.amt_in) * 1_000_000 if x.fee else 0)
+            for x in model.FowardEvent()
+            .select()
+            .where(model.FowardEvent.chan_id_out == str(self.channel.chan_id))
+        ]
+        return min(found_min) if found_min else 0
+
+    @property
     def best_fee(self):
         """
         Calculate the optimal routing fee based on history,
@@ -135,9 +154,7 @@ class Match(Base):
                 most_frequent + 10,
                 (ratio - global_ratio) / (1 - global_ratio),
             )
-        best = max(best, 110)
-        print(f"Best: {best}")
-        return best
+        return max(best, 100)
 
     def eval(self):
         channel = self.channel
@@ -155,12 +172,14 @@ class Match(Base):
 
     def eval_fee_rate(self):
         channel = self.channel
+        best_fee = self.best_fee
         return int(eval(str(self.fee_rate)))
 
 
 class Setter(Base):
-    def __init__(self, channel, fee_rate, meta, priority=0):
+    def __init__(self, channel, fee_rate, meta, obj, priority):
         self.channel = channel
+        self.obj = obj
         self.fee_rate = fee_rate
         self.meta = meta
         self.priority = priority
@@ -168,9 +187,13 @@ class Setter(Base):
     def set(self):
         self.meta.capacity = self.channel.capacity
         self.meta.ratio = self.channel.local_balance / self.channel.capacity
-        if self.meta.last_changed and arrow.get(
-            self.meta.last_changed
-        ) > arrow.utcnow().dehumanize("10 minutes ago"):
+        if (
+            self.obj["spam_prevention"] != 0
+            and self.meta.last_changed
+            and arrow.get(self.meta.last_changed)
+            > arrow.utcnow().shift(minutes=-eval(self.obj["spam_prevention"]))
+        ):
+            print(f"{self.channel.alias}: last updated updated recently, ignoring")
             return
         alias = Lnd().get_node_alias(self.channel.remote_pubkey)
         self.meta.fee_rate = self.fee_rate
@@ -182,9 +205,13 @@ class Setter(Base):
             self.meta.last_fee_rate = current_fee_rate
             self.meta.last_changed = int(arrow.utcnow().timestamp())
             if self.fee_rate < current_fee_rate:
-                new_fee = max(current_fee_rate * 0.9, self.fee_rate)
+                drop_rate_fee = current_fee_rate * (1 - self.obj["fee_drop_factor"])
+                new_fee = max(drop_rate_fee, self.fee_rate)
             else:
-                new_fee = self.fee_rate
+                new_fee = min(
+                    current_fee_rate + self.fee_rate * (self.obj["fee_bump_factor"]),
+                    self.fee_rate,
+                )
             print(f"setting fee rate to {new_fee} on {alias}")
             self.channel.fee_rate_milli_msat = new_fee
             self.channel.update_lnd_with_policies()
@@ -219,14 +246,22 @@ def get_dumper():
     return safe_dumper
 
 
-class Fees(StoppableThread):
+class FeesAuto(StoppableThread):
+    def __init__(self, obj):
+        self.obj = obj
+        super(FeesAuto, self).__init__()
+
+    def stop(self):
+        Clock.unschedule(self.schedule)
+        super(FeesAuto, self).stop()
+
     def schedule(self):
         Clock.schedule_once(lambda _: Thread(target=self.main).start(), 1)
-        Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 5 * 60)
+        self.schedule = Clock.schedule_interval(
+            lambda _: Thread(target=self.main).start(), eval(self.obj["frequency"])
+        )
 
     def main(self, *_):
-        print("fees.py")
-
         def load(fn):
             path = (pref_path("yaml") / fn).as_posix()
             print(path)
@@ -234,20 +269,15 @@ class Fees(StoppableThread):
                 return yaml.load(open(path, "r"), Loader=get_loader())
             return {}
 
-        obj = load("fees.yaml")
-
-        print(obj)
-        if not obj:
-            return
-        obj_meta = load("fees_meta.yaml")
+        obj_meta = load(meta_yaml_name)
         meta = {x.chan_id: x for x in obj_meta.get("meta", [])}
         chans = data_manager.data_man.channels
         setters = {}
         for c in chans:
-            alias = Lnd().get_node_alias(c.remote_pubkey)
+            print(f"analyzing channel: {c.chan_id}")
             if c.chan_id not in meta:
-                meta[c.chan_id] = FeeMeta(chan_id=c.chan_id, alias=alias)
-            for rule in obj.get("rules", []):
+                meta[c.chan_id] = FeeMeta(chan_id=c.chan_id, alias=c.alias)
+            for rule in self.obj.get("rules", []):
                 match = copy(rule)
                 match.channel = c
                 match.set_meta(meta[c.chan_id])
@@ -257,19 +287,18 @@ class Fees(StoppableThread):
                             channel=c,
                             fee_rate=match.eval_fee_rate(),
                             meta=meta[c.chan_id],
+                            obj=self.obj,
                             priority=match.priority,
                         )
         for s in setters:
             se = setters[s]
             print(f"Attempting to set: {se.fee_rate} on {se.channel.chan_id}")
             se.set()
-        print("Writing output")
         obj_meta["meta"] = sorted(
             [*set([*meta.values()])], key=lambda x: (x.ratio or 0), reverse=True
         )
         app = App.get_running_app()
         if app:
-            user_data_dir = app.user_data_dir
             path = (pref_path("yaml") / "fees_meta.yaml").as_posix()
             with open(path, "w") as stream:
                 stream.write(yaml.dump(obj_meta, Dumper=get_dumper()))
@@ -280,8 +309,110 @@ class Fees(StoppableThread):
             sleep(5)
 
 
-class AutoFees(Plugin):
+class AFView(Popup):
+    def __init__(self, *args, **kwargs):
+        self.path = (pref_path("yaml") / yaml_name).as_posix()
+        if not os.path.exists(self.path):
+            default = """
+frequency: 1 * 60
+spam_prevention: 10 * 60
+default_fee: 100
+fee_drop_factor: 0.1
+fee_bump_factor: 1
+
+rules:
+- !Match
+  alias: Low Outbound
+  all:
+  - channel.local_balance < 100_000 or channel.ratio < 0.1
+  any: null
+  fee_rate: 1000
+  priority: 10
+- !Match
+  alias: Low Inbound
+  all:
+  - channel.ratio_include_pending > 0.9
+  any: null
+  fee_rate: 0
+  priority: 0
+- !Match
+  alias: Best Fee
+  all:
+  - (channel.local_balance < 100_000 or channel.ratio < 0.1) and channel.ratio_include_pending <= 0.9
+  any: null
+  fee_rate: best_fee
+  priority: 10
+"""
+            with open(self.path, "w") as f:
+                f.write(default)
+        self.obj = yaml.load(open(self.path, "r"), Loader=get_loader())
+        if not self.obj:
+            return
+        super(AFView, self).__init__(*args, **kwargs)
+
+    def open(self, *args, **kwargs):
+        """
+        This gets called when the popup is first opened.
+        """
+        super(AFView, self).open(*args, **kwargs)
+        self.populate_rules()
+
+    def add_match_rule(self):
+        self.obj["rules"].append(
+            Match(
+                alias="New",
+                priority=0,
+                all=["False"],
+                fee_rate="best_fee",
+            )
+        )
+        self.ids.rules.clear_widgets()
+        self.populate_rules()
+        self.save()
+
+    def populate_rules(self):
+        self.ids.rules.clear_widgets()
+        mapping = {Match: MatchView}
+        for index, rule in enumerate(self.obj["rules"]):
+            view = mapping[type(rule)](rule=rule, parent_view=self, index=index)
+            self.ids.rules.add_widget(view)
+
+    def delete_rule(self, index):
+        self.obj["rules"] = self.obj["rules"][:index] + self.obj["rules"][index + 1 :]
+        self.save()
+        self.populate_rules()
+
+    def update_obj(self, attr, value):
+        self.obj[attr] = value
+        self.save()
+
+    def save(self, *_):
+        with open(self.path, "w") as stream:
+            stream.write(yaml.dump(self.obj, Dumper=get_dumper()))
+
+    def start(self):
+        autofees = FeesAuto(self.obj)
+        autofees.daemon = True
+        autofees.start()
+
+
+class BaseView(BoxLayout):
+    rule = ObjectProperty()
+    parent_view = ObjectProperty()
+    index = NumericProperty()
+
+    def update_rule(self, attr, value):
+        setattr(self.rule, attr, value)
+        self.parent_view.save()
+
+
+class MatchView(BaseView):
+    pass
+
+
+class AutoFeesPlugin(Plugin):
     def main(self):
-        auto_fee = Fees()
-        auto_fee.daemon = True
-        auto_fee.start()
+        kv_path = (Path(__file__).parent / "autofees.kv").as_posix()
+        Builder.unload_file(kv_path)
+        Builder.load_file(kv_path)
+        AFView().open()
