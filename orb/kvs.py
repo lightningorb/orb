@@ -2173,6 +2173,18 @@ Builder.load_string('''
         PopMatrix
 ''')
 Builder.load_string('''
+<SegmentLabel>:
+    font_size: '84sp'
+    size: [self.texture_size[0]*0.2, self.texture_size[1]*.2]
+    canvas.before:
+        PushMatrix
+        Scale:
+            origin: self.center
+            xyz: .2, .2, 1
+    canvas.after:
+        PopMatrix
+''')
+Builder.load_string('''
 <ContextMenu>:
     cols: 1
     size_hint: None, None

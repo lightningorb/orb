@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 07:29:28
+# @Last Modified time: 2022-02-11 14:03:35
 
 import os
 from time import sleep
@@ -313,19 +313,10 @@ rules:
   from_any: []
   num_sats: 100000
   to_all:
-  - channel.ratio < 0.12
+  - channel.ratio_include_pending < 0.1
   to_any: []
-- !FromTo
-  alias: From high outbound to bitfinex
-  fee_rate: 500
-  from_all:
-  - channel.ratio > 0.5
-  from_any: []
-  num_sats: 100000
-  to_all:
-  - channel.remote_pubkey == '033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025'
-  to_any: []
-threads: 5"""
+threads: 10
+"""
             with open(self.path, "w") as f:
                 f.write(default)
         self.obj = yaml.load(open(self.path, "r"), Loader=get_loader())

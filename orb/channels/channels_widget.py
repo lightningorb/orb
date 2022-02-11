@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 02:03:26
+# @Last Modified time: 2022-02-11 11:38:46
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -63,7 +63,8 @@ class ChannelsWidget(ScatterLayout):
         )
         self.ids.relative_layout.add_widget(self.node)
         self.ids.relative_layout.add_widget(self.chord_widget)
-        self.bind(size=self.update)  # pos=self.update,
+        self.bind(size=self.update)
+        App.get_running_app().bind(update_channels_widget=self.update)
         self.apply_transform(
             Matrix().scale(0.5, 0.5, 0.5), anchor=(self.size[0] / 2, self.size[1] / 2)
         )

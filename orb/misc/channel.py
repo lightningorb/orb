@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 12:59:44
+# @Last Modified time: 2022-02-11 09:31:14
 
 from threading import Thread
 
@@ -221,3 +221,19 @@ class Channel(EventDispatcher):
             )
         except:
             return 0
+
+    @property
+    def pending_in(self):
+        return sum(int(p.amount) for p in self.pending_htlcs if p.incoming)
+
+    @property
+    def pending_out(self):
+        return sum(int(p.amount) for p in self.pending_htlcs if not p.incoming)
+
+    @property
+    def pending_in_htlc_ids(self):
+        return [p.htlc_index for p in self.pending_htlcs if p.incoming]
+
+    @property
+    def pending_out_htlc_ids(self):
+        return [p.htlc_index for p in self.pending_htlcs if not p.incoming]

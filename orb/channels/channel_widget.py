@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 03:16:16
+# @Last Modified time: 2022-02-11 13:34:51
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -20,6 +20,9 @@ from orb.math.lerp import lerp_2d
 from orb.misc.colors import *
 from orb.misc.auto_obj import dict2obj
 from orb.misc import data_manager
+from orb.misc.prefs import pref
+
+op = lambda: float(pref("display.channel_opacity"))
 
 
 class ChannelWidget(Widget):
@@ -44,21 +47,18 @@ class ChannelWidget(Widget):
         self.to_fee = FeeWidget(channel=self.channel)
         self.add_widget(self.to_fee)
         self.anim_rectangles = []
-        self.selected = False
-
-        self.pending_in = sum(
-            int(p.amount) for p in self.channel.pending_htlcs if p.incoming
-        )
-        self.pending_out = sum(
-            int(p.amount) for p in self.channel.pending_htlcs if not p.incoming
-        )
+        self._selected = False
 
         with self.canvas.before:
             self.line_local = Segment(
-                amt_sat=int(self.channel.local_balance), width=self.width, color=GREEN
+                amt_sat=int(self.channel.local_balance),
+                width=self.width,
+                color=self.local_col,
             )
-            self.line_pending = Segment(width=self.width, color=ORANGE)
-            self.line_remote = Segment(width=self.width, color=BLUE)
+            self.line_pending = Segment(
+                width=self.width, color=self.pending_col, label=""
+            )
+            self.line_remote = Segment(width=self.width, color=self.remote_col)
             self.anim_col = Color(0.5, 1, 0.5, 1)
             self.anim_rect = RoundedRectangle(
                 pos=[-1000, -1000], size=[0, 0], radius=[5]
@@ -72,47 +72,31 @@ class ChannelWidget(Widget):
 
     @property
     def remote_col(self):
-        return (BLUE, BLUE_SELECTED)[self.selected]
+        s = self.selected
+        return Colour("#7f7fcc", alpha=(op(), 1)[s], selected=s).rgba
 
     @property
     def local_col(self):
-        return (GREEN, GREEN_SELECTED)[self.selected]
+        s = self.selected
+        return Colour("#7fcc7f", alpha=(op(), 1)[s], selected=s).rgba
 
     @property
     def pending_col(self):
-        return (GREEN, GREEN_SELECTED)[self.selected]
+        s = self.selected
+        return Colour("#ff7f7f", alpha=(op(), 1)[s], selected=s).rgba
+
+    @property
+    def selected(self):
+        # highlighted = self.channel.ratio > 0.5
+        return self._selected  # or highlighted
 
     def set_selected(self, widget, channel):
-        self.selected = channel == self.channel
+        self._selected = channel == self.channel
         (Animation(rgba=self.remote_col, duration=0.2)).start(self.line_remote.color)
         (Animation(rgba=self.local_col, duration=0.2)).start(self.line_local.color)
         (Animation(rgba=self.pending_col, duration=0.2)).start(self.line_pending.color)
 
     def update(self, *args):
-        """
-        CAPACITY: 1,000,000
-        LOCAL: 3,000,000
-        REMOTE: 7,000,000
-        PENDING IN:  500,000
-        PENDING OUT: 300,000
-
-        LOCAL                                                           REMOTE
-        |                  |                                                |
-        |-----------|------|----|-------------------------------------------|
-        |                  |                                                |
-        a          ca      c    cb                                          b
-
-        lerp a, b, ratio - pending/cap      lerp a, b, ratio + pending/cap
-
-        """
-
-        self.pending_in = sum(
-            int(p.amount) for p in self.channel.pending_htlcs if p.incoming
-        )
-        self.pending_out = sum(
-            int(p.amount) for p in self.channel.pending_htlcs if not p.incoming
-        )
-
         chan, line, trim = self.channel, self.points, 0.1
         ratio = int(chan.local_balance) / int(chan.capacity)
 
@@ -123,25 +107,35 @@ class ChannelWidget(Widget):
 
         # c is the 'center point' where local meets remote
         # (given there are no pending HTLCs)
-        c = lerp_2d(a, b, ratio + (self.pending_out / chan.capacity))
-
-        # ca is where the local line ends, minus pending out HTLC amounts
-        # e.g the outbound that's actually available
-        ca = lerp_2d(a, b, ratio)
+        c = lerp_2d(a, b, ratio)
 
         # cb is where the remote line beings, i.e local + all pending
         cb = lerp_2d(
-            a, b, ratio + (self.pending_in + self.pending_out) / int(chan.capacity)
+            a,
+            b,
+            ratio
+            + (self.channel.pending_in + self.channel.pending_out) / int(chan.capacity),
         )
-        self.line_local.line.points = [a[0], a[1], ca[0], ca[1]]
+        self.line_local.line.points = [a[0], a[1], c[0], c[1]]
 
         # the pending line goes from where local ends, and remote starts
-        self.line_pending.line.points = [ca[0], ca[1], cb[0], cb[1]]
+        self.line_pending.line.points = [c[0], c[1], cb[0], cb[1]]
         self.line_remote.line.points = [cb[0], cb[1], b[0], b[1]]
         self.to_fee.set_points(a, b, c)
         self.a, self.b, self.c = a, b, c
         self.line_local.update(amt_sat=self.channel.local_balance)
         self.line_pending.update()
+        if pref("debug.htlcs"):
+            in_ids = ", ".join(str(x) for x in self.channel.pending_in_htlc_ids)
+            out_ids = ", ".join(str(x) for x in self.channel.pending_out_htlc_ids)
+            text = ""
+            if in_ids:
+                text += f"in: {in_ids} "
+            if out_ids:
+                text += f"out: {out_ids}"
+            self.line_pending.label.text = text
+        else:
+            self.line_pending.label.text = ""
         self.line_remote.update()
 
     def anim_outgoing(self, s=10):
@@ -175,7 +169,7 @@ class ChannelWidget(Widget):
         Animation(points=points, duration=1).start(self)
 
     def anim_htlc(self, htlc):
-        col = WHITE
+        col = Colour("white").rgba
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
         receive = htlc.event_type == "RECEIVE"
@@ -187,37 +181,34 @@ class ChannelWidget(Widget):
         outgoing = htlc.outgoing_channel_id == self.channel.chan_id
         c = self.channel
 
-        get_pending_outgoing_event = lambda html: next(
+        get_pending_outgoing_event = lambda htlc: next(
             (
                 x
                 for x in c.pending_htlcs
-                if (not x.incoming)
-                and hasattr(x, "outgoing_htlc_id")
-                and x.outgoing_htlc_id == htlc.outgoing_htlc_id
+                if (not x.incoming) and x.htlc_index == htlc.outgoing_htlc_id
             ),
             None,
         )
 
-        get_pending_incoming_event = lambda html: next(
+        get_pending_incoming_event = lambda htlc: next(
             (
                 x
                 for x in c.pending_htlcs
-                if (x.incoming)
-                and hasattr(x, "incoming_htlc_id")
-                and x.incoming_htlc_id == htlc.incoming_htlc_id
+                if (x.incoming) and x.htlc_index == htlc.incoming_htlc_id
             ),
             None,
         )
 
         if send and outgoing:
             if htlc.event_outcome == "forward_fail_event":
-                col = RED_FULL
+                col = Colour("red").rgba
                 pending = get_pending_outgoing_event(htlc)
+                # should always be there...
                 if pending:
                     c.pending_htlcs.remove(pending)
                     c.local_balance += pending.amount
             else:
-                col = BLUE_FULL
+                col = Colour("blue").rgba
                 self.anim_outgoing()
                 if settle:
                     audio_manager.play_send_settle()
@@ -233,6 +224,7 @@ class ChannelWidget(Widget):
                         dict(
                             incoming=False,
                             amount=out_amt_sat,
+                            htlc_index=htlc.outgoing_htlc_id,
                             outgoing_htlc_id=htlc.outgoing_htlc_id,
                         )
                     )
@@ -242,7 +234,7 @@ class ChannelWidget(Widget):
             self.anim_incoming()
         elif forward:
             if forward_fail:
-                col = RED_FULL
+                col = Colour("red").rgba
             if outgoing:
                 if forward_fail:
                     pending = get_pending_outgoing_event(htlc)
@@ -264,6 +256,7 @@ class ChannelWidget(Widget):
                             dict(
                                 incoming=False,
                                 amount=out_amt_sat,
+                                htlc_index=htlc.outgoing_htlc_id,
                                 outgoing_htlc_id=htlc.outgoing_htlc_id,
                             )
                         )
@@ -290,6 +283,7 @@ class ChannelWidget(Widget):
                             dict(
                                 incoming=True,
                                 amount=in_amt_sat,
+                                htlc_index=htlc.incoming_htlc_id,
                                 incoming_htlc_id=htlc.incoming_htlc_id,
                             )
                         )
@@ -298,7 +292,7 @@ class ChannelWidget(Widget):
                 self.anim_incoming()
 
         if link_fail:
-            col = RED_FULL
+            col = Colour("red").rgba
             if hasattr(htlc, "wire_failure"):
                 """
                 Not yet available for REST

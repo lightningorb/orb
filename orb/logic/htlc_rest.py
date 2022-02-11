@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-06 05:44:13
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 09:48:19
+# @Last Modified time: 2022-02-11 14:23:59
 
 from orb.store.model import Htlc
 from orb.store.db_meta import *
@@ -18,13 +18,14 @@ class HtlcRest(Htlc):
         st = htlc.__str__()
         self.timestamp = int(int(htlc.timestamp_ns) / 1e9)
         self.event_type = htlc.event_type
+        print(st)
         if hasattr(htlc, "forward_event"):
             self.event_outcome = "forward_event"
             self.event_outcome_info = htlc.forward_event.info.todict()
         elif hasattr(htlc, "forward_fail_event"):
             self.event_outcome = "forward_fail_event"
+            self.forward_fail_event = htlc.forward_fail_event.todict()
         elif hasattr(htlc, "link_fail_event"):
-            print(st)
             self.link_fail_event = htlc.link_fail_event.todict()
             self.event_outcome = "link_fail_event"
             self.event_outcome_info = htlc.link_fail_event.info.todict()

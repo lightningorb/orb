@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 07:24:10
+# @Last Modified time: 2022-02-11 11:37:26
 
 import os
 import sys
@@ -21,6 +21,7 @@ from kivy.core.window import Window
 from kivy.utils import platform
 from kivy.config import Config
 from kivy.properties import ObjectProperty
+from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
 from kivy.uix.button import Button
 
@@ -57,6 +58,7 @@ class OrbApp(MDApp):
     title = "Orb"
     consumables = deque()
     selection = ObjectProperty(allownone=True)
+    update_channels_widget = NumericProperty()
     apps = None
 
     def get_application_config(self, defaultpath=f"~/orb.ini"):
@@ -286,11 +288,9 @@ class OrbApp(MDApp):
         settings.add_json_panel("Orb", self.config, filename=path.as_posix())
 
     def on_config_change(self, config, section, key, value):
-        """
-        What to do when a config value changes. TODO: needs fixing.
-        Currently we'd end up with multiple LND instances for example?
-        Simply not an option.
-        """
+        if [section, key] == ["debug", "htlcs"]:
+            self.update_channels_widget += 1
+
         self.main_layout.do_layout()
 
     @guarded

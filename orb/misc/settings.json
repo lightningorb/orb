@@ -67,6 +67,13 @@
    },
    {
       "type":"bool",
+      "title":"debug HTLCs",
+      "desc":"Display HTLC ids for debugging purposes",
+      "section":"debug",
+      "key":"htlcs"
+   },
+   {
+      "type":"bool",
       "title":"debug layouts",
       "desc":"Display layouts for debugging purposes",
       "section":"debug",

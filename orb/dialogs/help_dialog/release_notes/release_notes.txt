@@ -1,6 +1,11 @@
 0.11.0
 ----
 
+autofees UI
+fee widget flashes when updated
+auto-rebalances can now be stopped properly
+[dev] some refactoring in chord widget
+auto rebalance ui
 autofees and autobalance brought back into the main app
 [dev] added tests to main [dev] data_manager now has a plugin registry
     [dev] plugins can receive htlcs

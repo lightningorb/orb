@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 17:54:17
+# @Last Modified time: 2022-02-11 13:44:42
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -314,34 +314,42 @@ class AFView(Popup):
         self.path = (pref_path("yaml") / yaml_name).as_posix()
         if not os.path.exists(self.path):
             default = """
-frequency: 1 * 60
-spam_prevention: 10 * 60
 default_fee: 100
-fee_drop_factor: 0.1
 fee_bump_factor: 1
-
+fee_drop_factor: 0.1
+frequency: 300
 rules:
 - !Match
   alias: Low Outbound
   all:
-  - channel.local_balance < 100_000 or channel.ratio < 0.1
+  - channel.local_balance < 500_000 or channel.ratio < 0.1
   any: null
-  fee_rate: 1000
-  priority: 10
+  fee_rate: '1000'
+  priority: 2
 - !Match
   alias: Low Inbound
   all:
   - channel.ratio_include_pending > 0.9
   any: null
-  fee_rate: 0
+  fee_rate: '0'
   priority: 0
 - !Match
   alias: Best Fee
   all:
-  - (channel.local_balance < 100_000 or channel.ratio < 0.1) and channel.ratio_include_pending <= 0.9
+  - (channel.local_balance > 500_000 or channel.ratio > 0.1) and channel.ratio_include_pending
+    <= 0.9
   any: null
-  fee_rate: best_fee
-  priority: 10
+  fee_rate: self.best_fee
+  priority: 1
+- !Match
+  alias: LOOP
+  all:
+  - channel.alias == 'LOOP'
+  any: null
+  fee_rate: '1000'
+  priority: 5
+spam_prevention: 0
+
 """
             with open(self.path, "w") as f:
                 f.write(default)

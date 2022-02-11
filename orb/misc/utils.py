@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 09:25:46
+# @Last Modified time: 2022-02-11 11:26:56
 
 from pathlib import Path
 
@@ -28,6 +28,10 @@ def pref(name):
     app = App.get_running_app()
     if app:
         section, key = name.split(".")
+        if app.config[section][key] == "False":
+            return False
+        if app.config[section][key] == "True":
+            return True
         try:
             return float(app.config[section][key])
         except:

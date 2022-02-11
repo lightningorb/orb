@@ -1,0 +1,10 @@
+<SegmentLabel>:
+    font_size: '84sp'
+    size: [self.texture_size[0]*0.2, self.texture_size[1]*.2]
+    canvas.before:
+        PushMatrix
+        Scale:
+            origin: self.center
+            xyz: .2, .2, 1
+    canvas.after:
+        PopMatrix
