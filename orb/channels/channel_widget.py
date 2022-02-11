@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 17:48:04
+# @Last Modified time: 2022-02-11 20:19:35
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.animation import Animation
 from kivy.clock import Clock
 
+from orb.math.Vector import Vector
 from orb.audio.audio_manager import audio_manager
 from orb.channels.segment import Segment
 from orb.channels.fee_widget import FeeWidget
@@ -157,13 +158,14 @@ class ChannelWidget(Widget):
             self.c,
             self.b,
         )
-        anim = Animation(pos=start, size=(s, s), duration=0)
-        anim += Animation(pos=end, size=(s, s), duration=0.4)
-        anim += Animation(pos=end, size=(1, 1), duration=0)
+        dist = int(Vector(start[0], start[1]).dist(Vector(end[0], end[1])) / 500)
+        anim = Animation(pos=start, size=(s, s), duration=0, t="in_quad")
+        anim += Animation(pos=end, size=(s, s), duration=dist, t="in_quad")
+        anim += Animation(pos=end, size=(1, 1), duration=0, t="in_quad")
         anim.start(self.anim_rect)
-        anim = Animation(rgba=[0.5, 1, 0.5, 1], duration=0)
-        anim += Animation(rgba=[0.5, 1, 0.5, 1], duration=0.4)
-        anim += Animation(rgba=[0.5, 1, 0.5, 0], duration=0)
+        anim = Animation(rgba=[0.5, 1, 0.5, 1], duration=0, t="in_quad")
+        anim += Animation(rgba=[0.5, 1, 0.5, 1], duration=dist, t="in_quad")
+        anim += Animation(rgba=[0.5, 1, 0.5, 0], duration=0, t="in_quad")
         anim.start(self.anim_col)
 
     def anim_incoming(self, s=10):
@@ -171,12 +173,13 @@ class ChannelWidget(Widget):
             self.b,
             self.c,
         )
-        anim = Animation(pos=start, size=(s, s), duration=0)
-        anim += Animation(pos=end, size=(s, s), duration=0.4)
+        dist = int(Vector(start[0], start[1]).dist(Vector(end[0], end[1])) / 500)
+        anim = Animation(pos=start, size=(s, s), duration=0, t="out_quad")
+        anim += Animation(pos=end, size=(s, s), duration=dist, t="out_quad")
         anim.start(self.anim_rect)
-        anim = Animation(rgba=[0.5, 1, 0.5, 1], duration=0)
-        anim += Animation(rgba=[0.5, 1, 0.5, 1], duration=0.4)
-        anim += Animation(rgba=[0.5, 1, 0.5, 0], duration=0)
+        anim = Animation(rgba=[0.5, 1, 0.5, 1], duration=0, t="out_quad")
+        anim += Animation(rgba=[0.5, 1, 0.5, 1], duration=dist, t="out_quad")
+        anim += Animation(rgba=[0.5, 1, 0.5, 0], duration=0, t="out_quad")
         anim.start(self.anim_col)
 
     def anim_to_pos(self, points):

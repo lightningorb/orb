@@ -1,6 +1,11 @@
 0.11.0
 ----
 
+added highlighter dialog
+changed autofees and autobalance defaults lots of improvements with
+    how HTLCs handled and accounted for auto channel selector
+    improvements better color management htlcs can no be debugged via
+    the settings
 autofees UI
 fee widget flashes when updated
 auto-rebalances can now be stopped properly
