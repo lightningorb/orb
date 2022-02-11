@@ -1,8 +1,8 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 17:02:39
+# @Last Modified time: 2022-02-11 17:30:02
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -32,6 +32,7 @@ class DataManager(EventDispatcher):
     show_chord = NumericProperty(0)
     chords_direction = NumericProperty(0)
     channels_widget_ux_mode = NumericProperty(0)
+    highlighter_updated = NumericProperty(0)
 
     def __init__(self, *args, **kwargs):
         """

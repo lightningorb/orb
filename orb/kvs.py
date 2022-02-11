@@ -1503,6 +1503,26 @@ Builder.load_string('''
                 md_bg_color_disabled: .2,.2,.2,1
 ''')
 Builder.load_string('''
+#: import dp kivy.metrics.dp
+<HighlighterDialog>:
+    title: 'HighlighterDialog'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    size: dp(500), dp(150)
+    MDTextField:
+        id: text_input
+        on_text_validate: root.validate(self.text)
+        multiline: False
+    # MDTextField:
+    #     text: 'False'
+    #     helper_text: 'Number of rebalances'
+    #     helper_text_mode: "persistent"
+    #     size_hint_x: None
+    #     width: dp(100)
+    #     on_text_validate: root.update_obj('threads', int(self.text))
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -1537,8 +1557,8 @@ Big thanks to:\
 \
 Miguel\
 Richard\
-Neski\
-B\
+Mads\
+Asher\
 \
 And countless others for their\
 time, input and knowledge.'
@@ -1572,6 +1592,8 @@ Builder.load_string('''
 #:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
 #:import LoginDialog orb.dialogs.app_store.LoginDialog
 #:import UploadAppDialog orb.dialogs.upload_app.UploadAppDialog
+#:import HighlighterDialog orb.dialogs.highlighter_dialog.highlighter_dialog.HighlighterDialog
+
 
 #: import webbrowser webbrowser
 ########################################################################################
@@ -1666,23 +1688,29 @@ Builder.load_string('''
                             text: "Fee Distribution"
                             on_release: (app_menu.close_all(), FeeDistribution().open())
                 ContextMenuTextItem:
-                    text: "Sort Channels"
+                    text: "Channels"
                     ContextMenu:
                         ContextMenuTextItem:
-                            text: "ratio"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                            text: "Highlighter"
+                            on_release: [HighlighterDialog().open(), app_menu.close_all()]
                         ContextMenuTextItem:
-                            text: "capacity"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
-                        ContextMenuTextItem:
-                            text: "total-sent"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
-                        ContextMenuTextItem:
-                            text: "total-received"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
-                        ContextMenuTextItem:
-                            text: "out-ppm"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
+                            text: "Sort"
+                            ContextMenu:
+                                ContextMenuTextItem:
+                                    text: "ratio"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                                ContextMenuTextItem:
+                                    text: "capacity"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
+                                ContextMenuTextItem:
+                                    text: "total-sent"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
+                                ContextMenuTextItem:
+                                    text: "total-received"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
+                                ContextMenuTextItem:
+                                    text: "out-ppm"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
 
 
         AppMenuTextItem:

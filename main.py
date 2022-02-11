@@ -2,26 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 20:17:30
+# @Last Modified time: 2022-02-11 17:06:32
 
-print("loading main")
-print("loading system libraries")
 import sys
 import os
 from pathlib import Path
 from kivy.config import Config
 from kivy.utils import platform
 
-print("THE PLATFORM IS")
-print(platform)
-
 if platform == "win":
     Config.set("graphics", "multisamples", "0")
 
 # os.environ["KIVY_AUDIO"] = "ffpyplayer"
 # os.environ["KIVY_VIDEO"] = "ffpyplayer"
-
-print("loading kivy libraries")
 
 from kivy.utils import platform
 
@@ -33,8 +26,6 @@ if platform == "macosx":
     # import numpy
     # import matplotlib
 
-print("setting up dependency paths")
-
 sys.path.append(Path("orb/lnd").as_posix())
 sys.path.append(Path("orb/lnd/grpc_generated").as_posix())
 sys.path.append(Path("third_party/contextmenu").as_posix())
@@ -44,8 +35,6 @@ sys.path.append(Path("third_party/forex-python/").as_posix())
 sys.path.append(Path("third_party/bezier/src/python/").as_posix())
 sys.path.append(Path("third_party/colour/").as_posix())
 sys.path.append(Path("third_party/currency-symbols/").as_posix())
-
-print("loading orb modules")
 
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
@@ -77,6 +66,7 @@ from orb.screens.batch_open_screen import BatchOpenScreen
 from orb.dialogs.fee_distribution import FeeDistribution
 from orb.dialogs.help_dialog.about.about import About
 from orb.dialogs.upload_app import UploadAppDialog
+from orb.dialogs.highlighter_dialog.highlighter_dialog import HighlighterDialog
 
 import colour
 from kivymd.effects.stiffscroll import StiffScrollEffect
@@ -117,6 +107,7 @@ keep(FeeDistribution)
 keep(About)
 keep(UploadAppDialog)
 keep(forwarding_history)
+keep(HighlighterDialog)
 
 if __name__ == "__main__":
     # import unittest
@@ -138,5 +129,4 @@ if __name__ == "__main__":
 
     # unittest.main(exit=False)
 
-    print("loading main app")
     OrbApp().run()

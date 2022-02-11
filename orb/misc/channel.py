@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 09:31:14
+# @Last Modified time: 2022-02-11 17:45:50
 
 from threading import Thread
 
@@ -74,6 +74,10 @@ class Channel(EventDispatcher):
         self._policies_are_bound = False
 
         self.schedule_updates()
+
+    @property
+    def active(self):
+        return self.channel.active
 
     def schedule_updates(self):
         def get_policies(*_):

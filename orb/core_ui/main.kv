@@ -26,6 +26,8 @@
 #:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
 #:import LoginDialog orb.dialogs.app_store.LoginDialog
 #:import UploadAppDialog orb.dialogs.upload_app.UploadAppDialog
+#:import HighlighterDialog orb.dialogs.highlighter_dialog.highlighter_dialog.HighlighterDialog
+
 
 #: import webbrowser webbrowser
 ########################################################################################
@@ -120,23 +122,29 @@
                             text: "Fee Distribution"
                             on_release: (app_menu.close_all(), FeeDistribution().open())
                 ContextMenuTextItem:
-                    text: "Sort Channels"
+                    text: "Channels"
                     ContextMenu:
                         ContextMenuTextItem:
-                            text: "ratio"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                            text: "Highlighter"
+                            on_release: [HighlighterDialog().open(), app_menu.close_all()]
                         ContextMenuTextItem:
-                            text: "capacity"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
-                        ContextMenuTextItem:
-                            text: "total-sent"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
-                        ContextMenuTextItem:
-                            text: "total-received"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
-                        ContextMenuTextItem:
-                            text: "out-ppm"
-                            on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
+                            text: "Sort"
+                            ContextMenu:
+                                ContextMenuTextItem:
+                                    text: "ratio"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                                ContextMenuTextItem:
+                                    text: "capacity"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
+                                ContextMenuTextItem:
+                                    text: "total-sent"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
+                                ContextMenuTextItem:
+                                    text: "total-received"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
+                                ContextMenuTextItem:
+                                    text: "out-ppm"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
 
 
         AppMenuTextItem:

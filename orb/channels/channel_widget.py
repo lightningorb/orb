@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 13:34:51
+# @Last Modified time: 2022-02-11 17:48:04
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -12,6 +12,7 @@ from kivy.graphics.context_instructions import Color
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.animation import Animation
+from kivy.clock import Clock
 
 from orb.audio.audio_manager import audio_manager
 from orb.channels.segment import Segment
@@ -69,6 +70,9 @@ class ChannelWidget(Widget):
         self.bind(points=self.update)
 
         App.get_running_app().bind(selection=self.set_selected)
+        data_manager.data_man.bind(highlighter_updated=self.animate_highlight)
+
+        Clock.schedule_interval(self.animate_highlight, 10)
 
     @property
     def remote_col(self):
@@ -87,11 +91,21 @@ class ChannelWidget(Widget):
 
     @property
     def selected(self):
-        # highlighted = self.channel.ratio > 0.5
-        return self._selected  # or highlighted
+        try:
+            h = data_manager.data_man.store.get("highlighter", {})
+            text = h.get("highlight", "")
+            channel = self.channel
+            c = self.channel
+            highlighted = eval(text)
+        except:
+            highlighted = False
+        return self._selected or highlighted
 
     def set_selected(self, widget, channel):
         self._selected = channel == self.channel
+        self.animate_highlight()
+
+    def animate_highlight(self, *args):
         (Animation(rgba=self.remote_col, duration=0.2)).start(self.line_remote.color)
         (Animation(rgba=self.local_col, duration=0.2)).start(self.line_local.color)
         (Animation(rgba=self.pending_col, duration=0.2)).start(self.line_pending.color)
