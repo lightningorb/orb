@@ -19,7 +19,52 @@ from orb.lnd import Lnd
 def get_forwarding_history():
     from orb.store import model
 
-    return model.FowardEvent().select()
+    return model.ForwardEvent().select()
+
+
+def download_forwarding_history(*args, **kwargs):
+    def func():
+        from orb.store import model
+
+        last = model.ForwardEvent.select().order_by(
+            model.ForwardEvent.timestamp_ns.desc()
+        )
+        if last:
+            last = last.first()
+        i = 0
+        start_time = int(last.timestamp) if last else None
+        while True:
+            # fwd returns object with forwarding_events and last_offset_index attributes
+            print('downloading from offset {}'.format(i))
+            fwd = Lnd().get_forwarding_history(
+                start_time=start_time, index_offset=i, num_max_events=100
+            )
+
+            for j, f in enumerate(fwd.forwarding_events):
+                if j == 0 and start_time:
+                    # if this is not the first run, then skip the first
+                    # event, else it will show up as a duplicate
+                    continue
+
+                ev = model.ForwardEvent(
+                    timestamp=int(f.timestamp),
+                    chan_id_in=int(f.chan_id_in),
+                    chan_id_out=int(f.chan_id_out),
+                    amt_in=int(f.amt_in),
+                    amt_out=int(f.amt_out),
+                    fee=int(f.fee),
+                    fee_msat=int(f.fee_msat),
+                    amt_in_msat=int(f.amt_in_msat),
+                    amt_out_msat=int(f.amt_out_msat),
+                    timestamp_ns=int(f.timestamp_ns),
+                )
+                ev.save()
+            # i += 100
+            i = fwd.last_offset_index
+            if not fwd.forwarding_events:
+                break
+
+    Thread(target=func).start()
 
 
 def view_forwarding_history():
@@ -34,15 +79,15 @@ def view_forwarding_history():
     last_event = 0
 
     for f in fh.iterator():
-        total_out += f.amt_out
-        total_in += f.amt_in
-        total_fee += f.fee
+        total_out += f.amt_out_msat
+        total_in += f.amt_in_msat
+        total_fee += f.fee_msat
         last_event = f.timestamp
 
     text = f"""
-    total fees: {forex(total_fee)}
-    total out: {forex(total_out)} 
-    total in: {forex(total_in)}
+    total fees: {forex(round(total_fee/1000.))}
+    total out: {forex(round(total_out/1000.))} 
+    total in: {forex(round(total_in/1000.))}
 
     last event:
     {arrow.get(last_event).format('YYYY-MM-DD HH:mm:ss')}

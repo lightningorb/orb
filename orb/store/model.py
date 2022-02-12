@@ -15,7 +15,7 @@ from kivy.app import App
 from orb.store.db_meta import *
 
 
-class FowardEvent(Model):
+class ForwardEvent(Model):
     timestamp = IntegerField()
     chan_id_in = IntegerField()
     chan_id_out = IntegerField()

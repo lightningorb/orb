@@ -33,7 +33,7 @@ class SentReceivedWidget(Widget):
 
         skip = False
         try:
-            model.FowardEvent().select()
+            model.ForwardEvent().select()
         except:
             skip = True
 
@@ -44,17 +44,17 @@ class SentReceivedWidget(Widget):
             self.received = sum(
                 [
                     x.fee
-                    for x in model.FowardEvent()
+                    for x in model.ForwardEvent()
                     .select()
-                    .where(model.FowardEvent.chan_id_in == str(c.chan_id))
+                    .where(model.ForwardEvent.chan_id_in == str(c.chan_id))
                 ]
             )
             self.sent = sum(
                 [
                     x.fee
-                    for x in model.FowardEvent()
+                    for x in model.ForwardEvent()
                     .select()
-                    .where(model.FowardEvent.chan_id_out == str(c.chan_id))
+                    .where(model.ForwardEvent.chan_id_out == str(c.chan_id))
                 ]
             )
         alpha = 0.5
