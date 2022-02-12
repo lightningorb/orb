@@ -80,10 +80,10 @@ class Match(Base):
     def set_meta(self, meta):
         self.meta = meta
         ev = (
-            model.FowardEvent()
+            model.ForwardEvent()
             .select()
-            .order_by(model.FowardEvent.timestamp.desc())
-            .where(model.FowardEvent.chan_id_out == str(self.channel.chan_id))
+            .order_by(model.ForwardEvent.timestamp.desc())
+            .where(model.ForwardEvent.chan_id_out == str(self.channel.chan_id))
         )
         try:
             if ev:
@@ -98,9 +98,9 @@ class Match(Base):
         return sum(
             [
                 x.amt_in
-                for x in model.FowardEvent()
+                for x in model.ForwardEvent()
                 .select()
-                .where(model.FowardEvent.chan_id_in == str(self.channel.chan_id))
+                .where(model.ForwardEvent.chan_id_in == str(self.channel.chan_id))
             ]
         )
 
@@ -109,9 +109,9 @@ class Match(Base):
         return sum(
             [
                 x.amt_in
-                for x in model.FowardEvent()
+                for x in model.ForwardEvent()
                 .select()
-                .where(model.FowardEvent.chan_id_out == str(self.channel.chan_id))
+                .where(model.ForwardEvent.chan_id_out == str(self.channel.chan_id))
             ]
         )
 
@@ -120,9 +120,9 @@ class Match(Base):
         return max(
             [
                 ((x.fee / x.amt_in) * 1_000_000 if x.fee else 0)
-                for x in model.FowardEvent()
+                for x in model.ForwardEvent()
                 .select()
-                .where(model.FowardEvent.chan_id_out == str(self.channel.chan_id))
+                .where(model.ForwardEvent.chan_id_out == str(self.channel.chan_id))
             ]
             + [0]
         )
@@ -131,9 +131,9 @@ class Match(Base):
     def min_fee(self):
         found_min = [
             ((x.fee / x.amt_in) * 1_000_000 if x.fee else 0)
-            for x in model.FowardEvent()
+            for x in model.ForwardEvent()
             .select()
-            .where(model.FowardEvent.chan_id_out == str(self.channel.chan_id))
+            .where(model.ForwardEvent.chan_id_out == str(self.channel.chan_id))
         ]
         return min(found_min) if found_min else 0
 

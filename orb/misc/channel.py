@@ -220,9 +220,9 @@ class Channel(EventDispatcher):
             return sum(
                 [
                     x.fee
-                    for x in model.FowardEvent()
+                    for x in model.ForwardEvent()
                     .select()
-                    .where(model.FowardEvent.chan_id_out == str(self.chan_id))
+                    .where(model.ForwardEvent.chan_id_out == str(self.chan_id))
                 ]
             )
         except:
@@ -239,9 +239,9 @@ class Channel(EventDispatcher):
             return sum(
                 [
                     x.fee
-                    for x in model.FowardEvent()
+                    for x in model.ForwardEvent()
                     .select()
-                    .where(model.FowardEvent.chan_id_in == str(self.chan_id))
+                    .where(model.ForwardEvent.chan_id_in == str(self.chan_id))
                 ]
             )
         except:
