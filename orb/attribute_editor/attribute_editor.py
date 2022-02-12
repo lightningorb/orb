@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-12 08:29:24
+# @Last Modified time: 2022-02-13 04:08:58
 
 from threading import Thread
 
@@ -99,6 +99,7 @@ class AttributeEditor(BoxLayout):
                 if self.channel:
                     self.ids.md_list.clear_widgets()
                     self.populate_earned()
+                    self.populate_helped_earn()
                     self.populate_fees()
                     if is_rest():
                         # TODO: calling channel.channel is a little problematic
@@ -122,6 +123,19 @@ class AttributeEditor(BoxLayout):
         Thread(
             target=lambda: update(
                 "{:_}".format(self.channel.earned if self.channel else 0)
+            )
+        ).start()
+
+    @guarded
+    def populate_helped_earn(self):
+        @mainthread
+        def update(val):
+            self.ids.helped_earn.text = val
+
+        self.ids.helped_earn.text = ""
+        Thread(
+            target=lambda: update(
+                "{:_}".format(self.channel.helped_earn if self.channel else 0)
             )
         ).start()
 

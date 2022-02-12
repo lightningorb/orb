@@ -33,6 +33,11 @@ Builder.load_string('''
         helper_text: 'Earned'
         helper_text_mode: 'persistent'
 
+    MDTextField:
+        id: helped_earn
+        helper_text: 'Helped earnn'
+        helper_text_mode: 'persistent'
+
     ScrollView:
         DrawerList:
             id: md_list
