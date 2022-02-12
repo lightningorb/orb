@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 03:22:58
+# @Last Modified time: 2022-02-13 03:55:01
 
 from time import time
 from threading import Thread
@@ -106,7 +106,10 @@ class ChannelWidget(Widget):
         h = data_manager.data_man.store.get("highlighter", {})
         text = h.get("highlight", "")
         if text:
-            expired = text not in self.memo or time() - self.memo[text][0] < self.ttl
+            present = text in self.memo
+            expired = not present or (
+                present and time() - self.memo[text][0] > self.ttl
+            )
             if expired:
                 channel = self.channel
                 c = self.channel
@@ -119,12 +122,14 @@ class ChannelWidget(Widget):
                 self.memo[text] = (time(), highlighted)
                 return highlighted
             else:
-                return self.memo[text[1]]
+                return self.memo[text][1]
         return highlighted
 
     def set_selected(self, widget, channel):
-        self._selected = channel == self.channel
-        self.animate_highlight()
+        selected = channel == self.channel
+        if selected != self._selected:
+            self._selected = selected
+            self.animate_highlight()
 
     def animate_highlight(self, *args):
         (Animation(rgba=self.remote_col, duration=0.2)).start(self.line_remote.color)
