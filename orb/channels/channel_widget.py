@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 03:11:08
+# @Last Modified time: 2022-02-13 03:22:58
 
 from time import time
 from threading import Thread
@@ -113,6 +113,8 @@ class ChannelWidget(Widget):
                 try:
                     highlighted = eval(text)
                 except:
+                    highlighted = False
+                if type(highlighted) != bool:
                     highlighted = False
                 self.memo[text] = (time(), highlighted)
                 return highlighted
