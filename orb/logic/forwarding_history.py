@@ -12,8 +12,8 @@ def download_forwarding_history(*args, **kwargs):
     def func():
         from orb.store import model
 
-        last = model.FowardEvent.select().order_by(
-            model.FowardEvent.timestamp_ns.desc()
+        last = model.ForwardEvent.select().order_by(
+            model.ForwardEvent.timestamp_ns.desc()
         )
         if last:
             last = last.first()
@@ -30,7 +30,7 @@ def download_forwarding_history(*args, **kwargs):
                     # event, else it will show up as a duplicate
                     continue
 
-                ev = model.FowardEvent(
+                ev = model.ForwardEvent(
                     timestamp=int(f.timestamp),
                     chan_id_in=int(f.chan_id_in),
                     chan_id_out=int(f.chan_id_out),
