@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 17:45:50
+# @Last Modified time: 2022-02-12 08:05:26
 
 from threading import Thread
 
@@ -50,6 +50,8 @@ class Channel(EventDispatcher):
     commit_fee = NumericProperty(0)
     #: Whether we are the initiator
     initiator = BooleanProperty(False)
+    #: Balanced ratio, i.e the ratio at which the channel needs to be for the node to be balanced
+    balanced_ratio = NumericProperty(-1)
 
     # POLICY
 

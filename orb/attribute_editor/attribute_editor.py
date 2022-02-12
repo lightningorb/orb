@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 02:27:08
+# @Last Modified time: 2022-02-12 08:29:24
 
 from threading import Thread
 
@@ -341,11 +341,15 @@ class AttributeEditor(BoxLayout):
                 height=dp(60),
             )
         )
-        text = str(
-            data_manager.data_man.store.get("balanced_ratio", {}).get(
-                str(self.channel.chan_id if self.channel else ""), "0.5"
+        if self.channel:
+            text = str(
+                data_manager.data_man.store.get("balanced_ratio", {}).get(
+                    str(self.channel.chan_id),
+                    str(self.channel.balanced_ratio),
+                )
             )
-        )
+        else:
+            text = "-1"
         self.ids.md_list.add_widget(
             MDTextField(
                 text=text,

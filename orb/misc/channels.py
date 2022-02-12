@@ -2,16 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 09:35:23
+# @Last Modified time: 2022-02-12 08:46:04
 
 from traceback import print_exc
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
 from kivy.properties import DictProperty
+from kivy.clock import Clock
 
 from orb.misc.channel import Channel
 from orb.misc.utils import pref
+from orb.misc import data_manager
 
 
 class Channels(EventDispatcher):
@@ -48,6 +50,8 @@ class Channels(EventDispatcher):
         """
         self.lnd = lnd
         self.get()
+        Clock.schedule_once(self.compute_balanced_ratios, 0)
+        self.interval = Clock.schedule_interval(self.compute_balanced_ratios, 30)
 
     def get(self):
         """
@@ -96,6 +100,38 @@ class Channels(EventDispatcher):
         local = int(cb.unsettled_local_balance.sat) + int(cb.local_balance.sat)
         remote = int(cb.unsettled_remote_balance.sat) + int(cb.remote_balance.sat)
         return local / (local + remote)
+
+    def compute_balanced_ratios(self, *_):
+        solution = []
+        channels = [x for x in self.channels.values()]
+        for c in channels:
+            solution.append(
+                data_manager.data_man.store.get("balanced_ratio", {}).get(
+                    str(c.chan_id), -1
+                )
+            )
+        gr = self.global_ratio
+        indices = [i for i, x in enumerate(solution) if x == -1]
+
+        def binary_search(arr, gr):
+            low, mid, high = 0, 0, 1
+            while low <= high:
+                mid = (high + low) / 2
+                for i in indices:
+                    arr[i] = mid
+                ratio = sum(arr) / len(arr)
+                abs_diff = abs(ratio - gr)
+                if abs_diff < 0.0001:
+                    return ratio
+                if ratio < gr:
+                    low += 0.00001
+                elif ratio > gr:
+                    high -= 0.00001
+            return ratio
+
+        binary_search(solution, 0.5)
+        for i, c in enumerate(channels):
+            channels[i].balanced_ratio = solution[i]
 
     def __len__(self):
         return len(self.sorted_chan_ids)
