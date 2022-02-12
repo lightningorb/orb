@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-12 08:05:26
+# @Last Modified time: 2022-02-12 12:02:02
 
 from threading import Thread
 
@@ -223,6 +223,25 @@ class Channel(EventDispatcher):
                     for x in model.FowardEvent()
                     .select()
                     .where(model.FowardEvent.chan_id_out == str(self.chan_id))
+                ]
+            )
+        except:
+            return 0
+
+    @property
+    def helped_earn(self):
+        """
+        How much the channel helped earned in fees.
+        """
+        from orb.store import model
+
+        try:
+            return sum(
+                [
+                    x.fee
+                    for x in model.FowardEvent()
+                    .select()
+                    .where(model.FowardEvent.chan_id_in == str(self.chan_id))
                 ]
             )
         except:
