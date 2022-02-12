@@ -2,7 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 20:19:35
+# @Last Modified time: 2022-02-13 03:11:08
+
+from time import time
+from threading import Thread
 
 from kivy.properties import ObjectProperty
 from kivy.properties import ListProperty
@@ -50,7 +53,8 @@ class ChannelWidget(Widget):
         self.add_widget(self.to_fee)
         self.anim_rectangles = []
         self._selected = False
-
+        self.ttl = 30
+        self.memo = {}
         with self.canvas.before:
             self.line_local = Segment(
                 amt_sat=int(self.channel.local_balance),
@@ -71,7 +75,11 @@ class ChannelWidget(Widget):
         self.bind(points=self.update)
 
         App.get_running_app().bind(selection=self.set_selected)
-        data_manager.data_man.bind(highlighter_updated=self.animate_highlight)
+        data_manager.data_man.bind(
+            highlighter_updated=lambda *_: Thread(
+                target=lambda: self.animate_highlight()
+            ).start()
+        )
 
         Clock.schedule_interval(self.animate_highlight, 10)
 
@@ -92,15 +100,25 @@ class ChannelWidget(Widget):
 
     @property
     def selected(self):
-        try:
-            h = data_manager.data_man.store.get("highlighter", {})
-            text = h.get("highlight", "")
-            channel = self.channel
-            c = self.channel
-            highlighted = eval(text)
-        except:
-            highlighted = False
-        return self._selected or highlighted
+        if self._selected:
+            return self._selected
+        highlighted = False
+        h = data_manager.data_man.store.get("highlighter", {})
+        text = h.get("highlight", "")
+        if text:
+            expired = text not in self.memo or time() - self.memo[text][0] < self.ttl
+            if expired:
+                channel = self.channel
+                c = self.channel
+                try:
+                    highlighted = eval(text)
+                except:
+                    highlighted = False
+                self.memo[text] = (time(), highlighted)
+                return highlighted
+            else:
+                return self.memo[text[1]]
+        return highlighted
 
     def set_selected(self, widget, channel):
         self._selected = channel == self.channel
