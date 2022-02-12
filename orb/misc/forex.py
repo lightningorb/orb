@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-04 13:25:44
+# @Last Modified time: 2022-02-13 07:51:41
 
 """
 This module stores useful functions for foreign-exchange math.
@@ -33,7 +33,7 @@ def forex(sats: float):
     return f"{CurrencySymbols.get_symbol(currency)}{round(b.get_latest_price(currency) * int(sats) / 1e8, 2):,}"
 
 
-if __name__ == "__main__":
-    import doctest
+# if __name__ == "__main__":
+#     import doctest
 
-    doctest.testmod()
+#     doctest.testmod()
