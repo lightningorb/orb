@@ -212,8 +212,8 @@ class ChordWidget(Widget):
             from orb.store import model
 
             dir_model = {
-                Direction.routing_to: model.FowardEvent.chan_id_out,
-                Direction.routing_from: model.FowardEvent.chan_id_in,
+                Direction.routing_to: model.ForwardEvent.chan_id_out,
+                Direction.routing_from: model.ForwardEvent.chan_id_in,
             }
 
             # get our channel ids, as our history can include old channels
@@ -221,7 +221,7 @@ class ChordWidget(Widget):
             for c in self.channels:
                 # get forwarding history
                 hist = (
-                    model.FowardEvent()
+                    model.ForwardEvent()
                     .select()
                     .where(dir_model[direction] == c.chan_id)
                 )

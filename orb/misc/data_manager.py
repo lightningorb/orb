@@ -65,7 +65,7 @@ class DataManager(EventDispatcher):
                 pass
 
         db_create_tables.create_path_finding_tables()
-        db_create_tables.create_fowarding_tables()
+        db_create_tables.create_forwarding_tables()
         db_create_tables.create_aliases_tables()
         db_create_tables.create_invoices_tables()
         db_create_tables.create_htlcs_tables()

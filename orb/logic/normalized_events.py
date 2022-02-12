@@ -42,9 +42,9 @@ def get_descritized_routing_events(c):
     from orb.store import model
 
     fh = (
-        model.FowardEvent()
+        model.ForwardEvent()
         .select()
-        .where(model.FowardEvent.chan_id_out == str(c.chan_id))
+        .where(model.ForwardEvent.chan_id_out == str(c.chan_id))
     )
 
     # compute the PPMs
