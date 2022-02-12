@@ -13,4 +13,5 @@ jobs:
           cache: 'pip'
       - run: pip install -r requirements.txt
       - run: pip install fabric
+      - run: pip install nose
       - run: ./build.py test.test
