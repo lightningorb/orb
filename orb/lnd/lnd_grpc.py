@@ -2,13 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 11:07:56
+# @Last Modified time: 2022-02-13 10:51:31
 import sys
 import base64
 import os
 from functools import lru_cache
 from traceback import print_exc
 from threading import Lock
+
+from memoization import cached
+
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
 from orb.misc.channel import Channel
@@ -29,33 +32,6 @@ except:
     print_exc()
 
 MESSAGE_SIZE_MB = 50 * 1024 * 1024
-
-
-class CountLock:
-    """
-    A Lock context manager, that locks the lock if
-    there are more than _num threads currently
-    within the context.
-    """
-
-    def __init__(self, num):
-        self._count = 0
-        self._num = num
-        self._lock = Lock()
-
-    def __enter__(self):
-        self._count += 1
-        if self._count > self._num:
-            self._lock.acquire()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._count -= 1
-        if self._lock.locked():
-            self._lock.release()
-
-
-edge_mutex = CountLock(5)
 
 
 class LndGRPC(LndBase):
@@ -188,10 +164,12 @@ class LndGRPC(LndBase):
         except:
             return None
 
+    @cached(ttl=5)
     def get_edge(self, channel_id):
-        with edge_mutex:
-            return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
+        # with edge_mutex:
+        return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
 
+    @cached(ttl=5)
     def get_policy_to(self, channel_id):
         edge = self.get_edge(channel_id)
         # node1_policy contains the fee base and rate for payments from node1 to node2
@@ -199,6 +177,7 @@ class LndGRPC(LndBase):
             return edge.node1_policy
         return edge.node2_policy
 
+    @cached(ttl=5)
     def get_policy_from(self, channel_id):
         edge = self.get_edge(channel_id)
         # node1_policy contains the fee base and rate for payments from node1 to node2
@@ -206,9 +185,11 @@ class LndGRPC(LndBase):
             return edge.node2_policy
         return edge.node1_policy
 
+    @cached(ttl=5)
     def get_ppm_to(self, channel_id):
         return self.get_policy_to(channel_id).fee_rate_milli_msat
 
+    @cached(ttl=5)
     def get_ppm_from(self, channel_id):
         return self.get_policy_from(channel_id).fee_rate_milli_msat
 
@@ -243,9 +224,10 @@ class LndGRPC(LndBase):
     def close_channel(self, channel_point, force, sat_per_vbyte):
         tx, output = channel_point.split(":")
         cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
-        request = ln.CloseChannelRequest(
-            channel_point=cp, force=force, sat_per_vbyte=sat_per_vbyte
-        )
+        kwargs = dict(channel_point=cp, force=force)
+        if not force:
+            kwargs["sat_per_vbyte"] = sat_per_vbyte
+        request = ln.CloseChannelRequest(**kwargs)
         return self.stub.CloseChannel(request)
 
     def new_address(self):

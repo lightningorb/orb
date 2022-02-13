@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-06 05:44:13
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 14:23:59
+# @Last Modified time: 2022-02-13 09:19:00
 
 from orb.store.model import Htlc
 from orb.store.db_meta import *
@@ -18,7 +18,6 @@ class HtlcRest(Htlc):
         st = htlc.__str__()
         self.timestamp = int(int(htlc.timestamp_ns) / 1e9)
         self.event_type = htlc.event_type
-        print(st)
         if hasattr(htlc, "forward_event"):
             self.event_outcome = "forward_event"
             self.event_outcome_info = htlc.forward_event.info.todict()

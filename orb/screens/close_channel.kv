@@ -1,15 +1,20 @@
+#: import dp kivy.metrics.dp
+
 <CloseChannel>:
     title: 'Close Channel'
     size: (800, 600)
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
-    GridLayout:
-        cols: 1
-        row_force_default: True
-        row_default_height: 60
-        padding: 50
-        spacing: 50
+    BoxLayout:
+        orientation: 'vertical'
+        height: self.minimum_height
+        Label:
+            text: "force"
+            size_hint_y: None
+            height: self.texture_size[1]
+        MDCheckbox:
+            id: force
         MDTextField:
             id: channel_point
             helper_text: 'Channel Point'
@@ -21,7 +26,8 @@
         MDRaisedButton:
             text: 'close'
             on_release: root.close_channel(channel_point.text, sats_per_vbyte.text)
-            size_hint_x: None
-            width: 100
-            size_hint_y: 1
-            md_bg_color: 0.3,0.3,0.3,1
+            size_hint: None, None
+            width: dp(80)
+            height: dp(50)
+            # md_bg_color: 0.3,0.3,0.3,1
+        Widget:

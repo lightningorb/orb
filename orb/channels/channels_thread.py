@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-01 07:46:51
+# @Last Modified time: 2022-02-13 11:49:38
 
 import threading
 from time import sleep
@@ -59,14 +59,15 @@ class ChannelsThread(threading.Thread):
                             to_remove = next(
                                 iter(
                                     x
-                                    for x in self.inst.channels.channels
+                                    for x in self.inst.channels.channels.values()
                                     if x.chan_id == e.closed_channel.chan_id
                                 ),
                                 None,
                             )
                             if to_remove:
-                                self.inst.channels.channels.remove(to_remove)
-                                self.inst.remove_channel(e.closed_channel)
+                                print(f"removing channel {to_remove.chan_id}")
+                                self.inst.channels.remove(to_remove)
+                                self.inst.remove_channel(to_remove)
             except:
                 print("Exception getting Channels - let's sleep")
                 print(format_exc())

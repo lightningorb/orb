@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 11:38:46
+# @Last Modified time: 2022-02-13 11:44:51
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -85,7 +85,8 @@ class ChannelsWidget(ScatterLayout):
             self.update()
 
     def remove_channel(self, channel, caps=None):
-        pass
+        self.ids.relative_layout.clear_widget(self.cn[channel.chan_id])
+        del self.cn[channel.chan_id]
 
     def get_caps(self, channels):
         if not channels:

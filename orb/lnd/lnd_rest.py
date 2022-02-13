@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 07:19:11
+# @Last Modified time: 2022-02-13 10:49:06
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -10,6 +10,8 @@ import base64, json, requests, codecs, binascii
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from orb.misc.auto_obj import dict2obj, todict
+
+from memoization import cached
 
 decode_hex = codecs.getdecoder("hex_codec")
 encode_pk = lambda PK: base64.urlsafe_b64encode(
@@ -53,11 +55,13 @@ class LndREST(LndBase):
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
 
+    @cached(ttl=5)
     def get_edge(self, channel_id):
         url = f"{self.fqdn}/v1/graph/edge/{channel_id}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
 
+    @cached(ttl=5)
     def get_policy_to(self, channel_id):
 
         edge = self.get_edge(channel_id)
@@ -72,6 +76,7 @@ class LndREST(LndBase):
             return edge.node1_policy
         return edge.node2_policy
 
+    @cached(ttl=5)
     def get_policy_from(self, channel_id):
         edge = self.get_edge(channel_id)
         if edge.get("code", 0) == 3:
@@ -359,6 +364,21 @@ class LndREST(LndBase):
             "/v1/peers",
             data={"addr": addr, "perm": False, "timeout": "30"},
         )
+
+    def close_channel(self, channel_point, force, sat_per_vbyte):
+        print(f"force: {force}")
+        tx, output = channel_point.split(":")
+        url = f"{self.fqdn}/v1/channels/{tx}/{output}"
+        r = requests.delete(
+            url,
+            headers=self.headers,
+            verify=self.cert_path,
+            stream=True,
+            data={"force": force, "sat_per_vbyte": sat_per_vbyte},
+        )
+        for raw_response in r.iter_lines():
+            json_response = json.loads(raw_response)
+            print(json_response)
 
     def __get(self, url):
         """

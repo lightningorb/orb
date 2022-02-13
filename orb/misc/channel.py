@@ -2,9 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-12 12:02:02
+# @Last Modified time: 2022-02-13 10:46:23
 
-from threading import Thread
+from threading import Thread, Lock
 
 from kivy.clock import Clock
 from kivy.properties import NumericProperty
@@ -14,6 +14,33 @@ from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
 
 from orb.lnd import Lnd
+
+
+class CountLock:
+    """
+    A Lock context manager, that locks the lock if
+    there are more than _num threads currently
+    within the context.
+    """
+
+    def __init__(self, num):
+        self._count = 0
+        self._num = num
+        self._lock = Lock()
+
+    def __enter__(self):
+        self._count += 1
+        if self._count > self._num:
+            self._lock.acquire()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._count -= 1
+        if self._lock.locked():
+            self._lock.release()
+
+
+edge_mutex = CountLock(50)
 
 
 class Channel(EventDispatcher):
@@ -89,14 +116,15 @@ class Channel(EventDispatcher):
             a fee policy is changed in Orb, it immediately gets updated
             in LND.
             """
-            policy_to = Lnd().get_policy_to(self.chan_id)
-            self._unbind_policies()
-            self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-            self.fee_base_msat = policy_to.fee_base_msat
-            self.time_lock_delta = policy_to.time_lock_delta
-            self.max_htlc_msat = policy_to.max_htlc_msat
-            self.min_htlc_msat = policy_to.min_htlc
-            self._bind_policies()
+            with edge_mutex:
+                policy_to = Lnd().get_policy_to(self.chan_id)
+                self._unbind_policies()
+                self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+                self.fee_base_msat = policy_to.fee_base_msat
+                self.time_lock_delta = policy_to.time_lock_delta
+                self.max_htlc_msat = policy_to.max_htlc_msat
+                self.min_htlc_msat = policy_to.min_htlc
+                self._bind_policies()
 
         # get the policies now
         Clock.schedule_once(lambda *_: Thread(target=get_policies).start(), 0)

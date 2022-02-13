@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-12 08:46:04
+# @Last Modified time: 2022-02-13 11:43:34
 
 from traceback import print_exc
 
@@ -52,6 +52,10 @@ class Channels(EventDispatcher):
         self.get()
         Clock.schedule_once(self.compute_balanced_ratios, 0)
         self.interval = Clock.schedule_interval(self.compute_balanced_ratios, 30)
+
+    def remove(self, channel):
+        del self.channels[channel.chan_id]
+        self.sorted_chan_ids.remove(channel.chan_id)
 
     def get(self):
         """
