@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-05 05:46:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 08:11:49
+# @Last Modified time: 2022-02-15 06:32:36
 
 """
 Everything related to recieving and processing licence payments on
@@ -55,6 +55,47 @@ def deploy_katching_service(c, env=os.environ):
             con.put("build_system/katching_service.conf", "/tmp/")
         con.sudo("mv /tmp/katching_service.conf /etc/supervisor/conf.d/")
         con.sudo("supervisorctl update")
+
+
+@task
+def stop_remote_katching_service(c, env=os.environ):
+    """
+    The Katching Service gets settled invoices from RabbitMQ
+    and updates the database.
+    """
+    with Connection(
+        env["SERVER_HOSTNAME"],
+        connect_kwargs={"key_filename": env["SERVER_SSH_CERT"]},
+        user="ubuntu",
+    ) as con:
+        con.sudo("supervisorctl stop katching_service")
+
+
+@task
+def start_remote_katching_service(c, env=os.environ):
+    """
+    The Katching Service gets settled invoices from RabbitMQ
+    and updates the database.
+    """
+    with Connection(
+        env["SERVER_HOSTNAME"],
+        connect_kwargs={"key_filename": env["SERVER_SSH_CERT"]},
+        user="ubuntu",
+    ) as con:
+        con.sudo("supervisorctl start katching_service")
+
+
+@task
+def start_local_katching_service(c, env=os.environ):
+    """
+    The Katching Service gets settled invoices from RabbitMQ
+    and updates the database.
+    """
+    with c.cd("server"):
+        c.run(
+            "nameko run workers.katching_service --config workers/nameko-dev.yaml",
+            env=env,
+        )
 
 
 @task
