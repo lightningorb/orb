@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 11:43:34
+# @Last Modified time: 2022-02-16 05:13:14
 
 from traceback import print_exc
 
@@ -105,6 +105,13 @@ class Channels(EventDispatcher):
         remote = int(cb.unsettled_remote_balance.sat) + int(cb.remote_balance.sat)
         return local / (local + remote)
 
+    @property
+    def capacity(self):
+        cb = self.lnd.channel_balance()
+        local = int(cb.unsettled_local_balance.sat) + int(cb.local_balance.sat)
+        remote = int(cb.unsettled_remote_balance.sat) + int(cb.remote_balance.sat)
+        return local + remote
+
     def compute_balanced_ratios(self, *_):
         solution = []
         channels = [x for x in self.channels.values()]
@@ -116,24 +123,31 @@ class Channels(EventDispatcher):
             )
         gr = self.global_ratio
         indices = [i for i, x in enumerate(solution) if x == -1]
+        capacity = self.capacity
 
-        def binary_search(arr, gr):
-            low, mid, high = 0, 0, 1
+        def search(solution, indices, global_ratio):
+            low, mid, high, n = 0, 0, 1, 0
             while low <= high:
                 mid = (high + low) / 2
                 for i in indices:
-                    arr[i] = mid
-                ratio = sum(arr) / len(arr)
-                abs_diff = abs(ratio - gr)
-                if abs_diff < 0.0001:
+                    solution[i] = mid
+                ratio = (
+                    sum(
+                        [
+                            x.capacity * y
+                            for x, y in zip([*self.channels.values()], solution)
+                        ]
+                    )
+                    / capacity
+                )
+                abs_diff = abs(ratio - global_ratio)
+                n += 1
+                if abs_diff < 1 / 1e5 or n > 100:
                     return ratio
-                if ratio < gr:
-                    low += 0.00001
-                elif ratio > gr:
-                    high -= 0.00001
+                low, high = (mid, high) if ratio < global_ratio else (low, mid)
             return ratio
 
-        binary_search(solution, 0.5)
+        search(solution, indices, gr)
         for i, c in enumerate(channels):
             channels[i].balanced_ratio = solution[i]
 
