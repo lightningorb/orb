@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-01 04:15:17
+# @Last Modified time: 2022-02-15 15:48:22
 
 import threading
 import requests
 
+from kivy.uix.label import Label
 from kivy.clock import mainthread
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty
@@ -24,7 +25,7 @@ from orb.misc.forex import forex
 from orb.logic.thread_manager import thread_manager
 from orb.lnd import Lnd
 from orb.misc.utils import desktop, pref
-
+from orb.logic import licensing
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
 
 
@@ -384,3 +385,13 @@ class HUDUIMode(Button):
 
         mode = data_manager.data_man.channels_widget_ux_mode
         data_manager.data_man.channels_widget_ux_mode = [1, 0][mode]
+
+
+class HUDEvaluation(Label):
+    def get_text(self):
+        if licensing.is_trial():
+            e = licensing.get_edition()
+            e = e[0].upper() + e[1:]
+            return f"Orb {e} Edition\nEvaluation Copy"
+        else:
+            return ""

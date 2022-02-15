@@ -98,6 +98,7 @@ Builder.load_string('''
                 padding: 50
                 spacing: 50
                 MDRaisedButton:
+                    id: ingest_button
                     text: 'ingest'
                     size_hint_y: None
                     height: 80
@@ -1896,7 +1897,13 @@ Builder.load_string('''
 #:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
 
-
+<HUDEvaluation>:
+    text: root.get_text()
+    color: 1,1,1,0.1
+    font_size: '40sp'
+    size_hint: None, None
+    size: self.texture_size
+    halign: 'center'
 
 <HUDFeeSummary>:
     id: hud_label
@@ -2093,6 +2100,7 @@ Builder.load_string('''
     HUDNW
     HUDSE
     HUDNE
+    HUDN
 
 <HUDNW>:
     anchor_x: 'left'
@@ -2128,6 +2136,13 @@ Builder.load_string('''
     anchor_x: 'right'
     anchor_y: 'bottom'
     HUDBTCPrice
+
+<HUDN>:
+    anchor_x: 'center'
+    anchor_y: 'top'
+    HUDEvaluation
+    Widget:
+    
 
 ''')
 Builder.load_string('''

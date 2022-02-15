@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-18 06:35:48
+# @Last Modified time: 2022-02-15 15:28:40
 
 import arrow
 from datetime import timedelta
@@ -16,6 +16,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.lnd import Lnd
+from orb.logic import licensing
 
 
 class Invoice(BoxLayout):
@@ -71,6 +72,12 @@ class IngestInvoicesScreen(PopupDropShadow):
             .where(model.Invoice.expired() == False, model.Invoice.paid == False)
         )
         self.count.text = f"Invoices: {len(invoices)}"
+        is_satoshi = licensing.is_satoshi()
+        is_trial = licensing.is_trial()
+        restrict = (not is_satoshi) or is_trial
+        if restrict and len(invoices) >= 1:
+            self.ids.ingest_button.disabled = True
+
         return invoices
 
     def do_ingest(self, text):
@@ -85,7 +92,11 @@ class IngestInvoicesScreen(PopupDropShadow):
         def func():
             from orb.store import model
 
-            invs = self.load()
+            is_satoshi = licensing.is_satoshi()
+            is_trial = licensing.is_trial()
+            restrict = (not is_satoshi) or is_trial
+
+            ingested_count = 0
             not_ingested = []
             for line in text.split("\n"):
                 line = line.strip()
@@ -102,13 +113,21 @@ class IngestInvoicesScreen(PopupDropShadow):
                             expiry=req.expiry,
                             description=req.description,
                         )
+                        ingested_count += 1
                         invoice.save()
                         add_invoice_widget(Invoice(**invoice.__data__))
+                        if restrict:
+                            print(f"Non Satoshi & trial edition invoice limit: 1")
+                            break
                     except:
                         print(f"Problem decoding: {line}")
                         print_exc()
                         not_ingested.append(line)
-            self.count.text = str(len(self.load()))
+
+            num_invoices = int(self.count.text) + ingested_count
+            self.count.text = num_invoices
             update(not_ingested)
+            if restrict and num_invoices >= 1:
+                self.ids.ingest_button.disabled = True
 
         Thread(target=func).start()

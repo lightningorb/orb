@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 11:37:26
+# @Last Modified time: 2022-02-13 17:09:26
 
 import os
 import sys
@@ -271,6 +271,7 @@ class OrbApp(MDApp):
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
         self.icon = "orb.png"
         self.main_layout = MainLayout()
+        self.show_licence_info()
         return self.main_layout
 
     def build_config(self, config):
@@ -292,6 +293,19 @@ class OrbApp(MDApp):
             self.update_channels_widget += 1
 
         self.main_layout.do_layout()
+
+    def show_licence_info(self):
+        try:
+            from pytransform import get_license_info
+            import arrow
+
+            a = (
+                arrow.get(get_license_info()["EXPIRED"], "MMM DD HH:mm:ss YYYY")
+                - arrow.utcnow()
+            )
+            print(f"Your license expires in {a.days}")
+        except:
+            pass
 
     @guarded
     def run(self, *args):
