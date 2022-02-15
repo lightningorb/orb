@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-05 05:55:11
+# @Last Modified time: 2022-02-15 07:20:40
 
 import re
 import os
@@ -25,6 +25,7 @@ from build_system import host
 from build_system import armor
 from build_system import site
 from build_system import katching
+from build_system import alembic
 
 
 @task
@@ -52,4 +53,5 @@ namespace = Collection(
     ubuntu,
     armor,
     site,
+    alembic,
 )
