@@ -1,6 +1,45 @@
 0.11.0
 ----
 
+[dev] improved balanced ratio
+[dev] restricting functionality according to licensing
+Merge branch 'site' into main
+[dev] set prices back to non-test prices
+[dev] skip armor registration step in app routes
+no longer binding licenses to mac address
+Merge branch 'site' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    site
+license evaluation db schema change
+[dev] better mac address validation
+[dev] adding eval license model
+[dev] upgraded site to include evaluation copy (pre-migration)
+Merge branch 'site' into main
+[dev] grpc no longer locks the UI [dev] close channel dialog can now
+    force-close
+bump prices back to normal
+[dev] redirect might be taking place
+[dev] redirect might be taking place
+[dev] on download page use fqdn
+[dev] updated test workflow
+[dev] updated test workflow
+[dev] updated test workflow
+[dev] updated test workflow
+added 'helped earn' to attributes editor
+further bug fixes and speedups with highlighter
+highlighter bug fix
+Merge pull request #178 from
+    bc31164b-cfd5-4a63-8144-875100622b2d/fix_fowarding_duplicates
+Merge branch 'main' into fix_fowarding_duplicates
+fix misspellings
+Highlighter caching
+Merge pull request #177 from
+    bc31164b-cfd5-4a63-8144-875100622b2d/fix_fowarding_duplicates
+cleaning up worklog
+merging fix_fowarding_events
+[dev] channel now include a 'helped_earn' property
+compute balanced ratios for channels
+sat animations smoother
 added highlighter dialog
 changed autofees and autobalance defaults lots of improvements with
     how HTLCs handled and accounted for auto channel selector
@@ -31,7 +70,12 @@ updated readme
 version bump
 HTLCs now saved in a db, for later access
 added
+clock-out
+rounding with msats
+clock-in
+clock-out
 [dev] lightning payments through site now work
+clock-in
 restore site
 added
 added
@@ -83,6 +127,13 @@ updated docs
 fee distribution dialog: show all rows in table. normalized events
     added ability to exclude 0 ppm in best fee
 [dev] typo in armor command
+clock-out
+using last_offset_index from lnd, still getting discrepancy
+renaming foward->forward
+clock-in
+clock-out
+ignoring hourly config
+clock-in
 
 
 v0.9.0

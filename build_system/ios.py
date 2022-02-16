@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-31 06:16:12
+# @Last Modified time: 2022-02-16 13:08:56
 
 import os
 import re
@@ -38,6 +38,12 @@ def copy_files(c):
     )
 
 
+def copy_obfuscated_files(c):
+    c.run("rm -rf /tmp/lnorb/")
+    c.run("mkdir -p /tmp/lnorb/")
+    c.run("cp -r images tmp/orb/* /tmp/lnorb/")
+
+
 def get_auto_balance():
     return """
 #rules:
@@ -61,15 +67,49 @@ def get_auto_balance():
 #  - channel.local_balance / channel.capacity < 0.5"""
 
 
+# @task()
+# def update(c, env=dict(PATH=os.environ["PATH"])):
+#     """
+#     Update the xcode project with the latest changes.
+#     """
+#     update_version(c)
+#     copy_files(c)
+#     with c.cd("build"):
+#         c.run("toolchain update lnorb-ios", env=env)
+
+
 @task()
-def update(c, env=dict(PATH=os.environ["PATH"])):
+def update(c, env=os.environ):
     """
-    Update the xcode project with the latest changes.
+    Try to deploy in obfuscated mode.
     """
     update_version(c)
-    copy_files(c)
+    c.run("rm -rf dist tmp;")
+    c.run("mkdir -p tmp;")
+    c.run("cp -r main.py tmp/;")
+    c.run("cp -r third_party tmp/;")
+    c.run("cp -r orb tmp/;")
+    with c.cd("tmp"):
+        c.run(
+            "pyarmor obfuscate --no-cross-protection --platform darwin.arm64.0 --recursive main.py;",
+            env=env,
+        )
+
+        c.run("rm -rf orb main.py third_party")
+        c.run("mv dist orb")
+    copy_obfuscated_files(c)
     with c.cd("build"):
+        out = c.run("security find-identity", env=env).stdout
+        identity = re.search(r'1\) ([A-Z 0-9]{40}) "Apple Development', out).group(1)
         c.run("toolchain update lnorb-ios", env=env)
+        c.run(
+            f'codesign -f -s "{identity}" ./lnorb-ios/YourApp/pytransform/_pytransform.dylib',
+            env=env,
+        )
+        c.run(
+            f'codesign -f -s "{identity}" /tmp/lnorb/pytransform/_pytransform.dylib',
+            env=env,
+        )
 
 
 @task
@@ -94,6 +134,7 @@ def toolchain_pip(c, env=dict(PATH=os.environ["PATH"])):
         c.run("toolchain pip3 install PyYaml==6.0", env=env)
         c.run("toolchain pip3 install simplejson==3.17.6", env=env)
         c.run("toolchain pip3 install pycryptodome", env=env)
+        c.run("toolchain pip3 install memoization", env=env)
 
 
 @task
