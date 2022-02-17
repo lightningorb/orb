@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-15 15:48:22
+# @Last Modified time: 2022-02-18 05:13:18
 
 import threading
 import requests
@@ -69,7 +69,7 @@ class HUDBalance(BorderedLabel):
 
     def __init__(self, *args, **kwargs):
         BorderedLabel.__init__(self, *args, **kwargs)
-        Clock.schedule_interval(self.get_lnd_data, 60)
+        #Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
     @guarded
@@ -81,50 +81,44 @@ class HUDBalance(BorderedLabel):
 
         @guarded
         def func():
-            bal = Lnd().get_balance()
-            tot = int(bal.total_balance)
-            conf = int(bal.confirmed_balance)
-            unconf = int(bal.unconfirmed_balance)
-            pending_channels = Lnd().get_pending_channels()
-            pending_open = sum(
-                channel.channel.local_balance
-                for channel in pending_channels.pending_open_channels
+            lnd = Lnd()
+
+            ##################
+            # Get chain totals
+            ##################
+            chain_bal = lnd.get_balance()
+
+            hud = f"Chain Balance: {forex(chain_bal.total_balance)}\n"
+            if chain_bal.total_balance != chain_bal.confirmed_balance:
+                hud += f"Conf. Chain Balance: {forex(chain_bal.confirmed_balance)}\n"
+                hud += f"Unconf. Chain Balance: {forex(chain_bal.unconfirmed_balance)}\n"
+
+
+            ####################
+            # Get channel totals
+            ####################
+            channel_bal = lnd.channel_balance()
+            pending_channels = lnd.get_pending_channels()
+            limbo_balance = pending_channels.total_limbo_balance
+
+            hud += f"Local Balance: {forex(channel_bal.local_balance.sat)}\n"
+            if channel_bal.unsettled_local_balance.sat:
+                hud += f"Unset. Local B.: {forex(channel_bal.unsettled_local_balance.sat)}\n"
+            if channel_bal.unsettled_remote_balance.sat:
+                hud += f"Unset. Remote B.: {forex(channel_bal.unsettled_remote_balance.sat)}\n"
+            hud += f"Remote Balance: {forex(channel_bal.remote_balance.sat)}\n"
+
+            if limbo_balance:
+                hud += f"Limbo balance: {forex(limbo_balance)}\n"
+
+            ln_on_chain = chain_bal.total_balance + int(
+                int(channel_bal.local_balance.sat)
+                + int(channel_bal.unsettled_remote_balance.sat)
+                + int(limbo_balance)
             )
-            pending_close = (
-                sum(
-                    channel.limbo_balance
-                    for channel in pending_channels.pending_force_closing_channels
-                )
-                if hasattr(pending_channels, "pending_force_closing_channels")
-                else 0
-            )
-
-            hud = f"Chain Balance: {forex(tot)}\n"
-            if tot != conf:
-                hud += f"Conf. Chain Balance: {forex(conf)}\n"
-                hud += f"Unconf. Chain Balance: {forex(unconf)}\n"
-
-            cbal = Lnd().channel_balance()
-            hud += f"Local Balance: {forex(cbal.local_balance.sat)}\n"
-            if cbal.unsettled_local_balance.sat:
-                hud += f"Unset. Local B.: {forex(cbal.unsettled_local_balance.sat)}\n"
-            if cbal.unsettled_remote_balance.sat:
-                hud += f"Unset. Remote B.: {forex(cbal.unsettled_remote_balance.sat)}\n"
-            hud += f"Remote Balance: {forex(cbal.remote_balance.sat)}\n"
-
-            if pending_open:
-                hud += f"Pending Open: {forex(pending_open)}\n"
-
-            ln_on_chain = tot + int(
-                int(cbal.local_balance.sat)
-                + int(cbal.unsettled_remote_balance.sat)
-                + int(pending_open)
-            )
-
-            tlv = ln_on_chain + int(cbal.remote_balance.sat)
 
             hud += f"Local + Chain: {forex(ln_on_chain)}\n"
-            hud += f"Total: {forex(tlv)}"
+            hud += f"Total: {forex(ln_on_chain + int(channel_bal.remote_balance.sat))}"
             update_gui(hud)
 
         threading.Thread(target=func).start()
