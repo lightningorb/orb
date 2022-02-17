@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-18 05:13:18
+# @Last Modified time: 2022-02-18 05:41:59
 
 import threading
 import requests
@@ -69,7 +69,7 @@ class HUDBalance(BorderedLabel):
 
     def __init__(self, *args, **kwargs):
         BorderedLabel.__init__(self, *args, **kwargs)
-        #Clock.schedule_interval(self.get_lnd_data, 60)
+        Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
     @guarded
@@ -91,8 +91,9 @@ class HUDBalance(BorderedLabel):
             hud = f"Chain Balance: {forex(chain_bal.total_balance)}\n"
             if chain_bal.total_balance != chain_bal.confirmed_balance:
                 hud += f"Conf. Chain Balance: {forex(chain_bal.confirmed_balance)}\n"
-                hud += f"Unconf. Chain Balance: {forex(chain_bal.unconfirmed_balance)}\n"
-
+                hud += (
+                    f"Unconf. Chain Balance: {forex(chain_bal.unconfirmed_balance)}\n"
+                )
 
             ####################
             # Get channel totals
