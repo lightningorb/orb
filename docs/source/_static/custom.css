@@ -2,7 +2,7 @@
 * @Author: lnorb.com
 * @Date:   2022-01-31 09:11:58
 * @Last Modified by:   lnorb.com
-* @Last Modified time: 2022-02-10 09:00:33
+* @Last Modified time: 2022-02-18 08:06:23
 */
 
 /*@import "https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:700&amp;subset=latin-ext";
@@ -22,6 +22,10 @@ body {
     position: relative;
 }
 
+a {
+    color: #3390c5;
+}
+
 h1,
 h2,
 h3,
@@ -36,9 +40,12 @@ h1, h2, h3 {
     text-transform: uppercase;
 }
 
+cite {
+    color: red;
+}
 
 p {
-    color: #858d96 !important;
+    /*color: #858d96 !important;*/
 }
 
 /*p, a, li {
@@ -47,8 +54,8 @@ p {
 }
 */
 header{
-    background-image: url("https://s3-us-east-2.amazonaws.com/lnorb/docs/bg.jpeg_2022-01-31_07-09-16.png");
-    background-size: cover;
+    /*background-image: url("https://s3-us-east-2.amazonaws.com/lnorb/docs/bg.jpeg_2022-01-31_07-09-16.png");*/
+    /*background-size: cover;*/
 }
 
 @import https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans:300

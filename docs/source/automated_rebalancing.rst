@@ -1,3 +1,5 @@
+.. _automated-rebalancing:
+
 Automated Rebalancing
 =====================
 

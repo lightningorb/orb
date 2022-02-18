@@ -1,3 +1,5 @@
+.. _automated-fees:
+
 Automated Fees
 ==============
 
