@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-16 05:13:14
+# @Last Modified time: 2022-02-18 19:34:32
 
 from traceback import print_exc
 
@@ -100,16 +100,29 @@ class Channels(EventDispatcher):
         """
         Compute the global ratio, i.e local / capacity.
         """
-        cb = self.lnd.channel_balance()
-        local = int(cb.unsettled_local_balance.sat) + int(cb.local_balance.sat)
-        remote = int(cb.unsettled_remote_balance.sat) + int(cb.remote_balance.sat)
-        return local / (local + remote)
+        local = self.local_balance_include_pending
+        return local / self.capacity
+
+    @property
+    def local_balance(self):
+        return sum(x.local_balance for x in self.channels.values())
+
+    @property
+    def local_balance_include_pending(self):
+        return sum(x.local_balance_include_pending for x in self.channels.values())
+
+    @property
+    def remote_balance(self):
+        return sum(x.remote_balance for x in self.channels.values())
+
+    @property
+    def remote_balance_include_pending(self):
+        return sum(x.remote_balance_include_pending for x in self.channels.values())
 
     @property
     def capacity(self):
-        cb = self.lnd.channel_balance()
-        local = int(cb.unsettled_local_balance.sat) + int(cb.local_balance.sat)
-        remote = int(cb.unsettled_remote_balance.sat) + int(cb.remote_balance.sat)
+        local = self.local_balance_include_pending
+        remote = self.remote_balance_include_pending
         return local + remote
 
     def compute_balanced_ratios(self, *_):

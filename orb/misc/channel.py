@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 10:46:23
+# @Last Modified time: 2022-02-18 19:35:50
 
 from threading import Thread, Lock
 
@@ -206,6 +206,12 @@ class Channel(EventDispatcher):
         """
         return self.local_balance + sum(
             int(p.amount) for p in self.pending_htlcs if not p.incoming
+        )
+
+    @property
+    def remote_balance_include_pending(self):
+        return self.remote_balance + sum(
+            int(p.amount) for p in self.pending_htlcs if p.incoming
         )
 
     @property

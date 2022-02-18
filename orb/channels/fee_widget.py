@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 10:33:11
+# @Last Modified time: 2022-02-18 19:01:49
 
 from threading import Thread
 
@@ -51,6 +51,8 @@ class FeeWidget(Widget):
             self.circle_1 = Line(circle=(150, 150, 50))
             self.circle_2 = Line(circle=(150, 150, 50))
             self.line = Line(points=[0, 0, 0, 0])
+            Color(0.5, 0.5, 0.5, 0.5)
+            self.line_balanced_ratio = Line(points=[0, 0, 0, 0])
 
         self.label = FeeWidgetLabel(text="", color=(0.5, 1, 0.5, 0))
         self.add_widget(self.label)
@@ -60,6 +62,7 @@ class FeeWidget(Widget):
         self.bind(c=self.update)
         self.channel.bind(fee_rate_milli_msat=self.update)
         self.channel.bind(fee_rate_milli_msat=self.flash)
+        self.channel.bind(balanced_ratio=self.update_balanced_ratio_line)
 
     def flash(self, *_):
         (
@@ -78,6 +81,17 @@ class FeeWidget(Widget):
         self.circle_1.circle = (self.P1.x, self.P1.y, 5)
         self.circle_2.circle = (self.P2.x, self.P2.y, 5)
         self.line.points = (self.P1.x, self.P1.y, self.P2.x, self.P2.y)
+        self.update_balanced_ratio_line()
+
+    def update_balanced_ratio_line(self, *_):
+        A = Vector(*self.a)
+        B = Vector(*self.b)
+        AB = B - A
+        C = AB * self.channel.balanced_ratio
+        AB_perp_normed = AB.perp().normalized()
+        P1 = A + C + AB_perp_normed * 5
+        P2 = A + C - AB_perp_normed * 5
+        self.line_balanced_ratio.points = (P1.x, P1.y, P2.x, P2.y)
 
     def set_points(self, a, b, c):
         self.a, self.b, self.c = a, b, c
