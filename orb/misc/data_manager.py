@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 17:30:02
+# @Last Modified time: 2022-02-19 04:59:54
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -57,6 +57,7 @@ class DataManager(EventDispatcher):
             aliases_db_name,
             invoices_db_name,
             htlcs_db_name,
+            channel_stats_db_name,
         ]:
             try:
                 get_db(db).connect()
@@ -69,6 +70,7 @@ class DataManager(EventDispatcher):
         db_create_tables.create_aliases_tables()
         db_create_tables.create_invoices_tables()
         db_create_tables.create_htlcs_tables()
+        db_create_tables.create_channel_stats_tables()
 
     def save_cert(self):
         """

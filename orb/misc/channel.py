@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-18 19:35:50
+# @Last Modified time: 2022-02-19 05:37:59
 
 from threading import Thread, Lock
 
@@ -250,17 +250,14 @@ class Channel(EventDispatcher):
         """
         from orb.store import model
 
-        try:
-            return sum(
-                [
-                    x.fee
-                    for x in model.ForwardEvent()
-                    .select()
-                    .where(model.ForwardEvent.chan_id_out == str(self.chan_id))
-                ]
-            )
-        except:
-            return 0
+        out_stats = (
+            model.ChannelStats()
+            .select()
+            .where(model.ChannelStats.chan_id == int(self.chan_id))
+        )
+        if out_stats:
+            return int(out_stats.first().earned_msat / 1000)
+        return 0
 
     @property
     def helped_earn(self):
@@ -269,17 +266,14 @@ class Channel(EventDispatcher):
         """
         from orb.store import model
 
-        try:
-            return sum(
-                [
-                    x.fee
-                    for x in model.ForwardEvent()
-                    .select()
-                    .where(model.ForwardEvent.chan_id_in == str(self.chan_id))
-                ]
-            )
-        except:
-            return 0
+        in_stats = (
+            model.ChannelStats()
+            .select()
+            .where(model.ChannelStats.chan_id == int(self.chan_id))
+        )
+        if in_stats:
+            return int(in_stats.first().helped_earn_msat / 1000)
+        return 0
 
     @property
     def pending_in(self):

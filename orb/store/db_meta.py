@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 06:14:07
+# @Last Modified time: 2022-02-19 06:13:22
 
 import os
 from pathlib import Path
@@ -17,7 +17,8 @@ from orb.misc.utils import pref
 path_finding_db_name = "path_finding"
 aliases_db_name = "aliases"
 invoices_db_name = "invoices"
-forwarding_events_db_name = "forwarding_events_v3"
+forwarding_events_db_name = "forwarding_events_v4"
+channel_stats_db_name = "channel_stats"
 htlcs_db_name = "htlcs_v4"
 
 

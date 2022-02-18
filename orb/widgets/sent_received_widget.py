@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:46:59
+# @Last Modified time: 2022-02-19 05:55:28
 
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
@@ -26,45 +26,14 @@ class SentReceivedWidget(Widget):
         Class constructor.
         """
         super(SentReceivedWidget, self).__init__(*args, **kwargs)
-        from orb.store import model
-
-        self.channel = channel
-        c = self.channel
-
-        skip = False
-        try:
-            model.ForwardEvent().select()
-        except:
-            skip = True
-
-        if skip:
-            self.received = None
-            self.sent = None
-        else:
-            self.received = sum(
-                [
-                    x.fee
-                    for x in model.ForwardEvent()
-                    .select()
-                    .where(model.ForwardEvent.chan_id_in == str(c.chan_id))
-                ]
-            )
-            self.sent = sum(
-                [
-                    x.fee
-                    for x in model.ForwardEvent()
-                    .select()
-                    .where(model.ForwardEvent.chan_id_out == str(c.chan_id))
-                ]
-            )
         alpha = 0.5
         with self.canvas:
             Color(*[0.5, 1, 0.5, alpha])
             self.lines = []
-            for i in range(int(self.sent / 1_000)):
+            for i in range(int(channel.earned / 1_000)):
                 self.lines.append(Line(circle=(0, 0, 0, 0, 0), width=1, cap="none"))
             Color(*[0.5, 0.5, 1, alpha])
-            for i in range(int(self.received / 100_000)):
+            for i in range(int(channel.helped_earn / 100_000)):
                 self.lines.append(Line(circle=(0, 0, 0, 0, 0), width=3, cap="none"))
 
     def anim_to_pos(self, i, r):

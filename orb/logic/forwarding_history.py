@@ -2,49 +2,80 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 17:01:54
+# @Last Modified time: 2022-02-19 06:04:03
 
 from orb.lnd import Lnd
-from threading import Thread
+from threading import Thread, Lock
+
+lock = Lock()
 
 
-def download_forwarding_history(*args, **kwargs):
+def download_forwarding_history(*_, **__):
     def func():
-        from orb.store import model
+        if lock.locked():
+            return
+        with lock:
+            from orb.store import model
 
-        last = model.ForwardEvent.select().order_by(
-            model.ForwardEvent.timestamp_ns.desc()
-        )
-        if last:
-            last = last.first()
-        i = 0
-        start_time = int(last.timestamp) if last else None
-        while True:
-            fwd = Lnd().get_forwarding_history(
-                start_time=start_time, index_offset=i, num_max_events=100
+            last = model.ForwardEvent.select().order_by(
+                model.ForwardEvent.timestamp_ns.desc()
             )
-
-            for j, f in enumerate(fwd.forwarding_events):
-                if j == 0 and start_time:
-                    # if this is not the first run, then skip the first
-                    # event, else it will show up as a duplicate
-                    continue
-
-                ev = model.ForwardEvent(
-                    timestamp=int(f.timestamp),
-                    chan_id_in=int(f.chan_id_in),
-                    chan_id_out=int(f.chan_id_out),
-                    amt_in=int(f.amt_in),
-                    amt_out=int(f.amt_out),
-                    fee=int(f.fee),
-                    fee_msat=int(f.fee_msat),
-                    amt_in_msat=int(f.amt_in_msat),
-                    amt_out_msat=int(f.amt_out_msat),
-                    timestamp_ns=int(f.timestamp_ns),
+            if last:
+                last = last.first()
+            i = 0
+            start_time = int(last.timestamp) if last else None
+            while True:
+                fwd = Lnd().get_forwarding_history(
+                    start_time=start_time, index_offset=i, num_max_events=100
                 )
-                ev.save()
-            i += 100
-            if not fwd.forwarding_events:
-                break
+
+                for j, f in enumerate(fwd.forwarding_events):
+                    if j == 0 and start_time:
+                        # if this is not the first run, then skip the first
+                        # event, else it will show up as a duplicate
+                        continue
+
+                    ev = model.ForwardEvent(
+                        timestamp=int(f.timestamp),
+                        chan_id_in=int(f.chan_id_in),
+                        chan_id_out=int(f.chan_id_out),
+                        amt_in=int(f.amt_in),
+                        amt_out=int(f.amt_out),
+                        fee=int(f.fee),
+                        fee_msat=int(f.fee_msat),
+                        amt_in_msat=int(f.amt_in_msat),
+                        amt_out_msat=int(f.amt_out_msat),
+                        timestamp_ns=int(f.timestamp_ns),
+                    )
+                    ev.save()
+                    out_stats = (
+                        model.ChannelStats()
+                        .select()
+                        .where(model.ChannelStats.chan_id == int(f.chan_id_out))
+                    )
+                    if out_stats:
+                        out_stats = out_stats.first()
+                        out_stats.earned_msat += ev.fee_msat
+                    else:
+                        out_stats = model.ChannelStats(
+                            chan_id=int(f.chan_id_out), earned_msat=int(f.fee_msat)
+                        )
+                    out_stats.save()
+                    in_stats = (
+                        model.ChannelStats()
+                        .select()
+                        .where(model.ChannelStats.chan_id == int(f.chan_id_in))
+                    )
+                    if in_stats:
+                        in_stats = in_stats.first()
+                        in_stats.helped_earn_msat += ev.fee_msat
+                    else:
+                        in_stats = model.ChannelStats(
+                            chan_id=int(f.chan_id_in), helped_earn_msat=int(f.fee_msat)
+                        )
+                    in_stats.save()
+                i += 100
+                if not fwd.forwarding_events:
+                    break
 
     Thread(target=func).start()

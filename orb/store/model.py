@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 08:11:36
+# @Last Modified time: 2022-02-19 05:34:53
 import os
 import arrow
 from peewee import *
@@ -15,6 +15,17 @@ from kivy.app import App
 from orb.store.db_meta import *
 
 
+class ChannelStats(Model):
+    chan_id = IntegerField(index=True, unique=True)
+    earned_msat = IntegerField(default=0)
+    helped_earn_msat = IntegerField(default=0)
+    profit_msat = IntegerField(default=0)
+    debt_msat = IntegerField(default=0)
+
+    class Meta:
+        database = get_db(channel_stats_db_name)
+
+
 class ForwardEvent(Model):
     timestamp = IntegerField()
     chan_id_in = IntegerField()
@@ -25,7 +36,7 @@ class ForwardEvent(Model):
     fee_msat = IntegerField()
     amt_in_msat = IntegerField()
     amt_out_msat = IntegerField()
-    timestamp_ns = IntegerField()
+    timestamp_ns = IntegerField(index=True, unique=True)
 
     @hybrid_method
     def this_week(self):
