@@ -3,7 +3,7 @@
 Automated Fees
 ==============
 
-Orb includes a simple yet powerful rule-based fee setting engine.
+Before delving into automated fees, make sure you familiarize yourself with the :ref:`channel-highlighter`, as you'll need to be familiar with the syntax, and the auto-fees expressions can be pasted directly into the highlighter to preview what channels will get altered.
 
 *Apps > auto > fees*
 

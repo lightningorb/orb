@@ -3,7 +3,7 @@
 Automated Rebalancing
 =====================
 
-Orb includes a simple yet powerful rule-based channel rebalancing engine.
+Before delving into rebalancing, make sure you familiarize yourself with the :ref:`channel-highlighter`, as you'll need to be familiar with the syntax, and the rebalancing expressions can be pasted directly into the highlighter to preview what channels will get selected.
 
 *Apps > auto > balance*
 

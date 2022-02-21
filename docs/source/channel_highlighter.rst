@@ -1,9 +1,7 @@
+.. _channel-highlighter:
+
 Channel Highlighter
 ===================
-
-.. contents:: Table of Contents
-    :depth: 3
-
 
 This feature enables you to write simple expressions to highlight channels. This is extremely useful to unearth vital information about your channels, and their performance.
 
@@ -13,6 +11,9 @@ It is important to familiarize yourself with the Channel Highlighter as a steppi
 
 .. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-02-18_08-11-50.png
     :align: center
+
+.. contents:: Table of Contents
+    :depth: 3
 
 Syntax
 ------
