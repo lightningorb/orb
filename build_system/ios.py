@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-16 13:08:56
+# @Last Modified time: 2022-02-21 13:27:07
 
 import os
 import re
@@ -11,6 +11,7 @@ from glob import glob
 
 from invoke import task
 from build_system.semantic import *
+from build_system.armor import data
 
 
 def update_version(c):
@@ -44,72 +45,72 @@ def copy_obfuscated_files(c):
     c.run("cp -r images tmp/orb/* /tmp/lnorb/")
 
 
-def get_auto_balance():
-    return """
-#rules:
-#- !Ignore
-#  alias: LOOP
-#  any:
-#  - channel.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
-#- !To
-#  alias: SeasickDiver
-#  fee_rate: 800
-#  num_sats: 10_000
-#  all:
-#  - channel.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
-#  - channel.local_balance / channel.capacity < 0.5
-#- !To
-#  alias: bfx-lnd0
-#  num_sats: 100_000
-#  fee_rate: 400
-#  all:
-#  - channel.remote_pubkey == '033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025'
-#  - channel.local_balance / channel.capacity < 0.5"""
+@task()
+def update(c, env=dict(PATH=os.environ["PATH"])):
+    """
+    Update the xcode project with the latest changes.
+    """
+    update_version(c)
+    copy_files(c)
+    with c.cd("build"):
+        c.run("toolchain update lnorb-ios", env=env)
 
 
 # @task()
-# def update(c, env=dict(PATH=os.environ["PATH"])):
+# def update(c, env=os.environ):
 #     """
-#     Update the xcode project with the latest changes.
+#     Try to deploy in obfuscated mode.
 #     """
 #     update_version(c)
-#     copy_files(c)
+#     c.run("rm -rf dist tmp;")
+#     c.run("mkdir -p tmp;")
+#     c.run("cp -r main.py tmp/;")
+#     c.run("cp -r third_party tmp/;")
+#     c.run("cp -r orb tmp/;")
+#     with c.cd("tmp"):
+#         c.run(
+#             "pyarmor obfuscate --no-cross-protection --platform darwin.arm64.0 --recursive main.py;",
+#             env=env,
+#         )
+#         c.run("cp -r orb/lnd/grpc_generated dist/orb/lnd/grpc_generated")
+#         c.run("mkdir -p dist/orb/images")
+#         c.run("cp -r orb/images/shadow_inverted.png dist/orb/images/")
+#         c.run("cp -r orb/misc/settings.json dist/orb/misc/")
+#         c.run("cp -r orb/apps/auto_fees/autofees.kv dist/orb/apps/auto_fees/")
+#         c.run("cp -r orb/apps/auto_fees/autofees.png dist/orb/apps/auto_fees/")
+#         c.run("cp -r orb/apps/auto_fees/appinfo.yaml dist/orb/apps/auto_fees/")
+#         c.run(
+#             "cp -r orb/apps/auto_rebalance/autobalance.kv dist/orb/apps/auto_rebalance/"
+#         )
+#         c.run(
+#             "cp -r orb/apps/auto_rebalance/autobalance.png dist/orb/apps/auto_rebalance/"
+#         )
+#         c.run(
+#             "cp -r orb/apps/auto_rebalance/appinfo.yaml dist/orb/apps/auto_rebalance/"
+#         )
+#         c.run(
+#             "cp -r orb/apps/auto_max_htlcs/update_max_htlcs.png dist/orb/apps/auto_max_htlcs/"
+#         )
+#         c.run(
+#             "cp -r orb/apps/auto_max_htlcs/appinfo.yaml dist/orb/apps/auto_max_htlcs/"
+#         )
+#         c.run("mkdir -p dist/images/")
+#         c.run("cp -r ../images/ln.png dist/images/")
+#         c.run("rm -rf orb main.py third_party")
+#         c.run("mv dist orb")
+#     copy_obfuscated_files(c)
 #     with c.cd("build"):
+#         out = c.run("security find-identity", env=env).stdout
+#         identity = re.search(r'1\) ([A-Z 0-9]{40}) "Apple Development', out).group(1)
 #         c.run("toolchain update lnorb-ios", env=env)
-
-
-@task()
-def update(c, env=os.environ):
-    """
-    Try to deploy in obfuscated mode.
-    """
-    update_version(c)
-    c.run("rm -rf dist tmp;")
-    c.run("mkdir -p tmp;")
-    c.run("cp -r main.py tmp/;")
-    c.run("cp -r third_party tmp/;")
-    c.run("cp -r orb tmp/;")
-    with c.cd("tmp"):
-        c.run(
-            "pyarmor obfuscate --no-cross-protection --platform darwin.arm64.0 --recursive main.py;",
-            env=env,
-        )
-
-        c.run("rm -rf orb main.py third_party")
-        c.run("mv dist orb")
-    copy_obfuscated_files(c)
-    with c.cd("build"):
-        out = c.run("security find-identity", env=env).stdout
-        identity = re.search(r'1\) ([A-Z 0-9]{40}) "Apple Development', out).group(1)
-        c.run("toolchain update lnorb-ios", env=env)
-        c.run(
-            f'codesign -f -s "{identity}" ./lnorb-ios/YourApp/pytransform/_pytransform.dylib',
-            env=env,
-        )
-        c.run(
-            f'codesign -f -s "{identity}" /tmp/lnorb/pytransform/_pytransform.dylib',
-            env=env,
-        )
+#         c.run(
+#             f'codesign -f -s "{identity}" ./lnorb-ios/YourApp/pytransform/_pytransform.dylib',
+#             env=env,
+#         )
+#         c.run(
+#             f'codesign -f -s "{identity}" /tmp/lnorb/pytransform/_pytransform.dylib',
+#             env=env,
+#         )
 
 
 @task

@@ -1,6 +1,24 @@
-0.11.0
+0.12.0
 ----
 
+no longer using match fee rate
+improved syncing of forwarding and payment history improved auto-
+    rebalancing global pnl channel pln
+now tracking channel earnings in a database
+now displaying balanced ratio speedups in channels class
+added channel highlighter page to docs
+updated copy
+updated copy
+Merge branch 'site' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    site
+fixed buy / eval link. added foss and investor relations pages
+fixed buy / eval link. added foss and investor relations pages
+fixed buy / eval link. added foss and investor relations pages
+[dev] enable balance hud clock
+Balance HUD still incorrect #187
+added FOSS page
+IOS code obfuscation [#185]
 [dev] improved balanced ratio
 [dev] restricting functionality according to licensing
 Merge branch 'site' into main
