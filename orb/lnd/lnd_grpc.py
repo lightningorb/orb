@@ -2,19 +2,22 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 10:51:31
+# @Last Modified time: 2022-02-20 12:41:46
 import sys
 import base64
 import os
+import json
 from functools import lru_cache
 from traceback import print_exc
-from threading import Lock
 
 from memoization import cached
 
+from orb.misc.auto_obj import dict2obj
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
 from orb.misc.channel import Channel
+from google.protobuf.json_format import MessageToJson
+
 
 sys.path.append("orb/lnd/grpc_generate")
 sys.path.append("orb/lnd")
@@ -272,15 +275,23 @@ class LndGRPC(LndBase):
         )
         return self.stub.ForwardingHistory(request)
 
-    def list_payments(self, include_incomplete=True, index_offset=0, max_payments=100):
+    def list_payments(
+        self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
+    ):
         request = ln.ListPaymentsRequest(
-            include_incomplete=True,
+            include_incomplete=include_incomplete,
             index_offset=index_offset,
             max_payments=max_payments,
-            reversed=True,
+            reversed=reversed,
         )
         response = self.stub.ListPayments(request)
-        return response.payments
+        json_obj = json.loads(MessageToJson(
+            response,
+            including_default_value_fields=True,
+            preserving_proto_field_name=True,
+            sort_keys=True,
+        ))
+        return dict2obj(json_obj)
 
     def fee_report(self):
         request = ln.FeeReportRequest()

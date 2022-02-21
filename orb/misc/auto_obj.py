@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 06:17:39
+# @Last Modified time: 2022-02-20 11:43:44
 
 import json
 
@@ -38,6 +38,12 @@ def string_to_num(data):
     except:
         pass
     return data
+
+
+def sort_dict(item: dict):
+    return {
+        k: sort_dict(v) if isinstance(v, dict) else v for k, v in sorted(item.items())
+    }
 
 
 def to_num(data):

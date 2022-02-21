@@ -38,6 +38,16 @@ Builder.load_string('''
         helper_text: 'Helped earn'
         helper_text_mode: 'persistent'
 
+    MDTextField:
+        id: profit
+        helper_text: 'Profit'
+        helper_text_mode: 'persistent'
+
+    # MDTextField:
+    #     id: debt
+    #     helper_text: 'Debt'
+    #     helper_text_mode: 'persistent'
+
     ScrollView:
         DrawerList:
             id: md_list
@@ -1912,6 +1922,13 @@ Builder.load_string('''
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
+<HUDSpentFeeSummary>:
+    id: hud_label
+    text: root.hud
+    size_hint: [None, None]
+    markup: True
+    size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
 <HUDBalance>:
     id: hud_label
     text: root.hud
@@ -2112,6 +2129,7 @@ Builder.load_string('''
         HUDBalance
         HUDGlobalRatio
         HUDFeeSummary
+        HUDSpentFeeSummary
         Widget:
 
 <HUDNE>:

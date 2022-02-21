@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 13:44:42
+# @Last Modified time: 2022-02-21 05:44:20
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -35,8 +35,8 @@ from orb.lnd import Lnd
 from orb.misc import data_manager
 
 version = "0.0.4"
-yaml_name = f"auto_fees_v{version}.yaml"
-meta_yaml_name = f"fees_meta_v{version}.yaml"
+yaml_name = f"autofees_v{version}.yaml"
+meta_yaml_name = f"autofees_meta_v{version}.yaml"
 
 
 class Base:
@@ -348,8 +348,7 @@ rules:
   any: null
   fee_rate: '1000'
   priority: 5
-spam_prevention: 0
-
+spam_prevention: 300
 """
             with open(self.path, "w") as f:
                 f.write(default)

@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 05:55:28
+# @Last Modified time: 2022-02-20 08:39:26
 
+from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
 from kivy.animation import Animation
+from kivy.graphics.instructions import InstructionGroup
 
 from orb.math.Vector import Vector
 
@@ -21,24 +23,43 @@ class SentReceivedWidget(Widget):
     #: The channel
     channel = ObjectProperty(None)
 
-    def __init__(self, channel, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Class constructor.
         """
         super(SentReceivedWidget, self).__init__(*args, **kwargs)
+        self.lines = []
+        self.i = 0
+        self.r = 0
+        self.update()
+        Clock.schedule_interval(self.update, 60)
+
+    def update(self, *_):
         alpha = 0.5
+        self.lines[:] = []
+        self.canvas.clear()
         with self.canvas:
-            Color(*[0.5, 1, 0.5, alpha])
-            self.lines = []
-            for i in range(int(channel.earned / 1_000)):
-                self.lines.append(Line(circle=(0, 0, 0, 0, 0), width=1, cap="none"))
+            if self.channel.profit >= 0:
+                Color(*[0.5, 1, 0.5, alpha])
+                for i in range(int(self.channel.profit / 1_000)):
+                    line = Line(circle=(0, 0, 0, 0, 0), width=1, cap="none")
+                    self.lines.append(line)
+            else:
+                Color(*[1, 0.5, 0.5, alpha])
+                for i in range(int(self.channel.debt / 1_000)):
+                    line = Line(circle=(0, 0, 0, 0, 0), width=1, cap="none")
+                    self.lines.append(line)
             Color(*[0.5, 0.5, 1, alpha])
-            for i in range(int(channel.helped_earn / 100_000)):
+            for i in range(int(self.channel.helped_earn / 100_000)):
                 self.lines.append(Line(circle=(0, 0, 0, 0, 0), width=3, cap="none"))
+
+        self.anim_to_pos(self.i, self.r)
 
     def anim_to_pos(self, i, r):
         """
         Specify location when orb changes.
         """
+        self.i = i
+        self.r = r
         for rr, line in enumerate(self.lines):
             line.circle = (0, 0, r + 100 + (rr * 10), (i * 360) - 2, (i * 360) + 2)

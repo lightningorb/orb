@@ -2,24 +2,102 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 05:34:53
-import os
+# @Last Modified time: 2022-02-21 05:26:01
+
 import arrow
 from peewee import *
 
 from playhouse.hybrid import hybrid_property, hybrid_method
 from playhouse.sqlite_ext import *
 
-from kivy.app import App
-
 from orb.store.db_meta import *
+
+
+class LNDPayment(Model):
+    creation_date = IntegerField()
+    creation_time_ns = IntegerField(unique=True)
+    failure_reason = CharField()
+    fee = IntegerField()
+    fee_msat = IntegerField()
+    fee_sat = IntegerField()
+    payment_hash = CharField()
+    payment_index = IntegerField()
+    payment_preimage = CharField()
+    payment_request = CharField()
+    status = CharField()
+    value = IntegerField()
+    value_msat = IntegerField()
+    value_sat = IntegerField()
+    dest_pubkey = CharField()
+    last_hop_pubkey = CharField()
+    last_hop_chanid = IntegerField()
+    total_fees_msat = IntegerField()
+
+    @hybrid_method
+    def today(self):
+        return (arrow.utcnow().timestamp() - self.creation_date) < 3600 * 24
+
+    @hybrid_method
+    def this_week(self):
+        return (arrow.utcnow().timestamp() - self.creation_date) < 3600 * 24 * 7
+
+    @hybrid_method
+    def this_month(self):
+        return (arrow.utcnow().timestamp() - self.creation_date) < 3600 * 24 * 30
+
+    class Meta:
+        database = get_db(payments_db_name)
+
+
+class LNDPaymentAttempt(Model):
+    attempt_id = IntegerField()
+    attempt_time_ns = IntegerField()
+    # failure = CharField()
+    preimage = CharField()
+    resolve_time_ns = IntegerField()
+    status = CharField()
+    payment = ForeignKeyField(LNDPayment, backref="htlcs")
+
+    class Meta:
+        database = get_db(payments_db_name)
+
+
+class LNDAttemptRoute(Model):
+    total_amt = IntegerField()
+    total_amt_msat = IntegerField()
+    total_fees = IntegerField()
+    total_fees_msat = IntegerField()
+    total_time_lock = IntegerField()
+    attempt = ForeignKeyField(LNDPaymentAttempt, backref="route")
+
+    class Meta:
+        database = get_db(payments_db_name)
+
+
+class LNDHop(Model):
+
+    # amp_record = CharField(default="")
+    amt_to_forward = IntegerField()
+    amt_to_forward_msat = IntegerField()
+    chan_capacity = IntegerField()
+    chan_id = IntegerField()
+    custom_records = JSONField(default={})
+    expiry = IntegerField()
+    fee = IntegerField()
+    fee_msat = IntegerField()
+    # mpp_record = JSONField(default={})
+    pub_key = CharField()
+    tlv_payload = BooleanField()
+    route = ForeignKeyField(LNDAttemptRoute, backref="hops")
+
+    class Meta:
+        database = get_db(payments_db_name)
 
 
 class ChannelStats(Model):
     chan_id = IntegerField(index=True, unique=True)
     earned_msat = IntegerField(default=0)
     helped_earn_msat = IntegerField(default=0)
-    profit_msat = IntegerField(default=0)
     debt_msat = IntegerField(default=0)
 
     class Meta:
@@ -40,23 +118,15 @@ class ForwardEvent(Model):
 
     @hybrid_method
     def this_week(self):
-        return (self.timestamp + 3600 * 24 * 7) > arrow.now().timestamp()
+        return (arrow.utcnow().timestamp() - self.timestamp) < 3600 * 24 * 7
 
     @hybrid_method
     def this_month(self):
-        return (self.timestamp + 3600 * 24 * 30) > arrow.now().timestamp()
+        return (arrow.utcnow().timestamp() - self.timestamp) < 3600 * 24 * 30
 
     @hybrid_method
     def today(self):
-        """
-           + --------------- + -----------------------> greater than
-          ts                delta               now
-          |                  |                   |
-          v                  v                   v
-        -------------------------------------------------
-
-        """
-        return (self.timestamp + 3600 * 24) > arrow.now().timestamp()
+        return (arrow.utcnow().timestamp() - self.timestamp) < 3600 * 24
 
     def __str__(self):
         return (

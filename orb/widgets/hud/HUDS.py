@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-18 05:41:59
+# @Last Modified time: 2022-02-20 17:42:25
 
 import threading
 import requests
@@ -52,9 +52,66 @@ class HUDFeeSummary(BorderedLabel):
         def func():
             fr = Lnd().fee_report()
             update_gui(
-                f"Day: {forex(fr.day_fee_sum)}\nWeek"
+                f"Earned:\nDay: {forex(fr.day_fee_sum)}\nWeek"
                 f" {forex(fr.week_fee_sum)}\nMonth:"
                 f" {forex(fr.month_fee_sum)}"
+            )
+
+        threading.Thread(target=func).start()
+
+
+class HUDSpentFeeSummary(BorderedLabel):
+    """
+    Spent Fee Summary HUD
+    """
+
+    hud = ObjectProperty("")
+
+    def __init__(self, *args, **kwargs):
+        BorderedLabel.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.get_spent_data, 60)
+        Clock.schedule_once(self.get_spent_data, 1)
+
+    @guarded
+    def get_spent_data(self, *args):
+        @mainthread
+        def update_gui(text):
+            self.hud = text
+            self.show()
+
+        @guarded
+        def func():
+            from orb.store.model import LNDPayment
+
+            today = (
+                sum(
+                    p.total_fees_msat
+                    for p in LNDPayment().select().where(LNDPayment.today() == True)
+                )
+                / 1000
+            )
+            this_week = (
+                sum(
+                    p.total_fees_msat
+                    for p in LNDPayment().select().where(LNDPayment.this_week() == True)
+                )
+                / 1000
+            )
+            this_month = (
+                sum(
+                    p.total_fees_msat
+                    for p in LNDPayment()
+                    .select()
+                    .where(LNDPayment.this_month() == True)
+                )
+                / 1000
+            )
+
+            fr = Lnd().fee_report()
+            update_gui(
+                f"Spent:\nDay: {forex(today)}\nWeek"
+                f" {forex(this_week)}\nMonth:"
+                f" {forex(this_month)}"
             )
 
         threading.Thread(target=func).start()

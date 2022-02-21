@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 05:37:59
+# @Last Modified time: 2022-02-19 15:17:53
 
 from threading import Thread, Lock
 
@@ -229,19 +229,28 @@ class Channel(EventDispatcher):
         return self.local_balance_include_pending / self.capacity
 
     @property
-    def _profit(self):
+    def profit(self):
         """
         Channel profit is how much the channel made in fees
         minus how much was spent rebalancing towards it.
         """
-        pass
+        return self.earned - self.debt
 
     @property
-    def _debt(self):
+    def debt(self):
         """
         How much was spent rebalancing towards that channel.
         """
-        pass
+        from orb.store import model
+
+        stats = (
+            model.ChannelStats()
+            .select()
+            .where(model.ChannelStats.chan_id == int(self.chan_id))
+        )
+        if stats:
+            return int(stats.first().debt_msat / 1000)
+        return 0
 
     @property
     def earned(self):

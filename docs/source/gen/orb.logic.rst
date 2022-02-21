@@ -26,6 +26,7 @@ Submodules
    orb.logic.htlcs_thread
    orb.logic.normalized_events
    orb.logic.pay_logic
+   orb.logic.payment_history
    orb.logic.rebalance_thread
    orb.logic.routes
    orb.logic.thread_manager

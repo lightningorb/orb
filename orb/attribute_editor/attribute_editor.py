@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 04:08:58
+# @Last Modified time: 2022-02-20 05:20:13
 
 from threading import Thread
 
@@ -100,6 +100,8 @@ class AttributeEditor(BoxLayout):
                     self.ids.md_list.clear_widgets()
                     self.populate_earned()
                     self.populate_helped_earn()
+                    # self.populate_debt()
+                    self.populate_profit()
                     self.populate_fees()
                     if is_rest():
                         # TODO: calling channel.channel is a little problematic
@@ -138,6 +140,32 @@ class AttributeEditor(BoxLayout):
                 "{:_}".format(self.channel.helped_earn if self.channel else 0)
             )
         ).start()
+
+    @guarded
+    def populate_profit(self):
+        @mainthread
+        def update(val):
+            self.ids.profit.text = val
+
+        self.ids.profit.text = ""
+        Thread(
+            target=lambda: update(
+                "{:_}".format(self.channel.profit if self.channel else 0)
+            )
+        ).start()
+
+    # @guarded
+    # def populate_debt(self):
+    #     @mainthread
+    #     def update(val):
+    #         self.ids.debt.text = val
+
+    #     self.ids.debt.text = ""
+    #     Thread(
+    #         target=lambda: update(
+    #             "{:_}".format(self.channel.debt if self.channel else 0)
+    #         )
+    #     ).start()
 
     @guarded
     def fee_rate_milli_msat_changed(self, val, *args):

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 04:59:46
+# @Last Modified time: 2022-02-19 07:58:50
 
 from orb.store.db_meta import *
 from orb.store.model import *
@@ -54,5 +54,13 @@ def create_channel_stats_tables():
     db = get_db(channel_stats_db_name)
     try:
         db.create_tables([ChannelStats])
+    except:
+        pass
+
+
+def create_payments_tables():
+    db = get_db(payments_db_name)
+    try:
+        db.create_tables([LNDPayment, LNDPaymentAttempt, LNDAttemptRoute, LNDHop])
     except:
         pass

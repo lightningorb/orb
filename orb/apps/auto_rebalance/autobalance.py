@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 14:03:35
+# @Last Modified time: 2022-02-21 07:16:44
 
 import os
 from time import sleep
@@ -20,6 +20,7 @@ from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
+from kivy.properties import DictProperty
 from kivy.uix.boxlayout import BoxLayout
 
 from orb.misc.utils import pref_path
@@ -29,6 +30,9 @@ from orb.misc.plugin import Plugin
 from orb.misc import data_manager
 
 chan_ignore = set([])
+
+version = "0.0.4"
+yaml_name = f"autobalance_v{version}.yaml"
 
 
 class EvalMixin:
@@ -167,7 +171,7 @@ class Setter(RuleBase):
     def set(self):
         self.thread = RebalanceThread(
             amount=self.num_sats,
-            fee_rate=self.fee_rate,
+            fee_rate=self.eval_fee_rate(),
             chan_id=self._from.chan_id,
             last_hop_pubkey=self._to.remote_pubkey,
             max_paths=1000,
@@ -175,6 +179,11 @@ class Setter(RuleBase):
             thread_n=0,
         )
         return self
+
+    def eval_fee_rate(self):
+        to_channel = self._to
+        from_channel = self._from
+        return eval(self.fee_rate)
 
     def __eq__(self, other):
         return (
@@ -208,7 +217,6 @@ class Rebalance(StoppableThread):
         super(Rebalance, self).stop()
 
     def run(self, *_):
-        self.ratio = 0.5
         self.lock = Lock()
         self.setters = set([])
 
@@ -221,7 +229,7 @@ class Rebalance(StoppableThread):
         This is the 'heart' of the rebalancer.
         """
         with self.lock:
-            path = (pref_path("yaml") / "autobalance.yaml").as_posix()
+            path = (pref_path("yaml") / yaml_name).as_posix()
             if not os.path.exists(path):
                 return
             obj = yaml.load(open(path, "r"), Loader=get_loader())
@@ -291,12 +299,14 @@ class Rebalance(StoppableThread):
 
 
 class ABView(Popup):
+
+    obj = DictProperty({})
+
     def open(self, *args, **kwargs):
         """
         This gets called when the popup is first opened.
         """
-        super(ABView, self).open(*args, **kwargs)
-        self.path = (pref_path("yaml") / "autobalance.yaml").as_posix()
+        self.path = (pref_path("yaml") / yaml_name).as_posix()
         if not os.path.exists(self.path):
             default = """
 rules:
@@ -307,15 +317,18 @@ rules:
   any: null
 - !FromTo
   alias: From high outbound to low outbound
-  fee_rate: 500
+  fee_rate: min(to_channel.fee_rate_milli_msat, 500)
+  match_fee_rate: True
   from_all:
-  - channel.ratio > 0.5
+  - channel.ratio_include_pending  - (100_000 / channel.capacity)  > channel.balanced_ratio
   from_any: []
   num_sats: 100000
   to_all:
-  - channel.ratio_include_pending < 0.1
+  - channel.ratio_include_pending + (100_000 / channel.capacity) < channel.balanced_ratio
+    and channel.profit > 0 or channel.local_balance_include_pending < 100_000
   to_any: []
-threads: 10
+threads: 5
+max_budget: 0.25
 """
             with open(self.path, "w") as f:
                 f.write(default)
@@ -323,6 +336,7 @@ threads: 10
         if not self.obj:
             return
         self.populate_rules()
+        super(ABView, self).open(*args, **kwargs)
 
     def add_from_to_rule(self):
         self.obj["rules"].append(
@@ -370,7 +384,7 @@ threads: 10
 
     def save(self, *_):
         with open(self.path, "w") as stream:
-            stream.write(yaml.dump(self.obj, Dumper=get_dumper()))
+            stream.write(yaml.dump(dict(self.obj), Dumper=get_dumper()))
 
     def start(self):
         autobalance = Rebalance()

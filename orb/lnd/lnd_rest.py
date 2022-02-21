@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 10:49:06
+# @Last Modified time: 2022-02-19 15:27:37
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -380,6 +380,12 @@ class LndREST(LndBase):
             json_response = json.loads(raw_response)
             print(json_response)
 
+    def list_payments(
+        self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
+    ):
+        url = f"/v1/payments?include_incomplete={'true' if include_incomplete else 'false'}&index_offset={index_offset}&max_payments={max_payments}"
+        return self.__get(url)
+
     def __get(self, url):
         """
         Simplify get requests.
@@ -391,7 +397,9 @@ class LndREST(LndBase):
         """
         full_url = f"{self.fqdn}{url}"
         r = requests.get(full_url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
+        j = r.json()
+        o = dict2obj(j)
+        return o
 
     def __post(self, url, data):
         """
