@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 07:16:44
+# @Last Modified time: 2022-02-21 08:32:15
 
 import os
 from time import sleep
@@ -318,7 +318,6 @@ rules:
 - !FromTo
   alias: From high outbound to low outbound
   fee_rate: min(to_channel.fee_rate_milli_msat, 500)
-  match_fee_rate: True
   from_all:
   - channel.ratio_include_pending  - (100_000 / channel.capacity)  > channel.balanced_ratio
   from_any: []
