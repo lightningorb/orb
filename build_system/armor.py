@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 10:20:04
+# @Last Modified time: 2022-02-21 15:31:21
 
 try:
     # not all actions install all requirements
@@ -23,26 +23,6 @@ except:
 
 name = "lnorb"
 VERSION = open("VERSION").read().strip()
-
-paths = " ".join(
-    [f"--paths={x.as_posix()}" for x in Path("third_party/").glob("*") if x.is_dir()]
-)
-
-data = [
-    ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
-    ("orb/images/shadow_inverted.png", "orb/images/"),
-    ("orb/misc/settings.json", "orb/misc/"),
-    ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
-    ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),
-    ("orb/apps/auto_fees/appinfo.yaml", "orb/apps/auto_fees/"),
-    ("orb/apps/auto_rebalance/autobalance.kv", "orb/apps/auto_rebalance/"),
-    ("orb/apps/auto_rebalance/autobalance.png", "orb/apps/auto_rebalance/"),
-    ("orb/apps/auto_rebalance/appinfo.yaml", "orb/apps/auto_rebalance/"),
-    ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
-    ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
-    ("video_library.yaml", "."),
-    ("images/ln.png", "images/"),
-]
 
 
 def upload_to_s3(env, file_name, bucket, object_name=None):
@@ -122,6 +102,29 @@ def build_common(c, env, sep=":"):
     if spec == ";":
         # windows detected
         spec = "-s lnorb-win-patched.spec"
+    paths = " ".join(
+        [
+            f"--paths={x.as_posix()}"
+            for x in Path("third_party/").glob("*")
+            if x.is_dir()
+        ]
+    )
+
+    data = [
+        ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+        ("orb/images/shadow_inverted.png", "orb/images/"),
+        ("orb/misc/settings.json", "orb/misc/"),
+        ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
+        ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),
+        ("orb/apps/auto_fees/appinfo.yaml", "orb/apps/auto_fees/"),
+        ("orb/apps/auto_rebalance/autobalance.kv", "orb/apps/auto_rebalance/"),
+        ("orb/apps/auto_rebalance/autobalance.png", "orb/apps/auto_rebalance/"),
+        ("orb/apps/auto_rebalance/appinfo.yaml", "orb/apps/auto_rebalance/"),
+        ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
+        ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
+        ("video_library.yaml", "."),
+        ("images/ln.png", "images/"),
+    ]
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "

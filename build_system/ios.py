@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 13:27:07
+# @Last Modified time: 2022-02-21 15:32:08
 
 import os
 import re
@@ -11,7 +11,6 @@ from glob import glob
 
 from invoke import task
 from build_system.semantic import *
-from build_system.armor import data
 
 
 def update_version(c):
