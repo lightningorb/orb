@@ -12,6 +12,13 @@ License.lic
 
 Before downloading the trial version, or immediately after payment for the full version, you'll be asked to save your license in a `license.lic` file. After Orb has installed, this `license.lic` file must be saved in the same directory as the orb binary.
 
+
+License.lic on MacOSX
+~~~~~~~~~~~~~~~~~~~~~
+
+On MacOSX, after opening the DMG and drag & dropping `lnorb` into the `Applications` folder, open Finder, then click on `Go` and `Go to folder`. Paste the following path: `/Applications/lnorb.app/Contents/MacOS`. Finally save your license.lic in that folder.
+
+
 License.lic on Windows
 ~~~~~~~~~~~~~~~~~~~~~~
 
