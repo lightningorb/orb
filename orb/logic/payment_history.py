@@ -2,12 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 13:36:12
+# @Last Modified time: 2022-02-22 17:44:55
 
 import arrow
 from threading import Thread, Lock
 from collections import defaultdict
-
+from orb.misc import data_manager
 from orb.lnd import Lnd
 
 lock = Lock()
@@ -20,7 +20,7 @@ def download_payment_history(*_, **__):
         pay = model.LNDPayment(
             creation_date=p.creation_date,
             creation_time_ns=p.creation_time_ns,
-            failure_reason=p.failure_reason,  # needs getting
+            failure_reason=p.failure_reason,
             fee=p.fee,
             fee_msat=p.fee_msat,
             fee_sat=p.fee_sat,
@@ -28,7 +28,7 @@ def download_payment_history(*_, **__):
             payment_index=p.payment_index,
             payment_preimage=p.payment_preimage,
             payment_request=p.payment_request,
-            status=p.status,  # needs getting
+            status=p.status,
             value=p.value,
             value_msat=p.value_msat,
             value_sat=p.value_sat,
@@ -44,7 +44,6 @@ def download_payment_history(*_, **__):
             attempt = model.LNDPaymentAttempt(
                 attempt_id=h.attempt_id,
                 attempt_time_ns=h.attempt_time_ns,
-                # failure=h.failure if h.failure else "",
                 preimage=h.preimage,
                 resolve_time_ns=h.resolve_time_ns,
                 status=h.status,
@@ -65,7 +64,6 @@ def download_payment_history(*_, **__):
             for h in r.hops:
                 last_route = r
                 hop = model.LNDHop(
-                    # amp_record=h.amp_record if h.amp_record else "",
                     amt_to_forward=h.amt_to_forward,
                     amt_to_forward_msat=h.amt_to_forward_msat,
                     chan_capacity=h.chan_capacity,
@@ -76,7 +74,6 @@ def download_payment_history(*_, **__):
                     expiry=h.expiry,
                     fee=h.fee,
                     fee_msat=h.fee_msat,
-                    # mpp_record=h.mpp_record.toJSON() if h.mpp_record else {},
                     pub_key=h.pub_key,
                     tlv_payload=h.tlv_payload,
                     route=route,
@@ -84,21 +81,22 @@ def download_payment_history(*_, **__):
                 hop.save()
 
         pay.dest_pubkey = last_route.hops[-1].pub_key
-        if len(last_route.hops) > 1:
+        self_payment = data_manager.data_man.pubkey == pay.dest_pubkey
+        if self_payment and len(last_route.hops) > 1:
             pay.last_hop_pubkey = last_route.hops[-2].pub_key
-            pay.last_hop_chanid = last_route.hops[-2].chan_id
+            pay.last_hop_chanid = last_route.hops[-1].chan_id
             stats = (
                 model.ChannelStats()
                 .select()
-                .where(model.ChannelStats.chan_id == last_route.hops[-2].chan_id)
+                .where(model.ChannelStats.chan_id == last_route.hops[-1].chan_id)
             )
             if stats:
                 stats = stats.first()
                 stats.debt_msat += last_route.total_fees_msat
             else:
                 stats = model.ChannelStats(
-                    chan_id=int(last_route.hops[-2].chan_id),
-                    earned_msat=last_route.total_fees_msat,
+                    chan_id=int(last_route.hops[-1].chan_id),
+                    debt_msat=last_route.total_fees_msat,
                 )
             stats.save()
 

@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 08:18:56
+# @Last Modified time: 2022-02-22 17:19:01
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
 from kivy.properties import NumericProperty
+from kivy.properties import StringProperty
 from kivy.event import EventDispatcher
 
 from orb.store.db_meta import *
@@ -27,6 +28,7 @@ class DataManager(EventDispatcher):
     that makes testing difficult, allegidly.
     """
 
+    pubkey = StringProperty("")
     show_chords = BooleanProperty(False)
     menu_visible = BooleanProperty(False)
     show_chord = NumericProperty(0)
@@ -43,6 +45,7 @@ class DataManager(EventDispatcher):
         self.disable_shortcuts = False
         self.save_cert()
         self.lnd = Lnd()
+        self.pubkey = self.lnd.get_info().identity_pubkey
         self.plugin_registry = {}
 
         self.channels = Channels(self.lnd)

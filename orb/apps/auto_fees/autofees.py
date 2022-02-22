@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 05:44:20
+# @Last Modified time: 2022-02-22 15:44:39
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -258,7 +258,7 @@ class FeesAuto(StoppableThread):
     def schedule(self):
         Clock.schedule_once(lambda _: Thread(target=self.main).start(), 1)
         self.schedule = Clock.schedule_interval(
-            lambda _: Thread(target=self.main).start(), eval(self.obj["frequency"])
+            lambda _: Thread(target=self.main).start(), eval(str(self.obj["frequency"]))
         )
 
     def main(self, *_):

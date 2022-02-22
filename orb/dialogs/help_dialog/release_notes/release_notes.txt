@@ -1,11 +1,23 @@
-0.12.0
+0.12.1
 ----
 
+Merge branch 'site' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    site
+updated download page
+updated copy
+updated docs
+updated docs
+updated docs
+updated docs
+[dev] fix build system
+version bump
 no longer using match fee rate
 improved syncing of forwarding and payment history improved auto-
     rebalancing global pnl channel pln
 now tracking channel earnings in a database
 now displaying balanced ratio speedups in channels class
+updated copy
 added channel highlighter page to docs
 updated copy
 updated copy
