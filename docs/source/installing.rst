@@ -1,7 +1,11 @@
 Installing
 ==========
 
-Installing Orb should be straight-forward. Simply head over to `lnorb.com <https://lnorb.com>`_ and download either a trial version, or purchase a year-long license to unlock the full version.
+Installing Orb should be straight-forward. Simply head over to `lnorb.com <https://lnorb.com>`_ and after purchasing a year-long license (or clicking on 'evaluate' on the front-page) there are just a few simple steps to follow, documented below.
+
+.. note::
+
+    Download and save orb to your **Desktop computer**, not on your node. Orb connects to LND remotely, and does not run on your node directly.
 
 License.lic
 -----------
