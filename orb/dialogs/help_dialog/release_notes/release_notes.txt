@@ -1,9 +1,6 @@
 0.12.2
 ----
 
-updated site
-updated site
-updated pricing
 debt hot-fix
 Merge branch 'site' of
     https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into

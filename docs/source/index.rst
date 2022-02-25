@@ -13,6 +13,7 @@ Orb
 
    installing
    configuring
+   concepts
    lightning
    script_editor
    extending

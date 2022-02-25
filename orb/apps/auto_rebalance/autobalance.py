@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 08:32:15
+# @Last Modified time: 2022-02-25 10:52:26
 
 import os
 from time import sleep
@@ -31,7 +31,7 @@ from orb.misc import data_manager
 
 chan_ignore = set([])
 
-version = "0.0.4"
+version = "0.0.5"
 yaml_name = f"autobalance_v{version}.yaml"
 
 
@@ -309,6 +309,7 @@ class ABView(Popup):
         self.path = (pref_path("yaml") / yaml_name).as_posix()
         if not os.path.exists(self.path):
             default = """
+max_budget: 0.3
 rules:
 - !Ignore
   alias: LOOP
@@ -317,17 +318,16 @@ rules:
   any: null
 - !FromTo
   alias: From high outbound to low outbound
-  fee_rate: min(to_channel.fee_rate_milli_msat, 500)
+  fee_rate: '500'
   from_all:
-  - channel.ratio_include_pending  - (100_000 / channel.capacity)  > channel.balanced_ratio
+  - channel.ratio  - 0.1 > channel.balanced_ratio
   from_any: []
   num_sats: 100000
   to_all:
-  - channel.ratio_include_pending + (100_000 / channel.capacity) < channel.balanced_ratio
-    and channel.profit > 0 or channel.local_balance_include_pending < 100_000
+  - channel.ratio_include_pending + 0.1 < channel.balanced_ratio or channel.local_balance_include_pending
+    < 100_000
   to_any: []
 threads: 5
-max_budget: 0.25
 """
             with open(self.path, "w") as f:
                 f.write(default)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 09:32:32
+# @Last Modified time: 2022-02-25 10:10:49
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -45,11 +45,7 @@ class DataManager(EventDispatcher):
         self.disable_shortcuts = False
         self.save_cert()
         self.lnd = Lnd()
-        try:
-            self.pubkey = self.lnd.get_info().identity_pubkey
-        except:
-            print("unable to get node pubkey")
-            self.pubkey = ""
+        self.pubkey = self.lnd.get_info().identity_pubkey
         self.plugin_registry = {}
 
         self.channels = Channels(self.lnd)
@@ -60,7 +56,6 @@ class DataManager(EventDispatcher):
 
         for db in [
             forwarding_events_db_name,
-            path_finding_db_name,
             aliases_db_name,
             invoices_db_name,
             htlcs_db_name,
@@ -73,7 +68,6 @@ class DataManager(EventDispatcher):
                 # most likely already connected
                 pass
 
-        db_create_tables.create_path_finding_tables()
         db_create_tables.create_forwarding_tables()
         db_create_tables.create_aliases_tables()
         db_create_tables.create_invoices_tables()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 05:26:01
+# @Last Modified time: 2022-02-25 10:04:50
 
 import arrow
 from peewee import *
@@ -31,6 +31,8 @@ class LNDPayment(Model):
     dest_pubkey = CharField()
     last_hop_pubkey = CharField()
     last_hop_chanid = IntegerField()
+    first_hop_pubkey = CharField()
+    first_hop_chanid = IntegerField()
     total_fees_msat = IntegerField()
 
     @hybrid_method
@@ -136,36 +138,6 @@ class ForwardEvent(Model):
 
     class Meta:
         database = get_db(forwarding_events_db_name)
-
-
-class Payment(Model):
-    amount = IntegerField()
-    dest = CharField()
-    fees = IntegerField()
-    succeeded = BooleanField()
-    timestamp = IntegerField()
-
-    class Meta:
-        database = get_db(path_finding_db_name)
-
-
-class Attempt(Model):
-    code = IntegerField()
-    weakest_link_pk = CharField()
-    succeeded = BooleanField()
-    payment = ForeignKeyField(Payment, backref="attempts")
-
-    class Meta:
-        database = get_db(path_finding_db_name)
-
-
-class Hop(Model):
-    pk = CharField()
-    succeeded = BooleanField()
-    attempt = ForeignKeyField(Attempt, backref="hops")
-
-    class Meta:
-        database = get_db(path_finding_db_name)
 
 
 class Alias(Model):
