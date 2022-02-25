@@ -55,7 +55,6 @@ If this mental model doesn't work for you, you can reverse it by toggling: ``app
 Sent / Received
 ---------------
 
-
 .. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-42-50.png
    :alt: sent received
    :align: center

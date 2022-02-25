@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 17:42:25
+# @Last Modified time: 2022-02-23 13:26:39
 
 import threading
 import requests
@@ -158,6 +158,19 @@ class HUDBalance(BorderedLabel):
             channel_bal = lnd.channel_balance()
             pending_channels = lnd.get_pending_channels()
             limbo_balance = pending_channels.total_limbo_balance
+            pending_open = sum(
+                [
+                    x.channel.local_balance
+                    for x in pending_channels.pending_open_channels
+                ]
+            )
+
+            # pending_close = sum(
+            #     [
+            #         x.channel.local_balance
+            #         for x in pending_channels.pending_close_channels
+            #     ]
+            # )
 
             hud += f"Local Balance: {forex(channel_bal.local_balance.sat)}\n"
             if channel_bal.unsettled_local_balance.sat:
@@ -168,6 +181,12 @@ class HUDBalance(BorderedLabel):
 
             if limbo_balance:
                 hud += f"Limbo balance: {forex(limbo_balance)}\n"
+
+            if pending_open:
+                hud += f"Pending Open: {forex(pending_open)}\n"
+
+            # if pending_close:
+            #     hud += f"Pending Close: {forex(pending_close)}\n"
 
             ln_on_chain = chain_bal.total_balance + int(
                 int(channel_bal.local_balance.sat)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-22 17:44:55
+# @Last Modified time: 2022-02-23 12:07:57
 
 import arrow
 from threading import Thread, Lock
@@ -35,6 +35,8 @@ def download_payment_history(*_, **__):
             dest_pubkey="",
             last_hop_pubkey="",
             last_hop_chanid=0,
+            first_hop_pubkey="",
+            first_hop_chanid=0,
             total_fees_msat=0,
         )
         pay.save()
@@ -99,6 +101,9 @@ def download_payment_history(*_, **__):
                     debt_msat=last_route.total_fees_msat,
                 )
             stats.save()
+
+        pay.first_hop_pubkey = last_route.hops[0].pub_key
+        pay.first_hop_chanid = last_route.hops[0].chan_id
 
         pay.total_fees_msat = last_route.total_fees_msat
         pay.save()
