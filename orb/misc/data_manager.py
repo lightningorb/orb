@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-22 17:19:01
+# @Last Modified time: 2022-02-26 09:32:32
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -45,7 +45,11 @@ class DataManager(EventDispatcher):
         self.disable_shortcuts = False
         self.save_cert()
         self.lnd = Lnd()
-        self.pubkey = self.lnd.get_info().identity_pubkey
+        try:
+            self.pubkey = self.lnd.get_info().identity_pubkey
+        except:
+            print("unable to get node pubkey")
+            self.pubkey = ""
         self.plugin_registry = {}
 
         self.channels = Channels(self.lnd)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-21 15:31:21
+# @Last Modified time: 2022-02-26 09:59:11
 
 try:
     # not all actions install all requirements
@@ -114,12 +114,15 @@ def build_common(c, env, sep=":"):
         ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
         ("orb/images/shadow_inverted.png", "orb/images/"),
         ("orb/misc/settings.json", "orb/misc/"),
+        ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
         ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
         ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),
         ("orb/apps/auto_fees/appinfo.yaml", "orb/apps/auto_fees/"),
+        ("orb/apps/auto_rebalance/autobalance.py", "orb/apps/auto_rebalance/"),
         ("orb/apps/auto_rebalance/autobalance.kv", "orb/apps/auto_rebalance/"),
         ("orb/apps/auto_rebalance/autobalance.png", "orb/apps/auto_rebalance/"),
         ("orb/apps/auto_rebalance/appinfo.yaml", "orb/apps/auto_rebalance/"),
+        ("orb/apps/auto_max_htlcs/update_max_htlc.py", "orb/apps/auto_max_htlcs/"),
         ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
         ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
         ("video_library.yaml", "."),
@@ -164,10 +167,13 @@ def build_linux(c, env=os.environ):
 
 
 @task
-def build_osx(c, env=os.environ):
+def build_osx(c, do_upload=True, env=os.environ):
     build_common(c=c, env=env, sep=":")
     file_name = dmg(c=c, env=env)
-    upload_to_s3(env, file_name, "lnorb", object_name=f"customer_builds/{file_name}")
+    if do_upload:
+        upload_to_s3(
+            env, file_name, "lnorb", object_name=f"customer_builds/{file_name}"
+        )
 
 
 @task
@@ -201,6 +207,6 @@ def dmg(c, env=os.environ):
         """,
         env=env,
     )
-    build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.dmg"
+    build_name = f"orb-{VERSION}-{os.environ.get('os-name', 'macos-11')}-x86_64.dmg"
     os.rename(f"{name}.dmg", build_name)
     return build_name

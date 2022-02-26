@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-18 19:34:32
+# @Last Modified time: 2022-02-26 10:20:38
 
 from traceback import print_exc
 
@@ -101,7 +101,7 @@ class Channels(EventDispatcher):
         Compute the global ratio, i.e local / capacity.
         """
         local = self.local_balance_include_pending
-        return local / self.capacity
+        return local / self.capacity if self.capacity else 0
 
     @property
     def local_balance(self):
@@ -137,6 +137,8 @@ class Channels(EventDispatcher):
         gr = self.global_ratio
         indices = [i for i, x in enumerate(solution) if x == -1]
         capacity = self.capacity
+        if capacity == 0:
+            return
 
         def search(solution, indices, global_ratio):
             low, mid, high, n = 0, 0, 1, 0

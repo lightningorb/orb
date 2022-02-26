@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 17:09:26
+# @Last Modified time: 2022-02-26 09:45:00
 
 import os
 import sys
@@ -303,7 +303,12 @@ class OrbApp(MDApp):
                 arrow.get(get_license_info()["EXPIRED"], "MMM DD HH:mm:ss YYYY")
                 - arrow.utcnow()
             )
-            print(f"Your license expires in {a.days}")
+            if a.days == 0:
+                print("Your license is expired.")
+            else:
+                print(
+                    f"Your license is valid for another {a.days} day{'s' if a.days > 1 else ''}"
+                )
         except:
             pass
 

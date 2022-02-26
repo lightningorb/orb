@@ -2,13 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-22 17:44:55
+# @Last Modified time: 2022-02-26 09:19:14
 
 import arrow
 from threading import Thread, Lock
 from collections import defaultdict
 from orb.misc import data_manager
 from orb.lnd import Lnd
+from orb.misc.decorators import guarded
 
 lock = Lock()
 
@@ -126,6 +127,7 @@ def download_payment_history(*_, **__):
                 s.debt = 0
                 s.save()
 
+    @guarded
     def func():
         if lock.locked():
             return

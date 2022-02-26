@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 07:16:29
+# @Last Modified time: 2022-02-26 09:18:55
 
 import arrow
+from threading import Thread, Lock
 
 from orb.lnd import Lnd
-from threading import Thread, Lock
+from orb.misc.decorators import guarded
 
 lock = Lock()
 
@@ -51,6 +52,7 @@ def download_forwarding_history(*_, **__):
                 s.helped_earn_msat = 0
                 s.save()
 
+    @guarded
     def func():
         if lock.locked():
             return

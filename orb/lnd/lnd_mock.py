@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 11:37:05
+# @Last Modified time: 2022-02-26 08:35:13
 
 from collections import namedtuple
 from dataclasses import dataclass
@@ -150,6 +150,7 @@ class LndMock(object):
 
     def get_pending_channels(self):
         m = M(
+            total_limbo_balance=1000,
             pending_open_channels=[
                 dict(
                     channel=dict(
@@ -167,7 +168,7 @@ class LndMock(object):
                         channel_point="123:0",
                     )
                 )
-            ]
+            ],
         )
         return m
 
@@ -190,6 +191,7 @@ class LndMock(object):
     ):
         class ForwardHistory:
             forwarding_events = []
+            last_offset_index = 0
 
         return ForwardHistory()
 
@@ -201,3 +203,12 @@ class LndMock(object):
 
     def get_channel_events(self):
         return []
+
+    def list_payments(
+        self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
+    ):
+        class Payments:
+            payments = []
+            last_offset_index = 0
+
+        return Payments()

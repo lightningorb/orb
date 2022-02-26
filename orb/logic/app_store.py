@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 19:05:11
+# @Last Modified time: 2022-02-26 08:20:31
 
 import os
 import sys
@@ -128,7 +128,10 @@ class LocalApp(EventDispatcher):
                     break
         if self.plugin_info.get("icon"):
             self.icon = (self.directory / self.plugin_info.get("icon")).as_posix()
-        self.module_name = os.path.basename(os.path.splitext(self.py)[0])
+
+        self.module_name = (
+            os.path.basename(os.path.splitext(self.py)[0]) if self.py else None
+        )
         self.__import = None
         self.instance = None
         self.classname = None
