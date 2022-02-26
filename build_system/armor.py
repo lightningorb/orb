@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 12:04:08
+# @Last Modified time: 2022-02-26 14:23:31
 
 try:
     # not all actions install all requirements
@@ -85,6 +85,8 @@ pip3.9 install pyarmor==6.6.2 --user;
 pip3.9 install fabric --user;
 pip3.9 install plyer --user;
 pip3.9 install semver --user;
+pip3.9 install matplotlib --user;
+pip3.9 install pandas --user;
     """
 
 
