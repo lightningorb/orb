@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 14:23:31
+# @Last Modified time: 2022-02-26 14:55:11
 
 try:
     # not all actions install all requirements
@@ -131,7 +131,7 @@ def build_common(c, env, sep=":"):
         ("images/ln.png", "images/"),
     ]
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
-    hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import=pkg_resources"
+    hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import fabric --hidden-import=pkg_resources"
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
         f"""pyarmor pack {spec} --with-license outer --name {name} \
