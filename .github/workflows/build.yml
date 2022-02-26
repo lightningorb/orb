@@ -32,7 +32,7 @@ jobs:
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: brew install create-dmg
       - run: python ./build.py test.test
-      - run: python ./build.py armor.build-osx
+      - run: python ./build.py armor.build-osx --do-upload
   build_windows:
     runs-on: ${{ matrix.os }}
     env:

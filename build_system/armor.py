@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 09:59:11
+# @Last Modified time: 2022-02-26 12:04:08
 
 try:
     # not all actions install all requirements
@@ -171,6 +171,7 @@ def build_osx(c, do_upload=True, env=os.environ):
     build_common(c=c, env=env, sep=":")
     file_name = dmg(c=c, env=env)
     if do_upload:
+        print(f"Uploading {file_name} to S3: customer_builds/{file_name}")
         upload_to_s3(
             env, file_name, "lnorb", object_name=f"customer_builds/{file_name}"
         )
