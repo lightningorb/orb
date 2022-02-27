@@ -7,27 +7,69 @@ Installing Orb should be straight-forward. Simply head over to `lnorb.com <https
 
     Download and save orb to your **Desktop computer**, not on your node. Orb connects to LND remotely, and does not run on your node directly.
 
+
+.. note::
+
+    If you have any technical issues during installation, feel free to report them in our `tech-support group <https://t.me/+ItWJsyOBlDBjMmRl>`_
+
+.. note::
+    
+    Please read our `security <https://lnorb.com/security>`_ page before running our software.
+
+.. contents:: Table of Contents
+    :depth: 3
+
+
+
 License.lic
 -----------
 
-Before downloading the trial version, or immediately after payment for the full version, you'll be asked to save your license in a `license.lic` file. After Orb has installed, this `license.lic` file must be saved in the same directory as the orb binary.
+Before downloading the trial version, or immediately after payment for the full version, you'll be asked to save your license in a `license.lic` file. Keep a copy somewhere safe, e.g in your home directory.
 
 
-License.lic on MacOSX
-~~~~~~~~~~~~~~~~~~~~~
+MacOSX
+------
 
-On MacOSX, after opening the DMG and drag & dropping `lnorb` into the `Applications` folder, open Finder, then click on `Go` and `Go to folder`. Paste the following path: `/Applications/lnorb.app/Contents/MacOS`. Finally save your license.lic in that folder.
+- open the DMG
+- drag & drop `lnorb` into the `Applications` folder
+- Open Finder, then click on `Go` and `Go to folder`
+- paste the following path: `/Applications/lnorb.app/Contents/MacOS`
+- copy your license.lic to that folder
+- run the lnorb application
 
+If you get the message "lnorb can't be opened because Apple cannot check it for malicious software":
 
-License.lic on Windows
-~~~~~~~~~~~~~~~~~~~~~~
+- in spotlight, type: Security and Privacy
+- in the Security and Privacy screen, click "Open anyway"
 
-On Windows, after downloading and unzipping Orb, simply save your `license.lic` inside the `lnorb` folder. You are then free to save the `lnorb` folder wherever, e.g in your `program files` directory, and create appropriate launch shortcuts.
+If you are still having issues launching Orb:
 
+- in stoplight type 'terminal'
+- in the terminal paste
+    - cd /Applications/lnorb.app/Contents/MacOS
+    - ./lnorb
+    - report back your issues in our tech-support group
 
-License.lic on Linux
-~~~~~~~~~~~~~~~~~~~~
+Windows
+-------
 
-On Linux, after downloading and untarring Orb, simply cd into the `orb` directory and save your `license.lic`. The linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap.sh and run it once you are comfortable with the modifications it makes to your system's packages.
+On Windows, after downloading Orb:
 
-You're then free to move the orb folder to a directory of your choice (e.g `/opt/` or `~`) and create your alias as required.
+- unzip the downloaded zip file
+- open the `lnorb` folder
+- copy your `license.lic` inside the `lnorb` folder
+- you are then free to save the `lnorb` folder wherever
+    - e.g in your `program files` directory, and create appropriate launch shortcuts
+- run lnorb.exe
+
+Linux
+-----
+
+On Linux, after downloading Orb's tar file
+
+- untar Orb
+- cd into the `orb` directory
+- copy your `license.lic` in that folder
+- the linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap.sh and run it once you are comfortable with the modifications it makes to your system's packages
+- you're then free to move the orb folder to a directory of your choice (e.g `/opt/` or `~`) and create your alias as required
+
