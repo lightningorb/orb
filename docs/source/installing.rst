@@ -30,25 +30,37 @@ Before downloading the trial version, or immediately after payment for the full 
 MacOSX
 ------
 
+Security on OSX can be a little overzealous. Please follow these steps carefully, in order.
+
 - open the DMG
 - drag & drop `lnorb` into the `Applications` folder
+- In Spotlight, type lnorb
+- Once lnorb appears in Spotlight, try running it
+- You may be presented with the following two dialogs:
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Monosnap_2022-03-02_02-52-22.png
+    :width: 500px
+    :align: center
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Monosnap_2022-03-02_02-53-03.png
+    :width: 500px
+    :align: center
+
+- in spotlight, type: Security and Privacy
+- in the Security and Privacy screen, click "Open anyway", and "Open"
 - Open Finder, then click on `Go` and `Go to folder`
 - paste the following path: `/Applications/lnorb.app/Contents/MacOS`
 - copy your license.lic to that folder
 - run the lnorb application
+- Orb should open
 
-If you get the message "lnorb can't be opened because Apple cannot check it for malicious software":
-
-- in spotlight, type: Security and Privacy
-- in the Security and Privacy screen, click "Open anyway"
-
-If you are still having issues launching Orb:
+If Orb does not open:
 
 - in stoplight type 'terminal'
 - in the terminal paste
     - cd /Applications/lnorb.app/Contents/MacOS
     - ./lnorb
-    - report back your issues in our tech-support group
+    - report back your issues in our tech-support group (link at top of this page)
 
 Windows
 -------
