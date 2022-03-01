@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-02 04:14:33
+# @Last Modified time: 2022-03-02 04:15:21
 
 import re
 import os
@@ -54,7 +54,7 @@ def release(c, minor=False, patch=False):
     c.run("git commit -am 'version bump'")
     c.run("git push")
     tags.tag(c)
-    tags.push()
+    tags.push(c)
 
 
 namespace = Collection(
