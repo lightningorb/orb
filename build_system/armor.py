@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 14:55:11
+# @Last Modified time: 2022-03-01 14:24:55
 
 try:
     # not all actions install all requirements
@@ -85,8 +85,6 @@ pip3.9 install pyarmor==6.6.2 --user;
 pip3.9 install fabric --user;
 pip3.9 install plyer --user;
 pip3.9 install semver --user;
-pip3.9 install matplotlib --user;
-pip3.9 install pandas --user;
     """
 
 
@@ -131,7 +129,7 @@ def build_common(c, env, sep=":"):
         ("images/ln.png", "images/"),
     ]
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
-    hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect --hidden-import pandas.plotting._matplotlib --hidden-import fabric --hidden-import=pkg_resources"
+    hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
     c.run(
         f"""pyarmor pack {spec} --with-license outer --name {name} \
