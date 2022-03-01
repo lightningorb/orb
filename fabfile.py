@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-02 04:07:24
+# @Last Modified time: 2022-03-02 04:09:36
 
 import re
 import os
@@ -43,6 +43,9 @@ def release(c, minor: bool = False, patch: bool = False):
         return
     if minor and patch:
         exit(-1)
+    if not minor or patch:
+        print("Need either minor or patch")
+        exit(-1)
     release_notes.create(c)
     if patch:
         versioning.bump_patch(c)
@@ -50,7 +53,7 @@ def release(c, minor: bool = False, patch: bool = False):
         versioning.bump_minor(c)
     c.run("git commit -am 'version bump'")
     c.run("git push")
-    tags.tag()
+    tags.tag(c)
     tags.push()
 
 
