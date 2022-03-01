@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-01 10:12:24
+# @Last Modified time: 2022-03-01 11:24:32
 
 import arrow
 from orb.misc import data_manager
@@ -24,15 +24,24 @@ def get_code():
     return get_license_info()["CODE"]
 
 
-get_days_left = lambda: (
-    arrow.get(get_license_info()["EXPIRED"], "MMM DD HH:mm:ss YYYY") - arrow.utcnow()
-).days
-is_valid = lambda: get_days_left() > 0
+def get_days_left():
+    try:
+        from pytransform import get_license_info
+    except:
+        pass
+    return (
+        arrow.get(get_license_info()["EXPIRED"], "MMM DD HH:mm:ss YYYY")
+        - arrow.utcnow()
+    ).days
+
+
+def is_valid():
+    return get_days_left() > 0
 
 
 def is_trial():
     _, _, paid_status = get_code().split("_")
-    return paid_status == "trial"
+    return paid_status == "eval"
 
 
 def is_satoshi():
