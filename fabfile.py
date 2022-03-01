@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-02 04:13:27
+# @Last Modified time: 2022-03-02 04:14:33
 
 import re
 import os
@@ -43,7 +43,7 @@ def release(c, minor=False, patch=False):
         return
     if minor and patch:
         exit(-1)
-    if not minor or patch:
+    if not (minor or patch):
         print("Need either minor or patch")
         exit(-1)
     release_notes.create(c)
