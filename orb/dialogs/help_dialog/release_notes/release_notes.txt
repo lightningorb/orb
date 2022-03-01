@@ -1,6 +1,7 @@
 0.12.5
 ----
 
+default apps should get loaded properly on all platforms
 updated install instructions
 Test & document extending PYTHONPATH [#196]
 remove pandas and matplotlib from default dependencies [#197]
