@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-16 13:09:06
+# @Last Modified time: 2022-03-02 04:07:24
 
 import re
 import os
@@ -32,13 +32,31 @@ from build_system import alembic
 def deploy_ios(c, bump: bool = False):
     if bump:
         versioning.bump_patch(c)
-    documentation.build(c)
     release_notes.create(c)
     ios.update(c)
 
 
+@task
+def release(c, minor: bool = False, patch: bool = False):
+    if not "working tree clean" in c.run("git status").stdout:
+        print("Working directory not clean")
+        return
+    if minor and patch:
+        exit(-1)
+    release_notes.create(c)
+    if patch:
+        versioning.bump_patch(c)
+    if minor:
+        versioning.bump_minor(c)
+    c.run("git commit -am 'version bump'")
+    c.run("git push")
+    tags.tag()
+    tags.push()
+
+
 namespace = Collection(
     katching,
+    release,
     deploy_ios,
     third_party,
     versioning,

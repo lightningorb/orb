@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 08:20:31
+# @Last Modified time: 2022-03-02 03:30:12
 
 import os
 import sys
@@ -34,7 +34,7 @@ class Apps(EventDispatcher):
         self.apps = {}
 
     def load_from_disk(self):
-        for d in [pref_path("app"), Path("orb/apps")]:
+        for d in [pref_path("app"), Path(__file__).parent.parent / "apps"]:
             for plugin_info_file in d.glob("*/appinfo.yaml"):
                 app = LocalApp(plugin_info_file)
                 self.apps[app.uuid] = app

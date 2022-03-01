@@ -1,6 +1,29 @@
-0.12.2
+0.12.5
 ----
 
+updated install instructions
+Test & document extending PYTHONPATH [#196]
+remove pandas and matplotlib from default dependencies [#197]
+[dev] fixed issue with trial version
+version bump
+[dev] implemented call-home functionality
+[dev] add paid component to license code
+[dev] correct license paths
+[dev] add invoice id to license code
+updated site
+updated install instructions
+[dev] adding fabric to build
+[dev] adding matplotlib and pandas to build
+[dev] build
+Merge branch 'build' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    build
+no longer saving payments - version bump
+[dev] fixed build issues
+updated site
+updated site
+updated pricing
+no longer saving payments - version bump
 debt hot-fix
 Merge branch 'site' of
     https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
@@ -349,6 +372,139 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.12.5
+-------
+
+version bump
+[dev] implemented call-home functionality
+[dev] add paid component to license code
+[dev] correct license paths
+[dev] add invoice id to license code
+updated site
+updated install instructions
+[dev] adding fabric to build
+[dev] adding matplotlib and pandas to build
+[dev] build
+Merge branch 'build' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    build
+no longer saving payments - version bump
+[dev] fixed build issues
+updated site
+updated site
+updated pricing
+no longer saving payments - version bump
+debt hot-fix
+Merge branch 'site' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    site
+updated download page
+updated copy
+updated docs
+updated docs
+updated docs
+updated docs
+[dev] fix build system
+version bump
+no longer using match fee rate
+improved syncing of forwarding and payment history improved auto-
+    rebalancing global pnl channel pln
+now tracking channel earnings in a database
+now displaying balanced ratio speedups in channels class
+updated copy
+added channel highlighter page to docs
+updated copy
+updated copy
+Merge branch 'site' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    site
+fixed buy / eval link. added foss and investor relations pages
+fixed buy / eval link. added foss and investor relations pages
+fixed buy / eval link. added foss and investor relations pages
+[dev] enable balance hud clock
+Balance HUD still incorrect #187
+added FOSS page
+IOS code obfuscation [#185]
+[dev] improved balanced ratio
+[dev] restricting functionality according to licensing
+Merge branch 'site' into main
+[dev] set prices back to non-test prices
+[dev] skip armor registration step in app routes
+no longer binding licenses to mac address
+Merge branch 'site' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    site
+license evaluation db schema change
+[dev] better mac address validation
+[dev] adding eval license model
+[dev] upgraded site to include evaluation copy (pre-migration)
+Merge branch 'site' into main
+[dev] grpc no longer locks the UI [dev] close channel dialog can now
+    force-close
+bump prices back to normal
+[dev] redirect might be taking place
+[dev] redirect might be taking place
+[dev] on download page use fqdn
+[dev] updated test workflow
+[dev] updated test workflow
+[dev] updated test workflow
+[dev] updated test workflow
+added 'helped earn' to attributes editor
+further bug fixes and speedups with highlighter
+highlighter bug fix
+Merge pull request #178 from
+    bc31164b-cfd5-4a63-8144-875100622b2d/fix_fowarding_duplicates
+Merge branch 'main' into fix_fowarding_duplicates
+fix misspellings
+Highlighter caching
+Merge pull request #177 from
+    bc31164b-cfd5-4a63-8144-875100622b2d/fix_fowarding_duplicates
+cleaning up worklog
+merging fix_fowarding_events
+[dev] channel now include a 'helped_earn' property
+compute balanced ratios for channels
+sat animations smoother
+added highlighter dialog
+changed autofees and autobalance defaults lots of improvements with
+    how HTLCs handled and accounted for auto channel selector
+    improvements better color management htlcs can no be debugged via
+    the settings
+autofees UI
+fee widget flashes when updated
+auto-rebalances can now be stopped properly
+[dev] some refactoring in chord widget
+auto rebalance ui
+autofees and autobalance brought back into the main app
+[dev] added tests to main [dev] data_manager now has a plugin registry
+    [dev] plugins can receive htlcs
+changed site meta tags
+payment flow working well
+Channel spotlighting when node peer is selected #172
+Delay in Channel Editor when click on channel #174
+updated build file
+added licensing to checkout
+[dev] fix osx build
+[dev] bug fixes
+[dev] only import kivy related modules in Lnd class, since we're
+    dealing with __init__
+updated docs
+updated docs -version bump
+updated readme
+[dev] switch builds back to build branch
+clock-out
+rounding with msats
+clock-in
+clock-out
+clock-in
+clock-out
+using last_offset_index from lnd, still getting discrepancy
+renaming foward->forward
+clock-in
+clock-out
+ignoring hourly config
+clock-in
 
 
 v0.10.0
