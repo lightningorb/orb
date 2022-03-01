@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-02 04:09:36
+# @Last Modified time: 2022-03-02 04:13:27
 
 import re
 import os
@@ -37,7 +37,7 @@ def deploy_ios(c, bump: bool = False):
 
 
 @task
-def release(c, minor: bool = False, patch: bool = False):
+def release(c, minor=False, patch=False):
     if not "working tree clean" in c.run("git status").stdout:
         print("Working directory not clean")
         return
