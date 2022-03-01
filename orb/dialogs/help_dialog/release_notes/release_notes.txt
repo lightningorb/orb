@@ -1,6 +1,10 @@
 0.12.5
 ----
 
+[dev] updated fabfile
+[dev] updated fabfile
+fabfile
+version bump
 default apps should get loaded properly on all platforms
 updated install instructions
 Test & document extending PYTHONPATH [#196]
