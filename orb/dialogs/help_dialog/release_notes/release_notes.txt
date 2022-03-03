@@ -1,6 +1,11 @@
-0.12.5
+0.12.6
 ----
 
+using image hash properly. ad interval set to 60 seconds
+basic ad banner
+advertisers can now create ads on the site
+[dev] updated fabfile
+version bump
 [dev] updated fabfile
 [dev] updated fabfile
 fabfile
@@ -377,6 +382,21 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.12.6
+-------
+
+version bump
+[dev] updated fabfile
+[dev] updated fabfile
+fabfile
+version bump
+default apps should get loaded properly on all platforms
+updated install instructions
+Test & document extending PYTHONPATH [#196]
+remove pandas and matplotlib from default dependencies [#197]
+[dev] fixed issue with trial version
 
 
 v0.12.5
