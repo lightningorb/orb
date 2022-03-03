@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-23 13:26:39
+# @Last Modified time: 2022-03-03 11:05:18
 
 import threading
 import requests
+import random
 
 from kivy.uix.label import Label
 from kivy.clock import mainthread
@@ -17,6 +18,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.app import App
+from kivy.uix.image import AsyncImage
 
 from orb.misc.prefs import is_rest
 from orb.misc.decorators import silent, guarded
@@ -466,3 +468,15 @@ class HUDEvaluation(Label):
             return f"Orb {e} Edition\nEvaluation Copy"
         else:
             return ""
+
+
+class HUDBanner(AsyncImage):
+    def __init__(self, *args, **kwargs):
+        super(HUDBanner, self).__init__(
+            *args, source="https://lnorb.com/api/ads/any", **kwargs
+        )
+        self.source = "https://lnorb.com/api/ads/any"
+        Clock.schedule_interval(self.change_banner, 10)
+
+    def change_banner(self, *_):
+        self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"

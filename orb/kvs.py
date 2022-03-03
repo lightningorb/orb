@@ -1915,6 +1915,10 @@ Builder.load_string('''
     size: self.texture_size
     halign: 'center'
 
+<HUDBanner>:
+    size_hint: None, None
+    size: self.texture_size
+
 <HUDFeeSummary>:
     id: hud_label
     text: root.hud
@@ -2159,6 +2163,7 @@ Builder.load_string('''
     anchor_x: 'center'
     anchor_y: 'top'
     HUDEvaluation
+    HUDBanner
     Widget:
     
 
