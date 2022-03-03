@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-03 13:02:55
+# @Last Modified time: 2022-03-04 05:26:10
 
 import threading
 import requests
 import random
+import time
 
+from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.clock import mainthread
 from kivy.uix.floatlayout import FloatLayout
@@ -472,11 +474,18 @@ class HUDEvaluation(Label):
 
 class HUDBanner(AsyncImage):
     def __init__(self, *args, **kwargs):
-        super(HUDBanner, self).__init__(
-            *args, source="https://lnorb.com/api/ads/any", **kwargs
-        )
+        super(HUDBanner, self).__init__(*args, **kwargs)
+        self.last_motion = time.time()
+
+        def on_motion(*_):
+            self.last_motion = time.time()
+
+        self.change_banner()
         Clock.schedule_interval(self.change_banner, 60)
-        Clock.schedule_once(self.change_banner, 0)
+        Window.bind(on_motion=on_motion)
 
     def change_banner(self, *_):
-        self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"
+        print(time.time(), self.last_motion)
+        if time.time() - self.last_motion < 60:
+            print("yup")
+            self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"
