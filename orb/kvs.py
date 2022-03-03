@@ -54,69 +54,6 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
-########################################################################################
-# INGEST INVOICES
-########################################################################################
-
-<IngestInvoicesScreen>:
-    size_hint: .8, .8
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    count: count
-    title: 'Ingest Invoices'
-    BoxLayout:
-        padding: 20
-        spacing: 20
-        orientation: 'vertical'
-        GridLayout:
-            cols: 1
-            padding: 20
-            spacing: 20
-            BoxLayout:
-                size_hint_y: None
-                height: 150
-                orientation: 'horizontal'
-                Label:
-                    text: "Ingest"
-                    size_hint_y: None
-                    height: 150
-                TextInput:
-                    id: invoices
-                    multiline: True
-                    size_hint_y: None
-                    height: 150
-            Label:
-                id: count
-                size_hint_y: None
-                height: 50
-                text: ''
-            ScrollView:
-                size_hint: 0.5, 1
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                do_scroll_x: False
-                GridLayout:
-                    id: scroll_view
-                    cols: 1
-                    padding: 50
-                    spacing: 50
-                    size_hint_y: None
-                    height: self.minimum_height
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: 80
-                padding: 50
-                spacing: 50
-                MDRaisedButton:
-                    id: ingest_button
-                    text: 'ingest'
-                    size_hint_y: None
-                    height: 80
-                    width: 200
-                    on_release: root.do_ingest(invoices.text)
-
-''')
-Builder.load_string('''
 #: import dp kivy.metrics.dp
 
 <CloseChannel>:
@@ -455,105 +392,6 @@ Builder.load_string('''
             width: 100
             size_hint_y: 1
             md_bg_color: 0.3,0.3,0.3,1
-
-''')
-Builder.load_string('''
-########################################################################################
-# INVOICE
-########################################################################################
-
-#:import datetime datetime.datetime
-
-
-<Invoice>
-    orientation: 'vertical'
-    size_hint_y: None
-    height: 300
-    padding: 10
-    spacing: 10
-    canvas.before:
-        Color:
-            rgba: 55 / 255, 55 / 255, 55 / 255, 0.5
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        height: 40
-        Label:
-            text: 'Raw: '
-            height: 40
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 40
-            text: root.destination[:10] + '...'
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        height: 40
-        Label:
-            text: 'Amount: '
-            height: 40
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 40
-            text: f'S{int(root.num_satoshis):,}'
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        height: 40
-        Label:
-            text: 'Expires in: '
-            height: 40
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-        Label:
-            id: expiry_label
-            size_hint_y: None
-            height: 40
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-    BoxLayout:
-        orientation: 'horizontal'
-        height: 40
-        Label:
-            text: 'Description: '
-            height: 40
-            width: 200
-            size_hint_y: None
-            size_hint_x: None
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-        Label:
-            size_hint_y: None
-            height: 40
-            text: root.description[:50]
-            valign: "middle"
-            halign: "left"
-            text_size: self.size
-
 
 ''')
 Builder.load_string('''
@@ -1465,6 +1303,168 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
+########################################################################################
+# INGEST INVOICES
+########################################################################################
+
+<IngestInvoices>:
+    size_hint: .8, .8
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    count: count
+    title: 'Ingest Invoices'
+    BoxLayout:
+        padding: 20
+        spacing: 20
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            padding: 20
+            spacing: 20
+            BoxLayout:
+                size_hint_y: None
+                height: 150
+                orientation: 'horizontal'
+                Label:
+                    text: "Ingest"
+                    size_hint_y: None
+                    height: 150
+                TextInput:
+                    id: invoices
+                    multiline: True
+                    size_hint_y: None
+                    height: 150
+            Label:
+                id: count
+                size_hint_y: None
+                height: 50
+                text: ''
+            ScrollView:
+                size_hint: 0.5, 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: False
+                GridLayout:
+                    id: scroll_view
+                    cols: 1
+                    padding: 50
+                    spacing: 50
+                    size_hint_y: None
+                    height: self.minimum_height
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 80
+                padding: 50
+                spacing: 50
+                MDRaisedButton:
+                    id: ingest_button
+                    text: 'ingest'
+                    size_hint_y: None
+                    height: 80
+                    width: 200
+                    on_release: root.do_ingest(invoices.text)
+
+''')
+Builder.load_string('''
+########################################################################################
+# INVOICE
+########################################################################################
+
+#:import datetime datetime.datetime
+
+
+<Invoice>
+    orientation: 'vertical'
+    size_hint_y: None
+    height: 300
+    padding: 10
+    spacing: 10
+    canvas.before:
+        Color:
+            rgba: 55 / 255, 55 / 255, 55 / 255, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        height: 40
+        Label:
+            text: 'Raw: '
+            height: 40
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 40
+            text: root.destination[:10] + '...'
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        height: 40
+        Label:
+            text: 'Amount: '
+            height: 40
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 40
+            text: f'S{int(root.num_satoshis):,}'
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        height: 40
+        Label:
+            text: 'Expires in: '
+            height: 40
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+        Label:
+            id: expiry_label
+            size_hint_y: None
+            height: 40
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        height: 40
+        Label:
+            text: 'Description: '
+            height: 40
+            width: 200
+            size_hint_y: None
+            size_hint_x: None
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+        Label:
+            size_hint_y: None
+            height: 40
+            text: root.description[:50]
+            valign: "middle"
+            halign: "left"
+            text_size: self.size
+
+
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -1594,7 +1594,7 @@ Builder.load_string('''
 #:import PlayerDialog orb.dialogs.player_dialog.PlayerDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
-#:import IngestInvoicesScreen orb.screens.ingest_invoices_screen.IngestInvoicesScreen
+#:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
 #:import PayScreen orb.screens.pay_screen.PayScreen
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
@@ -1690,7 +1690,7 @@ Builder.load_string('''
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Ingest Invoices"
-                    on_press: IngestInvoicesScreen().open()
+                    on_press: IngestInvoices().open()
                     on_release: app_menu.close_all()
                 # ContextMenuTextItem:
                 #     text: "Rankings"

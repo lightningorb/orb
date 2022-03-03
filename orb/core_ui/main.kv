@@ -7,7 +7,7 @@
 #:import PlayerDialog orb.dialogs.player_dialog.PlayerDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
-#:import IngestInvoicesScreen orb.screens.ingest_invoices_screen.IngestInvoicesScreen
+#:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
 #:import PayScreen orb.screens.pay_screen.PayScreen
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
@@ -103,7 +103,7 @@
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Ingest Invoices"
-                    on_press: IngestInvoicesScreen().open()
+                    on_press: IngestInvoices().open()
                     on_release: app_menu.close_all()
                 # ContextMenuTextItem:
                 #     text: "Rankings"

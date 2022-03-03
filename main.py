@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 17:06:32
+# @Last Modified time: 2022-03-04 03:14:19
 
 import sys
 import os
@@ -44,7 +44,7 @@ from orb.screens.channels_screen import ChannelsScreen
 from orb.screens.pay_screen import PayScreen
 from orb.screens.open_channel_screen import OpenChannelScreen
 from orb.screens.connect_screen import ConnectScreen
-from orb.screens.ingest_invoices_screen import IngestInvoicesScreen
+from orb.dialogs.ingest_invoices.ingest_invoices import IngestInvoices
 from orb.screens.console.console_screen import ConsoleScreen
 from orb.dialogs.player_dialog import PlayerDialog
 from orb.screens.send_coins import SendCoins
@@ -84,7 +84,7 @@ keep(ChannelsScreen)
 keep(PayScreen)
 keep(OpenChannelScreen)
 keep(ConnectScreen)
-keep(IngestInvoicesScreen)
+keep(IngestInvoices)
 keep(ConsoleScreen)
 keep(PlayerDialog)
 keep(SendCoins)

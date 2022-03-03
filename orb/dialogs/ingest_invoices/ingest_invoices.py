@@ -2,58 +2,25 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-15 15:28:40
+# @Last Modified time: 2022-03-04 03:10:56
 
-import arrow
-from datetime import timedelta
 from traceback import print_exc
 from threading import Thread
 
-from kivy.clock import Clock
 from kivy.clock import mainthread
-from kivy.properties import ObjectProperty, NumericProperty, BooleanProperty
-from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
 
-from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.lnd import Lnd
 from orb.logic import licensing
+from orb.dialogs.ingest_invoices.invoice import Invoice
+from orb.components.popup_drop_shadow import PopupDropShadow
 
 
-class Invoice(BoxLayout):
-    raw = ObjectProperty("")
-    destination = ObjectProperty("")
-    num_satoshis = ObjectProperty(0)
-    timestamp = ObjectProperty(0)
-    expiry = ObjectProperty(0)
-    description = ObjectProperty("")
-    paid = BooleanProperty(False)
-    id = NumericProperty(0)
-
-    def __init__(self, *args, **kwargs):
-        super(Invoice, self).__init__(*args, **kwargs)
-
-        self.schedule = Clock.schedule_interval(self.update, 1)
-
-    def update(self, *args):
-        delta = int(self.timestamp) + int(self.expiry) - int(arrow.utcnow().timestamp())
-        if delta < 0:
-            self.ids.expiry_label.text = "expired"
-        else:
-            self.ids.expiry_label.text = (
-                arrow.utcnow()
-                .shift(seconds=delta)
-                .humanize(granularity=["hour", "minute", "second"])
-            )
-
-    def dismiss(self):
-        Clock.unschedule(self.schedule)
-
-
-class IngestInvoicesScreen(PopupDropShadow):
+class IngestInvoices(PopupDropShadow):
     count = ObjectProperty(None)
 
     def __init__(self, **kwargs):
-        super(IngestInvoicesScreen, self).__init__(**kwargs)
+        super(IngestInvoices, self).__init__(**kwargs)
         self.ids.scroll_view.clear_widgets()
         for inv in self.load():
             self.ids.scroll_view.add_widget(Invoice(**inv.__data__))
@@ -61,7 +28,7 @@ class IngestInvoicesScreen(PopupDropShadow):
     def dismiss(self, *args):
         for invoices in self.ids.scroll_view.children:
             invoices.dismiss()
-        return super(IngestInvoicesScreen, self).dismiss(*args)
+        return super(IngestInvoices, self).dismiss(*args)
 
     def load(self):
         from orb.store import model
@@ -71,7 +38,7 @@ class IngestInvoicesScreen(PopupDropShadow):
             .select()
             .where(model.Invoice.expired() == False, model.Invoice.paid == False)
         )
-        self.count.text = f"Invoices: {len(invoices)}"
+        self.count.text = f"{len(invoices)}"
         is_satoshi = licensing.is_satoshi()
         is_trial = licensing.is_trial()
         restrict = (not is_satoshi) or is_trial
@@ -125,7 +92,7 @@ class IngestInvoicesScreen(PopupDropShadow):
                         not_ingested.append(line)
 
             num_invoices = int(self.count.text) + ingested_count
-            self.count.text = num_invoices
+            self.count.text = str(num_invoices)
             update(not_ingested)
             if restrict and num_invoices >= 1:
                 self.ids.ingest_button.disabled = True
