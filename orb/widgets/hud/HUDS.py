@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-03 11:05:18
+# @Last Modified time: 2022-03-03 13:02:55
 
 import threading
 import requests
@@ -475,8 +475,8 @@ class HUDBanner(AsyncImage):
         super(HUDBanner, self).__init__(
             *args, source="https://lnorb.com/api/ads/any", **kwargs
         )
-        self.source = "https://lnorb.com/api/ads/any"
-        Clock.schedule_interval(self.change_banner, 10)
+        Clock.schedule_interval(self.change_banner, 60)
+        Clock.schedule_once(self.change_banner, 0)
 
     def change_banner(self, *_):
         self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"
