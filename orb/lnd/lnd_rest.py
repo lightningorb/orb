@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 15:27:37
+# @Last Modified time: 2022-03-04 07:47:03
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -98,6 +98,10 @@ class LndREST(LndBase):
         url = f"{self.fqdn}/v1/graph/node/{pub_key}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json()).node.alias
+
+    @lru_cache(maxsize=None)
+    def get_node_info(self, pub_key):
+        return self.__get(f"/v1/graph/node/{pub_key}")
 
     def fee_report(self):
         url = f"{self.fqdn}/v1/fees"
@@ -385,6 +389,32 @@ class LndREST(LndBase):
     ):
         url = f"/v1/payments?include_incomplete={'true' if include_incomplete else 'false'}&index_offset={index_offset}&max_payments={max_payments}"
         return self.__get(url)
+
+    def batch_open(self, pubkeys, amounts, sat_per_vbyte):
+        """
+        lncli: batchopenchannel BatchOpenChannel attempts to open multiple
+        single-funded channels in a single transaction in an atomic way.
+        This means either all channel open requests succeed at once or all
+        attempts are aborted if any of them fail. This is the safer
+        variant of using PSBTs to manually fund a batch of channels through
+        the OpenChannel RPC.
+        """
+        chans = [
+            dict(
+                node_pubkey=encode_pk(pk),
+                local_funding_amount=str(amount),
+                push_sat=0,
+                private=False,
+                min_htlc_msat=1000,
+            )
+            for pk, amount in zip(pubkeys, amounts)
+        ]
+        data = {
+            "channels": chans,
+            "sat_per_vbyte": str(sat_per_vbyte),
+            "spend_unconfirmed": False,
+        }
+        return self.__post(url="/v1/channels/batch", data=data)
 
     def __get(self, url):
         """
