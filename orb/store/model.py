@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-25 10:04:50
+# @Last Modified time: 2022-03-04 06:10:04
 
 import arrow
 from peewee import *
@@ -94,6 +94,36 @@ class LNDHop(Model):
 
     class Meta:
         database = get_db(payments_db_name)
+
+
+class Payment(Model):
+    amount = IntegerField()
+    dest = CharField()
+    fees = IntegerField()
+    succeeded = BooleanField()
+    timestamp = IntegerField()
+
+    class Meta:
+        database = get_db(path_finding_db_name)
+
+
+class Attempt(Model):
+    code = IntegerField()
+    weakest_link_pk = CharField()
+    succeeded = BooleanField()
+    payment = ForeignKeyField(Payment, backref="attempts")
+
+    class Meta:
+        database = get_db(path_finding_db_name)
+
+
+class Hop(Model):
+    pk = CharField()
+    succeeded = BooleanField()
+    attempt = ForeignKeyField(Attempt, backref="hops")
+
+    class Meta:
+        database = get_db(path_finding_db_name)
 
 
 class ChannelStats(Model):

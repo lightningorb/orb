@@ -1692,10 +1692,10 @@ Builder.load_string('''
                     text: "Ingest Invoices"
                     on_press: IngestInvoices().open()
                     on_release: app_menu.close_all()
-                # ContextMenuTextItem:
-                #     text: "Rankings"
-                #     on_press: Rankings().open()
-                #     on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Rankings"
+                    on_press: Rankings().open()
+                    on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Forwarding History"
                     ContextMenu:

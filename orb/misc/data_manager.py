@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-25 10:10:49
+# @Last Modified time: 2022-03-04 06:16:34
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -74,6 +74,7 @@ class DataManager(EventDispatcher):
         db_create_tables.create_htlcs_tables()
         db_create_tables.create_channel_stats_tables()
         db_create_tables.create_payments_tables()
+        db_create_tables.create_path_finding_tables()
 
     def save_cert(self):
         """

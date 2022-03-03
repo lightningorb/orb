@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-25 10:58:27
+# @Last Modified time: 2022-01-14 20:36:26
 
 import json
 import threading
@@ -109,17 +109,34 @@ def pay_thread(
     )
     has_next = False
     count = 0
+    payment = model.Payment(
+        amount=int(payment_request.num_satoshis),
+        dest=payment_request.destination,
+        fees=fee_limit_sat,
+        succeeded=False,
+        timestamp=int(arrow.now().timestamp()),
+    )
     while routes.has_next() and not stopped():
         if count > max_paths:
             return PaymentStatus.max_paths_exceeded
         count += 1
         has_next = True
         route = routes.get_next()
+        with lock:
+            payment.save()
         if route:
-            for j, hop in enumerate(route.hops):
-                node_alias = Lnd().get_node_alias(hop.pub_key)
-                text = f"{j:<5}:        {node_alias}"
-                print(f"T{thread_n}: {text}")
+            attempt = model.Attempt(
+                payment=payment, weakest_link_pk="", code=0, succeeded=False
+            )
+            with lock:
+                attempt.save()
+                for j, hop in enumerate(route.hops):
+                    node_alias = Lnd().get_node_alias(hop.pub_key)
+                    text = f"{j:<5}:        {node_alias}"
+                    print(f"T{thread_n}: {text}")
+                    # no actual need for hops for now
+                    p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
+                    p.save()
             try:
                 response = Lnd().send_payment(payment_request, route)
             except Exception as e:
@@ -154,8 +171,25 @@ def pay_thread(
                 print(
                     f"T{thread_n}: SUCCESS: {forex(response.route.total_amt)} (fees: {forex(response.route.total_fees)})"
                 )
+                attempt.succeeded = True
+                payment.succeeded = True
+                payment.fees = route.total_fees
+                with lock:
+                    for hop in attempt.hops:
+                        hop.succeeded = True
+                        hop.save()
+                    attempt.save()
+                    payment.save()
                 return PaymentStatus.success
             else:
+                attempt.code = response.failure.code if response else -1000
+                attempt.weakest_link_pk = (
+                    get_failure_source_pubkey(response, route)
+                    if response
+                    else route.hops[-1].pub_key
+                )
+                with lock:
+                    attempt.save()
                 handle_error(response, route, routes)
     if not has_next:
         print(f"T{thread_n}: No routes found!")

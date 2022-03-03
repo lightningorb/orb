@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 05:26:10
+# @Last Modified time: 2022-03-04 07:02:26
 
 import threading
 import requests
@@ -485,7 +485,5 @@ class HUDBanner(AsyncImage):
         Window.bind(on_motion=on_motion)
 
     def change_banner(self, *_):
-        print(time.time(), self.last_motion)
         if time.time() - self.last_motion < 60:
-            print("yup")
             self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"

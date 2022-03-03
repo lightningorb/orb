@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-25 10:09:38
+# @Last Modified time: 2022-03-04 06:11:03
 
 import os
 from pathlib import Path
@@ -14,6 +14,7 @@ from kivy.app import App
 
 from orb.misc.utils import pref
 
+path_finding_db_name = "path_finding"
 payments_db_name = "payments_v2"
 aliases_db_name = "aliases"
 invoices_db_name = "invoices"

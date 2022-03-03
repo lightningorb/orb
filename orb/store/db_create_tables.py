@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-25 10:05:13
+# @Last Modified time: 2022-03-04 06:11:53
 
 from orb.store.db_meta import *
 from orb.store.model import *
@@ -20,6 +20,14 @@ def create_forwarding_tables():
     db = get_db(forwarding_events_db_name)
     try:
         db.create_tables([ForwardEvent])
+    except:
+        pass
+
+
+def create_path_finding_tables():
+    db = get_db(path_finding_db_name)
+    try:
+        db.create_tables([Payment, Attempt, Hop])
     except:
         pass
 
