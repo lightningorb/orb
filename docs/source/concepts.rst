@@ -3,7 +3,11 @@ Concepts
 
 Fortunately there aren't many new concepts in Orb, and rightly so: there is no re-inventing of the wheel necessary here.
 
-However it is worth getting a firm grasp of the terms `channel ratio`, `global ratio` and `balanced ratio` as they are used a lot.
+However it is worth getting a firm grasp of the terms `channel ratio`, `override ratio`, `global ratio` and `balanced ratio` as they are used a lot.
+
+.. note::
+   
+   This section is somewhat technical. It is placed upstream of the practical guides as understanding these concepts first is a technical pre-requisite, however it is not a strict one, so feel free to skip ahead and return to these concepts later to gain a better understanding.
 
 .. contents:: Table of Contents
     :depth: 3
@@ -26,6 +30,11 @@ Dealing with channel ratios has several advantages:
 - Values are between 0 and 1
 - When discussing channel balancedness, the discreet local remote and outbound values are irrelevant.
 
+Override Ratio
+--------------
+
+The override ratio is where the node runner wants the ratio to be. It is a way for the node runner to dictate the desired ratio for a channel.
+
 Global Ratio
 ------------
 
@@ -36,22 +45,66 @@ A global ratio of `0.5` signals the node has the same amount of outbound as inbo
 Balanced Ratio
 --------------
 
-The term **balanced ratio** applies to channels: it represents where the ratio should ideally be, were the channel perfectly balanced.
+The term **balanced ratio** signals where the ratio should ideally be, were the channel perfectly balanced. The **balanced ratio** is the channel's **optimal** ratio.
 
-Orb uses channel balanced ratios when automatically picking channels for payments, for example, or rebalances. It also uses the balanced ratio in automated fee-setting, to try and nudge the channel's liquidity towards its balanced ratio.
+Let's work through some simple examples, as it will help elucidate these concepts.
 
-With a global ratio of `0.5`, the balanced ratio of each channel would also be `0.5`. However let's think of a real world scenario where manipulating balanced ratios becomes very useful.
+Example 1
+~~~~~~~~~
 
-Let's say you have the following channels:
+Let's begin with a simple node setup, with 4 balanced channels of 10M each. This gives us a capacity of 40M, and outbound of 20M, inbound of 20M, and a global ratio of .5.
 
-.. code::
 
-   Channel / Peer: A,    B,    C,    D,    E
-   Capacity:       100,  100,  200   300,  200
-   Local Balance:  50,   50,   100,  150,  50
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/2022-03-04+12.43.50.jpg
+   :align: center
+   :scale: 80%
 
-Notice all channels are balanced, with the exception of E. Now let's say we want to force the ratios of B and D to remain `0.1`.
 
-For example, B and D could be disproportionally huge LNBIG channels that were opened to our node. To avoid all our liquidity getting sucked up in huge channels, we can set their ratio to a very low value.
+Now let's say channel A is a strong drain. It then makes sense to specify an override ratio of .8 (for example). This helps keep more liquidity outbound, which is where it is of use. However those extra 3M need to be borrowed from B, C and D, leaving us with balanced ratios of .4.
 
-TBD
+In other words, if we want a ratio of .8 on A, we need ratios of .4 on all the other channels.
+
+
+Example 2
+~~~~~~~~~
+
+This example is identical to the previous one, although channel A now has a capacity of 20M. 
+
+
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/2022-03-04+12.44.00.jpg
+   :align: center
+   :scale: 80%
+
+
+Therefore this time, we need to borrow double the amount from other channels.
+
+
+Example 3
+~~~~~~~~~
+
+This example is slightly more realistic; it features a broad range of capacities: 20M, 100M, 10M, 10M. The starting ratios are: .4, .1, .5, .6. The goal is to:
+
+- Override A's ratio to 0.8 (since it is a drain)
+- Keep B's ratio to 0.1 (for example, someone could have opened a very large channel to your node)
+- Keep the ratios of the other channels (C, D) 'balanced'.
+
+.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/2022-03-04+12.44.07.jpg
+   :align: center
+   :scale: 80%
+
+It turns out the balanced ratios for C and D are 0.35.
+
+Bonus: in example 3, we are explicitely setting B's ratio to 0.1. If we do not set it explicitely, then balanced ratios for B, C and D are: 0.142.
+
+If example 3 felt hard, that's because it is. By now you should be getting a sense that calculating liquidities for channels is kind of a hard problem for an operator to do by hand, and gets increasingly difficult the more channels there are, with many channels sizes, liquidities etc. while for the computer this is an easy task.
+
+How is this useful
+------------------
+
+Balanced ratio is extremely useful in the day to day of running a node, since it enables node operators to dictate where they want the ratios of certain channels to be, while letting the ratios of other channels be computed for them.
+
+The balanced ratios of channels are also used by Orb when automatically selecting channels for payments. For example, if the operator lets Orb pick outgoing channels for payments, then Orb will prefer selecting channels with balances that are greater than their balanced ratio.
+
+Likewise, for circular rabalances, if Orb gets to automatically pick the from and to channels, it prefers to select channels where the ratios are above, and below their respective balanced ratios.
+
+Balanced ratios are also used in automated fee setting, to try and nudge channel liquidities back towards their balanced ratios.
