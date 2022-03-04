@@ -1,9 +1,18 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-01-26 18:25:08
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-03-04 08:45:49
+
 from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.metrics import dp
 from kivy.core.clipboard import Clipboard
 from kivymd.uix.datatables import MDDataTable
 
+from orb.misc.utils import mobile
+from orb.logic.licensing import is_satoshi
+from orb.logic.licensing import is_digital_gold
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 
@@ -49,16 +58,20 @@ class Rankings(PopupDropShadow):
             self.ids.box_layout.add_widget(self.data_tables)
             self.data_tables.bind(on_check_press=self.on_check_press)
         else:
-            self.ids.box_layout.add_widget(
-                Label(
-                    text=(
-                        "This feature ranks nodes by how predictable\n"
-                        "they are at routing payments.\n"
-                        "No path-finding data available.\n"
-                        "Make payments, or circular rebalances."
-                    )
-                )
+            text = (
+                "This feature ranks nodes by how predictable\n"
+                "they are at routing payments.\n"
+                "No path-finding data available.\n"
+                "Make payments, or circular rebalances."
             )
+            if mobile:
+                text = (
+                    "This feature ranks nodes by how predictable\n"
+                    "they are at routing payments.\n"
+                    "It is only available in the digital gold\n"
+                    "or satoshi edition of Orb."
+                )
+            self.ids.box_layout.add_widget(Label(text=text))
 
     @guarded
     def sort_on_signal(self, data):

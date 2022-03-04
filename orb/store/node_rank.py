@@ -2,10 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-10 08:11:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-02 06:08:58
+# @Last Modified time: 2022-03-04 08:42:00
 
 from collections import defaultdict
 import json
+from orb.logic.licensing import is_satoshi
+from orb.logic.licensing import is_digital_gold
 
 from orb.lnd import Lnd
 
@@ -90,6 +92,8 @@ def ingest(path):
 
 
 def count_successes_failures():
+    if not (is_satoshi() or is_digital_gold()):
+        return {}, []
     lnd = Lnd()
     payments = get_payments()
     nodes = defaultdict(lambda: dict(successes=0, failures=0))

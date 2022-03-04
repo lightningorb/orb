@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 08:28:08
+# @Last Modified time: 2022-03-04 09:34:43
 
 import arrow
 from orb.misc import data_manager
+from orb.misc.utils import mobile
 from kivy.clock import Clock
 from orb.misc.utils import pref
 from kivy.app import App
@@ -20,7 +21,10 @@ def get_code():
     try:
         from pytransform import get_license_info
     except:
-        return "satoshi_0_paid"
+        if not mobile:
+            return "satoshi_0_paid"
+        else:
+            return "free_0_paid"
     return get_license_info()["CODE"]
 
 
@@ -39,6 +43,11 @@ def is_valid():
     return get_days_left() > 0
 
 
+def is_paid():
+    _, _, paid_status = get_code().split("_")
+    return paid_status == "paid"
+
+
 def is_trial():
     _, _, paid_status = get_code().split("_")
     return paid_status == "eval"
@@ -54,14 +63,14 @@ def is_digital_gold():
     return edition == "digital-gold"
 
 
+def is_free():
+    edition, _, _ = get_code().split("_")
+    return edition == "free"
+
+
 def get_edition():
     edition, _, _ = get_code().split("_")
     return edition
-
-
-def is_paid():
-    _, _, paid_status = get_code().split("_")
-    return paid_status == "paid"
 
 
 def is_registered(*_):

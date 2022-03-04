@@ -579,6 +579,7 @@ Builder.load_string('''
 Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
+#:import desktop orb.misc.utils.desktop
 #:import os os
 
 <ConsoleFileChooser>:
@@ -614,7 +615,7 @@ Builder.load_string('''
     id: text_input
     disabled: False
     multiline: True
-    size_hint_y: 1
+    size_hint_y: 1 if desktop else 0
     background_color: (14/255,14/255,15/255,255/255) if self.focus else (13/255,13/255,14/255,255/255)
 
 <ConsoleOutput>:
