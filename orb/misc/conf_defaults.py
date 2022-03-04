@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 11:22:42
+# @Last Modified time: 2022-03-04 08:27:19
 
 
 def set_conf_defaults(config):
@@ -36,7 +36,7 @@ def set_conf_defaults(config):
     config.set("autobalance", "enable", 0)
     config.add_section("debug")
     config.set("debug", "layouts", 0)
-    config.set("debug", "htlcs", False)
+    config.set("debug", "htlcs", True)
     config.add_section("shortcuts")
     config.set("shortcuts", "toggle_chords", "shift c")
     config.set("shortcuts", "next_chord", "j")

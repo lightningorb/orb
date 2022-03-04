@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-01 11:24:32
+# @Last Modified time: 2022-03-04 08:28:08
 
 import arrow
 from orb.misc import data_manager
@@ -57,6 +57,11 @@ def is_digital_gold():
 def get_edition():
     edition, _, _ = get_code().split("_")
     return edition
+
+
+def is_paid():
+    _, _, paid_status = get_code().split("_")
+    return paid_status == "paid"
 
 
 def is_registered(*_):

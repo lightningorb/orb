@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 07:02:26
+# @Last Modified time: 2022-03-04 08:29:27
 
 import threading
 import requests
@@ -475,14 +475,15 @@ class HUDEvaluation(Label):
 class HUDBanner(AsyncImage):
     def __init__(self, *args, **kwargs):
         super(HUDBanner, self).__init__(*args, **kwargs)
-        self.last_motion = time.time()
-
-        def on_motion(*_):
+        if not licensing.is_paid():
             self.last_motion = time.time()
 
-        self.change_banner()
-        Clock.schedule_interval(self.change_banner, 60)
-        Window.bind(on_motion=on_motion)
+            def on_motion(*_):
+                self.last_motion = time.time()
+
+            self.change_banner()
+            Clock.schedule_interval(self.change_banner, 60)
+            Window.bind(on_motion=on_motion)
 
     def change_banner(self, *_):
         if time.time() - self.last_motion < 60:
