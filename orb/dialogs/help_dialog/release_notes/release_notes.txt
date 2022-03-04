@@ -1,6 +1,23 @@
-0.12.6
+0.13.0
 ----
 
+updated release notes
+updated docs
+Strip out functionality based on edition #200
+Add ability to hide keyboard in console output. #147
+Ads should only show in non-paying versions #206
+added release notes page to site
+bulk channel open in rest #202
+bring back rankings, using new payments db #205
+make sure ads only update when user is actively using Orb [#204]
+tweaks to advertising page
+tweaks to advertising page
+tweaks to advertising page
+removed 'clicks' from advertising page, since clicks not yet supported
+invoice # in bulk ingest screen [issue #201]
+added beta notice
+added beta notice
+version bump
 using image hash properly. ad interval set to 60 seconds
 basic ad banner
 advertisers can now create ads on the site
@@ -382,6 +399,16 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.13.0
+-------
+
+version bump
+using image hash properly. ad interval set to 60 seconds
+basic ad banner
+advertisers can now create ads on the site
+[dev] updated fabfile
 
 
 v0.12.6
