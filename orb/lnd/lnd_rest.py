@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 07:47:03
+# @Last Modified time: 2022-03-05 12:15:54
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -370,7 +370,6 @@ class LndREST(LndBase):
         )
 
     def close_channel(self, channel_point, force, sat_per_vbyte):
-        print(f"force: {force}")
         tx, output = channel_point.split(":")
         url = f"{self.fqdn}/v1/channels/{tx}/{output}"
         r = requests.delete(
@@ -380,9 +379,7 @@ class LndREST(LndBase):
             stream=True,
             data={"force": force, "sat_per_vbyte": sat_per_vbyte},
         )
-        for raw_response in r.iter_lines():
-            json_response = json.loads(raw_response)
-            print(json_response)
+        return r.iter_lines()
 
     def list_payments(
         self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
