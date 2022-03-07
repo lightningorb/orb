@@ -1,6 +1,12 @@
 0.13.1
 ----
 
+updated release notes
+splitting out the building of macosx
+[dev] added channel pnl
+updated pricing
+Better output when closing channels
+Can now clear balanced ratio from attributes editor
 version bump
 updated release notes
 updated docs
