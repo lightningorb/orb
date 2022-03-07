@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 05:20:13
+# @Last Modified time: 2022-03-05 14:11:21
 
 from threading import Thread
 
@@ -304,7 +304,11 @@ class AttributeEditor(BoxLayout):
         :type ratio: field
         """
         vals = data_manager.data_man.store.get("balanced_ratio", {})
-        vals[str(self.channel.chan_id)] = float(ratio.text)
+        if ratio.text == "":
+            if str(self.channel.chan_id) in vals:
+                del vals[str(self.channel.chan_id)]
+        else:
+            vals[str(self.channel.chan_id)] = float(ratio.text)
         data_manager.data_man.store.put("balanced_ratio", **vals)
 
     def populate_fees(self):
@@ -395,7 +399,7 @@ class AttributeEditor(BoxLayout):
         self.ids.md_list.add_widget(
             MDTextField(
                 text=text,
-                helper_text="balanced ratio (local / capacity)",
+                helper_text="balanced ratio",
                 helper_text_mode="persistent",
                 on_text_validate=self.on_balanced_ratio,
             )
