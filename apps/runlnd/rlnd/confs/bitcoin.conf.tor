@@ -1,0 +1,32 @@
+[main]
+# put under [main] section
+# Some mainnet peers
+addnode=gyn2vguc35viks2b.onion
+addnode=kvd44sw7skb5folw.onion
+addnode=nkf5e6b7pl4jfd4a.onion
+addnode=yu7sezmixhmyljn4.onion
+addnode=3ffk7iumtx3cegbi.onion
+addnode=3nmbbakinewlgdln.onion
+addnode=4j77gihpokxu2kj4.onion
+addnode=546esc6botbjfbxb.onion
+addnode=5at7sq5nm76xijkd.onion
+addnode=77mx2jsxaoyesz2p.onion
+addnode=7g7j54btiaxhtsiy.onion
+addnode=a6obdgzn67l7exu3.onion
+addnode=ab64h7olpl7qpxci.onion
+addnode=am2a4rahltfuxz6l.onion
+addnode=azuxls4ihrr2mep7.onion
+addnode=bitcoin7bi4op7wb.onion
+addnode=bitcoinostk4e4re.onion
+addnode=bk7yp6epnmcllq72.onion
+addnode=bmutjfrj5btseddb.onion
+addnode=ceeji4qpfs3ms3zc.onion
+addnode=clexmzqio7yhdao4.onion
+addnode=gb5ypqt63du3wfhn.onion
+addnode=h2vlpudzphzqxutd.onion
+
+# Only use Tor
+onlynet=onion
+
+# Connect to Tor proxy
+proxy=127.0.0.1:9050

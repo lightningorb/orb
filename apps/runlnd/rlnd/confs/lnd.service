@@ -1,0 +1,14 @@
+[Service]
+Environment=HOME=/home/ubuntu
+ExecStart=/home/ubuntu/go/bin/lnd --tor.active --tor.v3 --watchtower.active --wtclient.active
+ExecStop=/home/ubuntu/go/bin/lncli stop
+Restart=always
+RestartSec=30
+StandardOutput=null
+StandardError=null
+SyslogIdentifier=lnd
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target

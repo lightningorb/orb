@@ -1,0 +1,42 @@
+#:import Lnd orb.lnd.Lnd
+
+<KeysendDialogContent>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        id: alias
+        hint_text: "Recipient Alias"
+        text: ''
+        disabled: True
+
+    MDTextField:
+        hint_text: "Recipient PubKey"
+        id: pubkey
+        on_text: root.update_alias(self.text)
+        text: ''
+        disabled: False
+
+    MDTextField:
+        id: sats
+        text: '1000'
+        hint_text: "Sats"
+
+    MDTextField:
+        id: message
+        text: 'Keysending you some sats!'
+        hint_text: "Message"
+
+<KeysendDialog>
+    title: 'Keysend'
+    type: 'custom'
+    md_bg_color: .1, .1, .15, .9
+    overlay_color: 0, 0, 0, 0
+    canvas.before:
+        BorderImage:
+            source: 'orb/images/shadow_inverted.png'
+            border: 0,0,0,0
+            pos: self.x + 10, self.y - 30
+            size: self.width * 1.025, self.height * 1.025

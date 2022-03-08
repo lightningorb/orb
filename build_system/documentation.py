@@ -2,13 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-16 13:19:44
+# @Last Modified time: 2022-03-08 14:41:04
 
 import os
 import zipfile
 from pathlib import Path
 from fabric import Connection
-
+from textwrap import dedent
 from invoke import task
 
 
@@ -34,6 +34,45 @@ def build(c, env=os.environ):
     """
     Build the docs. Requires sphinx.
     """
+    for app in Path("apps/").glob("*"):
+        py = next(app.glob("*.py"))
+        kv = next(app.glob("*.kv"), None)
+        app = app.parts[-1]
+        with open(f"docs/source/apps/{app}.rst", "w") as f:
+            f.write(
+                dedent(
+                    f"""\
+                {app}
+                {len(app)*'='}
+
+                appinfo.yaml
+                ------------
+
+                .. literalinclude:: ../../../apps/{app}/appinfo.yaml
+                   :language: python
+
+
+                {py.parts[-1]}
+                {'-'*len(py.parts[-1])}
+
+                .. literalinclude:: ../../../{py}
+                   :language: python
+
+                """
+                )
+            )
+            if kv:
+                f.write(
+                    dedent(
+                        f"""\
+                {kv.parts[-1]}
+                {'-'*len(kv.parts[-1])}
+
+                .. literalinclude:: ../../../{kv}
+                   :language: kivy
+                    """
+                    )
+                )
     env["PYTHONPATH"] = "."
     flags = (
         "--ext-autodoc --module-first --follow-links --ext-coverage --separate --force"

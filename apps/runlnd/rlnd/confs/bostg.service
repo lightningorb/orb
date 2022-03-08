@@ -1,0 +1,13 @@
+[Service]
+Environment=HOME=/home/ubuntu
+ExecStart=/home/ubuntu/.npm-global/bin/bos telegram --connect {connection_code}
+Restart=always
+RestartSec=30
+StandardOutput=null
+StandardError=null
+SyslogIdentifier=lnd
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+pydantic
+yachalk
+simple_chalk
+google-api-python-client
+grpcio
+fabric
+tabulate
+boto3
+quantumrandom
+pyzipper
+arrow
+toml

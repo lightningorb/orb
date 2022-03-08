@@ -1,0 +1,26 @@
+#: import dp kivy.metrics.dp
+
+<HtlcTopView>:
+    title: 'HTLC Top'
+    size_hint: .98, .9
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    # ScrollView:
+    #     size_hint: 1, 1
+    #     pos_hint: {'center_x': .5, 'center_y': .5}
+    #     GridLayout:
+    #         id: htlcs
+    #         cols: 12
+    #         row_force_default: True
+    #         padding: 10
+    #         spacing: 10
+    #         size_hint: None, None
+    #         height: self.minimum_height
+    #         width: self.minimum_width
+
+
+<HtlcItem@Label>:
+    height: dp(20)
+    width: self.texture_size[0]
+    size_hint_y: None
+    size_hint_x: None

@@ -1,0 +1,6 @@
+menu: routing > htlc top
+name: HTLC Top
+description: View HTLC events in table form
+author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
+uuid: htlc_top
+icon: template.png

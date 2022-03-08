@@ -1,0 +1,12 @@
+/blockchain/.bitcoin/data/testnet3/debug.log
+{
+        su ubuntu ubuntu
+        rotate 5
+        copytruncate
+        daily
+        missingok
+        notifempty
+        compress
+        delaycompress
+        sharedscripts
+}

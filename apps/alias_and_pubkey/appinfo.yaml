@@ -1,0 +1,6 @@
+menu: node > alias and pubkey
+name: Alias and Pubkey
+description: Simple app that displays the node's alias and pubkey
+author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
+uuid: alias_and_pubkey
+icon: alias_and_pubkey.png

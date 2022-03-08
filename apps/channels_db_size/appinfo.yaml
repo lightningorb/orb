@@ -1,0 +1,6 @@
+menu: node > channels.db size
+name: channels db size
+description: A full lnd node provisioning and conf management app
+author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
+uuid: 4f1d2b99-0557-4dc9-8a52-bf1ce314b32f
+icon: template.png

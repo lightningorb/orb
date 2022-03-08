@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+##!/usr/bin/env python3
+
+import re
+import os
+import sys
+from fabric.main import program
+import rlnd
+import rlnd.commands.prefs as prefs
+
+host_in_cmd = lambda: "-H" in sys.argv
+key_in_cmd = lambda: "-i" in sys.argv
+
+if __name__ == "__main__":
+    path = (
+        "fabfile.py"
+        if os.path.exists("fabfile.py")
+        else os.path.join(os.path.dirname(rlnd.__file__), "fabfile.py")
+    )
+    sys.argv[0] = re.sub(r"(-script\.pyw|\.exe)?$", "", sys.argv[0])
+    sys.argv = [sys.argv[0]] + [f"-r={path}"] + sys.argv[1:]
+    if os.path.exists(prefs.prefs_file):
+        prefs = prefs.load()
+        default = prefs["node"].get("default")
+        if default:
+            con = prefs["node"].get(default)
+            if con:
+                prefs_connection = (
+                    lambda: [f"-H", f"{con['user']}@{con['host']}"]
+                    if not host_in_cmd()
+                    else []
+                )
+                prefs_key = (
+                    lambda: [f"-i", con["keyfile"]]
+                    if not key_in_cmd() and con.get("keyfile")
+                    else []
+                )
+                sys.argv = (
+                    sys.argv[0:2]
+                    + prefs_connection()
+                    + prefs_key()
+                    + ["--pty"]
+                    + sys.argv[2:]
+                )
+    sys.exit(program.run())

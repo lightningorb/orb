@@ -1,20 +1,36 @@
 Extending Functionality
 =======================
 
-One of the core motivations behind Orb is to:
+In Orb, the script editor is meant as a scratchpad, enabling you to quickly drum up scripts to interact with your node.
 
-- make it easy for users to extend functionality by writing their own scripts and plugins
-- make it easy for users to share plugins amongst themselves
-- blur the line between users and developers
+However, for scripts that are longer than a few lines, it's better to write an app.
 
-This entirely removes the dependency upon Orb's core development team, and follows the old adage of 'teaching someone how to fish'. Another good side-effect is the core development team can focus on delivering a high quality, stable core product while technical users can solve their own problems, and scratch their own itch.
+Apps Folder
+-----------
 
-Loading third-party modules
----------------------------
+.. code:: 
 
-The currently recommended way of loading third-party modules is to extend `sys.path`. e.g
+    Windows: %APPDATA%/orb/apps/
+    Linux: ~/.config/orb/apps/
+    MacOSX: ~/Library/Application Support/orb/apps/
 
-.. code:: python
 
-    import sys
-    sys.path.append('/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages')
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   apps/grpc_template
+   apps/currency_converter
+   apps/telegram_template
+   apps/balance
+   apps/todo
+   apps/today_top
+   apps/keysend
+   apps/rest_template
+   apps/runlnd
+   apps/alias_and_pubkey
+   apps/channels_db_size
+   apps/loop
+   apps/liquidity_view
+   apps/htlc_top
+

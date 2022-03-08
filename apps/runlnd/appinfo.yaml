@@ -1,0 +1,7 @@
+menu: node > runlnd
+name: runlnd
+description: A full lnd node provisioning and conf management app
+author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
+uuid: fccc6f14-dd9c-4963-ae5d-ced65e5c4a8f
+main: runlnd.py
+icon: template.png
