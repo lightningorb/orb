@@ -302,6 +302,13 @@
       "key":"trash"
    },
    {
+      "type":"string",
+      "title":"PYTHONPATH",
+      "desc":"Extra paths for loading modules. Use ; as a separator.",
+      "section":"path",
+      "key":"PYTHONPATH"
+   },
+   {
       "type":"title",
       "title":"URLs"
    },

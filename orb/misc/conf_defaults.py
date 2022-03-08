@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 08:27:19
+# @Last Modified time: 2022-03-08 10:29:45
 
 
 def set_conf_defaults(config):
@@ -52,5 +52,6 @@ def set_conf_defaults(config):
     config.set("path", "app_archive", "exports/archives")
     config.set("path", "trash", ".trash")
     config.set("path", "download", ".downloads")
+    config.set("path", "PYTHONPATH", "")
     config.add_section("url")
     config.set("url", "appstore", "https://lnappstore.com")

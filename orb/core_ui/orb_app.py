@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 09:45:00
+# @Last Modified time: 2022-03-08 10:34:34
 
 import os
 import sys
@@ -173,6 +173,9 @@ class OrbApp(MDApp):
         """
         Perform required tasks before app exists.
         """
+        python_paths = self.config["path"]["PYTHONPATH"].split(";")
+        for p in python_paths:
+            sys.path.append(p)
         self.apps = Apps()
         self.apps.load_from_disk()
         self.apps.load_all_apps()
