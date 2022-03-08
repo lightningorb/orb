@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-25 10:52:26
+# @Last Modified time: 2022-03-08 09:36:49
 
 import os
 from time import sleep
@@ -335,6 +335,7 @@ threads: 5
         if not self.obj:
             return
         self.populate_rules()
+        self.autobalance = None
         super(ABView, self).open(*args, **kwargs)
 
     def add_from_to_rule(self):
@@ -386,9 +387,13 @@ threads: 5
             stream.write(yaml.dump(dict(self.obj), Dumper=get_dumper()))
 
     def start(self):
-        autobalance = Rebalance()
-        autobalance.daemon = True
-        autobalance.start()
+        self.autobalance = Rebalance()
+        self.autobalance.daemon = True
+        self.autobalance.start()
+
+    def stop(self):
+        if self.autobalance:
+            self.autobalance.stop()
 
 
 class BaseView(BoxLayout):
@@ -414,4 +419,8 @@ class AutoBalance(Plugin):
         kv_path = (Path(__file__).parent / "autobalance.kv").as_posix()
         Builder.unload_file(kv_path)
         Builder.load_file(kv_path)
-        ABView().open()
+        self.view = ABView()
+        self.view.open()
+
+    def cleanup(self):
+        self.view.stop()

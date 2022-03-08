@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 17:26:55
+# @Last Modified time: 2022-03-08 09:57:51
 
 from time import sleep
 from kivy.clock import Clock
@@ -44,13 +44,22 @@ class UpdateMaxHTLC(StoppableThread):
 
     def run(self, *_):
         Clock.schedule_once(lambda _: Thread(target=self.main).start(), 1)
-        Clock.schedule_interval(lambda _: Thread(target=self.main).start(), 10 * 60)
+        self.schedule = Clock.schedule_interval(
+            lambda _: Thread(target=self.main).start(), 10 * 60
+        )
         while not self.stopped():
             sleep(5)
+
+    def stop(self, *_):
+        Clock.unschedule(self.schedule)
+        super(UpdateMaxHTLC, self).stop()
 
 
 class UpdateMaxHTLCPlug(Plugin):
     def main(self):
-        max_htlc = UpdateMaxHTLC(name="M")
-        max_htlc.daemon = True
-        max_htlc.start()
+        self.max_htlc = UpdateMaxHTLC(name="M")
+        self.max_htlc.daemon = True
+        self.max_htlc.start()
+
+    def cleanup(self):
+        self.max_htlc.stop()

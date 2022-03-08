@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-22 15:44:39
+# @Last Modified time: 2022-03-08 09:45:02
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -398,9 +398,13 @@ spam_prevention: 300
             stream.write(yaml.dump(self.obj, Dumper=get_dumper()))
 
     def start(self):
-        autofees = FeesAuto(self.obj)
-        autofees.daemon = True
-        autofees.start()
+        self.autofees = FeesAuto(self.obj)
+        self.autofees.daemon = True
+        self.autofees.start()
+
+    def stop(self):
+        if self.autofees:
+            self.autofees.stop()
 
 
 class BaseView(BoxLayout):
@@ -422,4 +426,8 @@ class AutoFeesPlugin(Plugin):
         kv_path = (Path(__file__).parent / "autofees.kv").as_posix()
         Builder.unload_file(kv_path)
         Builder.load_file(kv_path)
-        AFView().open()
+        self.view = AFView()
+        self.view.open()
+
+    def cleanup(self):
+        self.view.stop()
