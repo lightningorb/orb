@@ -2,18 +2,34 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 20:36:26
+# @Last Modified time: 2022-03-08 08:56:41
 
 import json
 import threading
 import arrow
+from collections import deque
 
 from orb.logic.routes import Routes
 from orb.misc.forex import forex
 from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
+from kivy.clock import (
+    Clock,
+    _default_time as time,
+)
 
-lock = threading.Lock()
+MAX_TIME = 1 / 5
+
+consumables = deque()
+
+
+def consume(*_):
+    while consumables and time() < (Clock.get_time() + MAX_TIME):
+        doc = consumables.popleft()
+        doc.save()
+
+
+Clock.schedule_interval(consume, 0)
 
 
 class PaymentStatus:
@@ -116,27 +132,24 @@ def pay_thread(
         succeeded=False,
         timestamp=int(arrow.now().timestamp()),
     )
+    consumables.append(payment)
     while routes.has_next() and not stopped():
         if count > max_paths:
             return PaymentStatus.max_paths_exceeded
         count += 1
         has_next = True
         route = routes.get_next()
-        with lock:
-            payment.save()
         if route:
             attempt = model.Attempt(
                 payment=payment, weakest_link_pk="", code=0, succeeded=False
             )
-            with lock:
-                attempt.save()
-                for j, hop in enumerate(route.hops):
-                    node_alias = Lnd().get_node_alias(hop.pub_key)
-                    text = f"{j:<5}:        {node_alias}"
-                    print(f"T{thread_n}: {text}")
-                    # no actual need for hops for now
-                    p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
-                    p.save()
+            consumables.append(attempt)
+            for j, hop in enumerate(route.hops):
+                node_alias = Lnd().get_node_alias(hop.pub_key)
+                text = f"{j:<5}:        {node_alias}"
+                print(f"T{thread_n}: {text}")
+                p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
+                consumables.append(p)
             try:
                 response = Lnd().send_payment(payment_request, route)
             except Exception as e:
@@ -174,12 +187,11 @@ def pay_thread(
                 attempt.succeeded = True
                 payment.succeeded = True
                 payment.fees = route.total_fees
-                with lock:
-                    for hop in attempt.hops:
-                        hop.succeeded = True
-                        hop.save()
-                    attempt.save()
-                    payment.save()
+                for hop in attempt.hops:
+                    hop.succeeded = True
+                    consumables.append(hop)
+                consumables.append(attempt)
+                consumables.append(payment)
                 return PaymentStatus.success
             else:
                 attempt.code = response.failure.code if response else -1000
@@ -188,8 +200,7 @@ def pay_thread(
                     if response
                     else route.hops[-1].pub_key
                 )
-                with lock:
-                    attempt.save()
+                consumables.append(attempt)
                 handle_error(response, route, routes)
     if not has_next:
         print(f"T{thread_n}: No routes found!")
