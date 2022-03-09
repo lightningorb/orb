@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 08:29:27
+# @Last Modified time: 2022-03-09 09:42:10
 
 import threading
 import requests
@@ -464,7 +464,7 @@ class HUDUIMode(Button):
 
 class HUDEvaluation(Label):
     def get_text(self):
-        if licensing.is_trial():
+        if licensing.is_trial() or licensing.is_free():
             e = licensing.get_edition()
             e = e[0].upper() + e[1:]
             return f"Orb {e} Edition\nEvaluation Copy"

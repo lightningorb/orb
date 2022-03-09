@@ -2,11 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 09:34:43
+# @Last Modified time: 2022-03-09 09:50:17
 
 import arrow
 from orb.misc import data_manager
 from orb.misc.utils import mobile
+from orb.misc.sec_rsa import encrypt_long
+from orb.misc.sec_rsa import decrypt_long
 from kivy.clock import Clock
 from orb.misc.utils import pref
 from kivy.app import App
@@ -75,9 +77,9 @@ def get_edition():
 
 def is_registered(*_):
     edition, invoice, paid_status = get_code().split("_")
-    if get_code() == "satoshi_0_paid":
-        return
-    if not paid_status == "paid":
+    # if get_code() == "satoshi_0_paid":
+    #     return
+    if data_manager.data_man.pubkey == "mock_pubkey":
         return
 
     ks1_pub = rsa.PublicKey.load_pkcs1(
@@ -91,10 +93,12 @@ def is_registered(*_):
         data_manager.data_man = None
         App.get_running_app().stop()
 
-    cached = data_manager.data_man.store.get("licensing", {}).get("data", "")
+    cached = data_manager.data_man.store.get("licensing", {}).get("datav2", "")
     if cached:
         decrypted = json.loads(
-            rsa.decrypt(codecs.decode(cached.encode(), "hex"), ks2_priv).decode()
+            decrypt_long(
+                codecs.decode(cached.encode(), "hex"), ks2_priv.save_pkcs1()
+            ).decode()
         )
         if (
             decrypted["detail"] == "looks good"
@@ -102,23 +106,25 @@ def is_registered(*_):
         ):
             return
         else:
-            print("License call-home failed - please contact support")
-            Clock.schedule_once(do_exit, 10)
+            print("License call-home failed")
 
     def func():
         r = requests.post(
-            f"{pref('url.appstore')}/api/orb/buy/call-home",
+            f"{pref('url.appstore')}/api/orb/buy/call-home-v2",
             data=json.dumps(
                 dict(
                     encoded=codecs.encode(
-                        rsa.encrypt(
+                        encrypt_long(
                             json.dumps(
                                 dict(
                                     pk=data_manager.data_man.pubkey,
+                                    edition=edition,
                                     invoice=invoice,
+                                    paid_status=paid_status,
                                 )
-                            ).encode(),
-                            ks1_pub,
+                            ),
+                            ks1_pub.save_pkcs1(),
+                            encoded=False,
                         ),
                         "hex",
                     ).decode()
@@ -129,13 +135,18 @@ def is_registered(*_):
         resp = r.json()
         if type(resp) is str:
             decrypted = json.loads(
-                rsa.decrypt(codecs.decode(r.json().encode(), "hex"), ks2_priv).decode()
+                decrypt_long(
+                    codecs.decode(r.json().encode(), "hex"), ks2_priv.save_pkcs1()
+                ).decode()
             )
             if (
                 decrypted["detail"] == "looks good"
                 and arrow.utcnow().timestamp() - decrypted["timestamp"] < 30
             ):
-                data_manager.data_man.store.put("licensing", **{"data": resp})
+                data_manager.data_man.store.put("licensing", **{"datav2": resp})
+            else:
+                print(f"Call-home failed: {decrypted['detail']}")
+                Clock.schedule_once(do_exit, 10)
             return
         print(resp)
         print("Call-home failed. Please connect to the internet or contact support.")
