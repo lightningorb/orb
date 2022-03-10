@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-02 04:15:21
+# @Last Modified time: 2022-03-10 08:50:18
 
 import re
 import os
@@ -55,6 +55,16 @@ def release(c, minor=False, patch=False):
     c.run("git push")
     tags.tag(c)
     tags.push(c)
+    c.run("git checkout build")
+    c.run("git rebase main")
+    c.run("git push")
+    c.run("git checkout docs")
+    c.run("git rebase main")
+    c.run("git push")
+    c.run("git checkout site")
+    c.run("git rebase main")
+    c.run("git push")
+    c.run("git checkout main")
 
 
 namespace = Collection(
