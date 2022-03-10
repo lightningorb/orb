@@ -1,6 +1,15 @@
-0.13.1
+0.14.0
 ----
 
+updated release script
+updated release notes
+prevent orb from starting for pubkeys that have used an eval license
+    for over a month
+updated docs
+add ability to extend sys.path from app settings #209
+clean up previous invocation of plugin on reload
+bulk payments can result in zombie threads (locking?) #207
+version bump
 updated release notes
 splitting out the building of macosx
 [dev] added channel pnl
@@ -406,6 +415,18 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.14.0
+-------
+
+version bump
+updated release notes
+splitting out the building of macosx
+[dev] added channel pnl
+updated pricing
+Better output when closing channels
+Can now clear balanced ratio from attributes editor
 
 
 v0.13.1
