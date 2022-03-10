@@ -30,14 +30,14 @@
             size_hint_x: None
             width: dp(100)
             on_text_validate: root.update_obj('threads', int(self.text))
-        MDTextField:
-            id: max_budget
-            text: str(root.obj.max_budget) if root.obj else '0'
-            helper_text: 'Max rebalance budget ({}% of earnings)'.format(int(float(self.text) * 100))
-            helper_text_mode: "persistent"
-            size_hint_x: None
-            width: dp(100)
-            on_text_validate: root.update_obj('max_budget', float(self.text))
+        # MDTextField:
+        #     id: max_budget
+        #     text: str(root.obj.max_budget) if root.obj else '0'
+        #     helper_text: 'Max rebalance budget ({}% of earnings)'.format(int(float(self.text) * 100))
+        #     helper_text_mode: "persistent"
+        #     size_hint_x: None
+        #     width: dp(100)
+        #     on_text_validate: root.update_obj('max_budget', float(self.text))
         ScrollView:
             size_hint: 1, 1
             pos_hint: {'center_x': .5, 'center_y': .5}
