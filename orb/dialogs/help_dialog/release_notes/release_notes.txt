@@ -1,6 +1,7 @@
 0.14.1
 ----
 
+show ads for free or trial versions
 version bump
 updated release script
 updated release notes
