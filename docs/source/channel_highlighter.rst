@@ -115,6 +115,14 @@ Once again, if you'd like to include pending HTLCs to avoid blinking highlights:
 
     c.local_balance_include_pending < 100_000
 
+Channels that are in profit
+---------------------------
+
+Orb deducts rebalances from a channel's profit, thus it enables you to select profitable channels:
+
+.. code:: python
+
+    c.profit > 1000
 
 Channels that are earning
 -------------------------
