@@ -37,16 +37,18 @@ Pay Through Channel
 
 This specifies whether the channel is used for payments, or not. For example, you ought to switch it off for drains, since it would be difficult to re-gain outbound.
 
-Aim for Ratio (local / capacity)
---------------------------------
+Balanced Ratio (local / capacity)
+---------------------------------
 
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_11-31-59.png
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-03-10_10-03-51.png
    :align: center
    :scale: 80%
 
-This is the ratio at which the channel is considered **balanced**. For example, with a ``1 BTC`` channel, a ratio of ``0.1`` signifies the channel is considered **balanced** once the local balance reaches ``0.1 BTC`` and remote balance reaches ``0.9 BTC``.
+The balanced ratio can be left as is, or overridden. If left as is, it represents the channel's optimal ratio. It can be set manually to tell Orb how much local balance is desired in that particular channel.
 
-This setting is used during automatic channel selection for payments and rebalancing.
+Balanced ratio is used when automatically selecting channels for payments, or for rebalances.
+
+Please see `concepts`_ for more information.
 
 Other
 -----

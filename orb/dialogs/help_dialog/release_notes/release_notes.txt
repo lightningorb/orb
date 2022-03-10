@@ -1,6 +1,7 @@
-0.14.0
+0.14.1
 ----
 
+version bump
 updated release script
 updated release notes
 prevent orb from starting for pubkeys that have used an eval license
@@ -415,6 +416,20 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.14.1
+-------
+
+version bump
+updated release script
+updated release notes
+prevent orb from starting for pubkeys that have used an eval license
+    for over a month
+updated docs
+add ability to extend sys.path from app settings #209
+clean up previous invocation of plugin on reload
+bulk payments can result in zombie threads (locking?) #207
 
 
 v0.14.0

@@ -613,7 +613,7 @@ Builder.load_string('''
                 on_release: root.dismiss()
 <ConsoleInput>:
     id: text_input
-    disabled: False
+    disabled: False if desktop else True
     multiline: True
     size_hint_y: 1 if desktop else 0
     background_color: (14/255,14/255,15/255,255/255) if self.focus else (13/255,13/255,14/255,255/255)

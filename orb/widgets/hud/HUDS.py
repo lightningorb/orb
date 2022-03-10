@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-09 09:42:10
+# @Last Modified time: 2022-03-10 09:19:35
 
 import threading
 import requests
@@ -464,7 +464,7 @@ class HUDUIMode(Button):
 
 class HUDEvaluation(Label):
     def get_text(self):
-        if licensing.is_trial() or licensing.is_free():
+        if licensing.is_trial():
             e = licensing.get_edition()
             e = e[0].upper() + e[1:]
             return f"Orb {e} Edition\nEvaluation Copy"
@@ -475,7 +475,7 @@ class HUDEvaluation(Label):
 class HUDBanner(AsyncImage):
     def __init__(self, *args, **kwargs):
         super(HUDBanner, self).__init__(*args, **kwargs)
-        if not licensing.is_paid():
+        if licensing.is_free() or licensing.is_trial():
             self.last_motion = time.time()
 
             def on_motion(*_):

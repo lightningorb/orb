@@ -1,7 +1,7 @@
-Peeps
-=====
+HUD
+===
 
-The peeps allow you to 'peep' into a variety of information.
+The HUD or Heads Up Displays for short allow you to view and edit certain bits of information.
 
 .. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_11-45-36.png
    :align: center

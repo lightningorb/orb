@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-05 14:11:21
+# @Last Modified time: 2022-03-10 10:02:43
 
 from threading import Thread
 
@@ -382,7 +382,7 @@ class AttributeEditor(BoxLayout):
         self.ids.md_list.add_widget(
             ItemDrawer(
                 icon="chart-bell-curve-cumulative",
-                text="Aim for Ratio:",
+                text="Balanced Ratio:",
                 size_hint_y=None,
                 height=dp(60),
             )

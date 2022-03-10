@@ -3,7 +3,7 @@ Script Editor
 
 .. warning::
 
-    The script editor is currently at the 'experimental' stage. It works well for very small scripts, e.g maximum 4 or 5 lines. However for longer scripts, the current recommendation is to write a plugin using your favorite editor.
+    The script editor is currently at the 'experimental' stage. It works well for very small scripts, e.g maximum 4 or 5 lines. However for longer scripts, the current recommendation is to write an app using your favorite editor.
 
     The script editor cannot match the comfort of using an editor or IDE such as Sublime Text, MS Studio Code, Atom, PyCharm etc.
 
@@ -36,23 +36,6 @@ Below is a template that can be used to run many of the examples in LND's docume
     print(stub)
 
 To run the code, simply do: ``ctrl a`` followed by ``enter``, and clicking ``view > run``.
-
-Installing Scripts
-------------------
-
-A script can be installed via ``View > Install``. The name of the script can also contain a submenu, e.g ``templates > lightning stub``.
-
-Once installed, scripts are available under the ``scripts`` menu.
-
-Loading Scripts
----------------
-
-To load a previously installed script, click ``View > Load``.
-
-Deleting Scripts
-----------------
-
-To delete a previously installed script, click ``View > Delete``.
 
 Script Editor Sizing Issues
 ---------------------------

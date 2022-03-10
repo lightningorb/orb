@@ -16,7 +16,7 @@ Click `close` and restart Orb.
 
    channels
    channel_editor
-   peeps
+   HUD
    invoice_ingestion
    pay
    rebalance
