@@ -197,7 +197,7 @@ Please note you may need to alter the path (`~/.lnd/tls.cert`) in the command st
 
 Paste it in your node's terminal, and run it.
 
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/term__2022-03-13_10-15-42.png
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/term_2022-03-13_11-03-45.png
    :alt: protocol
    :align: center
 
