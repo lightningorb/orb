@@ -2163,8 +2163,8 @@ Builder.load_string('''
 <HUDN>:
     anchor_x: 'center'
     anchor_y: 'top'
-    HUDEvaluation
-    HUDBanner
+    # HUDEvaluation
+    # HUDBanner
     Widget:
     
 

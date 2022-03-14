@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-01 14:24:55
+# @Last Modified time: 2022-03-14 10:52:57
 
 try:
     # not all actions install all requirements
     import os
+    import arrow
     from invoke import task
     from pathlib import Path
     import requests
@@ -131,8 +132,13 @@ def build_common(c, env, sep=":"):
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
+    expiry = arrow.utcnow().shift(years=1)
     c.run(
-        f"""pyarmor pack {spec} --with-license outer --name {name} \
+        f"pyarmor licenses --expired {expiry.format('YYYY-MM-DD')} satoshi_0_paid",
+        env=os.environ,
+    )
+    c.run(
+        f"""pyarmor pack {spec} --with-license licenses/satoshi_0_paid/license.lic --name {name} \
              -e " {pyinstall_flags}" \
              -x " --no-cross-protection --exclude build --exclude orb/lnd/grpc_generated" main.py""",
         env=env,
@@ -148,8 +154,13 @@ def build_linux(c, env=os.environ):
     c.run("cp -r third_party tmp/;")
     c.run("cp -r orb tmp/;")
     with c.cd("tmp"):
+        expiry = arrow.utcnow().shift(years=1)
         c.run(
-            "pyarmor obfuscate --with-license outer --recursive main.py;",
+            f"pyarmor licenses --expired {expiry.format('YYYY-MM-DD')} satoshi_0_paid",
+            env=os.environ,
+        )
+        c.run(
+            "pyarmor obfuscate --with-license licenses/satoshi_0_paid/license.lic --recursive main.py;",
             env=env,
         )
         c.run("rm -rf orb main.py third_party")
