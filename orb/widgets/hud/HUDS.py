@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-10 09:19:35
+# @Last Modified time: 2022-03-14 11:27:06
 
 import threading
 import requests
@@ -475,7 +475,8 @@ class HUDEvaluation(Label):
 class HUDBanner(AsyncImage):
     def __init__(self, *args, **kwargs):
         super(HUDBanner, self).__init__(*args, **kwargs)
-        if licensing.is_free() or licensing.is_trial():
+        # if licensing.is_free() or licensing.is_trial():
+        if True:
             self.last_motion = time.time()
 
             def on_motion(*_):
