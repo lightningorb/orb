@@ -1,6 +1,18 @@
-0.14.1
+0.14.2
 ----
 
+Merge branch 'free' into main
+making everything free
+adding macos-10.15 support
+updated docs
+updated docs
+updated docs
+added license download link
+added an obvious download button on site
+html meta
+removed max budget field for now
+updated docs
+version bump
 show ads for free or trial versions
 version bump
 updated release script
@@ -417,6 +429,13 @@ add VERSION file with semver support #132
 v0.3.0-beta+build.1
 -------------------
 
+
+
+v0.14.2
+-------
+
+version bump
+show ads for free or trial versions
 
 
 v0.14.1
