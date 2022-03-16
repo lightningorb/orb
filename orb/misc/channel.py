@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-19 15:17:53
+# @Last Modified time: 2022-03-17 05:45:01
 
 from threading import Thread, Lock
 
@@ -164,7 +164,7 @@ class Channel(EventDispatcher):
         """
         result = Lnd().update_channel_policy(
             channel=self,
-            fee_rate=self.fee_rate_milli_msat / 1e6,
+            fee_rate=max(self.fee_rate_milli_msat / 1e6, 1e-06),
             base_fee_msat=self.fee_base_msat,
             time_lock_delta=self.time_lock_delta,
             max_htlc_msat=self.max_htlc_msat,
