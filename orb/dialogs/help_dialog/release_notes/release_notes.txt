@@ -1,440 +1,17 @@
-0.14.3
+0.14.4
 ----
 
+
+
+v0.14.4
+-------
+
+version bump
 Better Linux installation documentation. Added missing modules to
     Linux bootstrap script. Added launch debug messages.
 fee-rate needs a lower bound of 1e-06
 added link to user group
 import order
-version bump
-Merge branch 'free' into main
-making everything free
-adding macos-10.15 support
-updated docs
-updated docs
-updated docs
-added license download link
-added an obvious download button on site
-html meta
-removed max budget field for now
-updated docs
-version bump
-show ads for free or trial versions
-version bump
-updated release script
-updated release notes
-prevent orb from starting for pubkeys that have used an eval license
-    for over a month
-updated docs
-add ability to extend sys.path from app settings #209
-clean up previous invocation of plugin on reload
-bulk payments can result in zombie threads (locking?) #207
-version bump
-updated release notes
-splitting out the building of macosx
-[dev] added channel pnl
-updated pricing
-Better output when closing channels
-Can now clear balanced ratio from attributes editor
-version bump
-updated release notes
-updated docs
-Strip out functionality based on edition #200
-Add ability to hide keyboard in console output. #147
-Ads should only show in non-paying versions #206
-added release notes page to site
-bulk channel open in rest #202
-bring back rankings, using new payments db #205
-make sure ads only update when user is actively using Orb [#204]
-tweaks to advertising page
-tweaks to advertising page
-tweaks to advertising page
-removed 'clicks' from advertising page, since clicks not yet supported
-invoice # in bulk ingest screen [issue #201]
-added beta notice
-added beta notice
-version bump
-using image hash properly. ad interval set to 60 seconds
-basic ad banner
-advertisers can now create ads on the site
-[dev] updated fabfile
-version bump
-[dev] updated fabfile
-[dev] updated fabfile
-fabfile
-version bump
-default apps should get loaded properly on all platforms
-updated install instructions
-Test & document extending PYTHONPATH [#196]
-remove pandas and matplotlib from default dependencies [#197]
-[dev] fixed issue with trial version
-version bump
-[dev] implemented call-home functionality
-[dev] add paid component to license code
-[dev] correct license paths
-[dev] add invoice id to license code
-updated site
-updated install instructions
-[dev] adding fabric to build
-[dev] adding matplotlib and pandas to build
-[dev] build
-Merge branch 'build' of
-    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
-    build
-no longer saving payments - version bump
-[dev] fixed build issues
-updated site
-updated site
-updated pricing
-no longer saving payments - version bump
-debt hot-fix
-Merge branch 'site' of
-    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
-    site
-updated download page
-updated copy
-updated docs
-updated docs
-updated docs
-updated docs
-[dev] fix build system
-version bump
-no longer using match fee rate
-improved syncing of forwarding and payment history improved auto-
-    rebalancing global pnl channel pln
-now tracking channel earnings in a database
-now displaying balanced ratio speedups in channels class
-updated copy
-added channel highlighter page to docs
-updated copy
-updated copy
-Merge branch 'site' of
-    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
-    site
-fixed buy / eval link. added foss and investor relations pages
-fixed buy / eval link. added foss and investor relations pages
-fixed buy / eval link. added foss and investor relations pages
-[dev] enable balance hud clock
-Balance HUD still incorrect #187
-added FOSS page
-IOS code obfuscation [#185]
-[dev] improved balanced ratio
-[dev] restricting functionality according to licensing
-Merge branch 'site' into main
-[dev] set prices back to non-test prices
-[dev] skip armor registration step in app routes
-no longer binding licenses to mac address
-Merge branch 'site' of
-    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
-    site
-license evaluation db schema change
-[dev] better mac address validation
-[dev] adding eval license model
-[dev] upgraded site to include evaluation copy (pre-migration)
-Merge branch 'site' into main
-[dev] grpc no longer locks the UI [dev] close channel dialog can now
-    force-close
-bump prices back to normal
-[dev] redirect might be taking place
-[dev] redirect might be taking place
-[dev] on download page use fqdn
-[dev] updated test workflow
-[dev] updated test workflow
-[dev] updated test workflow
-[dev] updated test workflow
-added 'helped earn' to attributes editor
-further bug fixes and speedups with highlighter
-highlighter bug fix
-Merge pull request #178 from
-    bc31164b-cfd5-4a63-8144-875100622b2d/fix_fowarding_duplicates
-Merge branch 'main' into fix_fowarding_duplicates
-fix misspellings
-Highlighter caching
-Merge pull request #177 from
-    bc31164b-cfd5-4a63-8144-875100622b2d/fix_fowarding_duplicates
-cleaning up worklog
-merging fix_fowarding_events
-[dev] channel now include a 'helped_earn' property
-compute balanced ratios for channels
-sat animations smoother
-added highlighter dialog
-changed autofees and autobalance defaults lots of improvements with
-    how HTLCs handled and accounted for auto channel selector
-    improvements better color management htlcs can no be debugged via
-    the settings
-autofees UI
-fee widget flashes when updated
-auto-rebalances can now be stopped properly
-[dev] some refactoring in chord widget
-auto rebalance ui
-autofees and autobalance brought back into the main app
-[dev] added tests to main [dev] data_manager now has a plugin registry
-    [dev] plugins can receive htlcs
-changed site meta tags
-payment flow working well
-Channel spotlighting when node peer is selected #172
-Delay in Channel Editor when click on channel #174
-updated build file
-added licensing to checkout
-[dev] fix osx build
-[dev] bug fixes
-[dev] only import kivy related modules in Lnd class, since we're
-    dealing with __init__
-updated docs
-updated docs -version bump
-updated readme
-[dev] switch builds back to build branch
-version bump
-HTLCs now saved in a db, for later access
-added
-clock-out
-rounding with msats
-clock-in
-clock-out
-[dev] lightning payments through site now work
-clock-in
-restore site
-added
-added
-added
-added
-added
-added
-added
-added
-added
-added
-multisample stuff
-testing out switching off sampling for windows
-testing out switching off sampling for windows
-testing out switching off sampling for windows
-updated terms and privacy
-supply password to nameko sqlalchemy
-katching not working on node
-katching not working on node
-katching not working on node
-katching not working on node
-trying live setup
-rename lnd_worker to lnd_invoice_service
-lnd invoice service
-moving builds back to build branch
-katching service
-added katching
-windows build no longer working
-generating invoice should work on site
-upload all builds to s3
-licensing
-Merge branch 'tmp' into site
-[dev] added privacy policy and terms and conditions
-[dev] missing import
-[dev] api endpoint should not contain fqnd
-[dev] site requests should point to api
-[dev] download page and mac-address bound build automated
-[dev] gitignore
-[dev] debug messages
-[dev] site build automation and download page
-[dev] added site
-in the protocol HUD, clicking now saves the new protocol to config
-attribute editor show format ints with underscores
-[dev] changed lock to counted lock in lnd grpc get-edge to prevent
-    deadlocks
-[dev] allow 5 concurrent threads to get grpc lnd edge info, to avoid
-    deadlocks
-updated docs
-fee distribution dialog: show all rows in table. normalized events
-    added ability to exclude 0 ppm in best fee
-[dev] typo in armor command
-clock-out
-using last_offset_index from lnd, still getting discrepancy
-renaming foward->forward
-clock-in
-clock-out
-ignoring hourly config
-clock-in
-
-
-v0.9.0
-------
-
-version bump - removed player from menu
-release notes wider than dialog
-[dev] moved download_forwarding_history into logic package
-[dev] no need to call update_rect needlessly, significant speedup in
-    rendering
-[dev] add orb.kvs to hidden imports list
-Attributes Editor now shows fees earned
-[dev] added some windows debugging
-[dev] build automation
-
-
-v0.8.0
-------
-
-[dev] make sure Window object exists before maximizing
-[dev] build on main, not master
-[dev] build automation
-[dev] build on main - not master
-[dev] build targets need different names
-[dev] osx and linux builds automated
-[dev] linux build automated
-[dev] linux build
-[dev] cater for python < 3.9
-[dev] channel's local_balance_include_pending typo (not reading actual
-    pending pending htlcs)
-ubuntu build [dev]
-linux build [dev]
-linux build [dev]
-save app store credentials after login
-app store login dialog regression
-app is sluggish in mock mode
-linux build [dev]
-[dev] build system
-OSX build
-[dev] missed comma in settings.json (typo)
-fast-forward events on app resumption #168
-Feature Request - Channel sort options #167
-
-
-v0.7.0
-------
-
-version bump
-Kivy selection handles crash orb #157
-when quitting the app from the console, it saves the 'q' character in
-    the buffer #166 the console doesn't save the last input #165
-When in the console, trouble going back to channels screen #161
-[dev] import Lnd in attributes editor to resolve "offline" label being
-    displayed
-mouse down event in the channels widget overrides node background
-    color #98
-Update issue templates
-delete tls.cert on app exit #162
-likely forgot to check in [dev]
-removed old code [dev]
-updated build system [dev]
-updated SECURITY.md
-encrypt tls cert and macroon in orb.ini file #152
-save tls.cert into a temp file, not main data directory #151
-channel policies now entirely managed by the Channel class [dev]
-in app store server, repo ref before use [dev]
-docs
-write SECURITY.md #154
-organizing files in appstore [dev]
-
-
-v0.6.0
-------
-
-appstore app icons, and appstore login dialog
-Changing channel fees isn't reflected in fee gizmo #27
-attempt to speed up app-store with async loading
-removed telegram bots from workflows as they don't seem to work [dev]
-Merge pull request #146 from
-    bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution
-When returning from the console, the 'view' menu isn't updated #144
-output doesn't appear in status line when line ends in a new line
-keysend over REST #145
-matched table with graph values
-fixed regression in console due to save / install menu items being
-    removed
-fixed module zero error in fee distribution dialog #140
-
-
-v0.5.0
-------
-
-app store #143
-fixed regression with invoice ingest dialog
-Create TelegramBridge.yml
-Create tg-notify.yml
-orb crashes when starting a fresh node [bug] #142
-moved currency-symbols to third_party directory [dev]
-removed humanize third-party dependency (using arrow instead) [dev]
-moved colour to third_party directory [dev]
-moved bezier to third_party directory [dev]
-moved forex-python to third_party directory [dev]
-moved qrcode to third_party directory [dev]
-moved arrow to third_party directory [dev]
-added debug info for link_fail_event [dev]
-[dev] _get_user_data_dir missing full os.path.join call
-bringing back old requirements.txt
-
-
-v0.4.4
-------
-
-version bump
-[dev] in ios app startup, place yaml files in correct directory, and
-    don't overwrite if they already exist
-[dev] provide sensible autobalance example file
-[dev] formatting
-[dev] better selection handling via main app object
-
-
-v0.4.3
-------
-
-[dev] patch bump
-output is shown in the console once again
-[dev] missing fields in htlc rest
-
-
-v0.4.2
-------
-
-release notes
-HTLC class better REST support
-no longer calling get_channels in HTLC class working well for GRPC
-partial commit: no longer calling get_channels non-stop
-patch version bump
-[dev] fabric monkeypatch, and combo command for ios deploy
-[dev] in release notes, display head as current version
-fixed regression: ios app can be paused / resumed again
-fixed player regression (path needs to be posix string)
-display full release notes in app #139
-Move printing / console output to the consumable pattern #138
-[dev] stop autobalancing from throwing errors if file is empty
-[dev] updated release notes
-[dev] load user scripts from source if running on desktop
-[dev] platform is macosx not 'osx'
-[dev] include tags in fabfile
-'on-chain > send coins' now working as expected over REST #137
-
-
-v0.4.0+build.1
---------------
-
-release notes
-high res background picture
-readme
-bespoke pay_logic error handling for REST
-only explicitly set high res on osx
-bump minor version
-files are better organized
-init node to None, in case we fail to get channels
-'Forwarding History' submenu triggers a 'on_press' unexpectedly in IOS
-swiping up gives focus to the status output line, and brings up the
-    keyboard #136
-Clicking on the menubar pans the channels view #135
-high resolution by default on desktop
-Make release notes available within the UI #134
-In player, disable the videos tab until a collection is selected. #120
-refactoring: moved data_manager into the orb module
-updated docs
-moving build system to python - housekeeping
-Make video about documentation #129
-build
-by default, channels are now longer
-Make video about connecting to the node #127
-Add copy buttons to the Connection Settings dialog, to copy python
-    commands #133
-GRPC should not be available in IOS #94
-add VERSION file with semver support #132
-
-
-v0.3.0-beta+build.1
--------------------
-
 
 
 v0.14.3
@@ -711,75 +288,9 @@ Merge branch 'tmp' into site
 [dev] api endpoint should not contain fqnd
 [dev] site requests should point to api
 [dev] download page and mac-address bound build automated
-
-
-something
----------
-
-
-
-customer_build_macos-11_dd484141292d4a85f385223b93cb0aeb1623fb457399b48721038f02e13b5d48
-----------------------------------------------------------------------------------------
-
-only keep hash part of tag
-set to public acl after upload
-remove task decorator
-typo
-typo
-use mac hash in filename
-updated
-updated
-[dev] updated
-[dev] updated
-[dev] updated
-[dev] wrong git command
-[dev] needs to be in steps
-[dev] needs to be in steps
-[dev] trying to get tags in various ways
-[dev] create tag event only works on pull requests
-[dev] missing os
-[dev] some actions don't have all requirements
-[dev] missing gitpython
-Merge branch 'customer_build' into site
-[dev] trigger build on tag push instead
-[dev] build on tag push instead
-[dev] download page now creates and pushes a tag for the customer
-    build
-2663699779f8ceaae6c9c1292292811d68f0ea9ddd917e4374ed31b31de735217b8f9c
-    37d9ddf8a67aaf6793241d6acf97935a01b4fc8cceb828ee90bd7f447a
-7f1406a3cc6d4dc98bdc0de493cd812c471b0d0f228648aab7b251120cfd9301476d0f
-    4910405a8c6cddfea3d830038c3e6b74dd6c2925de5f1128dfd357c952
-00bb68d1bd6ee7a3caa720b669c1fb2bff1f9010f327226913e1496158a6de2f77c26b
-    db666ea5f019a37249a21e07d54cb6e84205d21b5cc32028cba9d8e755
-18464a0eabb2fd264587f1ccafa82df223a2c63584353b93dfb8624ada9b2136b91951
-    94f0f7bbb46dae40443730f1952b3b22285f1e989e550ee953c27c8bca
-67c2c662eb04cd1ad1f95014386965fab61c07e9d5ce7ab8702b6c799e17ab19580589
-    84dfdcd0b6b188102334d47cfbf95557434e5e245c102cbf110faee9a4
-290721a6ef5a077ddb3db47dc4a9f8fb7e7b075c1aa706f82a79b80bf364d6e6d46ff6
-    8cc923a47b6bfcfc5866bff2a4383ad3c9733ae7fe7a7ea68f2f6896d8
-76ee90c1656aba0aaa0ab18652b5ca63c0c37608140ee62ae88497508aab1ec887090c
-    3752c43f5c6874986cc7280c3c5a2a7696102e1182c05208cbff0d707c
-10c983232327cecceb4f7946b94b2d1fe74afe12387aeabf5f64247e64ba5fca4b0b29
-    527506e6fc683cc28f956c748c9ab07df566e75961fda61e453f793d33
-76e255ba1ef9f6cf7398c2b77fa780e5a9297248b7c3a29cd07a24afdf76315b5d6617
-    754722e07aba9cf1826081da4104d87fd982a81f547a037af50b2b085a
-31eb4ddce2765aee0ab0e5d67d22dd14f16fe61c631c5900db4f5a3315937b337d2320
-    3f933d23073316a9a770f978ed973a24d7d4f083b189be0ca052833ded
-76568e2b2a0bd920eeff721df9eb5ec2b7a08db8d1afecbf1c1da35a9692f1e8ad7e33
-    d4c1b366ea0495e3b2888151ab328a2827b18bceb45622b6f343401523
-333216edc91094888cce72c02c791e246fbbbcf9bf84f32e73ca320e5d9da90902097a
-    4c30fabf83c62f8e59409316f4837e14a474b764789a983ef14da8f2a6
 [dev] gitignore
 [dev] debug messages
 [dev] site build automation and download page
-updated price grid
-added download page to site
-[dev] site do the actual building
-[dev] site do the actual building
-[dev] delete folders on target before unpacking
-[dev] removed subscribe blurb
-[dev] wrong link for docs
-[dev] use compressed images on site for fast loading
 [dev] added site
 in the protocol HUD, clicking now saves the new protocol to config
 attribute editor show format ints with underscores
@@ -791,6 +302,11 @@ updated docs
 fee distribution dialog: show all rows in table. normalized events
     added ability to exclude 0 ppm in best fee
 [dev] typo in armor command
+
+
+v0.9.0
+------
+
 version bump - removed player from menu
 release notes wider than dialog
 [dev] moved download_forwarding_history into logic package
@@ -800,6 +316,11 @@ release notes wider than dialog
 Attributes Editor now shows fees earned
 [dev] added some windows debugging
 [dev] build automation
+
+
+v0.8.0
+------
+
 [dev] make sure Window object exists before maximizing
 [dev] build on main, not master
 [dev] build automation
@@ -807,24 +328,158 @@ Attributes Editor now shows fees earned
 [dev] build targets need different names
 [dev] osx and linux builds automated
 [dev] linux build automated
+[dev] linux build
+[dev] cater for python < 3.9
+[dev] channel's local_balance_include_pending typo (not reading actual
+    pending pending htlcs)
+ubuntu build [dev]
+linux build [dev]
+linux build [dev]
+save app store credentials after login
+app store login dialog regression
+app is sluggish in mock mode
+linux build [dev]
+[dev] build system
+OSX build
+[dev] missed comma in settings.json (typo)
+fast-forward events on app resumption #168
+Feature Request - Channel sort options #167
 
 
-1764754553_linux
-----------------
+v0.7.0
+------
 
-tests
-tests
+version bump
+Kivy selection handles crash orb #157
+when quitting the app from the console, it saves the 'q' character in
+    the buffer #166 the console doesn't save the last input #165
+When in the console, trouble going back to channels screen #161
+[dev] import Lnd in attributes editor to resolve "offline" label being
+    displayed
+mouse down event in the channels widget overrides node background
+    color #98
+Update issue templates
+delete tls.cert on app exit #162
+likely forgot to check in [dev]
+removed old code [dev]
+updated build system [dev]
+updated SECURITY.md
+encrypt tls cert and macroon in orb.ini file #152
+save tls.cert into a temp file, not main data directory #151
+channel policies now entirely managed by the Channel class [dev]
+in app store server, repo ref before use [dev]
+docs
+write SECURITY.md #154
+organizing files in appstore [dev]
 
 
-1764723455_linux
-----------------
+v0.6.0
+------
 
-tests
+appstore app icons, and appstore login dialog
+Changing channel fees isn't reflected in fee gizmo #27
+attempt to speed up app-store with async loading
+removed telegram bots from workflows as they don't seem to work [dev]
+Merge pull request #146 from
+    bc31164b-cfd5-4a63-8144-875100622b2d/fee_distribution
+When returning from the console, the 'view' menu isn't updated #144
+output doesn't appear in status line when line ends in a new line
+keysend over REST #145
+matched table with graph values
+fixed regression in console due to save / install menu items being
+    removed
+fixed module zero error in fee distribution dialog #140
 
 
-1764718791_linux
-----------------
+v0.5.0
+------
 
-tests
+app store #143
+fixed regression with invoice ingest dialog
+Create TelegramBridge.yml
+Create tg-notify.yml
+orb crashes when starting a fresh node [bug] #142
+moved currency-symbols to third_party directory [dev]
+removed humanize third-party dependency (using arrow instead) [dev]
+moved colour to third_party directory [dev]
+moved bezier to third_party directory [dev]
+moved forex-python to third_party directory [dev]
+moved qrcode to third_party directory [dev]
+moved arrow to third_party directory [dev]
+added debug info for link_fail_event [dev]
+[dev] _get_user_data_dir missing full os.path.join call
+bringing back old requirements.txt
+
+
+v0.4.4
+------
+
+version bump
+[dev] in ios app startup, place yaml files in correct directory, and
+    don't overwrite if they already exist
+[dev] provide sensible autobalance example file
+[dev] formatting
+[dev] better selection handling via main app object
+
+
+v0.4.3
+------
+
+[dev] patch bump
+output is shown in the console once again
+[dev] missing fields in htlc rest
+
+
+v0.4.2
+------
+
+release notes
+HTLC class better REST support
+no longer calling get_channels in HTLC class working well for GRPC
+partial commit: no longer calling get_channels non-stop
+patch version bump
+[dev] fabric monkeypatch, and combo command for ios deploy
+[dev] in release notes, display head as current version
+fixed regression: ios app can be paused / resumed again
+fixed player regression (path needs to be posix string)
+display full release notes in app #139
+Move printing / console output to the consumable pattern #138
+[dev] stop autobalancing from throwing errors if file is empty
+[dev] updated release notes
+[dev] load user scripts from source if running on desktop
+[dev] platform is macosx not 'osx'
+[dev] include tags in fabfile
+'on-chain > send coins' now working as expected over REST #137
+
+
+v0.4.0+build.1
+--------------
+
+release notes
+high res background picture
+readme
+bespoke pay_logic error handling for REST
+only explicitly set high res on osx
+bump minor version
+files are better organized
+init node to None, in case we fail to get channels
+'Forwarding History' submenu triggers a 'on_press' unexpectedly in IOS
+swiping up gives focus to the status output line, and brings up the
+    keyboard #136
+Clicking on the menubar pans the channels view #135
+high resolution by default on desktop
+Make release notes available within the UI #134
+In player, disable the videos tab until a collection is selected. #120
+refactoring: moved data_manager into the orb module
+updated docs
+moving build system to python - housekeeping
+Make video about documentation #129
+build
+by default, channels are now longer
+Make video about connecting to the node #127
+Add copy buttons to the Connection Settings dialog, to copy python
+    commands #133
+GRPC should not be available in IOS #94
+add VERSION file with semver support #132
 
 

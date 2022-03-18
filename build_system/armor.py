@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-18 07:12:54
+# @Last Modified time: 2022-03-18 08:49:08
 
 try:
     # not all actions install all requirements
@@ -132,7 +132,7 @@ def build_common(c, env, sep=":"):
     ]
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
-    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
+    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --console "
     expiry = arrow.utcnow().shift(years=1)
     c.run(
         f"pyarmor licenses --expired {expiry.format('YYYY-MM-DD')} satoshi_0_paid",
@@ -194,10 +194,6 @@ def build_windows(c, env=os.environ):
     build_common(c, env, ";")
     build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.zip"
     zipf = zipfile.ZipFile(build_name, "w", zipfile.ZIP_DEFLATED)
-    # for p in Path(".").glob("*.spec"):
-    #     print(p)
-    #     print(p.open().read())
-    # shutil.copyfile(p.as_posix(), "dist")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
