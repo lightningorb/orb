@@ -2,21 +2,36 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 03:14:19
+# @Last Modified time: 2022-03-18 08:01:34
+
+print("importing system modules")
 
 import sys
 import os
 from pathlib import Path
+
+print("importing logger")
+
+from orb.core.logging import get_logger
+
+main_logger = get_logger(__name__)
+debug = main_logger.debug
+
+debug("importing kivy")
+
 from kivy.config import Config
 from kivy.utils import platform
 
+# from hanging_threads import start_monitoring
+
+# monitoring_thread = start_monitoring(seconds_frozen=600, test_interval=100)
+
 if platform == "win":
+    debug("windows detected, setting graphics multisampling to 0")
     Config.set("graphics", "multisamples", "0")
 
 # os.environ["KIVY_AUDIO"] = "ffpyplayer"
 # os.environ["KIVY_VIDEO"] = "ffpyplayer"
-
-from kivy.utils import platform
 
 if platform == "macosx":
     os.environ["KIVY_DPI"] = "240"
@@ -25,6 +40,8 @@ if platform == "macosx":
     # import pandas
     # import numpy
     # import matplotlib
+
+debug("appending paths to include lnd and third party modules")
 
 sys.path.append(Path("orb/lnd").as_posix())
 sys.path.append(Path("orb/lnd/grpc_generated").as_posix())
@@ -35,6 +52,8 @@ sys.path.append(Path("third_party/forex-python/").as_posix())
 sys.path.append(Path("third_party/bezier/src/python/").as_posix())
 sys.path.append(Path("third_party/colour/").as_posix())
 sys.path.append(Path("third_party/currency-symbols/").as_posix())
+
+debug("importing orb modules")
 
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
@@ -73,6 +92,8 @@ from kivymd.effects.stiffscroll import StiffScrollEffect
 
 from orb.core_ui.orb_app import OrbApp
 
+debug("keeping import modules in main")
+
 keep = lambda _: _
 
 keep(Lnd)
@@ -110,23 +131,6 @@ keep(forwarding_history)
 keep(HighlighterDialog)
 
 if __name__ == "__main__":
-    # import unittest
-
-    # print("TESTING CERTIFICATE")
-    # from tests.test_certificate import TestCertificate
-
-    # print("TESTING MACAROON")
-    # from tests.test_macaroon import TestMacaroon
-
-    # print("TESTING RSA")
-    # from tests.test_sec_rsa import TestSec
-
-    # print("TESTING MACAROON RSA")
-    # from tests.test_macaroon_secure import TestMacaroonSecure
-
-    # print("TESTING CERTIFICATE RSA")
-    # from tests.test_certificate_secure import TestCertificateSecure
-
-    # unittest.main(exit=False)
-
+    debug("in __main__")
+    debug("launching main Orb App")
     OrbApp().run()

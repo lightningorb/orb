@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-14 11:46:49
+# @Last Modified time: 2022-03-18 07:12:54
 
 try:
     # not all actions install all requirements
@@ -86,6 +86,7 @@ pip3.9 install pyarmor==6.6.2 --user;
 pip3.9 install fabric --user;
 pip3.9 install plyer --user;
 pip3.9 install semver --user;
+pip3.9 install memoization --user;
     """
 
 

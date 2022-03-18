@@ -69,6 +69,22 @@ On Linux, after downloading Orb's tar file
 
 - untar Orb
 - cd into the `orb` directory
-- the linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap.sh and run it once you are comfortable with the modifications it makes to your system's packages
-- you're then free to move the orb folder to a directory of your choice (e.g `/opt/` or `~`) and create your alias as required
+- the linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap.sh:
+
+.. code:: bash
+
+    cat bootstrap.sh
+
+If you are comfortable with the modifications it makes to your system's packages, then:
+
+.. code:: bash
+
+    bash boostrap.sh
+
+
+You should now be able to start orb:
+
+.. code:: bash
+
+    python3.9 main.py
 
