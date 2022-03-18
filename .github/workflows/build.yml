@@ -37,4 +37,7 @@ jobs:
           # try disabling pip caching
           # cache: 'pip'
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: pip install kivy.deps.gstreamer
+      - run: pip install kivy.deps.glew
+      - run: pip install kivy.deps.sdl2
       - run: python ./build.py armor.build-windows
