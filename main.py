@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-18 08:01:34
+# @Last Modified time: 2022-03-19 15:17:14
 
 print("importing system modules")
 
 import sys
 import os
 from pathlib import Path
+
+os.environ["KIVY_GL_BACKEND"] = "angle_sdl2"
 
 print("importing logger")
 

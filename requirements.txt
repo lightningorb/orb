@@ -20,7 +20,7 @@ grpcio
 pyarmor==6.6.2
 fabric
 semver
-
+kivy.deps.angle
 
 
 # requirements are slowly being copied to the third_party directory
