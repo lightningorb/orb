@@ -708,13 +708,15 @@ Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 
+<Tab>
+
 
 <ConnectionSettings>:
     title: 'LND Node Connection Settings'
-    size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
+    # size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [None, None]
+    size_hint: [.8, .8]
     MDTabs:
         id: tabs
         on_tab_switch: root.on_tab_switch(*args)
@@ -830,24 +832,23 @@ Builder.load_string('''
                 size_hint: (1, 1)
                 MDLabel:
                     text: "Install the 'rsa' module on your node, with pip3 install rsa then copy and run the provided command on your node."
-                    size_hint_y: 0.3
+                    size_hint_y: None
+                    height: self.texture_size[1]
                     multiline: True
                 MDIconButton:
                     icon: "content-copy"
-                    size_hint_y: 0.2
                     on_release: root.copy_cert_encrypt_command()
                 TextInput:
                     id: tls_cert
                     text: root.get_cert()
                     on_text: root.validate_cert(self.text)
-                    size_hint_y: 0.4
                     multiline: True
-                    size_hint: (1, 1)
                 MDLabel:
                     id: feedback
                     text: ""
-                    size_hint_y: 0.1
                     multiline: True
+                    size_hint_y: None
+                    height: self.texture_size[1]
                 MDRaisedButton:
                     text: 'Save'
                     on_release: root.save_cert(tls_cert.text)
@@ -857,7 +858,8 @@ Builder.load_string('''
                     md_bg_color: 0.3,0.3,0.3,1
                 MDLabel:
                     text: 'Once saved, you can proceed onto the next tab.'
-                    size_hint_y: 0.1
+                    size_hint_y: None
+                    height: self.texture_size[1]
         Tab:
             title: 'Macaroon'
             BoxLayout:
@@ -865,11 +867,11 @@ Builder.load_string('''
                 size_hint: (1, 1)
                 MDLabel:
                     text: "Install the 'rsa' module on your node (if you haven't already) with pip3 install rsa then copy and run the provided command on your node."
-                    size_hint_y: 0.3
                     multiline: True
+                    size_hint_y: None
+                    height: self.texture_size[1]
                 MDIconButton:
                     icon: "content-copy"
-                    size_hint_y: 0.2
                     on_release: root.copy_mac_encrypt_command()
                 TextInput:
                     id: macaroon
@@ -877,13 +879,12 @@ Builder.load_string('''
                     helper_text: 'Macaroon'
                     helper_text_mode: "persistent"
                     on_text: root.validate_macaroon(self.text)
-                    size_hint_y: 0.4
                     multiline: True
-                    size_hint: (1, 1)
                 MDLabel:
                     id: mac_feedback
                     text: ""
-                    size_hint_y: 0.1
+                    size_hint_y: None
+                    height: self.texture_size[1]
                     multiline: True
                 MDRaisedButton:
                     text: 'Save'
@@ -893,7 +894,6 @@ Builder.load_string('''
                     height: dp(40)
                     md_bg_color: 0.3,0.3,0.3,1
 
-<Tab>
 
 ''')
 Builder.load_string('''
