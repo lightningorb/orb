@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-18 07:12:54
+# @Last Modified time: 2022-03-22 07:14:14
 
 try:
     # not all actions install all requirements
@@ -62,31 +62,30 @@ def ubuntu_boostrap_3_9():
     return """\
 #!/bin/bash
 
-sudo apt-get update;
-sudo apt-get -y install python3-pip;
-sudo apt update -y;
-sudo apt install software-properties-common  -y;
-sudo add-apt-repository ppa:deadsnakes/ppa  -y;
-sudo apt install python3.9  -y;
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py;
-sudo python3.9 get-pip.py;
-pip3.9 install kivymd==0.104.2 --user;
-pip3.9 install peewee==3.14.8 --user;
-pip3.9 install python-dateutil==2.8.2 --user;
-pip3.9 install kivy_garden.graph==0.4.0 --user;
-pip3.9 install PyYaml==6.0 --user;
-pip3.9 install simplejson==3.17.6 --user;
-pip3.9 install Kivy==2.0.0 --user;
-pip3.9 install google-api-python-client --user;
-pip3.9 install grpcio --user;
-pip3.9 install ffpyplayer==4.2.0 --user;
-pip3.9 install python-dateutil==2.8.2 --user;
-pip3.9 install pyinstaller --user;
-pip3.9 install pyarmor==6.6.2 --user;
-pip3.9 install fabric --user;
-pip3.9 install plyer --user;
-pip3.9 install semver --user;
-pip3.9 install memoization --user;
+apt-get update;
+apt-get -y install python3-pip;
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+apt install software-properties-common -y;
+add-apt-repository ppa:deadsnakes/ppa -y;
+apt install python3.9 curl -y;
+curl https://bootstrap.pypa.io/get-pip.py | python3.9;
+pip3.9 install kivymd==0.104.2;
+pip3.9 install peewee==3.14.8;
+pip3.9 install python-dateutil==2.8.2;
+pip3.9 install kivy_garden.graph==0.4.0;
+pip3.9 install PyYaml==6.0;
+pip3.9 install simplejson==3.17.6;
+pip3.9 install Kivy==2.0.0;
+pip3.9 install google-api-python-client;
+pip3.9 install grpcio;
+# pip3.9 install ffpyplayer==4.2.0;
+pip3.9 install python-dateutil==2.8.2;
+pip3.9 install pyinstaller;
+pip3.9 install pyarmor==6.6.2;
+pip3.9 install fabric;
+pip3.9 install plyer;
+pip3.9 install semver;
+pip3.9 install memoization;
     """
 
 
@@ -166,7 +165,7 @@ def build_linux(c, env=os.environ):
         )
         c.run("rm -rf orb main.py third_party")
         c.run("mv dist orb")
-        with open("tmp/orb/bootstrap.sh", "w") as f:
+        with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
         build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"
         c.run(f"tar czvf {build_name} orb;")

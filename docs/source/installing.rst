@@ -62,24 +62,24 @@ On Windows, after downloading Orb:
     - e.g in your `program files` directory, and create appropriate launch shortcuts
 - run lnorb.exe
 
-Linux
------
+Ubuntu 20.04
+------------
 
-On Linux, after downloading Orb's tar file
+On Ubuntu 20.04, after downloading Orb's tar file
 
 - untar Orb
 - cd into the `orb` directory
-- the linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap.sh:
+- the linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap_ubuntu_20_04.sh:
 
 .. code:: bash
 
-    cat bootstrap.sh
+    cat bootstrap_ubuntu_20_04.sh
 
 If you are comfortable with the modifications it makes to your system's packages, then:
 
 .. code:: bash
 
-    bash boostrap.sh
+    sudo bash bootstrap_ubuntu_20_04.sh
 
 
 You should now be able to start orb:
@@ -88,3 +88,7 @@ You should now be able to start orb:
 
     python3.9 main.py
 
+
+.. note::
+
+    If you are using another Linux distribution, and require a bootstrap script, please request it in Orb's technical support group.
