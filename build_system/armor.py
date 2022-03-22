@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-22 08:06:04
+# @Last Modified time: 2022-03-22 08:31:38
 
 try:
     # not all actions install all requirements
@@ -26,7 +26,7 @@ name = "lnorb"
 VERSION = open("VERSION").read().strip()
 
 data = [
-    ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+    # ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
     ("orb/images/shadow_inverted.png", "orb/images/"),
     ("orb/misc/settings.json", "orb/misc/"),
     ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
@@ -168,7 +168,7 @@ def build_linux(c, env=os.environ):
         c.run("rm -rf orb main.py third_party")
         c.run("mv dist orb")
         for source, target in data:
-            c.run(f"cp ../orb/{source} {target}")
+            c.run(f"cp ../{source} orb/{target}")
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
         build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"
