@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-22 08:31:38
+# @Last Modified time: 2022-03-22 08:38:20
 
 try:
     # not all actions install all requirements
@@ -148,7 +148,7 @@ def build_common(c, env, sep=":"):
 
 
 @task
-def build_linux(c, env=os.environ):
+def build_linux(c, do_upload=True, env=os.environ):
     register(c)
     c.run("rm -rf dist tmp;")
     c.run("mkdir -p tmp;")
@@ -168,6 +168,7 @@ def build_linux(c, env=os.environ):
         c.run("rm -rf orb main.py third_party")
         c.run("mv dist orb")
         for source, target in data:
+            c.run(f"mkdir -p orb/{target}")
             c.run(f"cp ../{source} orb/{target}")
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
