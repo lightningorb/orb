@@ -1,24 +1,11 @@
-name: test and build
+name: build windows
 on:
   push:
-    branches: [ build ]
+    branches: [ build_windows ]
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 jobs:
-  build_linux:
-    runs-on: ubuntu-20.04
-    env:
-      os-name: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-          cache: 'pip'
-      - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: python ./build.py test.test
-      - run: python ./build.py armor.build-linux
   build_windows:
     runs-on: ${{ matrix.os }}
     env:

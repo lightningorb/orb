@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-22 07:14:14
+# @Last Modified time: 2022-03-22 08:06:04
 
 try:
     # not all actions install all requirements
@@ -24,6 +24,25 @@ except:
 
 name = "lnorb"
 VERSION = open("VERSION").read().strip()
+
+data = [
+    ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+    ("orb/images/shadow_inverted.png", "orb/images/"),
+    ("orb/misc/settings.json", "orb/misc/"),
+    ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
+    ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
+    ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),
+    ("orb/apps/auto_fees/appinfo.yaml", "orb/apps/auto_fees/"),
+    ("orb/apps/auto_rebalance/autobalance.py", "orb/apps/auto_rebalance/"),
+    ("orb/apps/auto_rebalance/autobalance.kv", "orb/apps/auto_rebalance/"),
+    ("orb/apps/auto_rebalance/autobalance.png", "orb/apps/auto_rebalance/"),
+    ("orb/apps/auto_rebalance/appinfo.yaml", "orb/apps/auto_rebalance/"),
+    ("orb/apps/auto_max_htlcs/update_max_htlc.py", "orb/apps/auto_max_htlcs/"),
+    ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
+    ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
+    ("video_library.yaml", "."),
+    ("images/ln.png", "images/"),
+]
 
 
 def upload_to_s3(env, file_name, bucket, object_name=None):
@@ -98,6 +117,7 @@ def upload(path):
 
 
 def build_common(c, env, sep=":"):
+    global data
     register(c)
     spec = ""
     if spec == ";":
@@ -111,24 +131,6 @@ def build_common(c, env, sep=":"):
         ]
     )
 
-    data = [
-        ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
-        ("orb/images/shadow_inverted.png", "orb/images/"),
-        ("orb/misc/settings.json", "orb/misc/"),
-        ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
-        ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
-        ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),
-        ("orb/apps/auto_fees/appinfo.yaml", "orb/apps/auto_fees/"),
-        ("orb/apps/auto_rebalance/autobalance.py", "orb/apps/auto_rebalance/"),
-        ("orb/apps/auto_rebalance/autobalance.kv", "orb/apps/auto_rebalance/"),
-        ("orb/apps/auto_rebalance/autobalance.png", "orb/apps/auto_rebalance/"),
-        ("orb/apps/auto_rebalance/appinfo.yaml", "orb/apps/auto_rebalance/"),
-        ("orb/apps/auto_max_htlcs/update_max_htlc.py", "orb/apps/auto_max_htlcs/"),
-        ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
-        ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
-        ("video_library.yaml", "."),
-        ("images/ln.png", "images/"),
-    ]
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
@@ -165,6 +167,8 @@ def build_linux(c, env=os.environ):
         )
         c.run("rm -rf orb main.py third_party")
         c.run("mv dist orb")
+        for source, target in data:
+            c.run(f"cp ../orb/{source} {target}")
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
         build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"

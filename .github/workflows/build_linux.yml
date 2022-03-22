@@ -1,19 +1,15 @@
-name: build macosx
+name: test linux
 on:
   push:
-    branches: [ build_macosx ]
+    branches: [ build_linux ]
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 jobs:
-  build_macosx:
-    runs-on: ${{ matrix.os }}
+  build_linux:
+    runs-on: ubuntu-20.04
     env:
-      os-name: ${{ matrix.os }}
-      KIVY_GL_BACKEND: 'angle_sdl2'
-    strategy:
-      matrix:
-        os: [macos-10.15, macos-11]
+      os-name: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -21,6 +17,5 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: brew install create-dmg
       - run: python ./build.py test.test
-      - run: python ./build.py armor.build-osx --do-upload
+      - run: python ./build.py armor.build-linux
