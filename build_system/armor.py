@@ -119,14 +119,7 @@ def upload(path):
 def build_common(c, env, sep=":"):
     global data
     register(c)
-    spec = ""
-    if sep == ";":
-        # windows detected
-        spec = "-s lnorb-win-patched.spec"
-        pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --console "
-    else:
-        pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
-    
+
     paths = " ".join(
         [
             f"--paths={x.as_posix()}"
@@ -134,6 +127,14 @@ def build_common(c, env, sep=":"):
             if x.is_dir()
         ]
     )
+    
+    spec = ""
+    if sep == ";":
+        # windows detected
+        spec = "-s lnorb-win-patched.spec"
+        pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --console "
+    else:
+        pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
 
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     print("="*50)
