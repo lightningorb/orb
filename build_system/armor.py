@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-22 08:38:20
+# @Last Modified time: 2022-03-22 10:08:39
 
 try:
     # not all actions install all requirements
@@ -172,14 +172,17 @@ def build_linux(c, do_upload=True, env=os.environ):
             c.run(f"cp ../{source} orb/{target}")
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
-        build_name = f"orb-{VERSION}-{os.environ['os-name']}-x86_64.tar.gz"
-        c.run(f"tar czvf {build_name} orb;")
-        upload_to_s3(
-            env,
-            f"tmp/{build_name}",
-            "lnorb",
-            object_name=f"customer_builds/{build_name}",
+        build_name = (
+            f"orb-{VERSION}-{os.environ.get('os-name', 'undefined')}-x86_64.tar.gz"
         )
+        c.run(f"tar czvf {build_name} orb;")
+        if do_upload:
+            upload_to_s3(
+                env,
+                f"tmp/{build_name}",
+                "lnorb",
+                object_name=f"customer_builds/{build_name}",
+            )
 
 
 @task

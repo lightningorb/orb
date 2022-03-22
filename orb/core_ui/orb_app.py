@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 10:34:34
+# @Last Modified time: 2022-03-22 10:17:40
 
 import os
 import sys
@@ -50,6 +50,13 @@ sys.path.append("orb/lnd")
 
 do_monkey_patching()
 is_dev = "main.py" in sys.argv[0]
+
+try:
+    from pytransform import get_license_info
+
+    is_dev = False
+except:
+    pass
 
 print(f"sys.argv[0] is {sys.argv[0]}")
 
