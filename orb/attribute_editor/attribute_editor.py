@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-10 10:02:43
+# @Last Modified time: 2022-03-23 04:25:43
 
 from threading import Thread
 
@@ -67,13 +67,6 @@ class AttributeEditor(BoxLayout):
         Class constructor.
         """
         super(AttributeEditor, self).__init__(*args, **kwargs)
-        try:
-            info = Lnd().get_info()
-            self.alias = info.alias
-            self.identity_pubkey = info.identity_pubkey
-        except:
-            self.alias = "offline"
-            self.identity_pubkey = "offline"
 
         def update_channel(inst, channel):
             self.channel = channel
@@ -86,6 +79,8 @@ class AttributeEditor(BoxLayout):
         """
         self.ids.md_list.clear_widgets()
         self.channel = None
+        self.alias = ""
+        self.identity_pubkey = ""
 
     def on_channel(self, inst, channel):
         """
@@ -97,6 +92,8 @@ class AttributeEditor(BoxLayout):
             def update(*_):
                 self.size_hint_y = None
                 if self.channel:
+                    self.alias = self.channel.alias
+                    self.identity_pubkey = self.channel.remote_pubkey
                     self.ids.md_list.clear_widgets()
                     self.populate_earned()
                     self.populate_helped_earn()
