@@ -132,8 +132,12 @@ def build_common(c, env, sep=":"):
     )
 
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
+    print("="*50)
+    print("DATA PATHS")
+    print(data)
+    print("="*50)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
-    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
+    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --console "
     expiry = arrow.utcnow().shift(years=1)
     c.run(
         f"pyarmor licenses --expired {expiry.format('YYYY-MM-DD')} satoshi_0_paid",
