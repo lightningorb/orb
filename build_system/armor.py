@@ -120,7 +120,7 @@ def build_common(c, env, sep=":"):
     global data
     register(c)
     spec = ""
-    if spec == ";":
+    if sep == ";":
         # windows detected
         spec = "-s lnorb-win-patched.spec"
     paths = " ".join(
