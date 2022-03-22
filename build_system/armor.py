@@ -119,7 +119,10 @@ def upload(path):
 def build_common(c, env, sep=":"):
     global data
     register(c)
-
+    spec = ""
+    if sep == ";":
+        # windows detected
+        spec = "-s lnorb-win-patched.spec"
     paths = " ".join(
         [
             f"--paths={x.as_posix()}"
@@ -127,14 +130,6 @@ def build_common(c, env, sep=":"):
             if x.is_dir()
         ]
     )
-    
-    spec = ""
-    if sep == ";":
-        # windows detected
-        spec = "-s lnorb-win-patched.spec"
-        pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --console "
-    else:
-        pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --windowed "
 
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
     print("="*50)
@@ -142,6 +137,7 @@ def build_common(c, env, sep=":"):
     print(data)
     print("="*50)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
+    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --{'windowed' if sep == ':' else 'console'} "
     expiry = arrow.utcnow().shift(years=1)
     c.run(
         f"pyarmor licenses --expired {expiry.format('YYYY-MM-DD')} satoshi_0_paid",
