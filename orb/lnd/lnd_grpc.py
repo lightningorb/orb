@@ -78,7 +78,7 @@ class LndGRPC(LndBase):
 
     def sign_message(self, message):
         request = ln.SignMessageRequest(msg=message.encode())
-        return self.stub.SignMessage(request)
+        return self.stub.SignMessage(request).signature
 
     @aliases_cache
     def get_node_alias(self, pub_key):
