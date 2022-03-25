@@ -315,7 +315,9 @@ class LndREST(LndBase):
         that a specific key is used to sign the message instead
         of the node identity private key.
         """
-        return self.__post(f"/v1/signmessage", data=dict(msg=msg)).signature
+        return self.__post(
+            f"/v1/signmessage", data=dict(msg=base64.b64encode(msg.encode()).decode())
+        ).signature
 
     def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
         import secrets
