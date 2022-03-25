@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-22 10:08:39
+# @Last Modified time: 2022-03-26 05:52:15
 
 try:
     # not all actions install all requirements
@@ -27,6 +27,9 @@ VERSION = open("VERSION").read().strip()
 
 data = [
     # ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+    ("orb/audio/link_fail_event.wav", "orb/audio/"),
+    ("orb/audio/forward_settle.wav", "orb/audio/"),
+    ("orb/audio/send_settle.wav", "orb/audio/"),
     ("orb/images/shadow_inverted.png", "orb/images/"),
     ("orb/misc/settings.json", "orb/misc/"),
     ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
