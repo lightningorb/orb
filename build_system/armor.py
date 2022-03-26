@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-26 05:52:15
+# @Last Modified time: 2022-03-26 07:40:17
 
 try:
     # not all actions install all requirements
@@ -26,7 +26,7 @@ name = "lnorb"
 VERSION = open("VERSION").read().strip()
 
 data = [
-    # ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+    ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
     ("orb/audio/link_fail_event.wav", "orb/audio/"),
     ("orb/audio/forward_settle.wav", "orb/audio/"),
     ("orb/audio/send_settle.wav", "orb/audio/"),
@@ -135,10 +135,10 @@ def build_common(c, env, sep=":"):
     )
 
     data = " ".join(f"--add-data '{s}{sep}{d}'" for s, d in data)
-    print("="*50)
+    print("=" * 50)
     print("DATA PATHS")
     print(data)
-    print("="*50)
+    print("=" * 50)
     hidden_imports = "--hidden-import orb.kvs --hidden-import orb.misc --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --{'windowed' if sep == ':' else 'console'} "
     expiry = arrow.utcnow().shift(years=1)

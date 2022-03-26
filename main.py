@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-18 08:01:34
+# @Last Modified time: 2022-03-26 07:53:09
 
 print("importing system modules")
 
@@ -42,16 +42,16 @@ if platform == "macosx":
     # import matplotlib
 
 debug("appending paths to include lnd and third party modules")
-
-sys.path.append(Path("orb/lnd").as_posix())
-sys.path.append(Path("orb/lnd/grpc_generated").as_posix())
-sys.path.append(Path("third_party/contextmenu").as_posix())
-sys.path.append(Path("third_party/arrow").as_posix())
-sys.path.append(Path("third_party/python-qrcode/").as_posix())
-sys.path.append(Path("third_party/forex-python/").as_posix())
-sys.path.append(Path("third_party/bezier/src/python/").as_posix())
-sys.path.append(Path("third_party/colour/").as_posix())
-sys.path.append(Path("third_party/currency-symbols/").as_posix())
+parent_dir = Path(__file__).parent
+sys.path.append((parent_dir / Path("orb/lnd")).as_posix())
+sys.path.append((parent_dir / Path("orb/lnd/grpc_generated")).as_posix())
+sys.path.append((parent_dir / Path("third_party/contextmenu")).as_posix())
+sys.path.append((parent_dir / Path("third_party/arrow")).as_posix())
+sys.path.append((parent_dir / Path("third_party/python-qrcode/")).as_posix())
+sys.path.append((parent_dir / Path("third_party/forex-python/")).as_posix())
+sys.path.append((parent_dir / Path("third_party/bezier/src/python/")).as_posix())
+sys.path.append((parent_dir / Path("third_party/colour/")).as_posix())
+sys.path.append((parent_dir / Path("third_party/currency-symbols/")).as_posix())
 
 debug("importing orb modules")
 

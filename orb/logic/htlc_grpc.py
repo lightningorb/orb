@@ -2,11 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-02-06 05:44:13
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 08:14:49
+# @Last Modified time: 2022-03-26 07:39:38
 
 try:
-    from grpc_generated import router_pb2 as lnrouter
-    from grpc_generated import lightning_pb2 as lnrpc
+    from orb.lnd.grpc_generated import router_pb2 as lnrouter
+    from orb.lnd.grpc_generated import lightning_pb2 as lnrpc
 except:
     pass
 
