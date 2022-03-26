@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-26 07:40:17
+# @Last Modified time: 2022-03-26 08:20:18
 
 try:
     # not all actions install all requirements
@@ -176,7 +176,7 @@ def build_linux(c, do_upload=True, env=os.environ):
         c.run("mv dist orb")
         for source, target in data:
             c.run(f"mkdir -p orb/{target}")
-            c.run(f"cp ../{source} orb/{target}")
+            c.run(f"cp -r ../{source} orb/{target}")
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
             f.write(ubuntu_boostrap_3_9())
         build_name = (
