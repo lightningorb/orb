@@ -149,12 +149,12 @@ Connection Settings
 In Orb, now click on `app > connection settings`, and add the following information:
 
 
-IP Address
-..........
+Node type and IP Address
+........................
 
 Enter your node's IP or domain name:
 
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-01-31_08-03-31.png
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-03-27_11-22-49.png
    :alt: ip address
    :align: center
 
@@ -193,7 +193,7 @@ Next copy the command:
    :alt: protocol
    :align: center
 
-Please note you may need to alter the path (`~/.lnd/tls.cert`) in the command string (we'll add an option box for Umbrel etc. in a future version of Orb. You can refer to :ref:`connection-string` if you are curious to know what the connection command does).
+You can refer to :ref:`connection-string` if you are curious to know what the connection command does).
 
 Paste it in your node's terminal, and run it.
 
