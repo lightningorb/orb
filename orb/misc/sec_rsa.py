@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 17:27:08
+# @Last Modified time: 2022-03-27 08:11:01
 
 
 import uuid
@@ -13,6 +13,7 @@ import struct
 import os
 import random
 from traceback import format_exc
+from orb.misc.utils import pref
 from orb.misc.utils import desktop
 import plyer
 import random
@@ -88,8 +89,14 @@ def get_sec_keys():
 
 
 def get_cert_command(public_key):
-    return f"""python3 -c "import rsa; import base64; import os; p = rsa.PublicKey.load_pkcs1({public_key}); c = open(os.path.expanduser('~/.lnd/tls.cert')).read(); print('\\n'.join([base64.b64encode(rsa.encrypt(c[i : i + 53].encode(), p)).decode() for i in range(0, len(c), 53)]))"  """
+    cert_path = "~/.lnd/tls.cert"
+    if pref("lnd.type") == "umbrel":
+        cert_path = "~/umbrel/.lnd/tls.cert"
+    return f"""python3 -c "import rsa; import base64; import os; p = rsa.PublicKey.load_pkcs1({public_key}); c = open(os.path.expanduser('{cert_path}')).read(); print('\\n'.join([base64.b64encode(rsa.encrypt(c[i : i + 53].encode(), p)).decode() for i in range(0, len(c), 53)]))"  """
 
 
 def get_mac_command(public_key):
-    return f"""python3 -c "import rsa; import os; import codecs; import base64; pub = rsa.PublicKey.load_pkcs1({public_key}); message = codecs.encode(open(os.path.expanduser('~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon'), 'rb' ).read(), 'hex',).decode(); print('\\n'.join([base64.b64encode(rsa.encrypt(message[i : i + 53].encode('utf8'), pub)).decode() for i in range(0, len(message), 53)]))"  """
+    mac_path = "~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+    if pref("lnd.type") == "umbrel":
+        mac_path = "~/umbrel/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+    return f"""python3 -c "import rsa; import os; import codecs; import base64; pub = rsa.PublicKey.load_pkcs1({public_key}); message = codecs.encode(open(os.path.expanduser('{mac_path}'), 'rb' ).read(), 'hex',).decode(); print('\\n'.join([base64.b64encode(rsa.encrypt(message[i : i + 53].encode('utf8'), pub)).decode() for i in range(0, len(message), 53)]))"  """

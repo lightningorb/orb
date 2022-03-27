@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 10:29:45
+# @Last Modified time: 2022-03-27 10:58:49
 
 
 def set_conf_defaults(config):
     config.add_section("lnd")
+    config.set("lnd", "type", "default")
     config.set("lnd", "hostname", "localhost")
     config.set("lnd", "rest_port", "8080")
     config.set("lnd", "grpc_port", "10009")

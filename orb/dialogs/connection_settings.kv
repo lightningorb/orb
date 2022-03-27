@@ -2,8 +2,13 @@
 #:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
+#:import Factory kivy.factory.Factory
 
 <Tab>
+
+<TypeSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(150), dp(25)
 
 
 <ConnectionSettings>:
@@ -16,11 +21,23 @@
         id: tabs
         on_tab_switch: root.on_tab_switch(*args)
         Tab:
-            title: 'Address'
+            title: 'Type & Address'
             BoxLayout:
                 orientation: 'vertical'
                 MDLabel:
-                    text: 'Enter the IP address or hostname of your LND node. It should not be an FQDN (e.g it should not contain https:// etc.).'
+                    text: 'Specify the type of node. Set as default, or Umbrel.'
+                    size_hint_y: 1
+                    multiline: True
+                Spinner:
+                    id: spinner_in_id
+                    option_cls: Factory.get("TypeSpinnerOption")
+                    text: pref('lnd.type')
+                    height: dp(30)
+                    width: dp(150)
+                    size_hint: None, None
+                    on_text: root.set_and_save('lnd.type', spinner_in_id.text)
+                MDLabel:
+                    text: 'Enter the IP address or hostname of your LND node.'
                     size_hint_y: 1
                     multiline: True
                 BoxLayout:

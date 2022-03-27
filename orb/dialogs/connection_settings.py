@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-19 13:51:17
+# @Last Modified time: 2022-03-27 10:45:08
 
 
 import base64
@@ -13,6 +13,8 @@ from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.app import App
 from kivy.core.clipboard import Clipboard
+from kivy.properties import StringProperty
+from kivy.uix.spinner import SpinnerOption
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
@@ -25,17 +27,29 @@ from orb.misc.macaroon_secure import MacaroonSecure
 from orb.misc.sec_rsa import get_sec_keys, get_cert_command, get_mac_command
 
 
+class TypeSpinnerOption(SpinnerOption):
+    pass
+
+
 class Tab(MDFloatLayout, MDTabsBase):
     """Class implementing content for a tab."""
 
 
 class ConnectionSettings(PopupDropShadow):
+
+    node_type = StringProperty("default")
+
     def open(self, *args):
 
         self.config = App.get_running_app().config
         self.ids.grpc.disabled = mobile
 
         super(ConnectionSettings, self).open(self, *args)
+
+        self.ids.spinner_in_id.values = ["default", "umbrel"]
+
+    def node_type_selected(self, val):
+        self.node_type = val
 
     def set_and_save(self, key, val):
         section, name = key.split(".")

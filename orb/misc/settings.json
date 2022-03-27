@@ -4,6 +4,17 @@
       "title":"Connection Settings"
    },
    {
+      "type":"options",
+      "title":"Node Type",
+      "desc":"The node's IP or domain, e.g 1.1.1.1",
+      "section":"lnd",
+      "key":"type",
+      "options":[
+         "default",
+         "umbrel"
+      ]
+   },
+   {
       "type":"string",
       "title":"Host",
       "desc":"The node's IP or domain, e.g 1.1.1.1",
