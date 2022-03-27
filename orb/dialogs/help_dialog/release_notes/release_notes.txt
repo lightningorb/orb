@@ -1,6 +1,39 @@
-0.14.4
+0.14.5
 ----
 
+updated docs
+updated release notes
+Add Umbrel checkbox in connection settings #215
+recursive copy
+make sure grpc_generated is available in builds
+version bump
+Audio not working in linux #224
+Merge branch 'main' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    main
+updated release notes
+Cannot log in to app store over GRPC #223
+In the channel editor, show pk and alias of the peer #222
+console for windows, windowed for osx
+paths referenced before declaration
+windows build working
+add paths to spec file and set console to true
+build with console enabled
+typo
+is_dev should not be True in ubuntu release
+Merge branch 'build' into main
+copy files to correct location
+copy files to correct location
+splitting up build targets into their own branches
+test bootstrap.sh #220
+added kivy.deps.angle requirement
+added kivy.deps.angle requirement
+force console mode
+release notes
+Connection settings dialog infinite loop [#219]
+disable file logging handler [#217]
+trying to fix builds
+Start in console rather than windowed mode.
 
 
 v0.14.4
