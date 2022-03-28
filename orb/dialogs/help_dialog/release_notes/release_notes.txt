@@ -1,6 +1,14 @@
-0.14.5
+0.14.6
 ----
 
+updated release script
+bulk payment threads stop unexpectedly #227
+
+
+v0.14.6
+-------
+
+version bump
 updated docs
 updated release notes
 Add Umbrel checkbox in connection settings #215
