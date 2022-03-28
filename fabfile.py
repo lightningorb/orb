@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-28 11:40:11
+# @Last Modified time: 2022-03-28 15:34:19
 
 import re
 import os
@@ -59,7 +59,7 @@ def release(c, minor=False, patch=False):
         c.run(f"git checkout {branch}")
         c.run("git rebase main")
         c.run("git push")
-
+    c.run("git checkout main")
 
 namespace = Collection(
     katching,
