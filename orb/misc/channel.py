@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-17 05:45:01
+# @Last Modified time: 2022-03-28 15:29:46
 
 from threading import Thread, Lock
 
@@ -14,33 +14,6 @@ from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
 
 from orb.lnd import Lnd
-
-
-class CountLock:
-    """
-    A Lock context manager, that locks the lock if
-    there are more than _num threads currently
-    within the context.
-    """
-
-    def __init__(self, num):
-        self._count = 0
-        self._num = num
-        self._lock = Lock()
-
-    def __enter__(self):
-        self._count += 1
-        if self._count > self._num:
-            self._lock.acquire()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._count -= 1
-        if self._lock.locked():
-            self._lock.release()
-
-
-edge_mutex = CountLock(50)
 
 
 class Channel(EventDispatcher):
@@ -102,36 +75,25 @@ class Channel(EventDispatcher):
 
         self._policies_are_bound = False
 
-        self.schedule_updates()
-
     @property
     def active(self):
         return self.channel.active
 
-    def schedule_updates(self):
-        def get_policies(*_):
-            """
-            Get the channel policies from LND on a thread,
-            and bind them to update_lnd_with_policies. This means whenever
-            a fee policy is changed in Orb, it immediately gets updated
-            in LND.
-            """
-            with edge_mutex:
-                policy_to = Lnd().get_policy_to(self.chan_id)
-                self._unbind_policies()
-                self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-                self.fee_base_msat = policy_to.fee_base_msat
-                self.time_lock_delta = policy_to.time_lock_delta
-                self.max_htlc_msat = policy_to.max_htlc_msat
-                self.min_htlc_msat = policy_to.min_htlc
-                self._bind_policies()
-
-        # get the policies now
-        Clock.schedule_once(lambda *_: Thread(target=get_policies).start(), 0)
-
-        # and update the policies every 5 minutes, in case they change
-        # in LND
-        Clock.schedule_interval(lambda *_: Thread(target=get_policies).start(), 5 * 60)
+    def get_policies(self):
+        """
+        Get the channel policies from LND,
+        and bind them to update_lnd_with_policies. This means whenever
+        a fee policy is changed in Orb, it immediately gets updated
+        in LND.
+        """
+        policy_to = Lnd().get_policy_to(self.chan_id)
+        self._unbind_policies()
+        self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+        self.fee_base_msat = policy_to.fee_base_msat
+        self.time_lock_delta = policy_to.time_lock_delta
+        self.max_htlc_msat = policy_to.max_htlc_msat
+        self.min_htlc_msat = policy_to.min_htlc
+        self._bind_policies()
 
     def _bind_policies(self):
         """

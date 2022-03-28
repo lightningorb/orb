@@ -2,9 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 10:20:38
+# @Last Modified time: 2022-03-28 15:30:09
 
 from traceback import print_exc
+import concurrent.futures
+import urllib.request
+from threading import Thread
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
@@ -51,7 +54,26 @@ class Channels(EventDispatcher):
         self.lnd = lnd
         self.get()
         Clock.schedule_once(self.compute_balanced_ratios, 0)
-        self.interval = Clock.schedule_interval(self.compute_balanced_ratios, 30)
+        Clock.schedule_interval(self.compute_balanced_ratios, 30)
+        Clock.schedule_once(lambda *_: Thread(target=self.get_chan_policies).start(), 5)
+        Clock.schedule_interval(
+            lambda *_: Thread(target=self.get_chan_policies).start(), 5 * 60
+        )
+
+    def get_chan_policies(self, *_):
+        def get_policies(channel):
+            channel.get_policies()
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=30) as executor:
+            future_to_channel = {
+                executor.submit(get_policies, c): c for c in self.channels.values()
+            }
+            for future in concurrent.futures.as_completed(future_to_channel):
+                channel = future_to_channel[future]
+                try:
+                    data = future.result()
+                except Exception as exc:
+                    print("%r generated an exception: %s" % (channel, exc))
 
     def remove(self, channel):
         del self.channels[channel.chan_id]
