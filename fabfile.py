@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-27 11:15:03
+# @Last Modified time: 2022-03-28 11:40:11
 
 import re
 import os
@@ -55,7 +55,7 @@ def release(c, minor=False, patch=False):
     c.run("git push")
     tags.tag(c)
     tags.push(c)
-    for branch in ["build_linux", "build_macosx" "build_windows", "docs", "site"]:
+    for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
         c.run(f"git checkout {branch}")
         c.run("git rebase main")
         c.run("git push")
