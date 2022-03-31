@@ -1,6 +1,25 @@
-0.14.7
+0.14.8
 ----
 
+Fixed the Umbrel connection string as it pointed to umbrel/.lnd
+    instead of umbrel/lnd.
+updated docs
+site not working on mobile - testing fixes
+site not working on mobile - testing fixes
+site not working on mobile - testing fixes
+site not working on mobile - testing fixes
+site not working on mobile - testing fixes
+site not working on mobile - testing fixes
+gallery not working on mobile
+updated site with images
+TMP
+TMP
+
+
+v0.14.8
+-------
+
+version bump
 updated release notes
 GUI freezes up after some time when making payments #228
 
