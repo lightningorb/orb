@@ -37,6 +37,12 @@ Edit your `lnd.conf` and enter your node's externally visible IP as an entry:
 
 (please note the `tlsextraip=` or `tlsextradomain` lines may appear multiple times).
 
+Make sure it contains the following settings:
+
+   tlsautorefresh=1
+   rpclisten=0.0.0.0:10009
+   restlisten=0.0.0.0:8080
+
 Step 3:
 .......
 
@@ -46,7 +52,10 @@ Shut down lnd.
 Step 4:
 .......
 
-Delete `.lnd/tls.cert`.
+.. code:: bash
+
+   mv .lnd/tls.cert .lnd/tls.cert.backup
+   mv .lnd/tls.key .lnd/tls.key.backup
 
 
 Step 5:
@@ -80,6 +89,12 @@ Edit your `~/umbrel/lnd/lnd.conf` and enter your node's externally visible IP as
 
 (please note the `tlsextraip=` or `tlsextradomain` lines may appear multiple times).
 
+Make sure it contains the following settings:
+
+   tlsautorefresh=1
+   rpclisten=0.0.0.0:10009
+   restlisten=0.0.0.0:8080
+
 
 Step 3:
 .......
@@ -89,27 +104,8 @@ Shut down lnd:
 .. code:: bash
 
    cd umbrel;
-   docker-compose stop lnd;
+   docker-compose restart lnd;
 
-
-Step 4:
-.......
-
-Delete tls.cert:
-
-.. code:: bash
-
-   rm lnd/tls.cert
-
-
-Step 5:
-.......
-
-Start lnd:
-
-.. code:: bash
-
-   docker-compose start lnd;
 
 Raspblitz
 ---------
@@ -136,6 +132,12 @@ Edit your `lnd.conf`, and enter your node's externally visible IP as an entry:
    tlsextradomain=[YOUR_NODE_DOMAIN]
 
 (please note the `tlsextraip=` or `tlsextradomain` lines may appear multiple times).
+
+Make sure it contains the following settings:
+
+   tlsautorefresh=1
+   rpclisten=0.0.0.0:10009
+   restlisten=0.0.0.0:8080
 
 Step 3:
 .......
