@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 09:45:02
+# @Last Modified time: 2022-03-31 06:40:46
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -212,9 +212,9 @@ class Setter(Base):
                     current_fee_rate + self.fee_rate * (self.obj["fee_bump_factor"]),
                     self.fee_rate,
                 )
+            new_fee = int(new_fee)
             print(f"setting fee rate to {new_fee} on {alias}")
             self.channel.fee_rate_milli_msat = new_fee
-            self.channel.update_lnd_with_policies()
 
 
 def get_loader():

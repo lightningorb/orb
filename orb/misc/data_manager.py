@@ -2,7 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 06:16:34
+# @Last Modified time: 2022-03-31 10:09:23
+
+from traceback import print_exc
 
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import BooleanProperty
@@ -45,7 +47,12 @@ class DataManager(EventDispatcher):
         self.disable_shortcuts = False
         self.save_cert()
         self.lnd = Lnd()
-        self.pubkey = self.lnd.get_info().identity_pubkey
+        try:
+            self.pubkey = self.lnd.get_info().identity_pubkey
+        except:
+            print_exc()
+            print("Error getting pubkey")
+
         self.plugin_registry = {}
 
         self.channels = Channels(self.lnd)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-27 08:11:01
+# @Last Modified time: 2022-03-31 09:40:15
 
 
 import uuid
@@ -91,12 +91,12 @@ def get_sec_keys():
 def get_cert_command(public_key):
     cert_path = "~/.lnd/tls.cert"
     if pref("lnd.type") == "umbrel":
-        cert_path = "~/umbrel/.lnd/tls.cert"
+        cert_path = "~/umbrel/lnd/tls.cert"
     return f"""python3 -c "import rsa; import base64; import os; p = rsa.PublicKey.load_pkcs1({public_key}); c = open(os.path.expanduser('{cert_path}')).read(); print('\\n'.join([base64.b64encode(rsa.encrypt(c[i : i + 53].encode(), p)).decode() for i in range(0, len(c), 53)]))"  """
 
 
 def get_mac_command(public_key):
     mac_path = "~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
     if pref("lnd.type") == "umbrel":
-        mac_path = "~/umbrel/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+        mac_path = "~/umbrel/lnd/data/chain/bitcoin/mainnet/admin.macaroon"
     return f"""python3 -c "import rsa; import os; import codecs; import base64; pub = rsa.PublicKey.load_pkcs1({public_key}); message = codecs.encode(open(os.path.expanduser('{mac_path}'), 'rb' ).read(), 'hex',).decode(); print('\\n'.join([base64.b64encode(rsa.encrypt(message[i : i + 53].encode('utf8'), pub)).decode() for i in range(0, len(message), 53)]))"  """
