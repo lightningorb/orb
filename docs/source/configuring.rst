@@ -39,6 +39,8 @@ Edit your `lnd.conf` and enter your node's externally visible IP as an entry:
 
 Make sure it contains the following settings:
 
+.. code:: bash
+
    tlsautorefresh=1
    rpclisten=0.0.0.0:10009
    restlisten=0.0.0.0:8080
@@ -91,6 +93,8 @@ Edit your `~/umbrel/lnd/lnd.conf` and enter your node's externally visible IP as
 
 Make sure it contains the following settings:
 
+.. code:: bash
+
    tlsautorefresh=1
    rpclisten=0.0.0.0:10009
    restlisten=0.0.0.0:8080
@@ -134,6 +138,8 @@ Edit your `lnd.conf`, and enter your node's externally visible IP as an entry:
 (please note the `tlsextraip=` or `tlsextradomain` lines may appear multiple times).
 
 Make sure it contains the following settings:
+
+.. code:: bash
 
    tlsautorefresh=1
    rpclisten=0.0.0.0:10009
