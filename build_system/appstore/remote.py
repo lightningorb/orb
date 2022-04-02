@@ -2,13 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 17:03:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 13:48:54
+# @Last Modified time: 2022-04-03 06:21:46
 
 from invoke import task
 import os
 
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.clone
-# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.create_db
+# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.create-db
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.install-service
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.create-tables
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.drop-tables
