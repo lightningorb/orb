@@ -329,5 +329,20 @@
       "desc":"URL for the App Store",
       "section":"url",
       "key":"appstore"
+   },
+   {
+      "type":"title",
+      "title":"System"
+   },
+   {
+      "type":"options",
+      "title":"Device Identifier",
+      "desc":"Library used to indentify your device",
+      "section":"system",
+      "key":"identifier",
+      "options":[
+         "uuid",
+         "plyer"
+      ]
    }
 ]

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-27 10:58:49
+# @Last Modified time: 2022-04-02 10:35:41
 
 
 def set_conf_defaults(config):
@@ -56,3 +56,6 @@ def set_conf_defaults(config):
     config.set("path", "PYTHONPATH", "")
     config.add_section("url")
     config.set("url", "appstore", "https://lnappstore.com")
+    config.add_section("system")
+    config.set("system", "identifier", "plyer")
+    config.set("system", "orb_version", "undefined")

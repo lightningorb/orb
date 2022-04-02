@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-31 09:40:15
+# @Last Modified time: 2022-04-02 10:18:49
 
 
 import uuid
@@ -79,9 +79,9 @@ def decrypt_long(encrypted_message, private_key):
 
 
 def get_sec_keys():
-    if desktop:
+    if pref("system.identifier") == "uuid":
         uid = uuid.getnode()
-    else:
+    elif pref("system.identifier") == "plyer":
         uid = plyer.uniqueid.id
     random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)

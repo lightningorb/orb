@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-02 10:07:30
+# @Last Modified time: 2022-04-02 10:35:56
 
 import os
 import sys
@@ -270,6 +270,8 @@ class OrbApp(MDApp):
             (Path(__file__).parent.parent.parent / "VERSION").open().read().strip()
         )
         print(f"Orb version: {self.version}")
+        self.config["system"]["orb_version"] = self.version
+        self.config.write()
 
     def build(self):
         """

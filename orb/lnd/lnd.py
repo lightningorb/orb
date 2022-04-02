@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-07 06:19:53
+# @Last Modified time: 2022-04-02 10:22:03
 
 from traceback import format_exc
 import os
@@ -42,6 +42,7 @@ def Lnd():
         )
         mac = mac_secure.as_plain_macaroon().macaroon.decode()
         if not mac:
+            print("Macaroon is invalid")
             mac_invalid = True
 
     if lnd.get(protocol) is None:
@@ -61,6 +62,7 @@ def Lnd():
                         macaroon=mac,
                     )
             except:
+                print("could not start lnd grpc")
                 print(format_exc())
         elif pref("lnd.protocol") == Protocol.rest:
             from orb.lnd.lnd_rest import LndREST
