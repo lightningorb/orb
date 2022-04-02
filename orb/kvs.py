@@ -1588,7 +1588,7 @@ Builder.load_string('''
     size_hint: .5, .5
     Label:
         id: label
-        size_hint: [1,1]
+        size_hint: 1, 1
 ''')
 Builder.load_string('''
 #:kivy 2.0.0
@@ -1811,7 +1811,7 @@ Builder.load_string('''
                 ContextMenuTextItem:
                     text: "Release Notes"
                     on_press: app_menu.close_all()
-                    on_release: ReleaseNotes().open()
+                    on_release: webbrowser.open('https://lnorb.com/release-notes')
                 ContextMenuTextItem:
                     text: "Links"
                     ContextMenu:
