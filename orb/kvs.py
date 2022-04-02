@@ -1585,22 +1585,10 @@ Builder.load_string('''
     title: 'About'
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [None, None]
-    size: [600, 700]
+    size_hint: .5, .5
     Label:
+        id: label
         size_hint: [1,1]
-        text: 'Orb is being developed in the\
-heart of the plebnet.\
-\
-Big thanks to:\
-\
-Miguel\
-Richard\
-Mads\
-Asher\
-\
-And countless others for their\
-time, input and knowledge.'
 ''')
 Builder.load_string('''
 #:kivy 2.0.0
