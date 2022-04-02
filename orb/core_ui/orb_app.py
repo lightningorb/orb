@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-22 10:17:40
+# @Last Modified time: 2022-04-02 10:07:30
 
 import os
 import sys
@@ -20,6 +20,7 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.utils import platform
 from kivy.config import Config
+from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
 from kivy.properties import ListProperty
@@ -67,6 +68,7 @@ class OrbApp(MDApp):
     selection = ObjectProperty(allownone=True)
     update_channels_widget = NumericProperty()
     apps = None
+    version = StringProperty("")
 
     def get_application_config(self, defaultpath=f"~/orb.ini"):
         """
@@ -263,6 +265,12 @@ class OrbApp(MDApp):
             self.config["lnd"]["macaroon_admin"] = mac_secure.macaroon_secure.decode()
             self.config.write()
 
+    def read_version(self):
+        self.version = (
+            (Path(__file__).parent.parent.parent / "VERSION").open().read().strip()
+        )
+        print(f"Orb version: {self.version}")
+
     def build(self):
         """
         Main build method for the app.
@@ -275,6 +283,7 @@ class OrbApp(MDApp):
         self.make_dirs()
         self.check_cert_and_mac()
         self.load_kvs()
+        self.read_version()
         data_manager.data_man = data_manager.DataManager()
         window_sizes = Window.size
         self.theme_cls.theme_style = "Dark"

@@ -38,6 +38,7 @@ a = Analysis(
         ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
         ("video_library.yaml", "."),
         ("images/ln.png", "images/"),
+        ("VERSION", "."),
     ],
     hiddenimports=[
         "orb.kvs",
