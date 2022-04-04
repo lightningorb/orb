@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 11:44:51
+# @Last Modified time: 2022-04-04 14:43:33
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -66,7 +66,7 @@ class ChannelsWidget(ScatterLayout):
         self.bind(size=self.update)
         App.get_running_app().bind(update_channels_widget=self.update)
         self.apply_transform(
-            Matrix().scale(0.5, 0.5, 0.5), anchor=(self.size[0] / 2, self.size[1] / 2)
+            Matrix().scale(0.3, 0.3, 0.3), anchor=(self.size[0] / 2, self.size[1] / 2)
         )
         if not is_mock():
             self.htlcs_thread.start()
