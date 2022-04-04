@@ -1,6 +1,18 @@
-0.14.10
+0.14.11
 ----
 
+updated release notes
+add support for 350+ channels #235
+added video to site
+using image thumbnails on site
+allow lnorb to publish apps
+site sorting of versions
+
+
+v0.14.10
+--------
+
+version bump
 do not print version in console
 use plyer for system identification #230 save version in orb.ini #234
 orb should be aware of which version it is #231
