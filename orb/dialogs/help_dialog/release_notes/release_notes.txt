@@ -1,6 +1,20 @@
-0.14.11
+0.14.12
 ----
 
+updated release notes
+when channel closes, it does not get removed from the scene
+regression: module plyer.platforms missing in windows #237
+added testimonial
+added testimonial
+capitalization typo
+added hire me page
+added testimonials
+
+
+v0.14.11
+--------
+
+version bump
 updated release notes
 add support for 350+ channels #235
 added video to site
