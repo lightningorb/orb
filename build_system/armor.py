@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-05-20 06:53:38
+# @Last Modified time: 2022-05-20 07:00:28
 
 try:
     # not all actions install all requirements
@@ -103,7 +103,7 @@ pip3.9 install google-api-python-client;
 pip3.9 install grpcio;
 # pip3.9 install ffpyplayer==4.2.0;
 pip3.9 install python-dateutil==2.8.2;
-pip3.9 install pyinstaller==5.0;
+pip3.9 install pyinstaller==4.9;
 pip3.9 install pyarmor==6.6.2;
 pip3.9 install fabric;
 pip3.9 install plyer;
