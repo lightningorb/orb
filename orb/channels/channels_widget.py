@@ -85,7 +85,7 @@ class ChannelsWidget(ScatterLayout):
             self.update()
 
     def remove_channel(self, channel, caps=None):
-        self.ids.relative_layout.clear_widget(self.cn[channel.chan_id])
+        self.ids.relative_layout.remove_widget(self.cn[channel.chan_id])
         del self.cn[channel.chan_id]
 
     def get_caps(self, channels):
