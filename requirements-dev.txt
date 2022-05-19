@@ -1,6 +1,6 @@
 pyarmor==6.6.2
 fabric
-pyinstaller
+pyinstaller==5.0
 semver
 requests
 gitpython
