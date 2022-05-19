@@ -45,7 +45,7 @@ a = Analysis(
         "orb.misc",
         "kivymd.effects.stiffscroll.StiffScrollEffect",
         "pkg_resources",
-        "plyer.platforms.win.notification",
+        # "plyer.platforms.win.notification",
         "pytransform",
     ],  # 'pandas.plotting._matplotlib',
     hookspath=["dist\\obf\\temp"],
