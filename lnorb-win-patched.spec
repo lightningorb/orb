@@ -46,6 +46,7 @@ a = Analysis(
         "kivymd.effects.stiffscroll.StiffScrollEffect",
         "pkg_resources",
         "plyer.platforms.win.notification",
+        "plyer.platforms.win.uniqueid",
         "pytransform",
     ],  # 'pandas.plotting._matplotlib',
     hookspath=["dist\\obf\\temp"],
