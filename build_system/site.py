@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:20:45
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-02 11:51:26
+# @Last Modified time: 2022-05-25 07:02:46
 
 
 from fabric import Connection
@@ -43,6 +43,12 @@ def upload(c):
 def build(c, env=os.environ):
     with c.cd("site"):
         c.run("npm run build", env=env)
+
+
+@task
+def run(c, env=os.environ):
+    with c.cd("site"):
+        c.run("npm run dev", env=env)
 
 
 @task
