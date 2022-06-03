@@ -1,6 +1,20 @@
-0.14.12
+0.14.13
 ----
 
+updated release notes
+Race condition in Lnd module #238
+updated site
+adding a missing dep to the windows spec file
+re-adding missing windows plyer module
+setting pyinstaller version
+setting pyinstaller version
+reverting change to spec file
+
+
+v0.14.12
+--------
+
+version bump
 updated release notes
 when channel closes, it does not get removed from the scene
 regression: module plyer.platforms missing in windows #237
