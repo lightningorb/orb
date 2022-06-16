@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-31 10:09:23
+# @Last Modified time: 2022-06-15 02:23:56
 
 from traceback import print_exc
 
@@ -88,12 +88,16 @@ class DataManager(EventDispatcher):
         Save the certificate to an file. This is required for
         requests over rest.
         """
-        with open(cert_path().as_posix(), "w") as f:
-            cert_secure = CertificateSecure.init_from_encrypted(
-                pref("lnd.tls_certificate").encode()
-            )
-            cert = cert_secure.as_plain_certificate()
-            f.write(cert.cert)
+        cert = pref("lnd.tls_certificate")
+        if cert:
+            with open(cert_path().as_posix(), "w") as f:
+                cert_secure = CertificateSecure.init_from_encrypted(cert.encode())
+                cert = cert_secure.as_plain_certificate()
+                f.write(cert.cert)
+        else:
+            if cert_path().is_file():
+                print("Deleting TLS cert")
+                os.unlink(cert_path().as_posix())
 
 
 data_man = None

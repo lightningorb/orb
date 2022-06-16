@@ -22,3 +22,4 @@ docs/docsbuild/
 */node_modules
 licenses
 hourly.yaml
+.cache

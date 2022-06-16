@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 11:17:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-05 12:52:18
+# @Last Modified time: 2022-06-15 02:41:28
 
 from orb.lnd import Lnd
-import requests
+from orb.misc.mempool import get_fees
 
 from orb.misc.plugin import Plugin
 
@@ -28,9 +28,7 @@ class LOOP(Plugin):
         except:
             print("already connect")
 
-        fastest = requests.get(f"https://mempool.space/api/v1/fees/recommended").json()[
-            "fastestFee"
-        ]
+        fastest = mempool.get_fees("fastestFee")
         assert fastest >= 1
 
         balance = int(lnd.get_balance().confirmed_balance / 10_000_000) * 10_000_000

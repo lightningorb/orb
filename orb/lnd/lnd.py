@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-05-27 09:29:53
+# @Last Modified time: 2022-06-14 10:58:12
 
 from traceback import format_exc
 from threading import Lock
@@ -60,8 +60,7 @@ def Lnd():
                     if cert.is_well_formed():
                         lnd[protocol] = LndGRPC(
                             tls_certificate=cert.reformat(),
-                            server=pref("lnd.hostname"),
-                            network=pref("lnd.network"),
+                            server=pref("host.hostname"),
                             macaroon=mac,
                         )
                 except:
@@ -72,10 +71,11 @@ def Lnd():
 
                 app = App.get_running_app()
                 data_dir = app.user_data_dir
+                cert = cert_path()
+
                 lnd[protocol] = LndREST(
-                    tls_certificate=cert_path().as_posix(),
-                    server=pref("lnd.hostname"),
-                    network=pref("lnd.network"),
+                    tls_certificate=(cert.as_posix() if cert.exists() else None),
+                    server=pref("host.hostname"),
                     macaroon=mac,
                     port=int(pref("lnd.rest_port")),
                 )

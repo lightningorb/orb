@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 16:40:02
+# @Last Modified time: 2022-06-17 07:30:07
 
 import re
 import base64
@@ -25,11 +25,18 @@ class MacaroonSecure:
         encrypted = encrypt_long(bin_data, pub, True)
         return MacaroonSecure(encrypted)
 
-    @staticmethod
-    def init_from_base64(bin_data):
-        _, pub = get_sec_keys()
-        encrypted = encrypt_long(bin_data, pub, True)
-        return MacaroonSecure(encrypted)
+    # @staticmethod
+    # def init_from_not_sure(data):
+    #     if type(data) is str:
+    #         data = data.encode()
+    #     # try decrypting it, if that doesn't work
+    #     try:
+    #         mac = MacaroonSecure.as_plain_macaroon(data)
+    #         return mac
+    #     except:
+    #         pass
+    #     mac = Macaroon.init_from_not_sure(data.decode())
+    #     return MacaroonSecure.init_from_plain(mac.macaroon.encode())
 
     def as_plain_macaroon(self):
         priv, _ = get_sec_keys()

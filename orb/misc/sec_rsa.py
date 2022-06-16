@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-02 10:18:49
+# @Last Modified time: 2022-06-15 04:35:41
 
 
 import uuid
@@ -83,6 +83,8 @@ def get_sec_keys():
         uid = uuid.getnode()
     elif pref("system.identifier") == "plyer":
         uid = plyer.uniqueid.id
+    else:
+        uid = 0
     random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)
     return priv.save_pkcs1(), pub.save_pkcs1()
@@ -90,13 +92,13 @@ def get_sec_keys():
 
 def get_cert_command(public_key):
     cert_path = "~/.lnd/tls.cert"
-    if pref("lnd.type") == "umbrel":
+    if pref("host.type") == "umbrel":
         cert_path = "~/umbrel/lnd/tls.cert"
     return f"""python3 -c "import rsa; import base64; import os; p = rsa.PublicKey.load_pkcs1({public_key}); c = open(os.path.expanduser('{cert_path}')).read(); print('\\n'.join([base64.b64encode(rsa.encrypt(c[i : i + 53].encode(), p)).decode() for i in range(0, len(c), 53)]))"  """
 
 
 def get_mac_command(public_key):
     mac_path = "~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
-    if pref("lnd.type") == "umbrel":
+    if pref("host.type") == "umbrel":
         mac_path = "~/umbrel/lnd/data/chain/bitcoin/mainnet/admin.macaroon"
     return f"""python3 -c "import rsa; import os; import codecs; import base64; pub = rsa.PublicKey.load_pkcs1({public_key}); message = codecs.encode(open(os.path.expanduser('{mac_path}'), 'rb' ).read(), 'hex',).decode(); print('\\n'.join([base64.b64encode(rsa.encrypt(message[i : i + 53].encode('utf8'), pub)).decode() for i in range(0, len(message), 53)]))"  """

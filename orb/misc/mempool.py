@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-27 16:07:26
+# @Last Modified time: 2022-06-17 07:37:58
 
 import requests
+from orb.misc.utils import pref
 
 
 def get_fees(which=None):
@@ -25,8 +26,10 @@ def get_fees(which=None):
     True
     """
     # TODO: Should use an enum style class rather than strings.
-
-    fees = requests.get("https://mempool.space/api/v1/fees/recommended").json()
+    lut = dict(testnet="testnet/", signet="signet/", mainnet="")
+    path = lut[pref("lnd.network") or "mainnet"]
+    url = f"https://mempool.space/{path}api/v1/fees/recommended"
+    fees = requests.get(url).json()
     return fees[which] if which else fees
 
 

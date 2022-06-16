@@ -9,6 +9,7 @@ karma-sphinx-theme
 boto3
 rsa
 gitpython
+nose
 
 # site
 

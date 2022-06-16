@@ -2,19 +2,33 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-02 10:35:41
+# @Last Modified time: 2022-06-11 07:03:42
 
 
 def set_conf_defaults(config):
+    config.add_section("host")
+    config.set("host", "type", "default")
+    config.set("host", "hostname", "localhost")
+    config.set("host", "port", "22")
+    config.set("host", "username", "umbrel")
+    config.set("host", "auth_type", "password")
+    config.set("host", "password", "")
+    config.set("host", "certificate", "")
     config.add_section("lnd")
-    config.set("lnd", "type", "default")
-    config.set("lnd", "hostname", "localhost")
     config.set("lnd", "rest_port", "8080")
     config.set("lnd", "grpc_port", "10009")
     config.set("lnd", "protocol", "mock")
     config.set("lnd", "tls_certificate", "")
+    config.set("lnd", "tls_certificate_path", "")
     config.set("lnd", "network", "mainnet")
     config.set("lnd", "macaroon_admin", "")
+    config.set("lnd", "macaroon_admin_path", "")
+    config.set("lnd", "lnd_path", "")
+    config.set("lnd", "lnd_conf_path", "")
+    config.set("lnd", "lnd_log_path", "")
+    config.set("lnd", "channel_db_path", "")
+    config.set("lnd", "stop_cmd", "")
+    config.set("lnd", "start_cmd", "")
     config.add_section("display")
     config.set("display", "channel_length", 1000)
     config.set("display", "inverted_channels", 0)

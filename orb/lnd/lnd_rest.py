@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-05 12:15:54
+# @Last Modified time: 2022-06-15 03:47:07
 
 from functools import lru_cache
 import base64, json, requests, codecs, binascii
@@ -20,7 +20,7 @@ encode_pk = lambda PK: base64.urlsafe_b64encode(
 
 
 class LndREST(LndBase):
-    def __init__(self, tls_certificate, server, network, macaroon, port):
+    def __init__(self, tls_certificate, server, macaroon, port):
         self.cert_path = tls_certificate
         self.hostname = server
         self.rest_port = port
@@ -97,6 +97,9 @@ class LndREST(LndBase):
     def get_node_alias(self, pub_key):
         url = f"{self.fqdn}/v1/graph/node/{pub_key}"
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
+        res = r.json()
+        if res.get("code") == 5:
+            print(res["message"])
         return dict2obj(r.json()).node.alias
 
     @lru_cache(maxsize=None)
@@ -359,16 +362,26 @@ class LndREST(LndBase):
             if response.status == "FAILED":
                 print(response.failure_reason)
 
+    def list_peers(self):
+        """
+        Return list of peers
+        """
+        return self.__get("/v1/peers")
+
     def connect(self, addr):
         """
         lncli: connect ConnectPeer attempts to establish a connection
         to a remote peer. This is at the networking level, and is
         used for communication between nodes. This is distinct from
         establishing a channel with a peer.
+
+        Lnd().connect(address) gives an error in REST.. strangely
+        it connects successfully, and the error can be ignored.
         """
+        pk, host = addr.split("@")
         return self.__post(
             "/v1/peers",
-            data={"addr": addr, "perm": False, "timeout": "30"},
+            data={"addr": dict(pubkey=pk, host=host), "perm": True, "timeout": "30"},
         )
 
     def close_channel(self, channel_point, force, sat_per_vbyte):
@@ -401,7 +414,7 @@ class LndREST(LndBase):
         chans = [
             dict(
                 node_pubkey=encode_pk(pk),
-                local_funding_amount=str(amount),
+                local_funding_amount=str(int(amount)),
                 push_sat=0,
                 private=False,
                 min_htlc_msat=1000,

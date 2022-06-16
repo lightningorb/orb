@@ -1,0 +1,73 @@
+#:import dp kivy.metrics.dp
+#:import os os
+#:import pref orb.misc.utils.pref
+#:import Factory kivy.factory.Factory
+
+<NetworkSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(200), dp(25)
+
+<VoltageNode>:
+    title: 'Voltage Node'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [.8, .8]
+    ScrollView:
+        size_hint: None, None
+        width: root.width
+        height: root.height - dp(100)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        pos: 0, 0
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            MDTextField:
+                id: address
+                text: pref('host.hostname')
+                helper_text: 'Host Address'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(300)
+                size_hint: (None, None)
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(10)
+            Spinner:
+                id: network
+                text: pref('lnd.network')
+                option_cls: Factory.get("NetworkSpinnerOption")
+                height: dp(25)
+                width: dp(200)
+                size_hint_y: None
+                size_hint_x: None
+                values: ["mainnet", "testnet", "signet"]
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(15)
+            MDLabel:
+                text: 'Admin Macaroon (hex):'
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(5)
+            TextInput:
+                id: tls_cert
+                height: dp(200)
+                width: root.width - dp(40)
+                size_hint: None, None
+                text: root.get_cert() or ""
+                on_text: root.validate_cert(self.text)
+                multiline: True
+            MDRaisedButton:
+                text: 'Save'
+                on_release: root.save()
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1

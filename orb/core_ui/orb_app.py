@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-02 11:00:48
+# @Last Modified time: 2022-06-14 07:51:25
 
 import os
 import sys
@@ -272,6 +272,21 @@ class OrbApp(MDApp):
         self.config["system"]["orb_version"] = self.version
         self.config.write()
 
+    def update_things(self):
+        """
+        Sometimes things change from one version to another.
+        """
+        if (
+            self.config["lnd"].get("hostname")
+            and self.config["host"]["hostname"] == "localhost"
+        ):
+            self.config["host"]["hostname"] = self.config["lnd"]["hostname"]
+        if (
+            self.config["lnd"].get("type") != "default"
+            and self.config["host"]["hostname"] == "default"
+        ):
+            self.config["host"]["type"] = self.config["lnd"]["type"]
+
     def build(self):
         """
         Main build method for the app.
@@ -285,6 +300,7 @@ class OrbApp(MDApp):
         self.check_cert_and_mac()
         self.load_kvs()
         self.read_version()
+        self.update_things()
         data_manager.data_man = data_manager.DataManager()
         window_sizes = Window.size
         self.theme_cls.theme_style = "Dark"
@@ -292,6 +308,9 @@ class OrbApp(MDApp):
         self.icon = "orb.png"
         self.main_layout = MainLayout()
         self.show_licence_info()
+        # from orb.core_ui import echoclient_ssh
+
+        # echoclient_ssh.run()
         return self.main_layout
 
     def build_config(self, config):

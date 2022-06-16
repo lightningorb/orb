@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 12:41:46
+# @Last Modified time: 2022-06-14 08:31:52
 import sys
 import base64
 import os
@@ -38,10 +38,10 @@ MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
 
 class LndGRPC(LndBase):
-    def __init__(self, tls_certificate, server, network, macaroon):
+    def __init__(self, tls_certificate, server, macaroon):
         os.environ["GRPC_SSL_CIPHER_SUITES"] = "HIGH+ECDSA"
         combined_credentials = self.get_credentials(
-            tls_certificate.encode(), network, macaroon.encode()
+            tls_certificate.encode(), macaroon.encode()
         )
         channel_options = [
             ("grpc.max_message_length", MESSAGE_SIZE_MB),
@@ -55,7 +55,7 @@ class LndGRPC(LndBase):
         self.invoices_stub = invoicesrpc.InvoicesStub(grpc_channel)
 
     @staticmethod
-    def get_credentials(tls_certificate, network, macaroon):
+    def get_credentials(tls_certificate, macaroon):
         ssl_credentials = grpc.ssl_channel_credentials(tls_certificate)
         auth_credentials = grpc.metadata_call_credentials(
             lambda _, callback: callback([("macaroon", macaroon)], None)
@@ -285,12 +285,14 @@ class LndGRPC(LndBase):
             reversed=reversed,
         )
         response = self.stub.ListPayments(request)
-        json_obj = json.loads(MessageToJson(
-            response,
-            including_default_value_fields=True,
-            preserving_proto_field_name=True,
-            sort_keys=True,
-        ))
+        json_obj = json.loads(
+            MessageToJson(
+                response,
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
         return dict2obj(json_obj)
 
     def fee_report(self):

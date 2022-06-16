@@ -1,13 +1,48 @@
 [
    {
       "type":"title",
-      "title":"Connection Settings"
+      "title":"Host Details"
+   },
+   {
+      "type":"string",
+      "title":"Host",
+      "desc":"The node's IP or domain, e.g 1.1.1.1 or umbrel.local",
+      "section":"host",
+      "key":"hostname"
+   },
+   {
+      "type":"string",
+      "title":"SSH port",
+      "desc":"The SSH port, usually 22",
+      "section":"host",
+      "key":"port"
+   },
+   {
+      "type":"string",
+      "title":"Username",
+      "desc":"The SSH username",
+      "section":"host",
+      "key":"username"
+   },
+   {
+      "type":"string",
+      "title":"Authentication Type",
+      "desc":"The SSH authentication type",
+      "section":"host",
+      "key":"auth_type"
+   },
+   {
+      "type":"string",
+      "title":"Host certificate",
+      "desc":"The host's SSH certificate",
+      "section":"host",
+      "key":"certificate"
    },
    {
       "type":"options",
       "title":"Node Type",
-      "desc":"The node's IP or domain, e.g 1.1.1.1",
-      "section":"lnd",
+      "desc":"The type of LND node",
+      "section":"host",
       "key":"type",
       "options":[
          "default",
@@ -15,11 +50,8 @@
       ]
    },
    {
-      "type":"string",
-      "title":"Host",
-      "desc":"The node's IP or domain, e.g 1.1.1.1",
-      "section":"lnd",
-      "key":"hostname"
+      "type":"title",
+      "title":"Connection Settings"
    },
    {
       "type":"string",
@@ -43,7 +75,8 @@
       "key":"network",
       "options":[
          "mainnet",
-         "testnet"
+         "testnet",
+         "signet"
       ]
    },
    {
@@ -67,10 +100,66 @@
    },
    {
       "type":"string",
+      "title":"Admin Macaroon Path",
+      "desc":"filesystem path on the node",
+      "section":"lnd",
+      "key":"macaroon_admin_path"
+   },
+   {
+      "type":"string",
       "title":"tls certificate",
       "desc":"plain-text TLS certificate",
       "section":"lnd",
       "key":"tls_certificate"
+   },
+   {
+      "type":"string",
+      "title":"tls certificate path",
+      "desc":"filesystem path on the node",
+      "section":"lnd",
+      "key":"tls_certificate_path"
+   },
+   {
+      "type":"string",
+      "title":"lnd directory path",
+      "desc":"filesystem path on the node",
+      "section":"lnd",
+      "key":"lnd_path"
+   },
+   {
+      "type":"string",
+      "title":"lnd.conf path",
+      "desc":"filesystem path on the node",
+      "section":"lnd",
+      "key":"lnd_conf_path"
+   },
+   {
+      "type":"string",
+      "title":"lnd.log path",
+      "desc":"filesystem path on the node",
+      "section":"lnd",
+      "key":"lnd_log_path"
+   },
+   {
+      "type":"string",
+      "title":"channel.db path",
+      "desc":"filesystem path on the node",
+      "section":"lnd",
+      "key":"channel_db_path"
+   },
+   {
+      "type":"string",
+      "title":"lnd stop command",
+      "desc":"system command to stop lnd",
+      "section":"lnd",
+      "key":"stop_cmd"
+   },
+   {
+      "type":"string",
+      "title":"lnd start command",
+      "desc":"system command to start lnd",
+      "section":"lnd",
+      "key":"start_cmd"
    },
    {
       "type":"title",

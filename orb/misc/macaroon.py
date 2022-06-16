@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-25 16:43:54
+# @Last Modified time: 2022-06-17 07:41:39
 
 import re
 import base64
@@ -42,10 +42,13 @@ class Macaroon:
     @staticmethod
     def is_base64_macaroon_str(text):
         try:
-            b64 = base64.b64decode(text.strip().encode()).decode()
+            text = text.strip()
+            if type(text) is str:
+                text = text.encode()
+            b64 = base64.b64decode(text)
             macaroon = Macaroon.init_from_str(b64)
             return macaroon.is_well_formed()
-        except:
+        except Exception as e:
             return False
 
     def is_well_formed(self):

@@ -31,11 +31,11 @@
                 Spinner:
                     id: spinner_in_id
                     option_cls: Factory.get("TypeSpinnerOption")
-                    text: pref('lnd.type')
+                    text: pref('host.type')
                     height: dp(30)
                     width: dp(150)
                     size_hint: None, None
-                    on_text: root.set_and_save('lnd.type', spinner_in_id.text)
+                    on_text: root.set_and_save('host.type', spinner_in_id.text)
                 MDLabel:
                     text: 'Enter the IP address or hostname of your LND node.'
                     size_hint_y: 1
@@ -46,7 +46,7 @@
                     size_hint_y: None
                     MDTextField:
                         id: address
-                        text: pref('lnd.hostname')
+                        text: pref('host.hostname')
                         helper_text: 'Host Address'
                         helper_text_mode: "persistent"
                         height: dp(60)
@@ -54,7 +54,7 @@
                         size_hint: (None, None)
                     MDRaisedButton:
                         text: 'Save'
-                        on_release: root.set_and_save('lnd.hostname', address.text)
+                        on_release: root.set_and_save('host.hostname', address.text)
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)

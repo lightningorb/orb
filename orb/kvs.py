@@ -736,11 +736,11 @@ Builder.load_string('''
                 Spinner:
                     id: spinner_in_id
                     option_cls: Factory.get("TypeSpinnerOption")
-                    text: pref('lnd.type')
+                    text: pref('host.type')
                     height: dp(30)
                     width: dp(150)
                     size_hint: None, None
-                    on_text: root.set_and_save('lnd.type', spinner_in_id.text)
+                    on_text: root.set_and_save('host.type', spinner_in_id.text)
                 MDLabel:
                     text: 'Enter the IP address or hostname of your LND node.'
                     size_hint_y: 1
@@ -751,7 +751,7 @@ Builder.load_string('''
                     size_hint_y: None
                     MDTextField:
                         id: address
-                        text: pref('lnd.hostname')
+                        text: pref('host.hostname')
                         helper_text: 'Host Address'
                         helper_text_mode: "persistent"
                         height: dp(60)
@@ -759,7 +759,7 @@ Builder.load_string('''
                         size_hint: (None, None)
                     MDRaisedButton:
                         text: 'Save'
-                        on_release: root.set_and_save('lnd.hostname', address.text)
+                        on_release: root.set_and_save('host.hostname', address.text)
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
@@ -1036,6 +1036,81 @@ Builder.load_string('''
         id: input
         size_hint_x: 0.8
 
+''')
+Builder.load_string('''
+#:import dp kivy.metrics.dp
+#:import os os
+#:import pref orb.misc.utils.pref
+#:import Factory kivy.factory.Factory
+
+<NetworkSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(200), dp(25)
+
+<VoltageNode>:
+    title: 'Voltage Node'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [.8, .8]
+    ScrollView:
+        size_hint: None, None
+        width: root.width
+        height: root.height - dp(100)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        pos: 0, 0
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            MDTextField:
+                id: address
+                text: pref('host.hostname')
+                helper_text: 'Host Address'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(300)
+                size_hint: (None, None)
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(10)
+            Spinner:
+                id: network
+                text: pref('lnd.network')
+                option_cls: Factory.get("NetworkSpinnerOption")
+                height: dp(25)
+                width: dp(200)
+                size_hint_y: None
+                size_hint_x: None
+                values: ["mainnet", "testnet", "signet"]
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(15)
+            MDLabel:
+                text: 'Admin Macaroon (hex):'
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(5)
+            TextInput:
+                id: tls_cert
+                height: dp(200)
+                width: root.width - dp(40)
+                size_hint: None, None
+                text: root.get_cert() or ""
+                on_text: root.validate_cert(self.text)
+                multiline: True
+            MDRaisedButton:
+                text: 'Save'
+                on_release: root.save()
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
@@ -1594,6 +1669,400 @@ Builder.load_string('''
         size_hint: 1, 1
 ''')
 Builder.load_string('''
+#:import dp kivy.metrics.dp
+#:import os os
+#:import pref orb.misc.utils.pref
+#:import Window kivy.core.window.Window
+#:import Clipboard kivy.core.clipboard.Clipboard
+#:import Factory kivy.factory.Factory
+
+<Tab>
+
+<AuthSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(300), dp(25)
+
+<CertFileChooser>:
+    title: 'Load Certificate'
+    size_hint: [.7,.7]
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        FileChooserIconView:
+            show_hidden: True
+            size_hint: [1,1]
+            id: filechooser
+            path: os.path.expanduser('~')
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: None, None
+            height: dp(30)
+            MDRaisedButton:
+                text: 'Open'
+                size_hint_x: None
+                width: 30
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
+            MDRaisedButton:
+                text: 'Cancel'
+                size_hint_x: None
+                width: 30
+                size_hint_y: 1
+                md_bg_color: 0.3,0.3,0.3,1
+                on_release: root.dismiss()
+
+
+<ConnectionWizard>:
+    title: 'Node Connection Wizard'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [.8, .8]
+    MDTabs:
+        id: tabs
+        on_tab_switch: root.on_tab_switch(*args)
+        SSHCredentials:
+            id: ssh_credentials
+        NodeAndFiles:
+        LNDConf:
+        RestartLND:
+            id: restart_lnd
+        CopyKeys:
+
+''')
+Builder.load_string('''
+
+<LNDConf>:
+    title: 'lnd.conf'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            MDLabel:
+                text: 'lnd.conf needs modifying for outside access.'
+                size_hint_y: None
+                height: dp(50)
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(10)
+            MDRaisedButton:
+                text: 'Check lnd.conf'
+                on_release: root.check_lnd_conf()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            MDLabel:
+                id: report
+                text: ''
+                multiline: True
+                size_hint_y: None
+                height: self.texture_size[1]
+            FocusTextInput:
+                id: input
+                size_hint_x: .9
+                size_hint_y: None
+                height: dp(300)
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(10)
+            MDRaisedButton:
+                text: 'Modify lnd.conf'
+                on_release: root.modify_lnd_conf()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            # Splitter:
+            #     horizontal: True
+            #     size_hint_y: None
+            #     height: dp(10)
+            # MDRaisedButton:
+            #     text: 'Restart lnd'
+            #     on_release: root.save_ssh_creds()
+            #     size_hint_y: None
+            #     size_hint_x: None
+            #     width: dp(100)
+            #     height: dp(40)
+            #     md_bg_color: 0.3,0.3,0.3,1
+            Widget:
+                size_hint_y: 1
+
+
+
+
+''')
+Builder.load_string('''
+<NodeAndFiles>:
+    title: 'Node & Files'
+    ScrollView:
+        size_hint: None, None
+        width: root.width
+        height: root.height - dp(40)
+        # pos_hint: {'center_x': .5, 'center_y': .5}
+        pos: 0, dp(40)
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            MDRaisedButton:
+                text: 'Detect Node Type'
+                on_release: root.detect_node_type()
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            MDTextField:
+                id: node_type
+                text: pref('host.type')
+                helper_text: 'Node Type'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: network
+                text: pref('lnd.network')
+                helper_text: 'Network'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: lnd_directory
+                text: pref('lnd.lnd_path')
+                helper_text: 'LND directory'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: lnd_conf_path
+                text: pref('lnd.lnd_conf_path')
+                helper_text: 'lnd.conf path'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: tls_certificate_path
+                text: pref('lnd.tls_certificate_path')
+                helper_text: 'TLS certificate path'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: admin_macaroon_path
+                text: pref('lnd.macaroon_admin_path')
+                helper_text: 'Admin Macaroon path'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: lnd_log_path
+                text: pref('lnd.lnd_log_path')
+                helper_text: 'lnd.log path'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: channel_db_path
+                text: pref('lnd.channel_db_path')
+                helper_text: 'channel.db path'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: lnd_start_cmd
+                text: pref('lnd.start_cmd')
+                helper_text: 'lnd start command'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+            MDTextField:
+                id: lnd_stop_cmd
+                text: pref('lnd.stop_cmd')
+                helper_text: 'lnd stop command'
+                helper_text_mode: "persistent"
+                height: dp(60)
+                width: dp(400)
+                size_hint: (None, None)
+    MDRaisedButton:
+        text: 'Save'
+        on_release: root.save()
+        size_hint_x: None
+        width: dp(100)
+        height: dp(40)
+        md_bg_color: 0.3,0.3,0.3,1
+''')
+Builder.load_string('''
+<SSHCredentials>:
+    title: 'SSH Credentials'
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: 1
+        MDLabel:
+            text: 'Enter SSH credential details to your node.'
+            size_hint_y: None
+            height: dp(60)
+            multiline: True
+        MDTextField:
+            id: address
+            text: pref('host.hostname')
+            helper_text: 'Host Address'
+            helper_text_mode: "persistent"
+            height: dp(60)
+            width: dp(200)
+            size_hint: (None, None)
+        MDTextField:
+            id: port
+            text: str(int(pref('host.port')))
+            helper_text: 'SSH port'
+            helper_text_mode: "persistent"
+            height: dp(60)
+            width: dp(200)
+            size_hint: (None, None)
+        BoxLayout:
+            orientation: 'vertical'
+            height: dp(80)
+            width: dp(300)
+            size_hint_y: None
+            size_hint_x: None
+            Label:
+                text: "Authentication"
+                size_hint_y: None
+            Spinner:
+                id: spinner_id
+                text: pref('host.auth_type')
+                option_cls: Factory.get("AuthSpinnerOption")
+                height: dp(25)
+                size_hint_y: 0
+                size_hint_x: 1
+                values: ["password", "certificate"]
+                on_text: root.cert_or_pass()
+        MDTextField:
+            id: username
+            text: pref('host.username')
+            helper_text: 'Username'
+            helper_text_mode: "persistent"
+            height: dp(60)
+            width: dp(200)
+            size_hint: (None, None)
+        BoxLayout:
+            orientation: 'vertical'
+            id: cert_or_pass
+        Widget:
+        MDRaisedButton:
+            id: test_connection
+            text: 'Test Connection'
+            on_release: root.test_connection()
+            size_hint_x: None
+            width: dp(200)
+            height: dp(40)
+            md_bg_color: 0.3,0.3,0.3,1
+        Splitter:
+            horizontal: True
+            size_hint_y: None
+            height: dp(10)
+        MDRaisedButton:
+            text: 'Save'
+            on_release: root.save_ssh_creds()
+            size_hint_x: None
+            width: dp(100)
+            height: dp(40)
+            md_bg_color: 0.3,0.3,0.3,1
+
+''')
+Builder.load_string('''
+
+<RestartLND>:
+    title: 'Restart LND'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            MDLabel:
+                text: 'LND needs restarting to generate new TLS certs.'
+                size_hint_y: None
+                height: dp(50)
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(10)
+            MDRaisedButton:
+                text: 'Restart LND'
+                on_release: root.restart_lnd()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            FocusTextInput:
+                id: input
+                size_hint_x: .9
+                size_hint_y: None
+                height: dp(300)
+
+''')
+Builder.load_string('''
+
+<CopyKeys>:
+    title: 'Copy Keys'
+    ScrollView:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            MDLabel:
+                text: 'Copy TLS Cert, Macaroon, and set connection settings for LND API to connect to your node.'
+                size_hint_y: None
+                height: self.texture_size[1]
+                multiline: True
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(10)
+            MDRaisedButton:
+                text: 'Copy keys'
+                on_release: root.copy_keys()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+
+''')
+Builder.load_string('''
 #:kivy 2.0.0
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
@@ -1618,6 +2087,8 @@ Builder.load_string('''
 #:import About orb.dialogs.help_dialog.about.about.About
 #:import ReleaseNotes orb.dialogs.help_dialog.release_notes.release_notes.ReleaseNotes
 #:import Rankings orb.screens.rankings.Rankings
+#:import ConnectionWizard orb.dialogs.connection_wizard.connection_wizard.ConnectionWizard
+#:import VoltageNode orb.dialogs.voltage_node.voltage_node.VoltageNode
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
 #:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
 #:import LoginDialog orb.dialogs.app_store.LoginDialog
@@ -1764,6 +2235,14 @@ Builder.load_string('''
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuTextItem:
+                    text: "SSH Connection Wizard"
+                    on_press: ConnectionWizard().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Voltage Node"
+                    on_press: VoltageNode().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
                     text: "Connection Settings"
                     on_press: ConnectionSettings().open()
                     on_release: app_menu.close_all()
@@ -1816,7 +2295,7 @@ Builder.load_string('''
                     on_press: app_menu.close_all()
                     on_release: webbrowser.open('https://lnorb.com/release-notes')
                 ContextMenuTextItem:
-                    text: "Links"
+                    text: "Lightning Links"
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Terminal"
@@ -1845,6 +2324,12 @@ Builder.load_string('''
                         ContextMenuTextItem:
                             text: "Acinq"
                             on_release: webbrowser.open("https://explorer.acinq.co/n/" + Lnd().get_info().identity_pubkey)
+                ContextMenuTextItem:
+                    text: "Testnet Faucets"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "BitcoinFaucet"
+                            on_release: webbrowser.open("https://bitcoinfaucet.uo1.net")
 
 ''')
 Builder.load_string('''

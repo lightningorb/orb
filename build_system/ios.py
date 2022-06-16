@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-02 09:53:58
+# @Last Modified time: 2022-06-09 11:55:23
 
 import os
 import re
@@ -133,8 +133,9 @@ def toolchain_pip(c, env=dict(PATH=os.environ["PATH"])):
         c.run("toolchain pip3 install kivy_garden.graph==0.4.0", env=env)
         c.run("toolchain pip3 install PyYaml==6.0", env=env)
         c.run("toolchain pip3 install simplejson==3.17.6", env=env)
-        c.run("toolchain pip3 install pycryptodome", env=env)
+        # c.run("toolchain pip3 install pycryptodome", env=env)
         c.run("toolchain pip3 install memoization", env=env)
+        c.run("toolchain pip3 install rsa", env=env)
 
 
 @task
@@ -150,6 +151,15 @@ def toolchain_build(c, env=os.environ):
         c.run("toolchain build audiostream", env=env)
         c.run("toolchain build pyyaml", env=env)
         c.run("toolchain build plyer", env=env)
+        c.run("toolchain build bcrypt", env=env)
+
+
+@task
+def tmp(c, env=os.environ):
+    with c.cd("../kivy-ios-master"):
+        c.run("python3.9 setup.py install --user", env=env)
+    with c.cd("build"):
+        c.run("toolchain build cryptography", env=env)
 
 
 @task
