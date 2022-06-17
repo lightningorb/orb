@@ -25,11 +25,15 @@
       "key":"username"
    },
    {
-      "type":"string",
+      "type":"options",
       "title":"Authentication Type",
       "desc":"The SSH authentication type",
       "section":"host",
-      "key":"auth_type"
+      "key":"auth_type",
+      "options":[
+         "certificate",
+         "password"
+      ]
    },
    {
       "type":"string",
@@ -124,21 +128,21 @@
       "title":"lnd directory path",
       "desc":"filesystem path on the node",
       "section":"lnd",
-      "key":"lnd_path"
+      "key":"path"
    },
    {
       "type":"string",
       "title":"lnd.conf path",
       "desc":"filesystem path on the node",
       "section":"lnd",
-      "key":"lnd_conf_path"
+      "key":"conf_path"
    },
    {
       "type":"string",
       "title":"lnd.log path",
       "desc":"filesystem path on the node",
       "section":"lnd",
-      "key":"lnd_log_path"
+      "key":"log_path"
    },
    {
       "type":"string",

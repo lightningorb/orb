@@ -1844,15 +1844,15 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_directory
-                text: pref('lnd.lnd_path')
+                text: pref('lnd.path')
                 helper_text: 'LND directory'
                 helper_text_mode: "persistent"
                 height: dp(60)
                 width: dp(400)
                 size_hint: (None, None)
             MDTextField:
-                id: lnd_conf_path
-                text: pref('lnd.lnd_conf_path')
+                id: conf_path
+                text: pref('lnd.conf_path')
                 helper_text: 'lnd.conf path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1875,8 +1875,8 @@ Builder.load_string('''
                 width: dp(400)
                 size_hint: (None, None)
             MDTextField:
-                id: lnd_log_path
-                text: pref('lnd.lnd_log_path')
+                id: log_path
+                text: pref('lnd.log_path')
                 helper_text: 'lnd.log path'
                 helper_text_mode: "persistent"
                 height: dp(60)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-11 07:03:42
+# @Last Modified time: 2022-06-17 08:37:41
 
 
 def set_conf_defaults(config):
@@ -23,9 +23,9 @@ def set_conf_defaults(config):
     config.set("lnd", "network", "mainnet")
     config.set("lnd", "macaroon_admin", "")
     config.set("lnd", "macaroon_admin_path", "")
-    config.set("lnd", "lnd_path", "")
-    config.set("lnd", "lnd_conf_path", "")
-    config.set("lnd", "lnd_log_path", "")
+    config.set("lnd", "path", "")
+    config.set("lnd", "conf_path", "")
+    config.set("lnd", "log_path", "")
     config.set("lnd", "channel_db_path", "")
     config.set("lnd", "stop_cmd", "")
     config.set("lnd", "start_cmd", "")

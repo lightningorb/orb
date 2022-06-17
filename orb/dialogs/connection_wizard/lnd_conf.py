@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 09:17:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-10 21:18:23
+# @Last Modified time: 2022-06-17 08:34:57
 
 from threading import Thread
 from pathlib import Path
@@ -34,7 +34,7 @@ class LNDConf(Tab):
     @guarded
     def check_lnd_conf(self):
         with Connection() as c:
-            lnd_conf = c.run(f'cat {pref("lnd.lnd_conf_path")}', hide=True).stdout
+            lnd_conf = c.run(f'cat {pref("lnd.conf_path")}', hide=True).stdout
             self.config = LNDConfParser()
             self.config.read_string(lnd_conf)
             app_options = self.config.get_section("[Application Options]")
@@ -69,12 +69,12 @@ class LNDConf(Tab):
     def modify_lnd_conf(self):
         with Connection() as c:
             epoch_time = int(time.time())
-            backup = f'{pref("lnd.lnd_conf_path")}.{epoch_time}.backup'
+            backup = f'{pref("lnd.conf_path")}.{epoch_time}.backup'
             print(f"Creating lnd.conf backup {backup}")
             c.run(
-                f'cp {pref("lnd.lnd_conf_path")} {backup}',
+                f'cp {pref("lnd.conf_path")} {backup}',
                 hide=True,
             )
             path = (Path(f"{gettempdir()}") / "lnd.conf").as_posix()
-            print(path, pref("lnd.lnd_conf_path"))
-            # c.put(path, pref("lnd.lnd_conf_path"))
+            print(path, pref("lnd.conf_path"))
+            # c.put(path, pref("lnd.conf_path"))

@@ -2,15 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 06:36:55
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-14 09:55:54
+# @Last Modified time: 2022-06-17 09:40:12
 
 from threading import Thread
+
+from kivy.clock import mainthread
+from kivy.app import App
 
 from orb.misc.decorators import guarded
 from orb.dialogs.connection_wizard.tab import Tab
 from orb.misc.utils import pref
 from orb.misc.fab_factory import Connection
-from kivy.app import App
 
 
 def system_ctl_service_enabled(c, service):
@@ -25,9 +27,9 @@ def system_ctl_service_enabled(c, service):
 class NodeAndFiles(Tab):
     def save(self):
         self.set_and_save("host.type", self.ids.node_type.text)
-        self.set_and_save("lnd.lnd_path", self.ids.lnd_directory.text)
-        self.set_and_save("lnd.lnd_conf_path", self.ids.lnd_conf_path.text)
-        self.set_and_save("lnd.lnd_log_path", self.ids.lnd_log_path.text)
+        self.set_and_save("lnd.path", self.ids.lnd_directory.text)
+        self.set_and_save("lnd.conf_path", self.ids.conf_path.text)
+        self.set_and_save("lnd.log_path", self.ids.log_path.text)
         self.set_and_save("lnd.channel_db_path", self.ids.channel_db_path.text)
         self.set_and_save("lnd.macaroon_admin_path", self.ids.admin_macaroon_path.text)
         self.set_and_save(
@@ -46,6 +48,17 @@ class NodeAndFiles(Tab):
 
     @guarded
     def detect_node_type(self):
+        self.ids.node_type.text = ""
+        self.ids.lnd_directory.text = ""
+        self.ids.conf_path.text = ""
+        self.ids.log_path.text = ""
+        self.ids.channel_db_path.text = ""
+        self.ids.admin_macaroon_path.text = ""
+        self.ids.tls_certificate_path.text = ""
+        self.ids.network.text = ""
+        self.ids.lnd_stop_cmd.text = ""
+        self.ids.lnd_start_cmd.text = ""
+
         def func():
 
             with Connection() as c:
@@ -82,7 +95,7 @@ class NodeAndFiles(Tab):
                 if lnd_dir:
 
                     if test_file(f"{lnd_dir}/lnd.conf"):
-                        self.ids.lnd_conf_path.text = f"{lnd_dir}/lnd.conf"
+                        self.ids.conf_path.text = f"{lnd_dir}/lnd.conf"
 
                     if test_file(f"{lnd_dir}/tls.cert"):
                         self.ids.tls_certificate_path.text = f"{lnd_dir}/tls.cert"
@@ -95,7 +108,7 @@ class NodeAndFiles(Tab):
                         )
 
                     if test_file(f"{lnd_dir}/logs/bitcoin/{network}/lnd.log"):
-                        self.ids.lnd_log_path.text = (
+                        self.ids.log_path.text = (
                             f"{lnd_dir}/logs/bitcoin/{network}/lnd.log"
                         )
 

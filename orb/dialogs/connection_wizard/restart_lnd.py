@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 09:17:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-12 11:33:25
+# @Last Modified time: 2022-06-17 08:33:57
 
 from threading import Thread
 from pathlib import Path
@@ -54,7 +54,7 @@ class RestartLND(Tab):
                     self.log_proc and not self.log_proc.ok or self.log_proc.exited
                 ):
                     self.log_proc = c.run(
-                        f"tail -f {pref('lnd.lnd_log_path')}",
+                        f"tail -f {pref('lnd.log_path')}",
                         hide=True,
                         out_stream=Out(),
                         asynchronous=True,
