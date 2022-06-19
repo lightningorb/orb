@@ -2310,6 +2310,7 @@ Builder.load_string('''
                     on_press: VoltageNode().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
+                    id: ssh_connection_wizard
                     text: "SSH Connection Wizard"
                     on_press: ConnectionWizard().open()
                     on_release: app_menu.close_all()

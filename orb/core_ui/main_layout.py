@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-14 09:30:36
+# @Last Modified time: 2022-06-19 12:34:30
 
 import os
 
@@ -13,9 +13,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 from kivy.uix.videoplayer import VideoPlayer
 from orb.misc import data_manager
-from kivy.utils import platform
-
-ios = platform == "ios"
+from orb.misc.utils import mobile
 
 
 class MainLayout(BoxLayout):
@@ -34,7 +32,7 @@ class MainLayout(BoxLayout):
         # them to the top. So we build this widget upside down and
         # then flip it.
         self.children = self.children[::-1]
-        if not ios:
+        if not mobile:
             keyboard = Window.request_keyboard(self._keyboard_released, self)
             keyboard.bind(
                 on_key_down=self._keyboard_on_key_down,
@@ -43,20 +41,13 @@ class MainLayout(BoxLayout):
         self.super = []
         self.shift = False
 
+        if mobile:
+            self.ids.ssh_connection_wizard.disabled = True
+
         @mainthread
         def delayed():
             app = App.get_running_app()
             app.root.ids.app_menu.populate_scripts()
-            show_player = False
-            # to test out the video player, change the parent to a RelativeLayout
-            # and uncomment the Scatter in the .kv file.
-            if show_player:
-                self.ids.scatter.add_widget(
-                    VideoPlayer(
-                        size=[800, 500],
-                        source=os.path.expanduser("~/Desktop/vids/rankings.mp4"),
-                    )
-                )
 
         delayed()
 
