@@ -22,7 +22,9 @@ Submodules
    orb.misc.data_manager
    orb.misc.decorators
    orb.misc.enums
+   orb.misc.fab_factory
    orb.misc.forex
+   orb.misc.lndconnect_url
    orb.misc.macaroon
    orb.misc.macaroon_secure
    orb.misc.mempool

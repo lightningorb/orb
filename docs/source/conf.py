@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-31 09:56:14
+# @Last Modified time: 2022-06-19 16:50:25
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.abspath("../orb/lnd/grpc_generated"))
 # -- Project information -----------------------------------------------------
 
 project = "orb"
-copyright = "2021, lnorb.com"
+copyright = "2022, lnorb.com"
 author = "lnorb.com"
 
 # The full version, including alpha/beta/rc tags
@@ -78,3 +78,9 @@ coverage_show_missing_items = True
 html_theme_options = {}
 
 html_show_sphinx = False
+
+rst_prolog = """
+.. |br| raw:: html
+
+  <br/>
+"""

@@ -12,7 +12,7 @@ Orb
    :caption: Contents:
 
    installing
-   configuring
+   connecting_to_your_node
    concepts
    lightning
    script_editor

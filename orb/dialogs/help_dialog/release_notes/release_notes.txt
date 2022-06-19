@@ -21,7 +21,6 @@ regression: module plyer.platforms missing in windows #237
 added testimonial
 added testimonial
 capitalization typo
-added hire me page
 added testimonials
 
 

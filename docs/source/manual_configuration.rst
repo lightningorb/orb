@@ -1,19 +1,7 @@
-.. contents:: Table of Contents
-    :depth: 2
+.. _manual-configuration:
 
-Configuring
-===========
-
-Orb needs to connect to your node from the outside world (from outside the node, unlike Umbrel which runs on the node itself). To do so, lnd.conf needs to be modified to allow outside connections.
-
-This is very typical, e.g the steps are similar to connecting `ZapHQ's Desktop Wallet <https://docs.zaphq.io/docs-desktop-lnd-configure>`_. Please cross-reference these steps with those listed in Zap's documentation, as Zap's may currently be more complete.
-
-.. note::
-
-    Please note this is not a security liability, as Orb encrypts your certificate and macaroon using an RSA key unique to your device (unique to the device connecting to your node).
-
-LND
----
+Manual configuration
+--------------------
 
 Step 1:
 .......
@@ -64,95 +52,6 @@ Step 5:
 .......
 
 Start lnd.
-
-
-Umbrel
-------
-
-
-Step 1:
-.......
-
-SSH into your node.
-
-
-Step 2:
-.......
-
-Edit your `~/umbrel/lnd/lnd.conf` and enter your node's externally visible IP as an entry:
-
-.. code:: bash
-
-   tlsextraip=[YOUR_NODE_IP]
-
-   or 
-   
-   tlsextradomain=[YOUR_NODE_DOMAIN]
-
-(please note the `tlsextraip=` or `tlsextradomain` lines may appear multiple times).
-
-Make sure it contains the following settings:
-
-.. code:: bash
-
-   tlsautorefresh=1
-   rpclisten=0.0.0.0:10009
-   restlisten=0.0.0.0:8080
-
-
-Step 3:
-.......
-
-Shut down lnd:
-
-.. code:: bash
-
-   cd umbrel;
-   docker-compose restart lnd;
-
-
-Raspblitz
----------
-
-
-
-Step 1:
-.......
-
-SSH into your node.
-
-
-Step 2:
-.......
-
-Edit your `lnd.conf`, and enter your node's externally visible IP as an entry:
-
-.. code:: bash
-
-   tlsextraip=[YOUR_NODE_IP]
-
-   or 
-   
-   tlsextradomain=[YOUR_NODE_DOMAIN]
-
-(please note the `tlsextraip=` or `tlsextradomain` lines may appear multiple times).
-
-Make sure it contains the following settings:
-
-.. code:: bash
-
-   tlsautorefresh=1
-   rpclisten=0.0.0.0:10009
-   restlisten=0.0.0.0:8080
-
-Step 3:
-.......
-
-Restart lnd.
-
-
-Connection Settings
--------------------
 
 In Orb, now click on `app > connection settings`, and add the following information:
 
