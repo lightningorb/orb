@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-27 08:17:12
+# @Last Modified time: 2022-06-19 20:26:50
 
 from orb.misc import data_manager
 
@@ -159,9 +159,26 @@ def patch_text_input():
     TextInput._draw_selection = draw_selection
 
 
+def patch_thread():
+    from threading import Thread
+    from traceback import format_exc
+
+    orig_run = Thread.run
+
+    def run(self, *args, **kwargs):
+        try:
+            orig_run(self, *args, **kwargs)
+        except Exception as e:
+            print(format_exc())
+            print(e)
+
+    Thread.run = run
+
+
 def do_monkey_patching():
     patch_store()
     patch_settings()
     patch_kv_settings()
     patch_datatables()
     patch_text_input()
+    patch_thread()
