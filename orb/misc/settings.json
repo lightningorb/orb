@@ -393,6 +393,13 @@
    },
    {
       "type":"string",
+      "title":"backup",
+      "desc":"Path where files are backed up",
+      "section":"path",
+      "key":"backup"
+   },
+   {
+      "type":"string",
       "title":"app archive",
       "desc":"Path where app archives are saved before upload",
       "section":"path",

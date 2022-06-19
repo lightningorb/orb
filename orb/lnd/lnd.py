@@ -70,7 +70,6 @@ def Lnd():
                 from orb.lnd.lnd_rest import LndREST
 
                 app = App.get_running_app()
-                data_dir = app.user_data_dir
                 cert = cert_path()
 
                 lnd[protocol] = LndREST(

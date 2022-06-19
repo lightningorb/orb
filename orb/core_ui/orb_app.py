@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-14 07:51:25
+# @Last Modified time: 2022-06-18 05:25:29
 
 import os
 import sys
@@ -156,6 +156,8 @@ class OrbApp(MDApp):
             "json",
             "db",
             "app",
+            "backup",
+            "export",
             "app_archive",
             "trash",
             "download",

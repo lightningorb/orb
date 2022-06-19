@@ -24,6 +24,7 @@
 #:import Rankings orb.screens.rankings.Rankings
 #:import ConnectionWizard orb.dialogs.connection_wizard.connection_wizard.ConnectionWizard
 #:import VoltageNode orb.dialogs.voltage_node.voltage_node.VoltageNode
+#:import UmbrelNode orb.dialogs.umbrel_node.umbrel_node.UmbrelNode
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
 #:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
 #:import LoginDialog orb.dialogs.app_store.LoginDialog
@@ -170,12 +171,16 @@
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuTextItem:
-                    text: "SSH Connection Wizard"
-                    on_press: ConnectionWizard().open()
+                    text: "Umbrel Node / lndonnect"
+                    on_press: UmbrelNode().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Voltage Node"
                     on_press: VoltageNode().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "SSH Connection Wizard"
+                    on_press: ConnectionWizard().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Connection Settings"

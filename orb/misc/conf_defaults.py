@@ -2,15 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-17 08:37:41
+# @Last Modified time: 2022-06-19 09:33:36
 
 
 def set_conf_defaults(config):
     config.add_section("host")
     config.set("host", "type", "default")
-    config.set("host", "hostname", "localhost")
+    config.set("host", "hostname", "")
     config.set("host", "port", "22")
-    config.set("host", "username", "umbrel")
+    config.set("host", "username", "")
     config.set("host", "auth_type", "password")
     config.set("host", "password", "")
     config.set("host", "certificate", "")
@@ -64,6 +64,7 @@ def set_conf_defaults(config):
     config.set("path", "cert", "certs")
     config.set("path", "app", "apps")
     config.set("path", "export", "exports")
+    config.set("path", "backup", "backups")
     config.set("path", "app_archive", "exports/archives")
     config.set("path", "trash", ".trash")
     config.set("path", "download", ".downloads")

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-14 11:27:06
+# @Last Modified time: 2022-06-19 11:09:06
 
 import threading
 import requests
@@ -45,14 +45,13 @@ class HUDFeeSummary(BorderedLabel):
         Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
-    @guarded
     def get_lnd_data(self, *args):
         @mainthread
         def update_gui(text):
             self.hud = text
             self.show()
 
-        @guarded
+        @silent
         def func():
             fr = Lnd().fee_report()
             update_gui(
@@ -76,14 +75,13 @@ class HUDSpentFeeSummary(BorderedLabel):
         Clock.schedule_interval(self.get_spent_data, 60)
         Clock.schedule_once(self.get_spent_data, 1)
 
-    @guarded
     def get_spent_data(self, *args):
         @mainthread
         def update_gui(text):
             self.hud = text
             self.show()
 
-        @guarded
+        @silent
         def func():
             from orb.store.model import LNDPayment
 
@@ -133,14 +131,13 @@ class HUDBalance(BorderedLabel):
         Clock.schedule_interval(self.get_lnd_data, 60)
         Clock.schedule_once(self.get_lnd_data, 1)
 
-    @guarded
     def get_lnd_data(self, *args):
         @mainthread
         def update_gui(text):
             self.hud = text
             self.show()
 
-        @guarded
+        @silent
         def func():
             lnd = Lnd()
 

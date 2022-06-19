@@ -1,3 +1,4 @@
+#:import os os
 
 <LNDConf>:
     title: 'lnd.conf'
@@ -43,6 +44,22 @@
                 size_hint_y: None
                 height: dp(10)
             MDRaisedButton:
+                text: 'Back up lnd.conf'
+                on_release: root.back_up_lnd_conf()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
+                text: 'Restore back-up'
+                on_release: root.restore_backup()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
                 text: 'Modify lnd.conf'
                 on_release: root.modify_lnd_conf()
                 size_hint_y: None
@@ -50,18 +67,6 @@
                 width: dp(100)
                 height: dp(40)
                 md_bg_color: 0.3,0.3,0.3,1
-            # Splitter:
-            #     horizontal: True
-            #     size_hint_y: None
-            #     height: dp(10)
-            # MDRaisedButton:
-            #     text: 'Restart lnd'
-            #     on_release: root.save_ssh_creds()
-            #     size_hint_y: None
-            #     size_hint_x: None
-            #     width: dp(100)
-            #     height: dp(40)
-            #     md_bg_color: 0.3,0.3,0.3,1
             Widget:
                 size_hint_y: 1
 

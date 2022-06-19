@@ -7,11 +7,12 @@
     size_hint: None, None
     size: dp(200), dp(25)
 
-<VoltageNode>:
-    title: 'Voltage.cloud Node'
+<UmbrelNode>:
+    title: 'Umbrel Node'
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [.8, .8]
+    size_hint: [.8, None]
+    height: dp(500)
     ScrollView:
         size_hint: None, None
         width: root.width
@@ -26,47 +27,24 @@
             height: self.minimum_height
             do_scroll_x: False
             Image:
-                source: 'orb/images/voltage.png'
+                source: 'orb/images/umbrel.png'
                 size: [103, 101]
                 size_hint: None, None
-            MDTextField:
-                id: address
-                text: pref('host.hostname')
-                helper_text: 'Host Address'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(300)
-                size_hint: (None, None)
             Splitter:
                 horizontal: True
                 size_hint_y: None
-                height: dp(10)
-            Spinner:
-                id: network
-                text: pref('lnd.network')
-                option_cls: Factory.get("NetworkSpinnerOption")
-                height: dp(25)
-                width: dp(200)
-                size_hint_y: None
-                size_hint_x: None
-                values: ["mainnet", "testnet", "signet"]
-            Splitter:
-                horizontal: True
-                size_hint_y: None
-                height: dp(15)
+                height: dp(5)
             MDLabel:
-                text: 'Admin Macaroon (hex):'
+                text: 'lndconnect URl'
             Splitter:
                 horizontal: True
                 size_hint_y: None
                 height: dp(5)
             TextInput:
-                id: tls_cert
+                id: lndurl
                 height: dp(200)
                 width: root.width - dp(40)
                 size_hint: None, None
-                text: root.get_cert() or ""
-                on_text: root.validate_cert(self.text)
                 multiline: True
             MDRaisedButton:
                 text: 'Save'

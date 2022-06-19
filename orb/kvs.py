@@ -1048,7 +1048,7 @@ Builder.load_string('''
     size: dp(200), dp(25)
 
 <VoltageNode>:
-    title: 'Voltage Node'
+    title: 'Voltage.cloud Node'
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [.8, .8]
@@ -1065,6 +1065,10 @@ Builder.load_string('''
             size_hint: 1, None
             height: self.minimum_height
             do_scroll_x: False
+            Image:
+                source: 'orb/images/voltage.png'
+                size: [103, 101]
+                size_hint: None, None
             MDTextField:
                 id: address
                 text: pref('host.hostname')
@@ -1672,6 +1676,63 @@ Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import os os
 #:import pref orb.misc.utils.pref
+#:import Factory kivy.factory.Factory
+
+<NetworkSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(200), dp(25)
+
+<UmbrelNode>:
+    title: 'Umbrel Node'
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [.8, None]
+    height: dp(500)
+    ScrollView:
+        size_hint: None, None
+        width: root.width
+        height: root.height - dp(100)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        pos: 0, 0
+        GridLayout:
+            cols: 1
+            padding: 10
+            spacing: 10
+            size_hint: 1, None
+            height: self.minimum_height
+            do_scroll_x: False
+            Image:
+                source: 'orb/images/umbrel.png'
+                size: [103, 101]
+                size_hint: None, None
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(5)
+            MDLabel:
+                text: 'lndconnect URl'
+            Splitter:
+                horizontal: True
+                size_hint_y: None
+                height: dp(5)
+            TextInput:
+                id: lndurl
+                height: dp(200)
+                width: root.width - dp(40)
+                size_hint: None, None
+                multiline: True
+            MDRaisedButton:
+                text: 'Save'
+                on_release: root.save()
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+''')
+Builder.load_string('''
+#:import dp kivy.metrics.dp
+#:import os os
+#:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 #:import Factory kivy.factory.Factory
@@ -1732,6 +1793,7 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
+#:import os os
 
 <LNDConf>:
     title: 'lnd.conf'
@@ -1777,6 +1839,22 @@ Builder.load_string('''
                 size_hint_y: None
                 height: dp(10)
             MDRaisedButton:
+                text: 'Back up lnd.conf'
+                on_release: root.back_up_lnd_conf()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
+                text: 'Restore back-up'
+                on_release: root.restore_backup()
+                size_hint_y: None
+                size_hint_x: None
+                width: dp(100)
+                height: dp(40)
+                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
                 text: 'Modify lnd.conf'
                 on_release: root.modify_lnd_conf()
                 size_hint_y: None
@@ -1784,18 +1862,6 @@ Builder.load_string('''
                 width: dp(100)
                 height: dp(40)
                 md_bg_color: 0.3,0.3,0.3,1
-            # Splitter:
-            #     horizontal: True
-            #     size_hint_y: None
-            #     height: dp(10)
-            # MDRaisedButton:
-            #     text: 'Restart lnd'
-            #     on_release: root.save_ssh_creds()
-            #     size_hint_y: None
-            #     size_hint_x: None
-            #     width: dp(100)
-            #     height: dp(40)
-            #     md_bg_color: 0.3,0.3,0.3,1
             Widget:
                 size_hint_y: 1
 
@@ -2089,6 +2155,7 @@ Builder.load_string('''
 #:import Rankings orb.screens.rankings.Rankings
 #:import ConnectionWizard orb.dialogs.connection_wizard.connection_wizard.ConnectionWizard
 #:import VoltageNode orb.dialogs.voltage_node.voltage_node.VoltageNode
+#:import UmbrelNode orb.dialogs.umbrel_node.umbrel_node.UmbrelNode
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
 #:import AppStoreDialog orb.dialogs.app_store.AppStoreDialog
 #:import LoginDialog orb.dialogs.app_store.LoginDialog
@@ -2235,12 +2302,16 @@ Builder.load_string('''
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuTextItem:
-                    text: "SSH Connection Wizard"
-                    on_press: ConnectionWizard().open()
+                    text: "Umbrel Node / lndonnect"
+                    on_press: UmbrelNode().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Voltage Node"
                     on_press: VoltageNode().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "SSH Connection Wizard"
+                    on_press: ConnectionWizard().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Connection Settings"

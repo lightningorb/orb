@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 06:36:55
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-17 09:40:12
+# @Last Modified time: 2022-06-19 11:37:00
 
 from threading import Thread
 
@@ -65,6 +65,8 @@ class NodeAndFiles(Tab):
                 test_file = lambda x: c.run(f"test -f {x}", warn=True).ok
                 test_dir = lambda x: c.run(f"test -d {x}", warn=True).ok
 
+                home = c.run("echo $HOME").stdout.strip()
+
                 if test_dir("~/umbrel"):
                     self.ids.node_type.text = "umbrel"
                 else:
@@ -73,9 +75,13 @@ class NodeAndFiles(Tab):
                 node_type = self.ids.node_type.text
 
                 if test_dir("~/.lnd"):
-                    self.ids.lnd_directory.text = "~/.lnd"
+                    self.ids.lnd_directory.text = f"{home}/.lnd"
                 elif test_dir("~/umbrel/lnd"):
-                    self.ids.lnd_directory.text = "~/umbrel/lnd"
+                    self.ids.lnd_directory.text = f"{home}/umbrel/lnd"
+                elif test_dir("~/umbrel/app-data/lightning/data/lnd"):
+                    self.ids.lnd_directory.text = (
+                        f"{home}/umbrel/app-data/lightning/data/lnd"
+                    )
                 else:
                     print("Could not find lnd directory")
                     return
@@ -83,6 +89,7 @@ class NodeAndFiles(Tab):
                 lnd_dir = self.ids.lnd_directory.text
 
                 for network in ["mainnet", "testnet", "signet"]:
+                    print(f"{lnd_dir}/data/graph/{network}")
                     if test_dir(f"{lnd_dir}/data/graph/{network}"):
                         self.ids.network.text = network
                         break
@@ -117,15 +124,7 @@ class NodeAndFiles(Tab):
                             f"{lnd_dir}/data/graph/{network}/channel.db"
                         )
 
-                if node_type == "umbrel":
-                    if system_ctl_service_enabled(c, "docker"):
-                        self.ids.lnd_stop_cmd.text = "docker stop lnd"
-                        self.ids.lnd_start_cmd.text = "docker start lnd"
-                    else:
-                        print(
-                            "could not find an enabled docker.service file in systemctl service files"
-                        )
-                else:
+                if node_type == "default":
                     if system_ctl_service_enabled(c, "lnd"):
                         self.ids.lnd_stop_cmd.text = "systemctl stop lnd"
                         self.ids.lnd_start_cmd.text = "systemctl start lnd"
@@ -133,5 +132,8 @@ class NodeAndFiles(Tab):
                         print(
                             "could not find an enabled lnd.service file in systemctl service files"
                         )
+                elif node_type == "umbrel":
+                    self.ids.lnd_stop_cmd.text = f"{home}/umbrel/scripts/stop"
+                    self.ids.lnd_start_cmd.text = f"{home}/umbrel/scripts/start"
 
         Thread(target=func).start()
