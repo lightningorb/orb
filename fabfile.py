@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 19:13:19
+# @Last Modified time: 2022-06-19 19:14:35
 
 import re
 import os
@@ -57,8 +57,9 @@ def release(c, minor=False, patch=False, hotfix=False):
     else:
         c.run("git commit -am 'version bump'")
     c.run("git push")
-    tags.tag(c)
-    tags.push(c)
+    if not hotfix:
+        tags.tag(c)
+        tags.push(c)
     for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
         c.run(f"git checkout {branch}")
         c.run("git rebase main")
