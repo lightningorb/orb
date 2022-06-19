@@ -1,6 +1,13 @@
 0.15.0
 ----
 
+fixing issues with 0.15.0 release
+
+
+v0.15.0
+-------
+
+version bump
 Make connecting to LND nodes easier [#240]
 disable ssh connection wizard on mobil
 Make connecting to LND nodes easier [#240]
