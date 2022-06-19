@@ -2,6 +2,8 @@
 ----
 
 fixing issues with 0.15.0 release
+release hotfix
+fixing issues with 0.15.0 release
 
 
 v0.15.0
