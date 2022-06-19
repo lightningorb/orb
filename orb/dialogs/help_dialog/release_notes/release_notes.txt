@@ -1,6 +1,9 @@
 0.15.0
 ----
 
+added missing hidden-import for plyer
+threads now print exceptions to console
+release hotfix
 fixing issues with 0.15.0 release
 release hotfix
 fixing issues with 0.15.0 release
