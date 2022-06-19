@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-26 07:53:09
+# @Last Modified time: 2022-06-19 17:15:31
 
 print("importing system modules")
 
@@ -86,7 +86,9 @@ from orb.dialogs.fee_distribution import FeeDistribution
 from orb.dialogs.help_dialog.about.about import About
 from orb.dialogs.upload_app import UploadAppDialog
 from orb.dialogs.highlighter_dialog.highlighter_dialog import HighlighterDialog
-
+from orb.dialogs.connection_wizard.connection_wizard import ConnectionWizard
+from orb.dialogs.umbrel_node.umbrel_node import UmbrelNode
+from orb.dialogs.voltage_node.voltage_node import VoltageNode
 import colour
 from kivymd.effects.stiffscroll import StiffScrollEffect
 
@@ -96,6 +98,9 @@ debug("keeping import modules in main")
 
 keep = lambda _: _
 
+keep(VoltageNode)
+keep(UmbrelNode)
+keep(ConnectionWizard)
 keep(Lnd)
 keep(ChannelsWidget)
 keep(Rebalance)

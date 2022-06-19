@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-15 04:35:41
+# @Last Modified time: 2022-06-19 19:10:22
 
 
 import uuid
@@ -79,11 +79,16 @@ def decrypt_long(encrypted_message, private_key):
 
 
 def get_sec_keys():
-    if pref("system.identifier") == "uuid":
-        uid = uuid.getnode()
-    elif pref("system.identifier") == "plyer":
-        uid = plyer.uniqueid.id
-    else:
+    try:
+        if pref("system.identifier") == "uuid":
+            uid = uuid.getnode()
+        elif pref("system.identifier") == "plyer":
+            uid = plyer.uniqueid.id
+        else:
+            uid = 0
+    except Exception as e:
+        print(e)
+        print("WARNING: plyer.uniqueid.id failed - setting uid to 0")
         uid = 0
     random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)

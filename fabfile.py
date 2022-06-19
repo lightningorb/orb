@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-02 09:32:41
+# @Last Modified time: 2022-06-19 19:13:19
 
 import re
 import os
@@ -37,21 +37,25 @@ def deploy_ios(c, bump: bool = False):
 
 
 @task
-def release(c, minor=False, patch=False):
+def release(c, minor=False, patch=False, hotfix=False):
     if not "working tree clean" in c.run("git status").stdout:
         print("Working directory not clean")
         return
-    if minor and patch:
-        exit(-1)
-    if not (minor or patch):
-        print("Need either minor or patch")
-        exit(-1)
-    if patch:
-        versioning.bump_patch(c)
-    if minor:
-        versioning.bump_minor(c)
+    if not hotfix:
+        if minor and patch:
+            exit(-1)
+        if not (minor or patch):
+            print("Need either minor or patch")
+            exit(-1)
+        if patch:
+            versioning.bump_patch(c)
+        if minor:
+            versioning.bump_minor(c)
     release_notes.create(c)
-    c.run("git commit -am 'version bump'")
+    if hotfix:
+        c.run("git commit -am 'release hotfix'")
+    else:
+        c.run("git commit -am 'version bump'")
     c.run("git push")
     tags.tag(c)
     tags.push(c)
