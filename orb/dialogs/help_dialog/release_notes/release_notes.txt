@@ -1,6 +1,20 @@
-0.14.13
+0.15.0
 ----
 
+Make connecting to LND nodes easier [#240]
+disable ssh connection wizard on mobil
+Make connecting to LND nodes easier [#240]
+renaming settings
+lightweight tests
+make github test install proper dev req
+Make connecting to LND nodes easier [#240]
+bump
+
+
+v0.14.13
+--------
+
+version bump
 updated release notes
 Race condition in Lnd module #238
 updated site
@@ -21,6 +35,7 @@ regression: module plyer.platforms missing in windows #237
 added testimonial
 added testimonial
 capitalization typo
+added hire me page
 added testimonials
 
 
