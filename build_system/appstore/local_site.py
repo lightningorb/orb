@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-22 07:58:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-22 09:13:39
+# @Last Modified time: 2022-06-22 12:23:23
 
 from invoke import task
 from pathlib import Path
@@ -33,3 +33,4 @@ def deploy(c, env=os.environ):
             c.run("unzip lnappstore.zip")
         with c.cd("/home/ubuntu/lnappstore_com/lnappstore"):
             c.run("npm install")
+            c.run("npm run build")
