@@ -1,6 +1,14 @@
-0.15.0
+0.15.1
 ----
 
+updated release notes
+remove functionality that may be problematic with the ios app store
+    review
+updated app store site
+updated app store site
+placeholder site for lnappstore.com
+updated release notes
+release hotfix
 added missing hidden-import for plyer
 threads now print exceptions to console
 release hotfix
