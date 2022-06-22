@@ -78,18 +78,19 @@ def decrypt_long(encrypted_message, private_key):
     return b"".join(ret)
 
 
-def get_sec_keys():
-    try:
-        if pref("system.identifier") == "uuid":
-            uid = uuid.getnode()
-        elif pref("system.identifier") == "plyer":
-            uid = plyer.uniqueid.id
-        else:
+def get_sec_keys(uid=None):
+    if uid is None:
+        try:
+            if pref("system.identifier") == "uuid":
+                uid = uuid.getnode()
+            elif pref("system.identifier") == "plyer":
+                uid = plyer.uniqueid.id
+            else:
+                uid = 0
+        except Exception as e:
+            print(e)
+            print("WARNING: plyer.uniqueid.id failed - setting uid to 0")
             uid = 0
-    except Exception as e:
-        print(e)
-        print("WARNING: plyer.uniqueid.id failed - setting uid to 0")
-        uid = 0
     random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)
     return priv.save_pkcs1(), pub.save_pkcs1()

@@ -4,9 +4,6 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-06-17 07:30:07
 
-import re
-import base64
-
 from orb.misc.macaroon import Macaroon
 from orb.misc.sec_rsa import *
 
@@ -20,8 +17,8 @@ class MacaroonSecure:
         return MacaroonSecure(text)
 
     @staticmethod
-    def init_from_plain(bin_data):
-        _, pub = get_sec_keys()
+    def init_from_plain(bin_data, uid=None):
+        _, pub = get_sec_keys(uid=uid)
         encrypted = encrypt_long(bin_data, pub, True)
         return MacaroonSecure(encrypted)
 

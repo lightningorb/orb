@@ -4,9 +4,6 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-01-25 13:15:12
 
-import re
-import base64
-
 from orb.misc.certificate import Certificate
 from orb.misc.sec_rsa import *
 
@@ -20,8 +17,8 @@ class CertificateSecure:
         return CertificateSecure(text)
 
     @staticmethod
-    def init_from_plain(text):
-        _, pub = get_sec_keys()
+    def init_from_plain(text, uid=None):
+        _, pub = get_sec_keys(uid=uid)
         encrypted = encrypt_long(str.encode(text), pub, True)
         return CertificateSecure(encrypted)
 

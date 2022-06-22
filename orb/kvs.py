@@ -708,6 +708,7 @@ Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 #:import Factory kivy.factory.Factory
+#:import device_id orb.misc.device_id.device_id
 
 <Tab>
 
@@ -893,8 +894,6 @@ Builder.load_string('''
                 TextInput:
                     id: macaroon
                     text: root.get_macaroon()
-                    helper_text: 'Macaroon'
-                    helper_text_mode: "persistent"
                     on_text: root.validate_macaroon(self.text)
                     multiline: True
                 MDLabel:
@@ -910,8 +909,50 @@ Builder.load_string('''
                     width: dp(100)
                     height: dp(40)
                     md_bg_color: 0.3,0.3,0.3,1
-
-
+        Tab:
+            title: 'Import'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: (1, 1)
+                MDTextField:
+                    id: device_id
+                    text: str(device_id())
+                    helper_text: 'Device ID'
+                    helper_text_mode: "persistent"
+                    size_hint_x: None
+                    width: dp(200)
+                TextInput:
+                    id: text_import
+                    multiline: True
+                MDRaisedButton:
+                    text: 'Import'
+                    on_release: root.import_node_settings()
+                    size_hint: (None, None)
+                    width: dp(100)
+                    height: dp(40)
+                    md_bg_color: 0.3,0.3,0.3,1
+        Tab:
+            title: 'Export'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: (1, 1)
+                MDTextField:
+                    id: device_id
+                    text: str(device_id())
+                    helper_text: 'Device ID'
+                    helper_text_mode: "persistent"
+                    size_hint_x: None
+                    width: dp(200)
+                MDRaisedButton:
+                    text: 'Export'
+                    on_release: root.export_node_settings()
+                    size_hint: (None, None)
+                    width: dp(100)
+                    height: dp(40)
+                    md_bg_color: 0.3,0.3,0.3,1
+                TextInput:
+                    id: text_export
+                    multiline: True
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
