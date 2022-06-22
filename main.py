@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 17:15:31
+# @Last Modified time: 2022-06-22 16:36:56
 
 print("importing system modules")
 
@@ -29,9 +29,6 @@ from kivy.utils import platform
 if platform == "win":
     debug("windows detected, setting graphics multisampling to 0")
     Config.set("graphics", "multisamples", "0")
-
-# os.environ["KIVY_AUDIO"] = "ffpyplayer"
-# os.environ["KIVY_VIDEO"] = "ffpyplayer"
 
 if platform == "macosx":
     os.environ["KIVY_DPI"] = "240"
@@ -65,7 +62,6 @@ from orb.screens.open_channel_screen import OpenChannelScreen
 from orb.screens.connect_screen import ConnectScreen
 from orb.dialogs.ingest_invoices.ingest_invoices import IngestInvoices
 from orb.screens.console.console_screen import ConsoleScreen
-from orb.dialogs.player_dialog import PlayerDialog
 from orb.screens.send_coins import SendCoins
 from orb.screens.rankings import Rankings
 from orb.dialogs.connection_settings import ConnectionSettings
@@ -112,7 +108,6 @@ keep(OpenChannelScreen)
 keep(ConnectScreen)
 keep(IngestInvoices)
 keep(ConsoleScreen)
-keep(PlayerDialog)
 keep(SendCoins)
 keep(Rankings)
 keep(MainLayout)

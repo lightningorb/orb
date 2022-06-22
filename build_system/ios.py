@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-09 11:55:23
+# @Last Modified time: 2022-06-22 14:15:15
 
 import os
 import re
@@ -143,10 +143,8 @@ def toolchain_build(c, env=os.environ):
     with c.cd("build"):
         c.run("toolchain build python3", env=env)
         c.run("toolchain build openssl", env=env)
-        c.run("toolchain build ffmpeg", env=env)
         c.run("toolchain build kivy", env=env)
         c.run("toolchain build pillow", env=env)
-        c.run("toolchain build ffpyplayer", env=env)
         c.run("toolchain build libzbar", env=env)
         c.run("toolchain build audiostream", env=env)
         c.run("toolchain build pyyaml", env=env)
@@ -164,8 +162,20 @@ def tmp(c, env=os.environ):
 
 @task
 def toolchain(c, env=dict(PATH=os.environ["PATH"]), clean=False):
+    """
+    Build and install all libs and modules required for XCode.
+    """
     if clean:
         with c.cd("build"):
-            c.run("toolchain distclean", en=env)
+            c.run("toolchain distclean", env=env)
     toolchain_build(c, env)
     toolchain_pip(c, env)
+
+
+@task
+def clean(c, env=dict(PATH=os.environ["PATH"]), clean=False):
+    """
+    Clean all XCode libs and modules
+    """
+    with c.cd("build"):
+        c.run("toolchain distclean", env=env)

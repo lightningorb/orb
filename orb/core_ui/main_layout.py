@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 12:34:30
+# @Last Modified time: 2022-06-22 16:43:02
 
 import os
 
@@ -13,7 +13,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 from kivy.uix.videoplayer import VideoPlayer
 from orb.misc import data_manager
-from orb.misc.utils import mobile
+from orb.misc.utils import mobile, ios
 
 
 class MainLayout(BoxLayout):
@@ -43,6 +43,10 @@ class MainLayout(BoxLayout):
 
         if mobile:
             self.ids.ssh_connection_wizard.disabled = True
+        if ios:
+            self.ids.app_store_login.disabled = True
+            self.ids.app_store.disabled = True
+            self.ids.upload_app.disabled = True
 
         @mainthread
         def delayed():

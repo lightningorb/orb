@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 11:26:56
+# @Last Modified time: 2022-06-22 16:42:48
 
 from pathlib import Path
 
@@ -64,4 +64,6 @@ def closest_point_on_line(p1, p2, p3):
 
 
 mobile = platform in ("ios", "android")
+ios = platform == "ios"
+android = platform == "android"
 desktop = platform not in ("ios", "android")

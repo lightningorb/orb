@@ -4,7 +4,6 @@
 #:import data_manager orb.misc.data_manager
 #:import Lnd orb.lnd.Lnd
 #:import MailDialog orb.dialogs.mail_dialog.MailDialog
-#:import PlayerDialog orb.dialogs.player_dialog.PlayerDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
@@ -189,14 +188,17 @@
                     on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
+                    id: app_store_login
                     text: "App Store Login"
                     on_press: LoginDialog().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
+                    id: app_store
                     text: "App Store"
                     on_press: AppStoreDialog().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
+                    id: upload_app
                     text: "Upload App"
                     on_press: UploadAppDialog().open()
                     on_release: app_menu.close_all()

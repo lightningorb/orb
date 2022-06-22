@@ -914,84 +914,6 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
-<PlayerDialog>:
-    title: 'player'
-    size_hint: .8, .8
-    MDTabs:
-        id: tabs
-        on_tab_switch: root.on_tab_switch(*args)
-        Tab:
-            title: 'Collections'
-            ScrollView:
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                do_scroll_x: False
-                GridLayout:
-                    id: collections
-                    cols: 3
-                    row_force_default: True
-                    row_default_height: dp(360/2)
-                    padding: 20
-                    spacing: 20
-        Tab:
-            title: 'Videos'
-            ScrollView:
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                do_scroll_x: False
-                GridLayout:
-                    id: videos
-                    cols: 3
-                    row_force_default: True
-                    row_default_height: dp(360/2)
-                    padding: 20
-                    spacing: 20
-                    size_hint_y: None
-                    height: self.minimum_height
-                    Label:
-                        text: "Please first select a collection"
-        Tab:
-            title: 'Player'
-            BoxLayout:        
-                id: bl
-                orientation: 'vertical'
-                Label:
-                    text: "Please first select a video"
-
-<Tab>
-
-<CollectionWidget>
-    Button:
-        id: button
-        size: dp(640/2), dp(360/2)
-        size_hint: None, None
-        Image:
-            source: 'images/overview.png'
-            y: self.parent.y
-            x: self.parent.x
-            size: [self.parent.size[0], self.parent.size[1]]
-            allow_stretch: True
-
-<VideoWidget>
-    Button:
-        id: button
-        size: dp(640/2), dp(360/2)
-        Image:
-            source: 'images/overview_blank.png'
-            y: self.parent.y
-            x: self.parent.x
-            size: [self.parent.size[0], self.parent.size[1]]
-            allow_stretch: True
-        Label:
-            text: root.title
-            markup: True
-            multiline: True
-            pos: (root.pos[0]+root.size[0]/2, root.pos[1]+root.size[1]/3)
-            font_size: '24sp'
-            halign: "left"
-            valign: "middle"
-            text_size: root.size
-
-''')
-Builder.load_string('''
 #:import dp kivy.metrics.dp
 
 <FeeDistribution>:
@@ -2135,7 +2057,6 @@ Builder.load_string('''
 #:import data_manager orb.misc.data_manager
 #:import Lnd orb.lnd.Lnd
 #:import MailDialog orb.dialogs.mail_dialog.MailDialog
-#:import PlayerDialog orb.dialogs.player_dialog.PlayerDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
@@ -2320,14 +2241,17 @@ Builder.load_string('''
                     on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
+                    id: app_store_login
                     text: "App Store Login"
                     on_press: LoginDialog().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
+                    id: app_store
                     text: "App Store"
                     on_press: AppStoreDialog().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
+                    id: upload_app
                     text: "Upload App"
                     on_press: UploadAppDialog().open()
                     on_release: app_menu.close_all()
