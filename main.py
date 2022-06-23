@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-24 08:30:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-22 16:36:56
+# @Last Modified time: 2022-06-23 18:08:39
 
 print("importing system modules")
 
@@ -85,6 +85,7 @@ from orb.dialogs.highlighter_dialog.highlighter_dialog import HighlighterDialog
 from orb.dialogs.connection_wizard.connection_wizard import ConnectionWizard
 from orb.dialogs.umbrel_node.umbrel_node import UmbrelNode
 from orb.dialogs.voltage_node.voltage_node import VoltageNode
+from orb.misc.device_id import device_id
 import colour
 from kivymd.effects.stiffscroll import StiffScrollEffect
 
@@ -129,6 +130,7 @@ keep(About)
 keep(UploadAppDialog)
 keep(forwarding_history)
 keep(HighlighterDialog)
+keep(device_id)
 
 if __name__ == "__main__":
     debug("in __main__")
