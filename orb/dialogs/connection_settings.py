@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-23 05:52:34
+# @Last Modified time: 2022-06-23 12:48:00
 
 from tempfile import mkdtemp
 from pathlib import Path
@@ -41,6 +41,7 @@ class ConnectionSettings(PopupDropShadow):
         "rest_port",
         "tls_certificate",
         "network",
+        "protocol",
         "macaroon_admin",
         "type",
     ]
@@ -138,18 +139,21 @@ class ConnectionSettings(PopupDropShadow):
             "lnd",
             {k: self.config["lnd"][k] for k in self.lnd_settings_to_copy},
         )
+
+        # not so clever
+        try:
+            uid = int(self.ids.device_id.text)
+        except:
+            uid = self.ids.device_id.text
+
         cert_secure = CertificateSecure(self.config["lnd"]["tls_certificate"].encode())
         plain_cert = cert_secure.as_plain_certificate().cert
-        cert_new_uid = CertificateSecure.init_from_plain(
-            plain_cert, uid=int(self.ids.device_id.text)
-        )
+        cert_new_uid = CertificateSecure.init_from_plain(plain_cert, uid=uid)
         config["lnd"]["tls_certificate"] = cert_new_uid.cert_secure.decode()
 
         mac_secure = MacaroonSecure(self.config["lnd"]["macaroon_admin"].encode())
         plain_mac = mac_secure.as_plain_macaroon().macaroon
-        mac_new_uid = MacaroonSecure.init_from_plain(
-            plain_mac, uid=int(self.ids.device_id.text)
-        )
+        mac_new_uid = MacaroonSecure.init_from_plain(plain_mac, uid=uid)
         config["lnd"]["macaroon_admin"] = mac_new_uid.macaroon_secure.decode()
 
         d = mkdtemp()
@@ -165,11 +169,14 @@ class ConnectionSettings(PopupDropShadow):
         d = mkdtemp()
         p = Path(d) / "orb.ini"
         with p.open("w") as f:
-            f.write(self.ids.text_export.text)
+            f.write(self.ids.text_import.text)
         config = ConfigParser()
         config.read(p.as_posix())
-        os.unlink(p.as_posix())
         self.config["host"]["hostname"] = config["host"]["hostname"]
         for s in self.lnd_settings_to_copy:
             self.config["lnd"][s] = config["lnd"][s]
+        if mobile:
+            self.config["lnd"]["protocol"] = "rest"
         self.config.write()
+        os.unlink(p.as_posix())
+        print("Settings updated - please restart Orb")
