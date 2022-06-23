@@ -1,6 +1,13 @@
 0.15.2
 ----
 
+missing import in main
+
+
+v0.15.2
+-------
+
+version bump
 add node settings import / export functionality #243
 add node settings import / export functionality [#243]
 
