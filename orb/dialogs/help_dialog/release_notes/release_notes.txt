@@ -1,6 +1,14 @@
-0.15.1
+0.15.2
 ----
 
+add node settings import / export functionality #243
+add node settings import / export functionality [#243]
+
+
+v0.15.1
+-------
+
+version bump
 updated release notes
 remove functionality that may be problematic with the ios app store
     review
