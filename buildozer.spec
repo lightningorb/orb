@@ -10,7 +10,7 @@ package.name = orb
 package.domain = com.lnorb
 
 # (str) Source code where the main.py live
-source.dir = calc
+source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,json,wav,yaml
@@ -22,7 +22,7 @@ source.include_patterns = VERSION,images/*
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-#source.exclude_dirs = tests, bin, venv
+source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, images, license, lnappstore, orb, server, site, tests, third_party, tutes, user, worklogs
 
 # (list) List of exclusions using pattern matching
 # Do not prefix with './'
