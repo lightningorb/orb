@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 11:09:06
+# @Last Modified time: 2022-06-26 22:18:06
 
 import threading
 import requests
@@ -308,7 +308,7 @@ class ThreadWidget(Widget):
     thread = ObjectProperty(None, allownone=True)
 
     def on_release(self, *args):
-        if not data_manager.data_man.menu_visible:
+        if data_manager.data_man and not data_manager.data_man.menu_visible:
             self.thread.stop()
         return super(ThreadWidget, self).on_release(*args)
 

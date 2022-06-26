@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 17:57:48
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 21:09:33
+# @Last Modified time: 2022-06-26 22:06:39
 
 print("importing system modules")
 
@@ -178,12 +178,15 @@ class MainApp(App):
         return main_layout
 
 
-if __name__ == "__main__":
-    app = MainApp()
-    app.run()
-
-
 # if __name__ == "__main__":
-#     debug("in __main__")
-#     debug("launching main Orb App")
-#     OrbApp().run()
+
+
+if __name__ == "__main__":
+    debug("in __main__")
+    debug("launching main Orb App")
+    try:
+        OrbApp().run()
+    except Exception as e:
+        error += str(e) + "\n"
+        app = MainApp()
+        app.run()

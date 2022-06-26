@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-18 05:25:29
+# @Last Modified time: 2022-06-26 22:20:28
 
 import os
 import sys
@@ -293,26 +293,33 @@ class OrbApp(MDApp):
         """
         Main build method for the app.
         """
-        Config.set("graphics", "window_state", "maximized")
-        Config.set("graphics", "fullscreen", "auto")
-        if Window:
-            Window.maximize()
-        self.override_stdout()
-        self.make_dirs()
-        self.check_cert_and_mac()
+        # Config.set("graphics", "window_state", "maximized")
+        # Config.set("graphics", "fullscreen", "auto")
+        # if Window:
+        #     Window.maximize()
+        # self.override_stdout()
+        # self.make_dirs()
+        # self.check_cert_and_mac()
         self.load_kvs()
-        self.read_version()
-        self.update_things()
-        data_manager.data_man = data_manager.DataManager()
-        window_sizes = Window.size
+        # self.read_version()
+        # self.update_things()
+        # try:
+        #     data_manager.data_man = data_manager.DataManager()
+        # except:
+        #     pass
+        class MockDataManager:
+            disable_shortcuts = True
+
+            def bind(self, *args, **kwargs):
+                pass
+
+        data_manager.data_man = MockDataManager()
+        # window_sizes = Window.size
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
-        self.icon = "orb.png"
+        # self.icon = "orb.png"
         self.main_layout = MainLayout()
-        self.show_licence_info()
-        # from orb.core_ui import echoclient_ssh
-
-        # echoclient_ssh.run()
+        # self.show_licence_info()
         return self.main_layout
 
     def build_config(self, config):
@@ -353,6 +360,6 @@ class OrbApp(MDApp):
         except:
             pass
 
-    @guarded
+    # @guarded
     def run(self, *args):
         super(OrbApp, self).run(*args)
