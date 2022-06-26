@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-22 16:42:48
+# @Last Modified time: 2022-06-26 21:02:59
 
 from pathlib import Path
 
@@ -28,6 +28,9 @@ def pref(name):
     app = App.get_running_app()
     if app:
         section, key = name.split(".")
+        if section not in app.config:
+            print(f"CONFIG SECTION NOT FOUND: {section}")
+            return ""
         if app.config[section][key] == "False":
             return False
         if app.config[section][key] == "True":

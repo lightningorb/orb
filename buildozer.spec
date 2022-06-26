@@ -22,7 +22,7 @@ source.include_patterns = VERSION,images/*
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, images, license, lnappstore, orb, server, site, tests, third_party, tutes, user, worklogs
+source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, images, license, lnappstore, server, site, tests, tutes, user, worklogs
 
 # (list) List of exclusions using pattern matching
 # Do not prefix with './'
@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow
+requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
