@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 22:18:06
+# @Last Modified time: 2022-06-26 22:43:48
 
 import threading
 import requests
@@ -421,7 +421,8 @@ class HUDGlobalRatio(BorderedLabel):
         @guarded
         def func():
             channels = data_manager.data_man.channels
-            update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
+            if channels:
+                update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
 
         threading.Thread(target=func).start()
 

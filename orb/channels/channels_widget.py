@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-04-04 14:43:33
+# @Last Modified time: 2022-06-26 22:50:43
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -39,7 +39,8 @@ class ChannelsWidget(ScatterLayout):
         self.htlcs_thread.daemon = True
         self.node = None
         self.channels = data_manager.data_man.channels
-        self.channels.get()
+        if self.channels:
+            self.channels.get()
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
         self.channels_thread.daemon = True
         self.cn = {}
@@ -55,8 +56,9 @@ class ChannelsWidget(ScatterLayout):
         self.chord_widget = ChordWidget(self.channels)
         caps = self.get_caps(self.channels)
         self.info = self.lnd.get_info()
-        for c in self.channels:
-            self.add_channel(channel=c, caps=caps, update=False)
+        if self.channels:
+            for c in self.channels:
+                self.add_channel(channel=c, caps=caps, update=False)
         self.node = Node(
             text=self.info.alias,
             round=pref("display.round_central_node"),
@@ -97,9 +99,10 @@ class ChannelsWidget(ScatterLayout):
     def update(self, *_):
         if self.node:
             self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
-        self.channels.sort_channels()
-        for i, chan_id in enumerate(self.channels.sorted_chan_ids):
-            self.cn[chan_id].update(i, len(self.cn))
+        if self.channels:
+            self.channels.sort_channels()
+            for i, chan_id in enumerate(self.channels.sorted_chan_ids):
+                self.cn[chan_id].update(i, len(self.cn))
 
     def on_touch_move(self, touch):
         if data_manager.data_man.menu_visible:

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-28 15:29:46
+# @Last Modified time: 2022-06-27 06:25:30
 
 from threading import Thread, Lock
 
@@ -12,6 +12,7 @@ from kivy.properties import StringProperty
 from kivy.properties import ListProperty
 from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
+from kivy.clock import mainthread
 
 from orb.lnd import Lnd
 
@@ -87,13 +88,18 @@ class Channel(EventDispatcher):
         in LND.
         """
         policy_to = Lnd().get_policy_to(self.chan_id)
-        self._unbind_policies()
-        self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
-        self.fee_base_msat = policy_to.fee_base_msat
-        self.time_lock_delta = policy_to.time_lock_delta
-        self.max_htlc_msat = policy_to.max_htlc_msat
-        self.min_htlc_msat = policy_to.min_htlc
-        self._bind_policies()
+
+        @mainthread
+        def do_update(policy_to):
+            self._unbind_policies()
+            self.fee_rate_milli_msat = policy_to.fee_rate_milli_msat
+            self.fee_base_msat = policy_to.fee_base_msat
+            self.time_lock_delta = policy_to.time_lock_delta
+            self.max_htlc_msat = policy_to.max_htlc_msat
+            self.min_htlc_msat = policy_to.min_htlc
+            self._bind_policies()
+
+        do_update(policy_to)
 
     def _bind_policies(self):
         """

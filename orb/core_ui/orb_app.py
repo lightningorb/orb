@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 22:20:28
+# @Last Modified time: 2022-06-27 06:37:34
 
 import os
 import sys
@@ -76,7 +76,7 @@ class OrbApp(MDApp):
         one OS to the next.
         """
         if platform == "android":
-            defaultpath = "/sdcard/.%(appname)s.ini"
+            defaultpath = f"{self._get_user_data_dir()}/%(appname)s.ini"
         elif platform == "ios":
             defaultpath = "~/Documents/%(appname)s.ini"
         elif platform == "win":
@@ -293,33 +293,37 @@ class OrbApp(MDApp):
         """
         Main build method for the app.
         """
-        # Config.set("graphics", "window_state", "maximized")
-        # Config.set("graphics", "fullscreen", "auto")
-        # if Window:
-        #     Window.maximize()
-        # self.override_stdout()
-        # self.make_dirs()
-        # self.check_cert_and_mac()
+        Config.set("graphics", "window_state", "maximized")
+        Config.set("graphics", "fullscreen", "auto")
+        if Window:
+            Window.maximize()
+        self.override_stdout()
+        self.make_dirs()
+        self.check_cert_and_mac()
         self.load_kvs()
-        # self.read_version()
-        # self.update_things()
-        # try:
-        #     data_manager.data_man = data_manager.DataManager()
-        # except:
-        #     pass
-        class MockDataManager:
-            disable_shortcuts = True
+        self.read_version()
+        self.update_things()
+        try:
+            data_manager.data_man = data_manager.DataManager()
+        except:
+            from orb.misc.channels import Channels
 
-            def bind(self, *args, **kwargs):
-                pass
+            class MockDataManager:
+                disable_shortcuts = True
+                show_chords = False
+                channels = None
+                channels_widget_ux_mode = 0
 
-        data_manager.data_man = MockDataManager()
-        # window_sizes = Window.size
+                def bind(self, *args, **kwargs):
+                    pass
+
+            data_manager.data_man = MockDataManager()
+        window_sizes = Window.size
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
-        # self.icon = "orb.png"
+        self.icon = "orb.png"
         self.main_layout = MainLayout()
-        # self.show_licence_info()
+        self.show_licence_info()
         return self.main_layout
 
     def build_config(self, config):
