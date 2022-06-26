@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-06-26 17:57:48
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-06-26 18:39:33
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+
 
 class MainApp(App):
     def build(self):
@@ -14,7 +20,7 @@ class MainApp(App):
         )
         main_layout.add_widget(self.solution)
         buttons = [
-            ["7", "8", "9", "/"],
+            ["7", "8", "9", "//"],
             ["4", "5", "6", "*"],
             ["1", "2", "3", "-"],
             [".", "0", "C", "+"],
@@ -30,9 +36,7 @@ class MainApp(App):
                 h_layout.add_widget(button)
             main_layout.add_widget(h_layout)
 
-        equals_button = Button(
-            text="=", pos_hint={"center_x": 0.5, "center_y": 0.5}
-        )
+        equals_button = Button(text="=", pos_hint={"center_x": 0.5, "center_y": 0.5})
         equals_button.bind(on_press=self.on_solution)
         main_layout.add_widget(equals_button)
 
@@ -46,8 +50,7 @@ class MainApp(App):
             # Clear the solution widget
             self.solution.text = ""
         else:
-            if current and (
-                self.last_was_operator and button_text in self.operators):
+            if current and (self.last_was_operator and button_text in self.operators):
                 # Don't add two operators right after each other
                 return
             elif current == "" and button_text in self.operators:

@@ -1,3 +1,5 @@
+.buildozer/
+bin/
 lnappstore.zip
 orb.log
 orb/apps/liquidity_view
