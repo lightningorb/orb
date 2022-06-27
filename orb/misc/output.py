@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 06:41:59
+# @Last Modified time: 2022-06-27 11:39:31
 
 import sys
 
@@ -44,8 +44,11 @@ class Output:
 
 
 def format_alias(alias):
-    if sys.stdout.encoding and not sys.stdout.encoding.lower().startswith("utf"):
-        alias = alias.encode("latin-1", "ignore").decode()
+    try:
+        if sys.stdout.encoding and not sys.stdout.encoding.lower().startswith("utf"):
+            alias = alias.encode("latin-1", "ignore").decode()
+    except:
+        pass
     return alias
 
 

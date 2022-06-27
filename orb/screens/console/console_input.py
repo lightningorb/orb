@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-10 10:17:38
+# @Last Modified time: 2022-06-27 08:55:30
 
 import uuid
 from traceback import format_exc
@@ -15,7 +15,6 @@ from kivy.properties import StringProperty
 from kivy.uix.button import Button
 from kivy.uix.codeinput import CodeInput
 from kivy.uix.popup import Popup
-from orb.misc.utils import desktop
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc import data_manager
@@ -37,7 +36,7 @@ class ConsoleInput(CodeInput):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            if data_manager.data_man.menu_visible or not desktop:
+            if data_manager.data_man.menu_visible:
                 return False
         return super(ConsoleInput, self).on_touch_down(touch)
 

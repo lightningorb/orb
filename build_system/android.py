@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 18:41:44
+# @Last Modified time: 2022-06-27 10:20:00
 
 from fabric import Connection
 from invoke import task
@@ -17,6 +17,14 @@ def install(c, env=os.environ):
 
 @task
 def build(c, env=os.environ):
+    """
+    need to set sqlite version to 3.38.0 or SQLITE_ENABLE_JSON1=1
+    ~/orb/.buildozer/android/platform/python-for-android/pythonforandroid/recipes/sqlite3/__init__.py
+    """
+    # c.run("mkdir -p ~/orb/.buildozer/android/platform")
+    # c.run(
+    #     "cp -r ~/pythonforandroid ~/orb/.buildozer/android/platform/python-for-android/"
+    # )
     c.run(
         "rm -f ~/orb/bin/orb-0.1-arm64-v8a_armeabi-v7a-debug.apk ~/lnorb_com/orb-0.1-arm64-v8a_armeabi-v7a-debug.apk"
     )

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-09 09:50:17
+# @Last Modified time: 2022-06-27 08:43:04
 
 import arrow
 from orb.misc import data_manager
@@ -56,8 +56,9 @@ def is_trial():
 
 
 def is_satoshi():
-    edition, _, _ = get_code().split("_")
-    return edition == "satoshi"
+    # edition, _, _ = get_code().split("_")
+    # return edition == "satoshi"
+    return True
 
 
 def is_digital_gold():
