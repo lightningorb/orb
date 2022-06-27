@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-10 06:42:53
+# @Last Modified time: 2022-06-26 22:49:34
 
 import math
 from collections import defaultdict
@@ -39,7 +39,8 @@ class ChordWidget(Widget):
         super(ChordWidget, self).__init__(*args, **kwargs)
         self.channels = channels
         Clock.schedule_once(lambda _: Thread(target=self.update).start(), 1)
-        channels.bind(channels=self.update)
+        if channels:
+            channels.bind(channels=self.update)
         data_manager.data_man.bind(show_chords=self.update)
         data_manager.data_man.bind(show_chord=self.show_chord)
         data_manager.data_man.bind(chords_direction=self.update)

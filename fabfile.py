@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 19:14:35
+# @Last Modified time: 2022-06-26 10:24:01
 
 import re
 import os
@@ -11,6 +11,7 @@ from build_system.monkey_patch import fix_annotations
 
 fix_annotations()
 
+from build_system import android
 from build_system import ios
 from build_system import osx
 from build_system import ubuntu
@@ -85,4 +86,5 @@ namespace = Collection(
     armor,
     site,
     alembic,
+    android,
 )

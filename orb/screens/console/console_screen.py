@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-15 13:22:44
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-17 03:07:45
+# @Last Modified time: 2022-06-26 22:46:41
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
@@ -82,19 +82,22 @@ class ConsoleScreen(Screen):
         Print the last line on the status line.
         """
         app = App.get_running_app()
-        while app.consumables and time() < (Clock.get_time() + MAX_TIME):
-            text = app.consumables.popleft()
-            # make sure we have something to print
-            if text:
-                # make sure it's a string
-                text = str(text)
-                # split up the output into lines
-                text_lines = text.split("\n")
-                if text_lines:
-                    for line in text_lines:
-                        if line:
-                            self.lines.append(line)
-                    for _ in range(max(0, len(self.lines) - 500)):
-                        self.lines.popleft()
-                    last_line = next((x for x in reversed(text_lines) if x != ''), '')
-                self.update_output("\n".join(self.lines), last_line)
+        if hasattr(app, "consumables"):
+            while app.consumables and time() < (Clock.get_time() + MAX_TIME):
+                text = app.consumables.popleft()
+                # make sure we have something to print
+                if text:
+                    # make sure it's a string
+                    text = str(text)
+                    # split up the output into lines
+                    text_lines = text.split("\n")
+                    if text_lines:
+                        for line in text_lines:
+                            if line:
+                                self.lines.append(line)
+                        for _ in range(max(0, len(self.lines) - 500)):
+                            self.lines.popleft()
+                        last_line = next(
+                            (x for x in reversed(text_lines) if x != ""), ""
+                        )
+                    self.update_output("\n".join(self.lines), last_line)

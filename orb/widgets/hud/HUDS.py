@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 11:09:06
+# @Last Modified time: 2022-06-26 22:43:48
 
 import threading
 import requests
@@ -308,7 +308,7 @@ class ThreadWidget(Widget):
     thread = ObjectProperty(None, allownone=True)
 
     def on_release(self, *args):
-        if not data_manager.data_man.menu_visible:
+        if data_manager.data_man and not data_manager.data_man.menu_visible:
             self.thread.stop()
         return super(ThreadWidget, self).on_release(*args)
 
@@ -421,7 +421,8 @@ class HUDGlobalRatio(BorderedLabel):
         @guarded
         def func():
             channels = data_manager.data_man.channels
-            update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
+            if channels:
+                update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
 
         threading.Thread(target=func).start()
 
