@@ -36,7 +36,6 @@ a = Analysis(
         ("orb/apps/auto_max_htlcs/update_max_htlc.py", "orb/apps/auto_max_htlcs/"),
         ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
         ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
-        ("video_library.yaml", "."),
         ("images/ln.png", "images/"),
         ("VERSION", "."),
     ],

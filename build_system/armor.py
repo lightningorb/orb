@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 21:47:11
+# @Last Modified time: 2022-06-28 07:16:51
 
 try:
     # not all actions install all requirements
@@ -43,7 +43,6 @@ data = [
     ("orb/apps/auto_max_htlcs/update_max_htlc.py", "orb/apps/auto_max_htlcs/"),
     ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
     ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
-    ("video_library.yaml", "."),
     ("VERSION", "."),
     ("images/ln.png", "images/"),
 ]

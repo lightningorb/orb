@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:00:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-22 14:15:15
+# @Last Modified time: 2022-06-28 07:17:00
 
 import os
 import re
@@ -33,9 +33,7 @@ def update_version(c):
 def copy_files(c):
     c.run("rm -rf /tmp/lnorb/")
     c.run("mkdir -p /tmp/lnorb/")
-    c.run(
-        "cp -r VERSION tests third_party main.py images docs orb user video_library.yaml /tmp/lnorb/"
-    )
+    c.run("cp -r VERSION tests third_party main.py images docs orb user /tmp/lnorb/")
 
 
 def copy_obfuscated_files(c):
