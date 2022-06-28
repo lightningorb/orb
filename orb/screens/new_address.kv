@@ -2,9 +2,12 @@
 # NEW ADDRESS
 ########################################################################################
 
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
 <NewAddress>:
     title: "New Wallet Address"
-    size: (800,550)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(500))
     size_hint: (None, None)
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0

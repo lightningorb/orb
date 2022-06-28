@@ -2,15 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 17:03:18
+# @Last Modified time: 2022-06-28 13:18:53
 
 from collections import defaultdict
 from threading import Thread
 import arrow
+
 from kivy.uix.popup import Popup
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
+from kivy.core.window import Window
+from kivy.metrics import dp
 
 from orb.misc.forex import forex
 from orb.lnd import Lnd
@@ -35,7 +38,7 @@ def download_forwarding_history(*args, **kwargs):
         start_time = int(last.timestamp) if last else None
         while True:
             # fwd returns object with forwarding_events and last_offset_index attributes
-            print('downloading from offset {}'.format(i))
+            print("downloading from offset {}".format(i))
             fwd = Lnd().get_forwarding_history(
                 start_time=start_time, index_offset=i, num_max_events=100
             )
@@ -97,7 +100,7 @@ def view_forwarding_history():
         title="Total Routing",
         content=Label(text=text),
         size_hint=(None, None),
-        size=(500, 500),
+        size=(min(dp(300), Window.size[0]), min(dp(300), Window.size[1])),
     )
     popup.open()
 

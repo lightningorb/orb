@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-27 10:20:00
+# @Last Modified time: 2022-06-28 08:46:35
 
 from fabric import Connection
 from invoke import task
@@ -43,6 +43,16 @@ def build_remote(c, env=os.environ):
     ) as con:
         with con.cd("orb"):
             con.run("./build.py android.build")
+
+
+@task
+def clean(c, env=os.environ):
+    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    with Connection(
+        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
+    ) as con:
+        with con.cd("orb"):
+            con.run("rm -rf .buildozer")
 
 
 @task

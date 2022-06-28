@@ -1,9 +1,10 @@
 #:import dp kivy.metrics.dp 
+#:import Window kivy.core.window.Window
 
 
 <BatchOpenScreen>:
     title: 'Batch Open'
-    size: (dp(800), dp(500))
+    size: min(Window.size[0], dp(800)), min(Window.size[1], dp(500))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -25,6 +26,8 @@
                     orientation: 'horizontal'
                     height: dp(60)
                     size_hint_y: None
+                    padding: dp(2)
+                    spacing: dp(2)
                     MDTextField:
                         id: amount
                         text: '100_000_000'
@@ -39,14 +42,12 @@
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
                     MDRaisedButton:
                         text: 'Ingest'
                         on_release: root.ingest(pubkeys.text)
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
         Tab:
             title: 'connect'
             BoxLayout:
@@ -66,7 +67,6 @@
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
         Tab:
             title: 'confirm'
             BoxLayout:
@@ -81,6 +81,8 @@
             BoxLayout:
                 orientation: 'vertical'
                 size_hint: (1, 1)
+                padding: dp(2)
+                spacing: dp(2)
                 MDTextField:
                     id: open_status
                     text: ''
@@ -95,6 +97,5 @@
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
 
 <Tab>

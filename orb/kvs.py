@@ -54,11 +54,12 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
-#: import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
 
 <CloseChannel>:
     title: 'Close Channel'
-    size: (800, 600)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -71,6 +72,7 @@ Builder.load_string('''
             height: self.texture_size[1]
         MDCheckbox:
             id: force
+        Widget:
         MDTextField:
             id: channel_point
             helper_text: 'Channel Point'
@@ -79,16 +81,16 @@ Builder.load_string('''
             id: sats_per_vbyte
             helper_text: 'Sats per v/byte'
             helper_text_mode: "persistent"
+        Widget:
         MDRaisedButton:
             text: 'close'
             on_release: root.close_channel(channel_point.text, sats_per_vbyte.text)
-            size_hint: None, None
-            width: dp(80)
+            size_hint: 1, None
             height: dp(50)
-            # md_bg_color: 0.3,0.3,0.3,1
-        Widget:
+
 ''')
 Builder.load_string('''
+#:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
 #:import os os
@@ -98,7 +100,8 @@ Builder.load_string('''
 
 <RankingsFileChooser>:
     title: 'Import DB'
-    size_hint: [.7,.7]
+    size_hint: None, None
+    size: min(Window.size[0], dp(800)), min(Window.size[1], dp(800))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     BoxLayout:
@@ -114,15 +117,15 @@ Builder.load_string('''
             MDRaisedButton:
                 text: 'Ingest'
                 size_hint_x: None
-                width: 30
+                width: dp(30)
                 size_hint_y: 1
                 md_bg_color: 0.3,0.3,0.3,1
                 on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
             MDRaisedButton:
                 text: 'Cancel'
                 size_hint_x: None
-                width: 30
                 size_hint_y: 1
+                width: dp(30)
                 md_bg_color: 0.3,0.3,0.3,1
                 on_release: root.dismiss()
 
@@ -168,7 +171,8 @@ Builder.load_string('''
     title: ''
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [.9, .9]
+    size_hint: None, None
+    size: min(Window.size[0], dp(800)), min(Window.size[1], dp(800))
     BoxLayout:
         id: box_layout
         orientation: 'vertical'
@@ -200,11 +204,12 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp 
+#:import Window kivy.core.window.Window
 
 
 <BatchOpenScreen>:
     title: 'Batch Open'
-    size: (dp(800), dp(500))
+    size: min(Window.size[0], dp(800)), min(Window.size[1], dp(500))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -226,6 +231,8 @@ Builder.load_string('''
                     orientation: 'horizontal'
                     height: dp(60)
                     size_hint_y: None
+                    padding: dp(2)
+                    spacing: dp(2)
                     MDTextField:
                         id: amount
                         text: '100_000_000'
@@ -240,14 +247,12 @@ Builder.load_string('''
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
                     MDRaisedButton:
                         text: 'Ingest'
                         on_release: root.ingest(pubkeys.text)
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
         Tab:
             title: 'connect'
             BoxLayout:
@@ -267,7 +272,6 @@ Builder.load_string('''
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
         Tab:
             title: 'confirm'
             BoxLayout:
@@ -282,6 +286,8 @@ Builder.load_string('''
             BoxLayout:
                 orientation: 'vertical'
                 size_hint: (1, 1)
+                padding: dp(2)
+                spacing: dp(2)
                 MDTextField:
                     id: open_status
                     text: ''
@@ -296,7 +302,6 @@ Builder.load_string('''
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
 
 <Tab>
 
@@ -306,9 +311,12 @@ Builder.load_string('''
 # NEW ADDRESS
 ########################################################################################
 
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
 <NewAddress>:
     title: "New Wallet Address"
-    size: (800,550)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(500))
     size_hint: (None, None)
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
@@ -326,9 +334,8 @@ Builder.load_string('''
             source: ''
 ''')
 Builder.load_string('''
-########################################################################################
-# CONNECT
-########################################################################################
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
 
 <ConnectScreen>:
     name: 'connect'
@@ -336,66 +343,68 @@ Builder.load_string('''
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
-    size: [600, 400]
-    GridLayout:
-        cols: 1
-        row_force_default: True
-        row_default_height: 60
-        padding: 50
-        spacing: 50
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(2)
+        spacing: dp(2)
+        Splitter:
+            horizontal: True
         MDTextField:
             id: address
             helper_text: 'Address'
             helper_text_mode: "persistent"
+        Splitter:
+            horizontal: True
         MDRaisedButton:
             text: 'Connect'
-            size_hint_x: None
-            width: 30
-            size_hint_y: 1
-            md_bg_color: 0.3,0.3,0.3,1
+            height: dp(40)
+            size_hint_x: 1
+            size_hint_y: None
             on_release: root.connect(address.text)
 
 ''')
 Builder.load_string('''
-########################################################################################
-# OPEN CHANNEL
-########################################################################################
+#:import Window kivy.core.window.Window
 
 <OpenChannelScreen>:
     title: 'Open Channel'
-    size: (800, 600)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
-    GridLayout:
-        cols: 1
-        row_force_default: True
-        row_default_height: 60
-        padding: 50
-        spacing: 50
-        MDTextField:
-            id: pk
-            helper_text: 'Pubkey'
-            helper_text_mode: "persistent"
-        MDTextField:
-            id: sats
-            helper_text: 'Sats'
-            helper_text_mode: "persistent"
-        MDTextField:
-            id: sats_per_vbyte
-            helper_text: 'Sats per v/byte'
-            helper_text_mode: "persistent"
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            row_force_default: True
+            row_default_height: dp(60)
+            padding: dp(2)
+            spacing: dp(2)
+            MDTextField:
+                id: pk
+                helper_text: 'Pubkey'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: sats
+                helper_text: 'Sats'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: sats_per_vbyte
+                helper_text: 'Sats per v/byte'
+                helper_text_mode: "persistent"
+        Widget:
         MDRaisedButton:
             text: 'open'
             on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
-            size_hint_x: None
-            width: 100
-            size_hint_y: 1
-            md_bg_color: 0.3,0.3,0.3,1
+            size_hint: None, None
+            width: dp(80)
+            height: dp(40)
 
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
 
 <SpinnerOption>:
     size_hint: None, None
@@ -403,7 +412,7 @@ Builder.load_string('''
 
 <PayScreen>:
     title: 'Pay Invoices'
-    size: (dp(400), dp(400))
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -500,9 +509,11 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
+#:import Window kivy.core.window.Window
+
 <Rebalance>:
     title: 'Rebalance'
-    size: (800, 900)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(500))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -530,7 +541,7 @@ Builder.load_string('''
             font_name: 'DejaVuSans'
             font_size: '24sp'
             size_hint_y: None
-            height: 60
+            height: dp(30)
             canvas.before:
                 PushMatrix
                 Scale:
@@ -541,7 +552,7 @@ Builder.load_string('''
         Spinner:
             id: spinner_out_id
             text: 'any'
-            height: 60
+            height: dp(30)
             size_hint_y: 0
             size_hint_x: 1
             on_text: root.first_hop_spinner_click(spinner_out_id.text)
@@ -550,7 +561,7 @@ Builder.load_string('''
             font_name: 'DejaVuSans'
             font_size: '24sp'
             size_hint_y: None
-            height: 60
+            height: dp(30)
             canvas.before:
                 PushMatrix
                 Scale:
@@ -561,19 +572,18 @@ Builder.load_string('''
         Spinner:
             id: spinner_in_id
             text: 'any'
-            height: 60
+            height: dp(30)
             size_hint_y: 0
             size_hint_x: 1
             on_text: root.last_hop_spinner_click(spinner_in_id.text)
         Splitter:
             horizontal: True
-        Button:
+        MDRaisedButton:
             text: 'Rebalance'
-            font_name: 'DejaVuSans'
             font_size: '12sp'
             on_release: root.rebalance() 
-            size_hint_y: None
-            height: 60
+            size_hint: 1, None
+            height: dp(40)
 
 ''')
 Builder.load_string('''
@@ -720,10 +730,10 @@ Builder.load_string('''
 
 <ConnectionSettings>:
     title: 'LND Node Connection Settings'
-    # size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
+    size: min(dp(1000), Window.size[0]), min(dp(700), Window.size[1])
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [.8, .8]
+    size_hint: None, None
     MDTabs:
         id: tabs
         on_tab_switch: root.on_tab_switch(*args)
@@ -765,7 +775,7 @@ Builder.load_string('''
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
+                        
                 MDLabel:
                     text: 'Once save, you can proceed onto the next tab.'
                     size_hint_y: 1
@@ -840,7 +850,7 @@ Builder.load_string('''
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
+                        
                 MDLabel:
                     text: 'Once saved, you can proceed onto the next tab.'
                     size_hint_y: 0.1
@@ -874,7 +884,7 @@ Builder.load_string('''
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
                 MDLabel:
                     text: 'Once saved, you can proceed onto the next tab.'
                     size_hint_y: None
@@ -909,7 +919,7 @@ Builder.load_string('''
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
         Tab:
             title: 'Import'
             BoxLayout:
@@ -931,7 +941,7 @@ Builder.load_string('''
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
         Tab:
             title: 'Export'
             BoxLayout:
@@ -950,7 +960,7 @@ Builder.load_string('''
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
                 TextInput:
                     id: text_export
                     multiline: True
@@ -1589,24 +1599,20 @@ Builder.load_string('''
                 md_bg_color_disabled: .2,.2,.2,1
 ''')
 Builder.load_string('''
-#: import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
 <HighlighterDialog>:
     title: 'HighlighterDialog'
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
-    size: dp(500), dp(150)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(150))
     MDTextField:
         id: text_input
         on_text_validate: root.validate(self.text)
         multiline: False
-    # MDTextField:
-    #     text: 'False'
-    #     helper_text: 'Number of rebalances'
-    #     helper_text_mode: "persistent"
-    #     size_hint_x: None
-    #     width: dp(100)
-    #     on_text_validate: root.update_obj('threads', int(self.text))
+
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
@@ -2233,19 +2239,19 @@ Builder.load_string('''
                             ContextMenu:
                                 ContextMenuTextItem:
                                     text: "ratio"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "capacity"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "total-sent"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "total-received"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "out-ppm"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'), channels.channels_widget.update())
 
 
         AppMenuTextItem:

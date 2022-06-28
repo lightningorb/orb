@@ -14,10 +14,10 @@
 
 <ConnectionSettings>:
     title: 'LND Node Connection Settings'
-    # size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
+    size: min(dp(1000), Window.size[0]), min(dp(700), Window.size[1])
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [.8, .8]
+    size_hint: None, None
     MDTabs:
         id: tabs
         on_tab_switch: root.on_tab_switch(*args)
@@ -59,7 +59,7 @@
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
+                        
                 MDLabel:
                     text: 'Once save, you can proceed onto the next tab.'
                     size_hint_y: 1
@@ -134,7 +134,7 @@
                         size_hint_x: None
                         width: dp(100)
                         height: dp(40)
-                        md_bg_color: 0.3,0.3,0.3,1
+                        
                 MDLabel:
                     text: 'Once saved, you can proceed onto the next tab.'
                     size_hint_y: 0.1
@@ -168,7 +168,7 @@
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
                 MDLabel:
                     text: 'Once saved, you can proceed onto the next tab.'
                     size_hint_y: None
@@ -203,7 +203,7 @@
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
         Tab:
             title: 'Import'
             BoxLayout:
@@ -225,7 +225,7 @@
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
         Tab:
             title: 'Export'
             BoxLayout:
@@ -244,7 +244,7 @@
                     size_hint: (None, None)
                     width: dp(100)
                     height: dp(40)
-                    md_bg_color: 0.3,0.3,0.3,1
+                    
                 TextInput:
                     id: text_export
                     multiline: True

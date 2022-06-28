@@ -134,19 +134,19 @@
                             ContextMenu:
                                 ContextMenuTextItem:
                                     text: "ratio"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'ratio'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "capacity"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'capacity'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "total-sent"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-sent'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "total-received"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'total-received'), channels.channels_widget.update())
                                 ContextMenuTextItem:
                                     text: "out-ppm"
-                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'))
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'), channels.channels_widget.update())
 
 
         AppMenuTextItem:

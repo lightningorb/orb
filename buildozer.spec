@@ -38,6 +38,8 @@ version = 0.1
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
 requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1
+# android,cryptography,bcrypt,attrs,cffi,fabric,pyinvoke
+
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

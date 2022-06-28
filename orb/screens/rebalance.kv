@@ -1,6 +1,8 @@
+#:import Window kivy.core.window.Window
+
 <Rebalance>:
     title: 'Rebalance'
-    size: (800, 900)
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(500))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -28,7 +30,7 @@
             font_name: 'DejaVuSans'
             font_size: '24sp'
             size_hint_y: None
-            height: 60
+            height: dp(30)
             canvas.before:
                 PushMatrix
                 Scale:
@@ -39,7 +41,7 @@
         Spinner:
             id: spinner_out_id
             text: 'any'
-            height: 60
+            height: dp(30)
             size_hint_y: 0
             size_hint_x: 1
             on_text: root.first_hop_spinner_click(spinner_out_id.text)
@@ -48,7 +50,7 @@
             font_name: 'DejaVuSans'
             font_size: '24sp'
             size_hint_y: None
-            height: 60
+            height: dp(30)
             canvas.before:
                 PushMatrix
                 Scale:
@@ -59,16 +61,15 @@
         Spinner:
             id: spinner_in_id
             text: 'any'
-            height: 60
+            height: dp(30)
             size_hint_y: 0
             size_hint_x: 1
             on_text: root.last_hop_spinner_click(spinner_in_id.text)
         Splitter:
             horizontal: True
-        Button:
+        MDRaisedButton:
             text: 'Rebalance'
-            font_name: 'DejaVuSans'
             font_size: '12sp'
             on_release: root.rebalance() 
-            size_hint_y: None
-            height: 60
+            size_hint: 1, None
+            height: dp(40)

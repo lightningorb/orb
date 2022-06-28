@@ -1,3 +1,4 @@
+#:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
 #:import os os
@@ -7,7 +8,8 @@
 
 <RankingsFileChooser>:
     title: 'Import DB'
-    size_hint: [.7,.7]
+    size_hint: None, None
+    size: min(Window.size[0], dp(800)), min(Window.size[1], dp(800))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     BoxLayout:
@@ -23,15 +25,15 @@
             MDRaisedButton:
                 text: 'Ingest'
                 size_hint_x: None
-                width: 30
+                width: dp(30)
                 size_hint_y: 1
                 md_bg_color: 0.3,0.3,0.3,1
                 on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
             MDRaisedButton:
                 text: 'Cancel'
                 size_hint_x: None
-                width: 30
                 size_hint_y: 1
+                width: dp(30)
                 md_bg_color: 0.3,0.3,0.3,1
                 on_release: root.dismiss()
 
@@ -77,7 +79,8 @@
     title: ''
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
-    size_hint: [.9, .9]
+    size_hint: None, None
+    size: min(Window.size[0], dp(800)), min(Window.size[1], dp(800))
     BoxLayout:
         id: box_layout
         orientation: 'vertical'
