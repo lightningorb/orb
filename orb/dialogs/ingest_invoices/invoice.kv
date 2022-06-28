@@ -3,14 +3,15 @@
 ########################################################################################
 
 #:import datetime datetime.datetime
+#:import dp kivy.metrics.dp
 
 
 <Invoice>
     orientation: 'vertical'
     size_hint_y: None
-    height: 300
-    padding: 10
-    spacing: 10
+    height: dp(160)
+    padding: dp(2)
+    spacing: dp(2)
     canvas.before:
         Color:
             rgba: 55 / 255, 55 / 255, 55 / 255, 0.5
@@ -19,11 +20,11 @@
             size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Raw: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             halign: "left"
@@ -31,18 +32,18 @@
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 40
+            height: dp(40)
             text: root.destination[:10] + '...'
             halign: "left"
             valign: "middle"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Amount: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             halign: "left"
@@ -50,18 +51,18 @@
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 40
+            height: dp(40)
             text: f'S{int(root.num_satoshis):,}'
             halign: "left"
             valign: "middle"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Expires in: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             valign: "middle"
@@ -70,17 +71,17 @@
         Label:
             id: expiry_label
             size_hint_y: None
-            height: 40
+            height: dp(40)
             valign: "middle"
             halign: "left"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Description: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             valign: "middle"
@@ -88,7 +89,7 @@
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 40
+            height: dp(40)
             text: root.description[:50]
             valign: "middle"
             halign: "left"

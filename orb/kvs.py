@@ -1368,37 +1368,33 @@ Builder.load_string('''
 # INGEST INVOICES
 ########################################################################################
 
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
 <IngestInvoices>:
-    size_hint: .8, .8
+    size_hint: None, None
+    size: min(Window.size[0], dp(1000)), min(Window.size[1], dp(800))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     count: count
     title: 'Ingest Invoices'
     BoxLayout:
-        padding: 20
-        spacing: 20
+        padding: dp(2)
+        spacing: dp(2)
         orientation: 'vertical'
         GridLayout:
             cols: 1
-            padding: 20
-            spacing: 20
-            BoxLayout:
+            padding: dp(2)
+            spacing: dp(2)
+            TextInput:
+                id: invoices
+                multiline: True
                 size_hint_y: None
-                height: 150
-                orientation: 'horizontal'
-                Label:
-                    text: "Ingest"
-                    size_hint_y: None
-                    height: 150
-                TextInput:
-                    id: invoices
-                    multiline: True
-                    size_hint_y: None
-                    height: 150
+                height: dp(150)
             Label:
                 id: count
                 size_hint_y: None
-                height: 50
+                height: dp(50)
                 text: ''
             ScrollView:
                 size_hint: 0.5, 1
@@ -1407,23 +1403,30 @@ Builder.load_string('''
                 GridLayout:
                     id: scroll_view
                     cols: 1
-                    padding: 50
-                    spacing: 50
+                    padding: dp(2)
+                    spacing: dp(2)
                     size_hint_y: None
                     height: self.minimum_height
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: None
-                height: 80
-                padding: 50
-                spacing: 50
+                padding: dp(2)
+                spacing: dp(2)
+                height: dp(80)
                 MDRaisedButton:
                     id: ingest_button
                     text: 'ingest'
                     size_hint_y: None
-                    height: 80
-                    width: 200
+                    height: dp(80)
+                    width: dp(200)
                     on_release: root.do_ingest(invoices.text)
+                MDRaisedButton:
+                    id: ingest_button
+                    text: 'close'
+                    size_hint_y: None
+                    height: dp(80)
+                    width: dp(200)
+                    on_release: root.dismiss()
 
 ''')
 Builder.load_string('''
@@ -1432,14 +1435,15 @@ Builder.load_string('''
 ########################################################################################
 
 #:import datetime datetime.datetime
+#:import dp kivy.metrics.dp
 
 
 <Invoice>
     orientation: 'vertical'
     size_hint_y: None
-    height: 300
-    padding: 10
-    spacing: 10
+    height: dp(160)
+    padding: dp(2)
+    spacing: dp(2)
     canvas.before:
         Color:
             rgba: 55 / 255, 55 / 255, 55 / 255, 0.5
@@ -1448,11 +1452,11 @@ Builder.load_string('''
             size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Raw: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             halign: "left"
@@ -1460,18 +1464,18 @@ Builder.load_string('''
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 40
+            height: dp(40)
             text: root.destination[:10] + '...'
             halign: "left"
             valign: "middle"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Amount: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             halign: "left"
@@ -1479,18 +1483,18 @@ Builder.load_string('''
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 40
+            height: dp(40)
             text: f'S{int(root.num_satoshis):,}'
             halign: "left"
             valign: "middle"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Expires in: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             valign: "middle"
@@ -1499,17 +1503,17 @@ Builder.load_string('''
         Label:
             id: expiry_label
             size_hint_y: None
-            height: 40
+            height: dp(40)
             valign: "middle"
             halign: "left"
             text_size: self.size
     BoxLayout:
         orientation: 'horizontal'
-        height: 40
+        height: dp(40)
         Label:
             text: 'Description: '
-            height: 40
-            width: 200
+            height: dp(40)
+            width: dp(100)
             size_hint_y: None
             size_hint_x: None
             valign: "middle"
@@ -1517,7 +1521,7 @@ Builder.load_string('''
             text_size: self.size
         Label:
             size_hint_y: None
-            height: 40
+            height: dp(40)
             text: root.description[:50]
             valign: "middle"
             halign: "left"

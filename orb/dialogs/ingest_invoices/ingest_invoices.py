@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 03:10:56
+# @Last Modified time: 2022-06-28 09:57:29
 
 from traceback import print_exc
 from threading import Thread
 
 from kivy.clock import mainthread
+from kivy.clock import Clock
 from kivy.properties import ObjectProperty
+from kivy.core.clipboard import Clipboard
 
 from orb.lnd import Lnd
 from orb.logic import licensing
@@ -18,16 +20,27 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 
 class IngestInvoices(PopupDropShadow):
     count = ObjectProperty(None)
+    ignore = []
 
     def __init__(self, **kwargs):
         super(IngestInvoices, self).__init__(**kwargs)
         self.ids.scroll_view.clear_widgets()
         for inv in self.load():
             self.ids.scroll_view.add_widget(Invoice(**inv.__data__))
+        self.schedule = Clock.schedule_interval(self.update, 1)
+
+    def update(self, *args):
+        clip = Clipboard.paste()
+        if clip:
+            if clip.startswith("ln"):
+                if clip not in self.ids.invoices.text and clip not in self.ignore:
+                    self.ids.invoices.text += f"\n{clip}\n"
+                    self.ignore.append(clip)
 
     def dismiss(self, *args):
         for invoices in self.ids.scroll_view.children:
             invoices.dismiss()
+        Clock.unschedule(self.schedule)
         return super(IngestInvoices, self).dismiss(*args)
 
     def load(self):
