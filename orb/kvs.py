@@ -2280,7 +2280,8 @@ Builder.load_string('''
         id: sm
         ChannelsScreen:
             id: channels
-        ConsoleScreen
+        ConsoleScreen:
+            id: console
     TopMenu:
         id: app_menu
         top: root.height

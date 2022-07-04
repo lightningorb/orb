@@ -33,7 +33,6 @@ class ConsoleScreen(Screen):
 
         #: text to display in output when the user enters the output screen
         self.output_text = ""
-        Clock.schedule_interval(self.consume, 0)
 
     def on_enter(self):
         """
@@ -65,10 +64,9 @@ class ConsoleScreen(Screen):
 
     def update_output(self, text, last_line):
         if text and text != "\n":
+            self.output_text = text
             if self.is_showing:
                 self.ids.console_output.output = text
-            else:
-                self.output_text = text
         if last_line and last_line != "\n":
             app = App.get_running_app()
             if app.root and "status_line" in app.root.ids:

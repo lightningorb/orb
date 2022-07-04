@@ -4,12 +4,14 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-07-02 23:12:38
 
+from collections import deque
 from pathlib import Path
 from functools import partial
 
 from kivy.metrics import dp
 from kivy.uix.widget import Widget
 from kivy.storage.jsonstore import JsonStore
+from kivy.clock import Clock
 
 from orb.misc.utils import mobile
 from orb.orb_connector import OrbConnector
@@ -20,6 +22,7 @@ from orb.misc.macaroon import Macaroon
 
 
 class OrbConnectorApp(AppCommon):
+    # consumables = deque()
     data = {
         "LNDConnect URL": "alpha-u-circle-outline",
         "Voltage": "lightning-bolt-outline",
@@ -86,4 +89,9 @@ class OrbConnectorApp(AppCommon):
         self.screen = OrbConnector()
         self.on_main_enter()
         self.theme_cls.theme_style = "Dark"
+        self.interval = Clock.schedule_interval(self.screen.ids.sm.get_screen('console').consume, 0)
         return self.screen
+
+    def stop(self):
+        Clock.unschedule(self.interval)
+        super(OrbConnectorApp, self).stop()

@@ -217,6 +217,9 @@ class OrbApp(AppCommon):
         self.icon = "orb.png"
         debug("loading main layout")
         self.main_layout = MainLayout()
+        from kivy.clock import Clock
+        Clock.schedule_interval(self.main_layout.ids.sm.get_screen('console').consume, 0)
+
         debug("showing license info")
         self.show_licence_info()
         debug("setting up cron")

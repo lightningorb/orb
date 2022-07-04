@@ -13,7 +13,7 @@ from kivymd.app import MDApp
 from kivy.utils import platform
 
 is_dev = "main.py" in sys.argv[0]
-
+orig_stdout = sys.stdout.write
 
 class AppCommon(MDApp):
     consumables = deque()
@@ -132,7 +132,7 @@ class AppCommon(MDApp):
             # simply join the arguments passed in
             content = " ".join(args)
             # print them out the regular way
-            _write(content)
+            orig_stdout(content)
             # print them out to Orb's console
             self.consumables.append(content)
             # console_output(content)
