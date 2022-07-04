@@ -59,6 +59,13 @@
    },
    {
       "type":"string",
+      "title":"Identity Pubkey",
+      "desc":"The Pubkey of the node",
+      "section":"lnd",
+      "key":"identity_pubkey"
+   },
+   {
+      "type":"string",
       "title":"GRPC Port",
       "desc":"The node's GRPC port, usually 10009",
       "section":"lnd",

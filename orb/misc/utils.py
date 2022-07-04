@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 16:08:17
+# @Last Modified time: 2022-07-04 13:00:18
 
 import re
 from pathlib import Path
@@ -11,6 +11,7 @@ from kivy.app import App
 from kivy.utils import platform
 
 from orb.math.Vector import Vector
+from orb.core_ui.app_common import AppCommon
 
 
 mobile = platform in ("ios", "android")
@@ -82,8 +83,8 @@ def closest_point_on_line(p1, p2, p3):
 
 
 def get_available_nodes():
-    app = App.get_running_app()
-    data_dir = Path(app._get_user_data_dir()).parent
+
+    data_dir = Path(AppCommon._get_user_data_dir_static())
     nodes = []
     for x in data_dir.glob("orb_*"):
         m = re.match(r"orb_([a-zA-Z0-9]{66})", x.name)

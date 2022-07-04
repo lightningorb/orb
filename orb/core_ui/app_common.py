@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-28 14:50:53
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 06:27:10
+# @Last Modified time: 2022-07-04 13:27:00
 
 import os
 import sys
@@ -39,6 +39,29 @@ class AppCommon(MDApp):
         print(f"Application config: {path}")
         return path
 
+    @classmethod
+    def _get_user_data_dir_static(self):
+        if platform == "ios":
+            data_dir = os.path.expanduser("~/Documents")
+        elif platform == "android":
+            from jnius import autoclass, cast
+
+            PythonActivity = autoclass("org.kivy.android.PythonActivity")
+            context = cast("android.content.Context", PythonActivity.mActivity)
+            file_p = cast("java.io.File", context.getFilesDir())
+            data_dir = file_p.getAbsolutePath()
+        elif platform == "win":
+            data_dir = os.environ["APPDATA"]
+        elif platform == "macosx":
+            data_dir = os.path.expanduser(f"~/Library/Application Support/")
+        else:
+            data_dir = os.path.expanduser(
+                os.path.join(os.environ.get("XDG_CONFIG_HOME", "~/.config"))
+            )
+        if not os.path.exists(data_dir):
+            os.mkdir(data_dir)
+        return data_dir
+
     def _get_user_data_dir(self):
         if platform == "ios":
             data_dir = os.path.expanduser("~/Documents")
@@ -49,7 +72,6 @@ class AppCommon(MDApp):
             context = cast("android.content.Context", PythonActivity.mActivity)
             file_p = cast("java.io.File", context.getFilesDir())
             data_dir = (Path(file_p.getAbsolutePath()) / self.name).as_posix()
-            print(f"DATA DIR: {data_dir}")
         elif platform == "win":
             data_dir = os.path.join(os.environ["APPDATA"], self.name)
         elif platform == "macosx":
