@@ -1,5 +1,58 @@
 from kivy.lang import Builder
 Builder.load_string('''
+<OrbConnector>:
+    orientation: 'vertical'
+    ScreenManager:
+        id: sm
+        OrbConnectorMain:
+        UmbrelNode:
+        VoltageNode:
+        ConnectionWizard:
+        ConnectionSettings:
+        ExportConnectionSettings:
+        ImportConnectionSettings:
+        ConsoleScreen:
+    StatusLine
+        id: status_line
+''')
+Builder.load_string('''
+<OrbConnectorMain>:
+    name: "main"
+    FitImage:
+        source: "images/bg.jpeg"
+        opacity: 0.1
+    GridLayout:
+        id: grid
+        cols:1
+        Splitter:
+            horizontal: True
+            height: dp(5)
+            size_hint_y: 1
+        Label:
+            text: 'The Lightning Network'
+            multiline: True
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Label:
+            text: 'just got way more fun!'
+            multiline: True
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Splitter:
+            horizontal: True
+            height: dp(5)
+            size_hint_y: 1
+    MDFloatingActionButtonSpeedDial:
+        data: app.data
+        root_button_anim: True
+        callback: root.add_released
+        icon: 'orbit'
+''')
+Builder.load_string('''
 <AttributeEditor>:
     orientation: "vertical"
     padding: "8dp"
@@ -87,6 +140,99 @@ Builder.load_string('''
             on_release: root.close_channel(channel_point.text, sats_per_vbyte.text)
             size_hint: 1, None
             height: dp(50)
+
+''')
+Builder.load_string('''
+<ImportConnectionSettings>:
+    name: 'import_node_settings'
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: (1, 1)
+        MDTextField:
+            id: device_id
+            text: str(device_id().decode())
+            helper_text: 'Device ID'
+            helper_text_mode: "persistent"
+            size_hint_x: None
+            width: dp(200)
+        TextInput:
+            id: text_import
+            multiline: True
+        MDRaisedButton:
+            text: 'Import'
+            on_release: root.import_node_settings()
+            size_hint: (None, None)
+            width: dp(100)
+            height: dp(40)
+        MDRaisedButton:
+            id: connect
+            text: 'Connect'
+            on_release: root.connect()
+            size_hint_x: 1
+            height: dp(40)
+        MDRaisedButton:
+            text: 'Back'
+            on_release:
+                app.screen.ids.sm.current = "main"
+                root.manager.transition.direction = "right"
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(40)
+
+''')
+Builder.load_string('''
+#:import Factory kivy.factory.Factory
+#:import get_available_nodes orb.misc.utils.get_available_nodes
+
+<NodeSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(300), dp(30)
+
+
+<ExportConnectionSettings>:
+    name: 'export_node_settings'
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: (1, 1)
+        Spinner:
+            id: nodes
+            # option_cls: Factory.get("NodeSpinnerOption")
+            text: "Select node to export"
+            height: dp(30)
+            width: dp(300)
+            size_hint: None, None
+            on_text:
+                root.node_selected(self.text)
+            values: [x[:10] for x in get_available_nodes()]
+        Label:
+            text: "The device ID to export to"
+            size_hint_y: None
+            height: self.texture_size[1]
+        MDTextField:
+            id: device_id
+            helper_text: 'Device ID'
+            helper_text_mode: "persistent"
+            size_hint_x: None
+            width: dp(200)
+        MDRaisedButton:
+            id: export_button
+            text: 'Export'
+            on_release: root.export_node_settings()
+            size_hint: (None, None)
+            width: dp(100)
+            height: dp(40)
+            disabled: True
+        TextInput:
+            id: text_export
+            multiline: True
+        MDRaisedButton:
+            text: 'Back'
+            on_release:
+                app.screen.ids.sm.current = "main"
+                root.manager.transition.direction = "right"
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(40)
 
 ''')
 Builder.load_string('''
@@ -708,7 +854,7 @@ Builder.load_string('''
         width: dp(25)
         size_hint_y: 1
         md_bg_color: 0.3,0.3,0.3,1
-        on_release: app.root.ids.sm.current = 'console'
+        on_release: root.se_release()
     StatusLineOutput:
         id: line_output
 
@@ -729,241 +875,217 @@ Builder.load_string('''
 
 
 <ConnectionSettings>:
-    title: 'LND Node Connection Settings'
-    size: min(dp(1000), Window.size[0]), min(dp(700), Window.size[1])
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: None, None
-    MDTabs:
-        id: tabs
-        on_tab_switch: root.on_tab_switch(*args)
-        Tab:
-            title: 'Type & Address'
-            BoxLayout:
-                orientation: 'vertical'
-                MDLabel:
-                    text: 'Specify the type of node. Set as default, or Umbrel.'
-                    size_hint_y: 1
-                    multiline: True
-                Spinner:
-                    id: spinner_in_id
-                    option_cls: Factory.get("TypeSpinnerOption")
-                    text: pref('host.type')
-                    height: dp(30)
-                    width: dp(150)
-                    size_hint: None, None
-                    on_text: root.set_and_save('host.type', spinner_in_id.text)
-                MDLabel:
-                    text: 'Enter the IP address or hostname of your LND node.'
-                    size_hint_y: 1
-                    multiline: True
-                BoxLayout:
-                    orientation: 'horizontal'
-                    height: dp(60)
-                    size_hint_y: None
-                    MDTextField:
-                        id: address
-                        text: pref('host.hostname')
-                        helper_text: 'Host Address'
-                        helper_text_mode: "persistent"
-                        height: dp(60)
-                        width: dp(200)
-                        size_hint: (None, None)
-                    MDRaisedButton:
-                        text: 'Save'
-                        on_release: root.set_and_save('host.hostname', address.text)
-                        size_hint_x: None
-                        width: dp(100)
-                        height: dp(40)
-                        
-                MDLabel:
-                    text: 'Once save, you can proceed onto the next tab.'
-                    size_hint_y: 1
-        Tab:
-            title: 'Protocol'
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: (1, 1)
-                MDLabel:
-                    text: 'Enter the protocol for your LND node. If you are on a desktop, you man use GRPC. On mobile, you must select REST.'
-                    size_hint_y: 1
-                    multiline: True
-                BoxLayout:
-                    orientation: 'horizontal'
-                    BoxLayout:
-                        orientation: 'vertical'
-                        MDSwitch:
-                            id: rest
-                            on_release: root.save_protocol('rest')
-                            active: pref('lnd.protocol') == 'rest'
-                        MDLabel:
-                            text: 'REST'
-                    BoxLayout:
-                        orientation: 'vertical'
-                        MDSwitch:
-                            id: grpc
-                            on_release: root.save_protocol('grpc')
-                            active: pref('lnd.protocol') == 'grpc'
-                        MDLabel:
-                            text: 'GRPC'
-                    BoxLayout:
-                        orientation: 'vertical'
-                        MDSwitch:
-                            id: mock
-                            on_release: root.save_protocol('mock')
-                            active: pref('lnd.protocol') == 'mock'
-                        MDLabel:
-                            text: 'MOCK'
-                MDLabel:
-                    text: 'Once entered, you can proceed onto the next tab.'
-                    size_hint_y: 1
-        Tab:
-            title: 'Port'
-            BoxLayout:
-                orientation: 'vertical'
-                MDLabel:
-                    text: 'Enter the port # to connect your LND node. This is typically 8080 for REST, and 10009 for GRPC.'
-                    size_hint_y: 0.1
-                    multiline: True
+    name: 'connection_settings'
+    BoxLayout:
+        orientation: 'vertical'
+        MDTabs:
+            id: tabs
+            Tab:
+                title: 'Type & Address'
                 BoxLayout:
                     orientation: 'vertical'
-                    size_hint_y: 0.8
-                    MDTextField:
-                        id: rest_port
-                        text: str(int(pref('lnd.rest_port')))
-                        helper_text: 'REST Port #'
-                        helper_text_mode: "persistent"
+                    MDLabel:
+                        text: 'Specify the type of node. Set as default, or Umbrel.'
+                        size_hint_y: 1
+                        multiline: True
+                    Spinner:
+                        id: spinner_in_id
+                        option_cls: Factory.get("TypeSpinnerOption")
+                        height: dp(30)
+                        width: dp(150)
+                        text: 'default'
+                        values: ["default", "umbrel"]
+                        size_hint: None, None
+                        on_text: root.set_and_save('host.type', spinner_in_id.text)
+                    MDLabel:
+                        text: 'Enter the IP address or hostname of your LND node.'
+                        size_hint_y: 1
+                        multiline: True
+                    BoxLayout:
+                        orientation: 'horizontal'
                         height: dp(60)
-                        width: dp(200)
-                        size_hint: (None, None)
-                    MDTextField:
-                        id: grpc_port
-                        text: str(int(pref('lnd.grpc_port')))
-                        helper_text: 'GRPC Port #'
-                        helper_text_mode: "persistent"
-                        height: dp(60)
-                        width: dp(200)
-                        size_hint: (None, None)
+                        size_hint_y: None
+                        MDTextField:
+                            id: address
+                            # text: pref('host.hostname')
+                            helper_text: 'Host Address'
+                            helper_text_mode: "persistent"
+                            height: dp(60)
+                            width: dp(200)
+                            size_hint: (None, None)
+                        MDRaisedButton:
+                            text: 'Save'
+                            on_release: root.set_and_save('host.hostname', address.text)
+                            size_hint_x: None
+                            width: dp(100)
+                            height: dp(40)
+                            
+                    MDLabel:
+                        text: 'Once save, you can proceed onto the next tab.'
+                        size_hint_y: 1
+            Tab:
+                title: 'Protocol'
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: (1, 1)
+                    MDLabel:
+                        text: 'Enter the protocol for your LND node. If you are on a desktop, you man use GRPC. On mobile, you must select REST.'
+                        size_hint_y: 1
+                        multiline: True
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        BoxLayout:
+                            orientation: 'vertical'
+                            MDSwitch:
+                                id: rest
+                                on_release: root.save_protocol('rest')
+                                # active: pref('lnd.protocol') == 'rest'
+                            MDLabel:
+                                text: 'REST'
+                        BoxLayout:
+                            orientation: 'vertical'
+                            MDSwitch:
+                                id: grpc
+                                on_release: root.save_protocol('grpc')
+                                # active: pref('lnd.protocol') == 'grpc'
+                            MDLabel:
+                                text: 'GRPC'
+                        BoxLayout:
+                            orientation: 'vertical'
+                            MDSwitch:
+                                id: mock
+                                on_release: root.save_protocol('mock')
+                                # active: pref('lnd.protocol') == 'mock'
+                            MDLabel:
+                                text: 'MOCK'
+                    MDLabel:
+                        text: 'Once entered, you can proceed onto the next tab.'
+                        size_hint_y: 1
+            Tab:
+                title: 'Port'
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDLabel:
+                        text: 'Enter the port # to connect your LND node. This is typically 8080 for REST, and 10009 for GRPC.'
+                        size_hint_y: 0.1
+                        multiline: True
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.8
+                        MDTextField:
+                            id: rest_port
+                            text: '8080'
+                            helper_text: 'REST Port #'
+                            helper_text_mode: "persistent"
+                            height: dp(60)
+                            width: dp(200)
+                            size_hint: (None, None)
+                        MDTextField:
+                            id: grpc_port
+                            text: '10009'
+                            helper_text: 'GRPC Port #'
+                            helper_text_mode: "persistent"
+                            height: dp(60)
+                            width: dp(200)
+                            size_hint: (None, None)
+                        MDRaisedButton:
+                            text: 'Save'
+                            on_release: (root.set_and_save('lnd.rest_port', rest_port.text), root.set_and_save('lnd.grpc_port', grpc_port.text))
+                            size_hint_x: None
+                            width: dp(100)
+                            height: dp(40)
+                            
+                    MDLabel:
+                        text: 'Once saved, you can proceed onto the next tab.'
+                        size_hint_y: 0.1
+            Tab:
+                title: 'TLS Certificate'
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: (1, 1)
+                    MDLabel:
+                        text: "Install the 'rsa' module on your node, with pip3 install rsa then copy and run the provided command on your node."
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        multiline: True
+                    MDIconButton:
+                        icon: "content-copy"
+                        on_release: root.copy_cert_encrypt_command()
+                    TextInput:
+                        id: tls_cert
+                        text: 
+                        on_text: root.validate_cert(self.text)
+                        multiline: True
+                    MDLabel:
+                        id: feedback
+                        text: ""
+                        multiline: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
                     MDRaisedButton:
                         text: 'Save'
-                        on_release: (root.set_and_save('lnd.rest_port', rest_port.text), root.set_and_save('lnd.grpc_port', grpc_port.text))
-                        size_hint_x: None
+                        on_release: root.save_cert(tls_cert.text)
+                        size_hint: (None, None)
                         width: dp(100)
                         height: dp(40)
                         
-                MDLabel:
-                    text: 'Once saved, you can proceed onto the next tab.'
-                    size_hint_y: 0.1
-        Tab:
-            title: 'TLS Certificate'
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: (1, 1)
-                MDLabel:
-                    text: "Install the 'rsa' module on your node, with pip3 install rsa then copy and run the provided command on your node."
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                    multiline: True
-                MDIconButton:
-                    icon: "content-copy"
-                    on_release: root.copy_cert_encrypt_command()
-                TextInput:
-                    id: tls_cert
-                    text: root.get_cert()
-                    on_text: root.validate_cert(self.text)
-                    multiline: True
-                MDLabel:
-                    id: feedback
-                    text: ""
-                    multiline: True
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                MDRaisedButton:
-                    text: 'Save'
-                    on_release: root.save_cert(tls_cert.text)
-                    size_hint: (None, None)
-                    width: dp(100)
-                    height: dp(40)
-                    
-                MDLabel:
-                    text: 'Once saved, you can proceed onto the next tab.'
-                    size_hint_y: None
-                    height: self.texture_size[1]
-        Tab:
-            title: 'Macaroon'
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: (1, 1)
-                MDLabel:
-                    text: "Install the 'rsa' module on your node (if you haven't already) with pip3 install rsa then copy and run the provided command on your node."
-                    multiline: True
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                MDIconButton:
-                    icon: "content-copy"
-                    on_release: root.copy_mac_encrypt_command()
-                TextInput:
-                    id: macaroon
-                    text: root.get_macaroon()
-                    on_text: root.validate_macaroon(self.text)
-                    multiline: True
-                MDLabel:
-                    id: mac_feedback
-                    text: ""
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                    multiline: True
-                MDRaisedButton:
-                    text: 'Save'
-                    on_release: root.save_macaroon(macaroon.text)
-                    size_hint: (None, None)
-                    width: dp(100)
-                    height: dp(40)
-                    
-        Tab:
-            title: 'Import'
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: (1, 1)
-                MDTextField:
-                    id: device_id
-                    text: str(device_id())
-                    helper_text: 'Device ID'
-                    helper_text_mode: "persistent"
-                    size_hint_x: None
-                    width: dp(200)
-                TextInput:
-                    id: text_import
-                    multiline: True
-                MDRaisedButton:
-                    text: 'Import'
-                    on_release: root.import_node_settings()
-                    size_hint: (None, None)
-                    width: dp(100)
-                    height: dp(40)
-                    
-        Tab:
-            title: 'Export'
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: (1, 1)
-                MDTextField:
-                    id: device_id
-                    text: str(device_id())
-                    helper_text: 'Device ID'
-                    helper_text_mode: "persistent"
-                    size_hint_x: None
-                    width: dp(200)
-                MDRaisedButton:
-                    text: 'Export'
-                    on_release: root.export_node_settings()
-                    size_hint: (None, None)
-                    width: dp(100)
-                    height: dp(40)
-                    
-                TextInput:
-                    id: text_export
-                    multiline: True
+                    MDLabel:
+                        text: 'Once saved, you can proceed onto the next tab.'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+            Tab:
+                title: 'Macaroon'
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: (1, 1)
+                    MDLabel:
+                        text: "Install the 'rsa' module on your node (if you haven't already) with pip3 install rsa then copy and run the provided command on your node."
+                        multiline: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDIconButton:
+                        icon: "content-copy"
+                        on_release: root.copy_mac_encrypt_command()
+                    TextInput:
+                        id: macaroon
+                        on_text: root.validate_macaroon(self.text)
+                        multiline: True
+                    MDLabel:
+                        id: mac_feedback
+                        text: ""
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        multiline: True
+                    MDRaisedButton:
+                        text: 'Save'
+                        on_release: root.save_macaroon(macaroon.text)
+                        size_hint: (None, None)
+                        width: dp(100)
+                        height: dp(40)
+            Tab:
+                title: 'Connect'
+                id: connect
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: (1, 1)
+                    Widget:
+                    MDRaisedButton:
+                        text: 'Connect'
+                        on_release: root.connect()
+                        size_hint: (None, None)
+                        width: dp(100)
+                        height: dp(40)
+                    Widget:
+
+        MDRaisedButton:
+            text: 'Back'
+            on_release:
+                app.screen.ids.sm.current = "main"
+                root.manager.transition.direction = "right"
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(40)
+
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
@@ -1014,7 +1136,6 @@ Builder.load_string('''
 Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import os os
-#:import pref orb.misc.utils.pref
 #:import Factory kivy.factory.Factory
 
 <NetworkSpinnerOption@SpinnerOption>:
@@ -1022,10 +1143,7 @@ Builder.load_string('''
     size: dp(200), dp(25)
 
 <VoltageNode>:
-    title: 'Voltage.cloud Node'
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [.8, .8]
+    name: 'voltage_node'
     ScrollView:
         size_hint: None, None
         width: root.width
@@ -1045,7 +1163,6 @@ Builder.load_string('''
                 size_hint: None, None
             MDTextField:
                 id: address
-                text: pref('host.hostname')
                 helper_text: 'Host Address'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1057,7 +1174,7 @@ Builder.load_string('''
                 height: dp(10)
             Spinner:
                 id: network
-                text: pref('lnd.network')
+                text: 'mainnet'
                 option_cls: Factory.get("NetworkSpinnerOption")
                 height: dp(25)
                 width: dp(200)
@@ -1079,16 +1196,23 @@ Builder.load_string('''
                 height: dp(200)
                 width: root.width - dp(40)
                 size_hint: None, None
-                text: root.get_cert() or ""
                 on_text: root.validate_cert(self.text)
                 multiline: True
             MDRaisedButton:
-                text: 'Save'
-                on_release: root.save()
-                size_hint_x: None
-                width: dp(100)
+                id: connect
+                text: 'Connect'
+                on_release: root.connect()
+                size_hint_x: 1
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
+                text: 'Back'
+                on_release:
+                    app.screen.ids.sm.current = "main"
+                    root.manager.transition.direction = "right"
+                size_hint_x: 1
+                size_hint_y: None
+                height: dp(40)
+
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
@@ -1649,7 +1773,6 @@ Builder.load_string('''
 Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import os os
-#:import pref orb.misc.utils.pref
 #:import Factory kivy.factory.Factory
 
 <NetworkSpinnerOption@SpinnerOption>:
@@ -1657,11 +1780,7 @@ Builder.load_string('''
     size: dp(200), dp(25)
 
 <UmbrelNode>:
-    title: 'Umbrel Node'
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [.8, None]
-    height: dp(500)
+    name: 'umbrel_node'
     ScrollView:
         size_hint: None, None
         width: root.width
@@ -1675,10 +1794,10 @@ Builder.load_string('''
             size_hint: 1, None
             height: self.minimum_height
             do_scroll_x: False
-            Image:
-                source: 'orb/images/umbrel.png'
-                size: [103, 101]
-                size_hint: None, None
+            # Image:
+            #     source: 'orb/images/umbrel.png'
+            #     size: [103, 101]
+            #     size_hint: None, None
             Splitter:
                 horizontal: True
                 size_hint_y: None
@@ -1692,21 +1811,27 @@ Builder.load_string('''
             TextInput:
                 id: lndurl
                 height: dp(200)
-                width: root.width - dp(40)
+                width: root.width
                 size_hint: None, None
                 multiline: True
             MDRaisedButton:
-                text: 'Save'
-                on_release: root.save()
-                size_hint_x: None
-                width: dp(100)
+                id: connect
+                text: 'Connect'
+                on_release: root.connect()
+                size_hint_x: 1
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
+                text: 'Back'
+                on_release:
+                    app.screen.ids.sm.current = "main"
+                    root.manager.transition.direction = "right"
+                size_hint_x: 1
+                height: dp(40)
+
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import os os
-#:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 #:import Factory kivy.factory.Factory
@@ -1738,32 +1863,37 @@ Builder.load_string('''
                 size_hint_x: None
                 width: 30
                 size_hint_y: 1
-                md_bg_color: 0.3,0.3,0.3,1
                 on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
             MDRaisedButton:
                 text: 'Cancel'
                 size_hint_x: None
                 width: 30
                 size_hint_y: 1
-                md_bg_color: 0.3,0.3,0.3,1
                 on_release: root.dismiss()
 
 
 <ConnectionWizard>:
-    title: 'Node Connection Wizard'
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [.8, .8]
-    MDTabs:
-        id: tabs
-        on_tab_switch: root.on_tab_switch(*args)
-        SSHCredentials:
-            id: ssh_credentials
-        NodeAndFiles:
-        LNDConf:
-        RestartLND:
-            id: restart_lnd
-        CopyKeys:
+    name: 'ssh_wizard'
+    BoxLayout:
+        orientation: 'vertical'
+        MDTabs:
+            id: tabs
+            size_hint_y: 1
+            on_tab_switch: root.on_tab_switch(*args)
+            SSHCredentials:
+                id: ssh_credentials
+            NodeAndFiles:
+            LNDConf:
+            RestartLND:
+                id: restart_lnd
+            CopyKeys:
+        MDRaisedButton:
+            text: 'Back'
+            on_release:
+                app.screen.ids.sm.current = "main"
+                root.manager.transition.direction = "right"
+            size_hint_x: 1
+            height: dp(40)
 
 ''')
 Builder.load_string('''
@@ -1796,7 +1926,7 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             MDLabel:
                 id: report
                 text: ''
@@ -1819,7 +1949,7 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             MDRaisedButton:
                 text: 'Restore back-up'
                 on_release: root.restore_backup()
@@ -1827,7 +1957,7 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             MDRaisedButton:
                 text: 'Modify lnd.conf'
                 on_release: root.modify_lnd_conf()
@@ -1835,7 +1965,7 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             Widget:
                 size_hint_y: 1
 
@@ -1849,9 +1979,9 @@ Builder.load_string('''
     ScrollView:
         size_hint: None, None
         width: root.width
-        height: root.height - dp(40)
-        # pos_hint: {'center_x': .5, 'center_y': .5}
-        pos: 0, dp(40)
+        height: root.height
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        # pos: 0, dp(40)
         GridLayout:
             cols: 1
             padding: 10
@@ -1865,10 +1995,10 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             MDTextField:
                 id: node_type
-                text: pref('host.type')
+                text: 'default'
                 helper_text: 'Node Type'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1876,7 +2006,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: network
-                text: pref('lnd.network')
+                text: 'mainnet'
                 helper_text: 'Network'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1884,7 +2014,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_directory
-                text: pref('lnd.path')
+                text: ''
                 helper_text: 'LND directory'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1892,7 +2022,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: conf_path
-                text: pref('lnd.conf_path')
+                text: ''
                 helper_text: 'lnd.conf path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1900,7 +2030,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: tls_certificate_path
-                text: pref('lnd.tls_certificate_path')
+                text: ''
                 helper_text: 'TLS certificate path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1908,7 +2038,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: admin_macaroon_path
-                text: pref('lnd.macaroon_admin_path')
+                text: ''
                 helper_text: 'Admin Macaroon path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1916,7 +2046,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: log_path
-                text: pref('lnd.log_path')
+                text: ''
                 helper_text: 'lnd.log path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1924,7 +2054,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: channel_db_path
-                text: pref('lnd.channel_db_path')
+                text: ''
                 helper_text: 'channel.db path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1932,7 +2062,7 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_start_cmd
-                text: pref('lnd.start_cmd')
+                text: ''
                 helper_text: 'lnd start command'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -1940,19 +2070,13 @@ Builder.load_string('''
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_stop_cmd
-                text: pref('lnd.stop_cmd')
+                text: ''
                 helper_text: 'lnd stop command'
                 helper_text_mode: "persistent"
                 height: dp(60)
                 width: dp(400)
                 size_hint: (None, None)
-    MDRaisedButton:
-        text: 'Save'
-        on_release: root.save()
-        size_hint_x: None
-        width: dp(100)
-        height: dp(40)
-        md_bg_color: 0.3,0.3,0.3,1
+        
 ''')
 Builder.load_string('''
 <SSHCredentials>:
@@ -1960,6 +2084,8 @@ Builder.load_string('''
     BoxLayout:
         orientation: 'vertical'
         size_hint_y: 1
+        spacing: dp(5)
+        padding: dp(5)
         MDLabel:
             text: 'Enter SSH credential details to your node.'
             size_hint_y: None
@@ -1967,7 +2093,6 @@ Builder.load_string('''
             multiline: True
         MDTextField:
             id: address
-            text: pref('host.hostname')
             helper_text: 'Host Address'
             helper_text_mode: "persistent"
             height: dp(60)
@@ -1975,7 +2100,7 @@ Builder.load_string('''
             size_hint: (None, None)
         MDTextField:
             id: port
-            text: str(int(pref('host.port')))
+            text: '22'
             helper_text: 'SSH port'
             helper_text_mode: "persistent"
             height: dp(60)
@@ -1992,7 +2117,7 @@ Builder.load_string('''
                 size_hint_y: None
             Spinner:
                 id: spinner_id
-                text: pref('host.auth_type')
+                text: 'certificate'
                 option_cls: Factory.get("AuthSpinnerOption")
                 height: dp(25)
                 size_hint_y: 0
@@ -2001,7 +2126,7 @@ Builder.load_string('''
                 on_text: root.cert_or_pass()
         MDTextField:
             id: username
-            text: pref('host.username')
+            text: 'ubuntu'
             helper_text: 'Username'
             helper_text_mode: "persistent"
             height: dp(60)
@@ -2018,18 +2143,6 @@ Builder.load_string('''
             size_hint_x: None
             width: dp(200)
             height: dp(40)
-            md_bg_color: 0.3,0.3,0.3,1
-        Splitter:
-            horizontal: True
-            size_hint_y: None
-            height: dp(10)
-        MDRaisedButton:
-            text: 'Save'
-            on_release: root.save_ssh_creds()
-            size_hint_x: None
-            width: dp(100)
-            height: dp(40)
-            md_bg_color: 0.3,0.3,0.3,1
 
 ''')
 Builder.load_string('''
@@ -2061,7 +2174,7 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             FocusTextInput:
                 id: input
                 size_hint_x: .9
@@ -2099,8 +2212,12 @@ Builder.load_string('''
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
-
+            MDRaisedButton:
+                id: connect
+                text: 'Connect'
+                on_release: root.connect()
+                size_hint_x: 1
+                height: dp(40)
 ''')
 Builder.load_string('''
 #:kivy 2.0.0
@@ -2316,10 +2433,6 @@ Builder.load_string('''
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
                     on_release: app_menu.close_all()
-                # ContextMenuTextItem:
-                #     text: "Player"
-                #     on_press:  app_menu.close_all()
-                #     on_release: PlayerDialog().open()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Quit"

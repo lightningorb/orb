@@ -3,9 +3,9 @@
     ScrollView:
         size_hint: None, None
         width: root.width
-        height: root.height - dp(40)
-        # pos_hint: {'center_x': .5, 'center_y': .5}
-        pos: 0, dp(40)
+        height: root.height
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        # pos: 0, dp(40)
         GridLayout:
             cols: 1
             padding: 10
@@ -19,10 +19,10 @@
                 size_hint_x: None
                 width: dp(100)
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+                
             MDTextField:
                 id: node_type
-                text: pref('host.type')
+                text: 'default'
                 helper_text: 'Node Type'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -30,7 +30,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: network
-                text: pref('lnd.network')
+                text: 'mainnet'
                 helper_text: 'Network'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -38,7 +38,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_directory
-                text: pref('lnd.path')
+                text: ''
                 helper_text: 'LND directory'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -46,7 +46,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: conf_path
-                text: pref('lnd.conf_path')
+                text: ''
                 helper_text: 'lnd.conf path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -54,7 +54,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: tls_certificate_path
-                text: pref('lnd.tls_certificate_path')
+                text: ''
                 helper_text: 'TLS certificate path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -62,7 +62,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: admin_macaroon_path
-                text: pref('lnd.macaroon_admin_path')
+                text: ''
                 helper_text: 'Admin Macaroon path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -70,7 +70,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: log_path
-                text: pref('lnd.log_path')
+                text: ''
                 helper_text: 'lnd.log path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -78,7 +78,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: channel_db_path
-                text: pref('lnd.channel_db_path')
+                text: ''
                 helper_text: 'channel.db path'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -86,7 +86,7 @@
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_start_cmd
-                text: pref('lnd.start_cmd')
+                text: ''
                 helper_text: 'lnd start command'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -94,16 +94,10 @@
                 size_hint: (None, None)
             MDTextField:
                 id: lnd_stop_cmd
-                text: pref('lnd.stop_cmd')
+                text: ''
                 helper_text: 'lnd stop command'
                 helper_text_mode: "persistent"
                 height: dp(60)
                 width: dp(400)
                 size_hint: (None, None)
-    MDRaisedButton:
-        text: 'Save'
-        on_release: root.save()
-        size_hint_x: None
-        width: dp(100)
-        height: dp(40)
-        md_bg_color: 0.3,0.3,0.3,1
+        

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-28 15:30:09
+# @Last Modified time: 2022-07-01 13:19:47
 
 from traceback import print_exc
 import concurrent.futures
@@ -13,6 +13,7 @@ from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
 from kivy.properties import DictProperty
 from kivy.clock import Clock
+from kivy.app import App
 
 from orb.misc.channel import Channel
 from orb.misc.utils import pref
@@ -152,9 +153,9 @@ class Channels(EventDispatcher):
         channels = [x for x in self.channels.values()]
         for c in channels:
             solution.append(
-                data_manager.data_man.store.get("balanced_ratio", {}).get(
-                    str(c.chan_id), -1
-                )
+                App.get_running_app()
+                .store.get("balanced_ratio", {})
+                .get(str(c.chan_id), -1)
             )
         gr = self.global_ratio
         indices = [i for i, x in enumerate(solution) if x == -1]

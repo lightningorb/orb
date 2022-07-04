@@ -2,9 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-06 02:46:02
+# @Last Modified time: 2022-07-02 13:26:13
 
 import threading
+
+from kivy.app import App
 
 from kivy.clock import mainthread
 from kivy.metrics import dp
@@ -25,9 +27,9 @@ class Tab(MDFloatLayout, MDTabsBase):
 class BatchOpenScreen(PopupDropShadow):
     @guarded
     def open(self, *args):
-        from orb.misc.data_manager import data_man
-
-        self.ids.pubkeys.text = data_man.store.get("batch_open", {}).get("text", "")
+        self.ids.pubkeys.text = (
+            App.get_running_app().store.get("batch_open", {}).get("text", "")
+        )
         super(BatchOpenScreen, self).open(*args)
 
     @guarded
@@ -47,9 +49,7 @@ class BatchOpenScreen(PopupDropShadow):
         self.ids.pubkeys.text = "\n".join([f"{p},{a}" for p, a in zip(pks, amounts)])
 
     def ingest(self, text):
-        from orb.misc.data_manager import data_man
-
-        data_man.store.put("batch_open", text=text)
+        App.get_running_app().store.put("batch_open", text=text)
 
     @guarded
     def get_pks_amounts(self):

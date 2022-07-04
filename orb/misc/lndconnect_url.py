@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-15 10:47:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-18 15:25:16
+# @Last Modified time: 2022-06-29 07:19:09
 
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
@@ -39,6 +39,8 @@ def decode_ln_url(url):
         next(iter(q["cert"]), None),
         next(iter(q["macaroon"]), None),
     )
-
+    port = res.netloc.split(":")[1]
+    # Umbrel has a stray character in the port number
+    port = int(port.replace("}", ""))
     mac, cert = decode_mac(mac), decode_cert(cert)
-    return host, cert, mac
+    return host, port, cert, mac

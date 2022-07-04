@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 02:52:18
+# @Last Modified time: 2022-07-01 13:27:27
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -25,7 +25,10 @@ class ChannelsScreen(MDScreen):
         @mainthread
         def delayed():
             app = App.get_running_app()
-            app.root.ids.app_menu.add_channels_menu()
+            try:
+                app.root.ids.app_menu.add_channels_menu()
+            except:
+                print("FAILED TO ADD CHANNELS MENU")
 
         delayed()
 

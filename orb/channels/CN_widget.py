@@ -6,7 +6,6 @@
 import math
 
 from kivy.app import App
-from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 
 from orb.channels.channel_widget import ChannelWidget

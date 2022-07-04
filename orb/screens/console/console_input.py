@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-27 08:55:30
+# @Last Modified time: 2022-07-01 12:24:46
 
 import uuid
 from traceback import format_exc
@@ -36,7 +36,7 @@ class ConsoleInput(CodeInput):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            if data_manager.data_man.menu_visible:
+            if data_manager.data_man and data_manager.data_man.menu_visible:
                 return False
         return super(ConsoleInput, self).on_touch_down(touch)
 
@@ -67,16 +67,17 @@ class ConsoleInput(CodeInput):
 
     def reset_split_size(self, *_):
 
-        data_manager.data_man.store.put(
+        App.get_running_app().store.put(
             "console", input_height=None, output_height=None
         )
 
     def keyboard_on_key_up(self, window, keycode):
-        data_manager.data_man.store.put("console_input", text=self.text)
+        App.get_running_app().store.put("console_input", text=self.text)
         if self.do_eval:
             self.exec(self.selection_text)
             return True
-        return super(ConsoleInput, self).keyboard_on_key_up(window, keycode)
+        # super(ConsoleInput, self).keyboard_on_key_up(window, keycode)
+        return True
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         meta = "meta" in modifiers

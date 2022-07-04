@@ -2,13 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-28 10:10:20
+# @Last Modified time: 2022-07-02 18:48:49
 
 import functools
 from threading import Lock
-from orb.store import model
-from functools import lru_cache
 import string
+
+from kivy.app import App
 
 printable = set(string.printable)
 to_ascii = lambda s: "".join(filter(lambda x: x in printable, s))
@@ -30,6 +30,13 @@ def aliases_cache(func):
         functools.wraps things. Seriously what does this do again?
         """
         pk = args[1]
+
+        # hack alert:
+        # loading the model
+        if App.get_running_app().title != "Orb":
+            return to_ascii(func(*args, **kwargs))
+
+        from orb.store import model
 
         if pk in cache:
             return cache[pk]

@@ -5,9 +5,8 @@
 # @Last Modified time: 2022-03-04 06:10:04
 
 import arrow
-from peewee import *
 
-from playhouse.hybrid import hybrid_property, hybrid_method
+from playhouse.hybrid import hybrid_method
 from playhouse.sqlite_ext import *
 
 from orb.store.db_meta import *

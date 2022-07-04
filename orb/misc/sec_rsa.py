@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 19:10:22
+# @Last Modified time: 2022-06-30 18:57:32
 
 
 import uuid
@@ -15,6 +15,7 @@ import random
 from traceback import format_exc
 from orb.misc.utils import pref
 from orb.misc.utils import desktop
+from orb.misc.device_id import device_id
 import plyer
 import random
 import sys
@@ -80,17 +81,7 @@ def decrypt_long(encrypted_message, private_key):
 
 def get_sec_keys(uid=None):
     if uid is None:
-        try:
-            if pref("system.identifier") == "uuid":
-                uid = uuid.getnode()
-            elif pref("system.identifier") == "plyer":
-                uid = plyer.uniqueid.id
-            else:
-                uid = 0
-        except Exception as e:
-            print(e)
-            print("WARNING: plyer.uniqueid.id failed - setting uid to 0")
-            uid = 0
+        uid = device_id()
     random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)
     return priv.save_pkcs1(), pub.save_pkcs1()

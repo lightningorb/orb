@@ -1,6 +1,5 @@
 #:import dp kivy.metrics.dp
 #:import os os
-#:import pref orb.misc.utils.pref
 #:import Factory kivy.factory.Factory
 
 <NetworkSpinnerOption@SpinnerOption>:
@@ -8,10 +7,7 @@
     size: dp(200), dp(25)
 
 <VoltageNode>:
-    title: 'Voltage.cloud Node'
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [.8, .8]
+    name: 'voltage_node'
     ScrollView:
         size_hint: None, None
         width: root.width
@@ -31,7 +27,6 @@
                 size_hint: None, None
             MDTextField:
                 id: address
-                text: pref('host.hostname')
                 helper_text: 'Host Address'
                 helper_text_mode: "persistent"
                 height: dp(60)
@@ -43,7 +38,7 @@
                 height: dp(10)
             Spinner:
                 id: network
-                text: pref('lnd.network')
+                text: 'mainnet'
                 option_cls: Factory.get("NetworkSpinnerOption")
                 height: dp(25)
                 width: dp(200)
@@ -65,13 +60,19 @@
                 height: dp(200)
                 width: root.width - dp(40)
                 size_hint: None, None
-                text: root.get_cert() or ""
                 on_text: root.validate_cert(self.text)
                 multiline: True
             MDRaisedButton:
-                text: 'Save'
-                on_release: root.save()
-                size_hint_x: None
-                width: dp(100)
+                id: connect
+                text: 'Connect'
+                on_release: root.connect()
+                size_hint_x: 1
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
+                text: 'Back'
+                on_release:
+                    app.screen.ids.sm.current = "main"
+                    root.manager.transition.direction = "right"
+                size_hint_x: 1
+                size_hint_y: None
+                height: dp(40)

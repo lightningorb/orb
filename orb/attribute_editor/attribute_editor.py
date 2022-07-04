@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-23 04:25:43
+# @Last Modified time: 2022-07-01 11:22:03
 
 from threading import Thread
 
@@ -289,9 +289,9 @@ class AttributeEditor(BoxLayout):
         :param active: whether to activate or deactivate paying through channel.
         :type active: field
         """
-        vals = data_manager.data_man.store.get("pay_through_channel", {})
+        vals = App.get_running_app().store.get("pay_through_channel", {})
         vals[str(self.channel.chan_id)] = active.active
-        data_manager.data_man.store.put("pay_through_channel", **vals)
+        App.get_running_app().store.put("pay_through_channel", **vals)
 
     def on_balanced_ratio(self, ratio):
         """
@@ -300,13 +300,13 @@ class AttributeEditor(BoxLayout):
         :param ratio: the desired ratio, between 0 and 1
         :type ratio: field
         """
-        vals = data_manager.data_man.store.get("balanced_ratio", {})
+        vals = App.get_running_app().store.get("balanced_ratio", {})
         if ratio.text == "":
             if str(self.channel.chan_id) in vals:
                 del vals[str(self.channel.chan_id)]
         else:
             vals[str(self.channel.chan_id)] = float(ratio.text)
-        data_manager.data_man.store.put("balanced_ratio", **vals)
+        App.get_running_app().store.put("balanced_ratio", **vals)
 
     def populate_fees(self):
         self.ids.md_list.add_widget(
@@ -366,9 +366,9 @@ class AttributeEditor(BoxLayout):
 
         ptc = MDSwitch(
             pos_hint={"center_x": 0.5, "center_y": 0.5},
-            active=data_manager.data_man.store.get("pay_through_channel", {}).get(
-                str(self.channel.chan_id if self.channel else ""), True
-            ),
+            active=App.get_running_app()
+            .store.get("pay_through_channel", {})
+            .get(str(self.channel.chan_id if self.channel else ""), True),
             size_hint_y=None,
             height=dp(50),
         )
@@ -386,7 +386,9 @@ class AttributeEditor(BoxLayout):
         )
         if self.channel:
             text = str(
-                data_manager.data_man.store.get("balanced_ratio", {}).get(
+                App.get_running_app()
+                .store.get("balanced_ratio", {})
+                .get(
                     str(self.channel.chan_id),
                     str(self.channel.balanced_ratio),
                 )

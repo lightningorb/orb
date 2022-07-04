@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-26 03:03:22
+# @Last Modified time: 2022-06-29 06:47:17
 
 from orb.misc.utils import *
 from pathlib import Path
@@ -45,12 +45,14 @@ def cert():
 
 
 @lru_cache(maxsize=None)
-def cert_path():
+def cert_path(use_tmp=False):
     """
     Get the path to the temp TLS cert file.
     On mobile we store it in the temp diretory, since it's only accessible by the
     app, while on desktop we keep the cert in the user's app data dir.
     """
+    if use_tmp:
+        return Path(tempfile.gettempdir()) / "f66d6b24ccfb"
     if desktop:
         app = App.get_running_app()
         return Path(app.user_data_dir) / pref("path.cert") / "tls.cert"

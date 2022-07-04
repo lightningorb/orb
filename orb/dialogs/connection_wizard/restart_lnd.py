@@ -2,22 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 09:17:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-17 08:33:57
+# @Last Modified time: 2022-06-30 09:41:55
 
 from threading import Thread
-from pathlib import Path
-import re
-import configparser
-from tempfile import gettempdir
+
+from kivy.app import App
 from kivy.clock import mainthread
-import time
+from kivy.uix.textinput import TextInput
 
 from orb.misc.decorators import guarded
-from orb.dialogs.connection_wizard.tab import Tab
-from orb.misc.utils import pref
 from orb.misc.fab_factory import Connection
-
-from kivy.uix.textinput import TextInput
+from orb.dialogs.connection_wizard.tab import Tab
 
 
 class FocusTextInput(TextInput):
@@ -49,12 +44,21 @@ class RestartLND(Tab):
                 def flush(self):
                     pass
 
-            with Connection() as c:
+            app = App.get_running_app()
+            with Connection(
+                use_prefs=False,
+                host=app.node_settings.get("host.hostname"),
+                port=app.node_settings.get("host.port"),
+                auth=app.node_settings.get("host.auth_type"),
+                username=app.node_settings.get("host.username"),
+                password=app.node_settings.get("host.password"),
+                cert_path=app.node_settings.get("host.certificate"),
+            ) as c:
                 if not self.log_proc or (
                     self.log_proc and not self.log_proc.ok or self.log_proc.exited
                 ):
                     self.log_proc = c.run(
-                        f"tail -f {pref('lnd.log_path')}",
+                        f"tail -f {app.node_settings.get('lnd.log_path')}",
                         hide=True,
                         out_stream=Out(),
                         asynchronous=True,
@@ -66,6 +70,16 @@ class RestartLND(Tab):
 
     @guarded
     def restart_lnd(self):
-        with Connection() as c:
-            c.sudo(pref("lnd.stop_cmd"))
-            c.sudo(pref("lnd.start_cmd"))
+        app = App.get_running_app()
+
+        with Connection(
+            use_prefs=False,
+            host=app.node_settings.get("host.hostname"),
+            port=app.node_settings.get("host.port"),
+            auth=app.node_settings.get("host.auth_type"),
+            username=app.node_settings.get("host.username"),
+            password=app.node_settings.get("host.password"),
+            cert_path=app.node_settings.get("host.certificate"),
+        ) as c:
+            c.sudo(app.node_settings.get("lnd.stop_cmd"))
+            c.sudo(app.node_settings.get("lnd.start_cmd"))

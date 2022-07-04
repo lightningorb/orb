@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 20:26:50
+# @Last Modified time: 2022-07-01 13:43:39
 
 from orb.misc import data_manager
 
@@ -141,10 +141,11 @@ def patch_text_input():
     from orb.misc import data_manager
 
     def on_focus(_, inst, value):
-        if value:
-            data_manager.data_man.disable_shortcuts = True
-        else:
-            data_manager.data_man.disable_shortcuts = False
+        if hasattr(data_manager.data_man, "disable_shortcuts"):
+            if value:
+                data_manager.data_man.disable_shortcuts = True
+            else:
+                data_manager.data_man.disable_shortcuts = False
 
     TextInput.on_focus = on_focus
 

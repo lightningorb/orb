@@ -1,6 +1,5 @@
 #:import dp kivy.metrics.dp
 #:import os os
-#:import pref orb.misc.utils.pref
 #:import Factory kivy.factory.Factory
 
 <NetworkSpinnerOption@SpinnerOption>:
@@ -8,11 +7,7 @@
     size: dp(200), dp(25)
 
 <UmbrelNode>:
-    title: 'Umbrel Node'
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [.8, None]
-    height: dp(500)
+    name: 'umbrel_node'
     ScrollView:
         size_hint: None, None
         width: root.width
@@ -26,10 +21,10 @@
             size_hint: 1, None
             height: self.minimum_height
             do_scroll_x: False
-            Image:
-                source: 'orb/images/umbrel.png'
-                size: [103, 101]
-                size_hint: None, None
+            # Image:
+            #     source: 'orb/images/umbrel.png'
+            #     size: [103, 101]
+            #     size_hint: None, None
             Splitter:
                 horizontal: True
                 size_hint_y: None
@@ -43,13 +38,19 @@
             TextInput:
                 id: lndurl
                 height: dp(200)
-                width: root.width - dp(40)
+                width: root.width
                 size_hint: None, None
                 multiline: True
             MDRaisedButton:
-                text: 'Save'
-                on_release: root.save()
-                size_hint_x: None
-                width: dp(100)
+                id: connect
+                text: 'Connect'
+                on_release: root.connect()
+                size_hint_x: 1
                 height: dp(40)
-                md_bg_color: 0.3,0.3,0.3,1
+            MDRaisedButton:
+                text: 'Back'
+                on_release:
+                    app.screen.ids.sm.current = "main"
+                    root.manager.transition.direction = "right"
+                size_hint_x: 1
+                height: dp(40)

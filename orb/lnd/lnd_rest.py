@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-15 03:47:07
+# @Last Modified time: 2022-06-29 06:51:44
 
 from functools import lru_cache
-import base64, json, requests, codecs, binascii
+import base64, json, requests, codecs
 
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
@@ -24,7 +24,11 @@ class LndREST(LndBase):
         self.cert_path = tls_certificate
         self.hostname = server
         self.rest_port = port
-        self.headers = {"Grpc-Metadata-macaroon": macaroon.encode()}
+        self.headers = {
+            "Grpc-Metadata-macaroon": macaroon.encode()
+            if type(macaroon) is str
+            else macaroon
+        }
 
     @property
     def fqdn(self):

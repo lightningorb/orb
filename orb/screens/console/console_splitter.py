@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-01-26 18:25:08
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-07-01 11:21:17
+
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.uix.splitter import Splitter
@@ -18,11 +24,13 @@ class ConsoleSplitter(Splitter):
         def load_config(*_):
             from orb.misc import data_manager
 
-            input_height = data_manager.data_man.store.get("console", {}).get(
-                "input_height", None
+            input_height = (
+                App.get_running_app().store.get("console", {}).get("input_height", None)
             )
-            output_height = data_manager.data_man.store.get("console", {}).get(
-                "output_height", None
+            output_height = (
+                App.get_running_app()
+                .store.get("console", {})
+                .get("output_height", None)
             )
 
             if input_height and output_height:
@@ -56,7 +64,7 @@ class ConsoleSplitter(Splitter):
             self.output.height = self.output_pressed_height - (
                 self.pressed_pos[1] - touch.pos[1]
             )
-            data_manager.data_man.store.put(
+            App.get_running_app().store.put(
                 "console",
                 input_height=self.input.height,
                 output_height=self.output.height,

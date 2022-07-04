@@ -2,35 +2,23 @@
 # @Author: lnorb.com
 # @Date:   2022-06-17 08:34:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 10:09:59
-# -*- coding: utf-8 -*-
-# @Author: lnorb.com
-# @Date:   2022-06-10 09:17:49
-# @Last needs modifying by:   lnorb.com
-# @Last needs modifying time: 2022-06-17 08:34:57
+# @Last Modified time: 2022-06-30 09:33:33
 
 import os
 import re
 import time
-from threading import Thread
+import hashlib
 from pathlib import Path
+from threading import Thread
 from tempfile import gettempdir
 
-from kivy.properties import StringProperty
-from kivy.clock import mainthread
-
-from orb.misc.utils import pref_path
-from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.misc.decorators import guarded
-from orb.dialogs.connection_wizard.tab import Tab
-from orb.misc.utils import pref
-from orb.misc.fab_factory import Connection
-from orb.lnd.lnd_conf import LNDConf as LNDConfParser
-
+from kivy.app import App
 from kivy.uix.textinput import TextInput
 
-
-import hashlib
+from orb.misc.decorators import guarded
+from orb.misc.fab_factory import Connection
+from orb.dialogs.connection_wizard.tab import Tab
+from orb.lnd.lnd_conf import LNDConf as LNDConfParser
 
 
 def md5checksum(fname):
@@ -61,19 +49,30 @@ class LNDConf(Tab):
             )
 
         def func():
+            app = App.get_running_app()
             print("Analyzing lnd.conf")
-            if not pref("lnd.conf_path"):
+            if not app.node_settings.get("lnd.conf_path"):
                 print("lnd.conf_path not set - quitting")
                 return
-            with Connection() as c:
-                print(f'Checking {pref("lnd.conf_path")}')
-                lnd_conf = c.run(f'cat {pref("lnd.conf_path")}', hide=True).stdout
+            with Connection(
+                use_prefs=False,
+                host=app.node_settings.get("host.hostname"),
+                port=app.node_settings.get("host.port"),
+                auth=app.node_settings.get("host.auth_type"),
+                username=app.node_settings.get("host.username"),
+                password=app.node_settings.get("host.password"),
+                cert_path=app.node_settings.get("host.certificate"),
+            ) as c:
+                print(f'Checking {app.node_settings.get("lnd.conf_path")}')
+                lnd_conf = c.run(
+                    f'cat {app.node_settings.get("lnd.conf_path")}', hide=True
+                ).stdout
                 self.config = LNDConfParser()
                 self.config.read_string(lnd_conf)
                 app_options = self.config.get_section("[Application Options]")
                 tlsextraips = app_options.get("tlsextraip")
                 tlsextradomains = app_options.get("tlsextradomain")
-                hostname = pref("host.hostname")
+                hostname = app.node_settings.get("host.hostname")
                 changes = []
                 is_ip = re.match(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", hostname)
                 if is_ip:
@@ -100,12 +99,21 @@ class LNDConf(Tab):
 
     @guarded
     def back_up_lnd_conf(self, *args):
-        backup = pref_path("backup") / "lnd.conf"
+        app = App.get_running_app()
+        backup = Path(app._get_user_data_dir()) / "lnd.conf"
         print(f"Creating lnd.conf backup {backup}")
 
         def func():
-            with Connection() as c:
-                conf_path = Path(pref("lnd.conf_path"))
+            with Connection(
+                use_prefs=False,
+                host=app.node_settings.get("host.hostname"),
+                port=app.node_settings.get("host.port"),
+                auth=app.node_settings.get("host.auth_type"),
+                username=app.node_settings.get("host.username"),
+                password=app.node_settings.get("host.password"),
+                cert_path=app.node_settings.get("host.certificate"),
+            ) as c:
+                conf_path = Path(app.node_settings.get("lnd.conf_path"))
                 print(f"copying {conf_path} to {backup}")
                 lnd_conf = c.run(f"cat {conf_path.as_posix()}", hide=True).stdout
                 if backup.exists():
@@ -124,12 +132,23 @@ class LNDConf(Tab):
 
     @guarded
     def restore_backup(self, *args):
-        backup = os.path.expanduser((pref_path("backup") / "lnd.conf").as_posix())
+        app = App.get_running_app()
+        backup = os.path.expanduser(
+            (Path(app._get_user_data_dir()) / "lnd.conf").as_posix()
+        )
         print(f"Restoring lnd.conf backup {backup}")
 
         def func():
-            with Connection() as c:
-                conf_path = Path(pref("lnd.conf_path")).as_posix()
+            with Connection(
+                use_prefs=False,
+                host=app.node_settings.get("host.hostname"),
+                port=app.node_settings.get("host.port"),
+                auth=app.node_settings.get("host.auth_type"),
+                username=app.node_settings.get("host.username"),
+                password=app.node_settings.get("host.password"),
+                cert_path=app.node_settings.get("host.certificate"),
+            ) as c:
+                conf_path = Path(app.node_settings.get("lnd.conf_path")).as_posix()
                 print(f"copying {backup} to {conf_path}")
                 result = md5checksum(backup)
                 md5sum = (
@@ -144,11 +163,20 @@ class LNDConf(Tab):
 
     @guarded
     def modify_lnd_conf(self):
-        with Connection() as c:
+        app = App.get_running_app()
+        with Connection(
+            use_prefs=False,
+            host=app.node_settings.get("host.hostname"),
+            port=app.node_settings.get("host.port"),
+            auth=app.node_settings.get("host.auth_type"),
+            username=app.node_settings.get("host.username"),
+            password=app.node_settings.get("host.password"),
+            cert_path=app.node_settings.get("host.certificate"),
+        ) as c:
             if self.ids.input.text:
                 path = Path(f"{gettempdir()}") / "lnd.conf"
                 print(f"Saving conf to: {path}")
                 with path.open("w") as f:
                     f.write(self.ids.input.text)
-                print(f"copying {path} to {pref('lnd.conf_path')}")
-                c.put(path, pref("lnd.conf_path"))
+                print(f"copying {path} to {app.node_settings.get('lnd.conf_path')}")
+                c.put(path, app.node_settings.get("lnd.conf_path"))

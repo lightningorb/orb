@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 06:36:55
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 11:37:00
+# @Last Modified time: 2022-06-30 08:52:23
 
 from threading import Thread
 
@@ -11,7 +11,6 @@ from kivy.app import App
 
 from orb.misc.decorators import guarded
 from orb.dialogs.connection_wizard.tab import Tab
-from orb.misc.utils import pref
 from orb.misc.fab_factory import Connection
 
 
@@ -26,25 +25,21 @@ def system_ctl_service_enabled(c, service):
 
 class NodeAndFiles(Tab):
     def save(self):
-        self.set_and_save("host.type", self.ids.node_type.text)
-        self.set_and_save("lnd.path", self.ids.lnd_directory.text)
-        self.set_and_save("lnd.conf_path", self.ids.conf_path.text)
-        self.set_and_save("lnd.log_path", self.ids.log_path.text)
-        self.set_and_save("lnd.channel_db_path", self.ids.channel_db_path.text)
-        self.set_and_save("lnd.macaroon_admin_path", self.ids.admin_macaroon_path.text)
-        self.set_and_save(
-            "lnd.tls_certificate_path", self.ids.tls_certificate_path.text
-        )
-        self.set_and_save("lnd.network", self.ids.network.text)
-        self.set_and_save("lnd.stop_cmd", self.ids.lnd_stop_cmd.text)
-        self.set_and_save("lnd.start_cmd", self.ids.lnd_start_cmd.text)
-
-    def set_and_save(self, key, val):
-        self.config = App.get_running_app().config
-        section, name = key.split(".")
-        print(f"Setting: {section}, {name}")
-        self.config.set(section, name, val)
-        self.config.write()
+        app = App.get_running_app()
+        app.node_settings["host.type"] = self.ids.node_type.text
+        app.node_settings["lnd.path"] = self.ids.lnd_directory.text
+        app.node_settings["lnd.conf_path"] = self.ids.conf_path.text
+        app.node_settings["lnd.log_path"] = self.ids.log_path.text
+        app.node_settings["lnd.channel_db_path"] = self.ids.channel_db_path.text
+        app.node_settings["lnd.macaroon_admin_path"] = self.ids.admin_macaroon_path.text
+        app.node_settings[
+            "lnd.tls_certificate_path"
+        ] = self.ids.tls_certificate_path.text
+        app.node_settings["lnd.network"] = self.ids.network.text
+        app.node_settings["lnd.stop_cmd"] = self.ids.lnd_stop_cmd.text
+        app.node_settings["lnd.start_cmd"] = self.ids.lnd_start_cmd.text
+        print("SAVE")
+        print(app.node_settings)
 
     @guarded
     def detect_node_type(self):
@@ -60,8 +55,16 @@ class NodeAndFiles(Tab):
         self.ids.lnd_start_cmd.text = ""
 
         def func():
-
-            with Connection() as c:
+            app = App.get_running_app()
+            with Connection(
+                use_prefs=False,
+                host=app.node_settings.get("host.hostname"),
+                port=app.node_settings.get("host.port"),
+                auth=app.node_settings.get("host.auth_type"),
+                username=app.node_settings.get("host.username"),
+                password=app.node_settings.get("host.password"),
+                cert_path=app.node_settings.get("host.certificate"),
+            ) as c:
                 test_file = lambda x: c.run(f"test -f {x}", warn=True).ok
                 test_dir = lambda x: c.run(f"test -d {x}", warn=True).ok
 
@@ -135,5 +138,7 @@ class NodeAndFiles(Tab):
                 elif node_type == "umbrel":
                     self.ids.lnd_stop_cmd.text = f"{home}/umbrel/scripts/stop"
                     self.ids.lnd_start_cmd.text = f"{home}/umbrel/scripts/start"
+
+                self.save()
 
         Thread(target=func).start()

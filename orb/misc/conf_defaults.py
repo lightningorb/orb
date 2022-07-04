@@ -2,26 +2,31 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-19 09:33:36
+# @Last Modified time: 2022-06-30 18:30:54
 
 
-def set_conf_defaults(config):
+def set_conf_defaults(config, node_config):
     config.add_section("host")
     config.set("host", "type", "default")
-    config.set("host", "hostname", "")
+    config.set("host", "hostname", node_config.get("host.hostname", "") or "")
     config.set("host", "port", "22")
     config.set("host", "username", "")
     config.set("host", "auth_type", "password")
     config.set("host", "password", "")
     config.set("host", "certificate", "")
     config.add_section("lnd")
-    config.set("lnd", "rest_port", "8080")
-    config.set("lnd", "grpc_port", "10009")
-    config.set("lnd", "protocol", "mock")
-    config.set("lnd", "tls_certificate", "")
+    config.set(
+        "lnd", "identity_pubkey", node_config.get("lnd.identity_pubkey", "") or ""
+    )
+    config.set("lnd", "rest_port", node_config.get("lnd.rest_port", "8080") or "")
+    config.set("lnd", "grpc_port", node_config.get("lnd.grpc_port", "10009") or "")
+    config.set("lnd", "protocol", node_config.get("lnd.protocol", "mock") or "")
+    config.set(
+        "lnd", "tls_certificate", node_config.get("lnd.tls_certificate", "") or ""
+    )
     config.set("lnd", "tls_certificate_path", "")
     config.set("lnd", "network", "mainnet")
-    config.set("lnd", "macaroon_admin", "")
+    config.set("lnd", "macaroon_admin", node_config.get("lnd.macaroon_admin", "") or "")
     config.set("lnd", "macaroon_admin_path", "")
     config.set("lnd", "path", "")
     config.set("lnd", "conf_path", "")

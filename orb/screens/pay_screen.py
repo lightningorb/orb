@@ -2,23 +2,23 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-28 10:46:23
+# @Last Modified time: 2022-07-02 06:32:23
 
-from time import sleep
 import threading
+from time import sleep
 from random import choice
-from traceback import print_exc
 from traceback import format_exc
 from functools import lru_cache
 
 import arrow
+
 from kivy.clock import mainthread
+from kivy.app import App
 
 from orb.logic.channel_selector import get_low_inbound_channel
-from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.components.popup_drop_shadow import PopupDropShadow
+from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.thread_manager import thread_manager
-
 from orb.misc import data_manager
 from orb.lnd import Lnd
 
@@ -83,9 +83,9 @@ class PayScreen(PopupDropShadow):
     def get_ignored_pks(self):
         return [
             k
-            for k, v in data_manager.data_man.store.get(
-                "pay_through_channel", {}
-            ).items()
+            for k, v in App.get_running_app()
+            .store.get("pay_through_channel", {})
+            .items()
             if not v
         ]
 

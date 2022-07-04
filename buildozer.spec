@@ -13,7 +13,7 @@ package.domain = com.lnorb
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,json,wav,yaml,ogg
+source.include_exts = py,png,jpg,jpeg,json,wav,yaml,ogg
 
 # (list) List of inclusions using pattern matching
 source.include_patterns = VERSION,images/*

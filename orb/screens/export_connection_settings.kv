@@ -1,0 +1,52 @@
+#:import Factory kivy.factory.Factory
+#:import get_available_nodes orb.misc.utils.get_available_nodes
+
+<NodeSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(300), dp(30)
+
+
+<ExportConnectionSettings>:
+    name: 'export_node_settings'
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: (1, 1)
+        Spinner:
+            id: nodes
+            # option_cls: Factory.get("NodeSpinnerOption")
+            text: "Select node to export"
+            height: dp(30)
+            width: dp(300)
+            size_hint: None, None
+            on_text:
+                root.node_selected(self.text)
+            values: [x[:10] for x in get_available_nodes()]
+        Label:
+            text: "The device ID to export to"
+            size_hint_y: None
+            height: self.texture_size[1]
+        MDTextField:
+            id: device_id
+            helper_text: 'Device ID'
+            helper_text_mode: "persistent"
+            size_hint_x: None
+            width: dp(200)
+        MDRaisedButton:
+            id: export_button
+            text: 'Export'
+            on_release: root.export_node_settings()
+            size_hint: (None, None)
+            width: dp(100)
+            height: dp(40)
+            disabled: True
+        TextInput:
+            id: text_export
+            multiline: True
+        MDRaisedButton:
+            text: 'Back'
+            on_release:
+                app.screen.ids.sm.current = "main"
+                root.manager.transition.direction = "right"
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(40)

@@ -2,12 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-15 13:22:44
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 22:46:41
-# -*- coding: utf-8 -*-
-# @Author: lnorb.com
-# @Date:   2021-12-15 07:15:28
-# @Last Modiconsumablesfied by:   lnorb.com
-# @Last Modified time: 2022-01-15 13:07:26
+# @Last Modified time: 2022-07-02 12:27:52
 
 from collections import deque
 
@@ -19,25 +14,25 @@ from kivy.clock import (
 from kivy.clock import mainthread
 from kivy.uix.screenmanager import Screen
 
-from orb.misc import data_manager
 from orb.screens.console.console_input import ConsoleInput
 from orb.screens.console.console_output import ConsoleOutput
+
+keep = lambda _: _
+keep(ConsoleInput)
+keep(ConsoleOutput)
 
 MAX_TIME = 1 / 5
 
 
 class ConsoleScreen(Screen):
-
-    lines = deque()
-    player_showing = False
-    show_player = False
-    is_showing = False
-
-    #: text to display in output when the user enters the output screen
-    output_text = ""
-
     def __init__(self, *args, **kwargs):
         super(ConsoleScreen, self).__init__(*args, **kwargs)
+
+        self.lines = deque()
+        self.is_showing = False
+
+        #: text to display in output when the user enters the output screen
+        self.output_text = ""
         Clock.schedule_interval(self.consume, 0)
 
     def on_enter(self):
@@ -49,15 +44,17 @@ class ConsoleScreen(Screen):
         def delayed():
             # when 'output' changes on the console_input
             # then update 'output' on the console_output
+            # it's ok to bind this over and over
             self.ids.console_input.bind(output=self.ids.console_output.setter("output"))
             # retrieve the code stored in the prefs, and set it
             # in the console input
 
-            self.ids.console_input.text = data_manager.data_man.store.get(
-                "console_input", {}
-            ).get("text", "")
+            self.ids.console_input.text = (
+                App.get_running_app().store.get("console_input", {}).get("text", "")
+            )
             app = App.get_running_app()
-            app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
+            if app.root.ids.get("app_menu"):
+                app.root.ids.app_menu.add_console_menu(cbs=self.ids.console_input)
 
         delayed()
         self.is_showing = True
@@ -74,7 +71,8 @@ class ConsoleScreen(Screen):
                 self.output_text = text
         if last_line and last_line != "\n":
             app = App.get_running_app()
-            app.root.ids.status_line.ids.line_output.output = last_line
+            if app.root and "status_line" in app.root.ids:
+                app.root.ids.status_line.ids.line_output.output = last_line
 
     def consume(self, *args):
         """

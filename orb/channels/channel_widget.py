@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 03:55:01
+# @Last Modified time: 2022-07-01 11:22:00
 
 from time import time
 from threading import Thread
@@ -103,7 +103,7 @@ class ChannelWidget(Widget):
         if self._selected:
             return self._selected
         highlighted = False
-        h = data_manager.data_man.store.get("highlighter", {})
+        h = App.get_running_app().store.get("highlighter", {})
         text = h.get("highlight", "")
         if text:
             present = text in self.memo

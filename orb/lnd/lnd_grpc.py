@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-14 08:31:52
+# @Last Modified time: 2022-06-29 08:05:05
 import sys
 import base64
 import os
@@ -38,17 +38,20 @@ MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
 
 class LndGRPC(LndBase):
-    def __init__(self, tls_certificate, server, macaroon):
+    def __init__(self, tls_certificate, server, port, macaroon):
         os.environ["GRPC_SSL_CIPHER_SUITES"] = "HIGH+ECDSA"
         combined_credentials = self.get_credentials(
-            tls_certificate.encode(), macaroon.encode()
+            tls_certificate.encode()
+            if type(tls_certificate) is str
+            else tls_certificate,
+            macaroon.encode() if type(macaroon) is str else macaroon,
         )
         channel_options = [
             ("grpc.max_message_length", MESSAGE_SIZE_MB),
             ("grpc.max_receive_message_length", MESSAGE_SIZE_MB),
         ]
         grpc_channel = grpc.secure_channel(
-            server + ":10009", combined_credentials, channel_options
+            f"{server}:{port}", combined_credentials, channel_options
         )
         self.stub = lnrpc.LightningStub(grpc_channel)
         self.router_stub = lnrouterrpc.RouterStub(grpc_channel)

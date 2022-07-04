@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-22 16:43:02
+# @Last Modified time: 2022-07-01 13:27:47
 
 import os
 
@@ -51,7 +51,10 @@ class MainLayout(BoxLayout):
         @mainthread
         def delayed():
             app = App.get_running_app()
-            app.root.ids.app_menu.populate_scripts()
+            try:
+                app.root.ids.app_menu.populate_scripts()
+            except:
+                print("FAILED TO POPULATE SCRIPTS")
 
         delayed()
 

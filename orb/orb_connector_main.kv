@@ -1,0 +1,35 @@
+<OrbConnectorMain>:
+    name: "main"
+    FitImage:
+        source: "images/bg.jpeg"
+        opacity: 0.1
+    GridLayout:
+        id: grid
+        cols:1
+        Splitter:
+            horizontal: True
+            height: dp(5)
+            size_hint_y: 1
+        Label:
+            text: 'The Lightning Network'
+            multiline: True
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Label:
+            text: 'just got way more fun!'
+            multiline: True
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Splitter:
+            horizontal: True
+            height: dp(5)
+            size_hint_y: 1
+    MDFloatingActionButtonSpeedDial:
+        data: app.data
+        root_button_anim: True
+        callback: root.add_released
+        icon: 'orbit'

@@ -2,21 +2,24 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:47:33
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 12:04:35
+# @Last Modified time: 2022-07-01 15:13:20
 
 import requests
 import json
+
+from kivy.app import App
+
 from orb.misc import data_manager
 from orb.lnd import Lnd
 from orb.misc.utils import pref
 
 
 def get_creds():
-    return data_manager.data_man.store.get("auth", {})
+    return App.get_running_app().store.get("auth", {})
 
 
 def set_creds(resp):
-    return data_manager.data_man.store.put(
+    return App.get_running_app().store.put(
         "auth",
         **{
             "username": resp["username"],
@@ -27,7 +30,7 @@ def set_creds(resp):
 
 
 def clear_creds(creds):
-    return data_manager.data_man.store.put("auth", {})
+    return App.get_running_app().store.put("auth", {})
 
 
 def register(username, password):

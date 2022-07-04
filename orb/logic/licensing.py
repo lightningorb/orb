@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-27 08:43:04
+# @Last Modified time: 2022-07-01 11:21:46
 
 import arrow
 from orb.misc import data_manager
@@ -94,7 +94,7 @@ def is_registered(*_):
         data_manager.data_man = None
         App.get_running_app().stop()
 
-    cached = data_manager.data_man.store.get("licensing", {}).get("datav2", "")
+    cached = App.get_running_app().store.get("licensing", {}).get("datav2", "")
     if cached:
         decrypted = json.loads(
             decrypt_long(
@@ -144,7 +144,7 @@ def is_registered(*_):
                 decrypted["detail"] == "looks good"
                 and arrow.utcnow().timestamp() - decrypted["timestamp"] < 30
             ):
-                data_manager.data_man.store.put("licensing", **{"datav2": resp})
+                App.get_running_app().store.put("licensing", **{"datav2": resp})
             else:
                 print(f"Call-home failed: {decrypted['detail']}")
                 Clock.schedule_once(do_exit, 10)

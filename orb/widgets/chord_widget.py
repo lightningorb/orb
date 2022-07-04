@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 22:49:34
+# @Last Modified time: 2022-07-01 11:21:10
 
 import math
 from collections import defaultdict
@@ -48,7 +48,7 @@ class ChordWidget(Widget):
     def show_chord(self, inst, chord):
         chord %= len(self.channels)
         show = {str(c.chan_id): i == chord for i, c in enumerate(self.channels)}
-        data_manager.data_man.store.put("show_to_chords", **show)
+        App.get_running_app().store.put("show_to_chords", **show)
         self.update()
 
     @mainthread
@@ -83,8 +83,10 @@ class ChordWidget(Widget):
                 offset += sec_w
 
             for chan, col in zip(self.channels, cols):
-                show = data_manager.data_man.store.get("show_to_chords", {}).get(
-                    str(chan.chan_id), False
+                show = (
+                    App.get_running_app()
+                    .store.get("show_to_chords", {})
+                    .get(str(chan.chan_id), False)
                 )
                 if show:
                     self.draw_channel_chords(
