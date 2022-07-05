@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 06:32:23
+# @Last Modified time: 2022-07-05 10:19:41
 
 import threading
 from time import sleep
@@ -80,14 +80,16 @@ class PayScreen(PopupDropShadow):
         )
         return invoices
 
-    def get_ignored_pks(self):
-        return [
-            k
-            for k, v in App.get_running_app()
-            .store.get("pay_through_channel", {})
-            .items()
-            if not v
-        ]
+    def get_ignored_chan_ids(self):
+        return set(
+            [
+                int(k)
+                for k, v in App.get_running_app()
+                .store.get("pay_through_channel", {})
+                .items()
+                if not v
+            ]
+        )
 
     def pay(self):
         class PayThread(threading.Thread):
@@ -146,8 +148,9 @@ class PayScreen(PopupDropShadow):
                         with lock:
                             chan_id = get_low_inbound_channel(
                                 lnd=Lnd(),
-                                pk_ignore=self.inst.get_ignored_pks(),
-                                chan_ignore=chan_ignore,
+                                pk_ignore=[],
+                                chan_ignore=chan_ignore
+                                | self.inst.get_ignored_chan_ids(),
                                 num_sats=int(payment_request.num_satoshis)
                                 + int(payment_request.num_satoshis)
                                 * 0.05,  # 5% for the fees
