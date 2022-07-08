@@ -16,7 +16,12 @@ def install(c, env=os.environ):
 
 
 @task
-def build(c, env=os.environ):
+def build(
+    c,
+    env=os.environ,
+    AWS_ACCESS_KEY_ID=None,
+    AWS_SECRET_ACCESS_KEY=None,
+):
     """
     need to set sqlite version to 3.38.0 or SQLITE_ENABLE_JSON1=1
     ~/orb/.buildozer/android/platform/python-for-android/pythonforandroid/recipes/sqlite3/__init__.py
@@ -25,14 +30,24 @@ def build(c, env=os.environ):
     # c.run(
     #     "cp -r ~/pythonforandroid ~/orb/.buildozer/android/platform/python-for-android/"
     # )
-    c.run(
-        "rm -f ~/orb/bin/orb-0.1-arm64-v8a_armeabi-v7a-debug.apk ~/lnorb_com/orb-0.1-arm64-v8a_armeabi-v7a-debug.apk"
-    )
+    c.run("rm -f ~/orb/bin/*.apk")
     env[
         "PATH"
     ] = "/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
     c.run(f"buildozer android debug", env=env)
-    c.run("cp -f ~/orb/bin/orb-0.1-arm64-v8a_armeabi-v7a-debug.apk ~/lnorb_com/")
+    # c.run("cp -f ~/orb/bin/*.apk ~/lnorb_com/")
+    build_name = next(iter(Path("bin/").glob("*.apk")), None)
+    # orb-0.10.0-windows-2022-x86_64.zip
+    # orb-0.15.2-arm64-v8a_armeabi-v7a-debug.apk
+    if build_name:
+        upload_to_s3(
+            env,
+            build_name.as_posix(),
+            "lnorb",
+            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
+            object_name=f"customer_builds/{build_name}",
+        )
 
 
 @task
@@ -42,7 +57,9 @@ def build_remote(c, env=os.environ):
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as con:
         with con.cd("orb"):
-            con.run("./build.py android.build")
+            con.run(
+                f"./build.py android.build --AWS-ACCESS-KEY-ID {env['AWS_ACCESS_KEY_ID']} --AWS-SECRET-ACCESS-KEY  {env['AWS_SECRET_ACCESS_KEY']}"
+            )
 
 
 @task
@@ -57,7 +74,42 @@ def clean(c, env=os.environ):
 
 @task
 def sync(c, env=os.environ):
+    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    with Connection(
+        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
+    ) as con:
+        with con.cd("orb"):
+            con.run("git reset --hard")
+            con.run("git clean -f")
     c.run(
         "rsync -azv -e 'ssh -i lnorb_com.cer' . ubuntu@lnorb.com:/home/ubuntu/orb/ --exclude build --exclude dist --exclude .cache --exclude lnappstore/node_modules --exclude site/node_modules",
         env=env,
     )
+
+
+def upload_to_s3(
+    env,
+    file_name,
+    bucket,
+    object_name=None,
+    AWS_ACCESS_KEY_ID=None,
+    AWS_SECRET_ACCESS_KEY=None,
+):
+    import boto3
+    from botocore.exceptions import ClientError
+
+    if object_name is None:
+        object_name = os.path.basename(file_name)
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    )
+    try:
+        response = s3_client.upload_file(
+            file_name, bucket, object_name, ExtraArgs={"ACL": "public-read"}
+        )
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True

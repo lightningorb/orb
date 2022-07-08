@@ -111,14 +111,6 @@ pip3.9 install memoization;
     """
 
 
-def upload(path):
-    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
-    with Connection(
-        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
-    ) as con:
-        con.put(path, "/home/ubuntu/lnorb_com/releases/")
-
-
 def build_common(c, env, sep=":"):
     global data
     register(c)
