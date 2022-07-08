@@ -31,23 +31,27 @@ def build(
     #     "cp -r ~/pythonforandroid ~/orb/.buildozer/android/platform/python-for-android/"
     # )
     c.run("rm -f ~/orb/bin/*.apk")
+    c.run("rm -f ~/orb/bin/*.aab")
     env[
         "PATH"
     ] = "/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+
+    def do_upload(ext):
+        build_name = next(iter(Path("bin/").glob(ext)), None)
+        if build_name:
+            upload_to_s3(
+                env,
+                build_name.as_posix(),
+                "lnorb",
+                AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
+                AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
+                object_name=f"customer_builds/{build_name.name}",
+            )
+
     c.run(f"buildozer android debug", env=env)
-    # c.run("cp -f ~/orb/bin/*.apk ~/lnorb_com/")
-    build_name = next(iter(Path("bin/").glob("*.apk")), None)
-    # orb-0.10.0-windows-2022-x86_64.zip
-    # orb-0.15.2-arm64-v8a_armeabi-v7a-debug.apk
-    if build_name:
-        upload_to_s3(
-            env,
-            build_name.as_posix(),
-            "lnorb",
-            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
-            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
-            object_name=f"customer_builds/{build_name}",
-        )
+    do_upload("*.apk")
+    c.run(f"buildozer android release", env=env)
+    do_upload("*.aab")
 
 
 @task
