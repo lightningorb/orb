@@ -29,7 +29,7 @@ source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, i
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.15.2
+version = 0.15.3
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -49,7 +49,7 @@ requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.
 #presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = %(source.dir)s/images/bg.jpeg
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = all
@@ -101,7 +101,7 @@ android.permissions = INTERNET,WAKE_LOCK
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 27
+android.api = 30
 
 # (int) Minimum API your APK / AAB will support.
 #android.minapi = 21
