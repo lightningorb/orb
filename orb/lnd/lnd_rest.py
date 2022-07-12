@@ -220,7 +220,13 @@ class LndREST(LndBase):
         ).iter_lines()
 
     def get_channel_events(self):
-        pass
+        url = f"{self.fqdn}/v1/channels/subscribe"
+        r = requests.get(url, headers=self.headers, verify=self.cert_path, stream=True)
+        for l in r.iter_lines():
+            j = json.loads(l.decode())
+            j = dict2obj(j)
+            if hasattr(j, 'result'):
+                yield j.result
 
     def get_forwarding_history(
         self, start_time=None, end_time=None, index_offset=0, num_max_events=100

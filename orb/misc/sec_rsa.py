@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 18:57:32
+# @Last Modified time: 2022-07-10 13:22:26
 
 
 import uuid
@@ -19,32 +19,10 @@ from orb.misc.device_id import device_id
 import plyer
 import random
 import sys
+from orb.misc import patch_rand_bits
 
-if (sys.version_info.major, sys.version_info.minor) < (3, 9):
-
-    def randbytes(n):
-        return random.getrandbits(n * 8).to_bytes(n, "little")
-
-    random.randbytes = randbytes
-
-
-def read_random_bits(nbits: int) -> bytes:
-    """Monkeypatched so RSA uses the devices's MAC address
-    and a key password for rand data generation, this makes
-    the keys deterministic.
-
-    Reads 'nbits' random bits.
-    """
-    nbytes, rbits = divmod(nbits, 8)
-    randomdata = random.randbytes(nbytes)
-    if rbits > 0:
-        randomvalue = ord(random.randbytes(1))
-        randomvalue >>= 8 - rbits
-        randomdata = struct.pack("B", randomvalue) + randomdata
-    return randomdata
-
-
-rsa.randnum.read_random_bits = read_random_bits
+keep = lambda _: _
+keep(patch_rand_bits)
 
 
 def encrypt(message, public_key, encoded=False):
@@ -85,17 +63,3 @@ def get_sec_keys(uid=None):
     random.seed(f"{uid}-orbkeygenpass-3802f003-bc64-47e3-a64f-82f57945271b")
     (pub, priv) = rsa.newkeys(nbits=512, accurate=True)
     return priv.save_pkcs1(), pub.save_pkcs1()
-
-
-def get_cert_command(public_key):
-    cert_path = "~/.lnd/tls.cert"
-    if pref("host.type") == "umbrel":
-        cert_path = "~/umbrel/lnd/tls.cert"
-    return f"""python3 -c "import rsa; import base64; import os; p = rsa.PublicKey.load_pkcs1({public_key}); c = open(os.path.expanduser('{cert_path}')).read(); print('\\n'.join([base64.b64encode(rsa.encrypt(c[i : i + 53].encode(), p)).decode() for i in range(0, len(c), 53)]))"  """
-
-
-def get_mac_command(public_key):
-    mac_path = "~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
-    if pref("host.type") == "umbrel":
-        mac_path = "~/umbrel/lnd/data/chain/bitcoin/mainnet/admin.macaroon"
-    return f"""python3 -c "import rsa; import os; import codecs; import base64; pub = rsa.PublicKey.load_pkcs1({public_key}); message = codecs.encode(open(os.path.expanduser('{mac_path}'), 'rb' ).read(), 'hex',).decode(); print('\\n'.join([base64.b64encode(rsa.encrypt(message[i : i + 53].encode('utf8'), pub)).decode() for i in range(0, len(message), 53)]))"  """

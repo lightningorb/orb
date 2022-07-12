@@ -26,3 +26,4 @@ docs/docsbuild/
 licenses
 hourly.yaml
 .cache
+build.log

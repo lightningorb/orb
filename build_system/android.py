@@ -2,17 +2,99 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-09 09:42:17
+# @Last Modified time: 2022-07-10 14:40:12
 
 from fabric import Connection
 from invoke import task, Responder
 from pathlib import Path
+from textwrap import dedent
 import os
+
+to_compile = set(
+    [
+        "orb/lnd/lnd.py",
+        "orb/lnd/lnd_base.py",
+        "orb/lnd/lnd_grpc.py",
+        "orb/lnd/lnd_rest.py",
+        "orb/misc/sec_rsa.py",
+        "orb/misc/certificate.py",
+        "orb/misc/certificate_secure.py",
+        "orb/misc/macaroon.py",
+        "orb/misc/macaroon_secure.py",
+        "orb/misc/device_id.py",
+        # "orb/misc/channels.py",
+        "orb/misc/decrypt.py",
+        "orb/logic/balanced_ratio.py",
+        "orb/math/lerp.py",
+        "orb/math/normal_distribution.py",
+        "orb/math/Vector.py",
+    ]
+)
 
 
 @task
 def install(c, env=os.environ):
     c.run(f"pip3 install python-for-android", env=env)
+
+
+@task
+def minify(c, env=os.environ):
+    for p in Path("orb/").rglob("*.py"):
+        c.run(f"/home/ubuntu/.local/bin/pyminify {p} --in-place")
+
+
+def get_obf_py_files():
+    ignore = "grpc_generated"
+    dirs = [
+        "orb/store",
+        "orb/math",
+        "orb/widgets",
+        "orb/status_line",
+        "orb/screens",
+        "orb/logic",
+        "orb/dialogs",
+        "orb/attribute_editor",
+        "orb/audio",
+        "orb/channels",
+        "orb/components",
+        "orb/core",
+        "orb/core_ui",
+        "orb/lnd",
+    ]
+    ret = []
+    for _dir in dirs:
+        for p in Path(_dir).rglob("*.py"):
+            if ignore in str(p):
+                continue
+            if "__init__.py" in str(p):
+                continue
+            if str(p) not in to_compile:
+                ret.append(p)
+    return ret
+
+
+@task
+def obfuscate(c, env=os.environ):
+    import base64
+    from orb.misc.decrypt import encrypt
+
+    for p in get_obf_py_files():
+        if str(p) not in to_compile:
+            print(f"Obfuscate: {p}")
+            with p.open() as f:
+                code = f.read()
+                b64code = encrypt(code)
+            with p.open("w") as f:
+                f.write(
+                    dedent(
+                        f"""\
+                        from orb.misc.decrypt import decrypt
+                        eval(decrypt({b64code}))
+                        """
+                    )
+                )
+        else:
+            print(f"Compile: {p}")
 
 
 @task
@@ -30,7 +112,9 @@ def build(
     # c.run(
     #     "cp -r ~/pythonforandroid ~/orb/.buildozer/android/platform/python-for-android/"
     # )
+    # minify(c, env=env)
     c.run("rm -rf ~/orb/bin/*")
+    c.run("rm -rf ~/orb/tmp*")
     env[
         "PATH"
     ] = "/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
@@ -48,7 +132,8 @@ def build(
             )
 
     stdout = c.run(f"buildozer android debug", env=env).stdout
-    # stdout = c.run(f"buildozer android release", env=env).stdout
+    stdout = c.run(f"buildozer android release", env=env).stdout
+    c.run("cp -f ~/orb/bin/* ~/lnorb_com/")
     # do_upload("*.apk")
     # c.run(f"buildozer android release", env=env)
     # do_upload("*.aab")
@@ -57,7 +142,7 @@ def build(
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.15.3-arm64-v8a_armeabi-v7a-release.aab",
+    release_path="/home/ubuntu/orb/bin/orb-0.15.3.2-arm64-v8a_armeabi-v7a-release.aab",
     password="",
 ):
     keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
@@ -81,7 +166,7 @@ def sign(
         con.run(
             f"/home/ubuntu/.buildozer/android/platform/android-sdk/build-tools/33.0.0/zipalign -v 4 {release_path} {aligned_path}"
         )
-        con.get(aligned_path, "/Users/orb/Downloads/")
+        con.get(aligned_path, os.path.expanduser("~/Downloads/"))
 
 
 @task
@@ -105,8 +190,53 @@ def build_remote(c, env=os.environ):
     ) as con:
         with con.cd("orb"):
             con.run(
-                f"./build.py android.build --AWS-ACCESS-KEY-ID {env['AWS_ACCESS_KEY_ID']} --AWS-SECRET-ACCESS-KEY  {env['AWS_SECRET_ACCESS_KEY']}"
+                f"./build.py android.obfuscate android.cython android.cython-obfuscated android.build --AWS-ACCESS-KEY-ID {env['AWS_ACCESS_KEY_ID']} --AWS-SECRET-ACCESS-KEY  {env['AWS_SECRET_ACCESS_KEY']}"
             )
+
+
+@task
+def cython(c, env=os.environ):
+    """
+    In this task, we loop through non-obfuscated py files that are cythonable,
+    and generate their pyx equivalent. It's important to seed UUID else
+    we'll keep on generating new pyx files each time, that'll need to be
+    rebuilt each time.
+    """
+    import uuid
+    import random as rd
+
+    rd.seed(0)
+
+    for p in to_compile:
+        p = Path(p)
+        uid = "m" + str(uuid.UUID(int=rd.getrandbits(128))).replace("-", "_")
+        pyx = f"/home/ubuntu/orb/lib/custom_lib/{uid}.pyx"
+        c.run(f"cp /home/ubuntu/orb/{str(p)} {pyx}")
+        cmd = f"sed -i '1s/^/# cython: language_level=3\\n/' {pyx}"
+        c.run(cmd)
+        c.run(f"echo 'from {uid} import *' > /home/ubuntu/orb/{str(p)}")
+
+
+@task
+def cython_obfuscated(c, env=os.environ):
+    """
+    In this task, we loop through obfuscated py files,
+    and generate their pyx equivalent. It's important to seed UUID else
+    we'll keep on generating new pyx files each time, that'll need to be
+    rebuilt each time.
+    """
+    import uuid
+    import random as rd
+
+    rd.seed(1)
+
+    for p in get_obf_py_files():
+        uid = "m" + str(uuid.UUID(int=rd.getrandbits(128))).replace("-", "_")
+        pyx = f"/home/ubuntu/orb/lib/custom_lib/{uid}.pyx"
+        c.run(f"cp /home/ubuntu/orb/{str(p)} {pyx}")
+        cmd = f"sed -i '1s/^/# cython: language_level=3\\n/' {pyx}"
+        c.run(cmd)
+        c.run(f"echo 'from {uid} import *' > /home/ubuntu/orb/{str(p)}")
 
 
 @task
@@ -127,7 +257,7 @@ def sync(c, env=os.environ):
     ) as con:
         with con.cd("orb"):
             con.run("git reset --hard")
-            con.run("git clean -f")
+            con.run("git clean -fd")
     c.run(
         "rsync -azv -e 'ssh -i lnorb_com.cer' . ubuntu@lnorb.com:/home/ubuntu/orb/ --exclude build --exclude dist --exclude .cache --exclude lnappstore/node_modules --exclude site/node_modules --exclude *.dmg",
         env=env,

@@ -6,10 +6,11 @@
 
 import threading
 from time import sleep
+from traceback import format_exc
 
 from orb.lnd import Lnd
+from orb.misc.channel import Channel
 from orb.logic.thread_manager import thread_manager
-from traceback import format_exc
 
 
 class ChannelsThread(threading.Thread):
@@ -35,7 +36,7 @@ class ChannelsThread(threading.Thread):
                         if self.stopped():
                             return
                         print(e)
-                        if e.inactive_channel:
+                        if hasattr(e, "inactive_channel"):
                             print(dir(e.inactive_channel))
                             """
                             inactive_channel {
@@ -43,7 +44,7 @@ class ChannelsThread(threading.Thread):
                               output_index: 1
                             }
                             """
-                        if e.active_channel:
+                        if hasattr(e, "active_channel"):
                             print(dir(e.active_channel))
                             """
                             active_channel {
@@ -52,10 +53,18 @@ class ChannelsThread(threading.Thread):
                             }
                             type: ACTIVE_CHANNEL
                             """
-                        if e.open_channel.chan_id:
-                            self.inst.channels.channels.append(e.open_channel)
-                            self.inst.add_channel(e.open_channel)
-                        if e.closed_channel.chan_id:
+                        if hasattr(e, "open_channel"):
+                            o = e.open_channel
+                            self.inst.channels.get()
+                            self.inst.add_channel(
+                                self.inst.channels.channels[o.chan_id], update=True
+                            )
+                        if hasattr(e, "pending_open_channel"):
+                            p = e.pending_open_channel
+                            print(
+                                f"PENDING OPEN: index: {p.output_index}, txid: {p.txid}"
+                            )
+                        if hasattr(e, "closed_channel"):
                             to_remove = next(
                                 iter(
                                     x

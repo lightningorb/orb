@@ -103,7 +103,10 @@ class ChannelWidget(Widget):
         if self._selected:
             return self._selected
         highlighted = False
-        h = App.get_running_app().store.get("highlighter", {})
+        app = App.get_running_app()
+        if not hasattr(app, 'store'):
+            return
+        h = app.store.get("highlighter", {})
         text = h.get("highlight", "")
         if text:
             present = text in self.memo

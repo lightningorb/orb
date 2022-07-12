@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-27 06:25:30
+# @Last Modified time: 2022-07-10 16:54:55
 
 from threading import Thread, Lock
 
@@ -173,13 +173,13 @@ class Channel(EventDispatcher):
         may not always be desireable.
         """
         return self.local_balance + sum(
-            int(p.amount) for p in self.pending_htlcs if not p.incoming
+            [int(p.amount) for p in self.pending_htlcs if not p.incoming]
         )
 
     @property
     def remote_balance_include_pending(self):
         return self.remote_balance + sum(
-            int(p.amount) for p in self.pending_htlcs if p.incoming
+            [int(p.amount) for p in self.pending_htlcs if p.incoming]
         )
 
     @property
@@ -254,11 +254,11 @@ class Channel(EventDispatcher):
 
     @property
     def pending_in(self):
-        return sum(int(p.amount) for p in self.pending_htlcs if p.incoming)
+        return sum([int(p.amount) for p in self.pending_htlcs if p.incoming])
 
     @property
     def pending_out(self):
-        return sum(int(p.amount) for p in self.pending_htlcs if not p.incoming)
+        return sum([int(p.amount) for p in self.pending_htlcs if not p.incoming])
 
     @property
     def pending_in_htlc_ids(self):

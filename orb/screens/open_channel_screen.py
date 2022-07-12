@@ -13,10 +13,14 @@ from orb.lnd import Lnd
 class OpenChannelScreen(PopupDropShadow):
     @guarded
     def open_channel(self, pk, sats, sats_per_vbyte):
-        print(
-            Lnd().open_channel(
-                node_pubkey_string=pk,
-                sat_per_vbyte=int(sats_per_vbyte),
-                amount_sat=int(sats),
-            )
+        out = Lnd().open_channel(
+            node_pubkey_string=pk,
+            sat_per_vbyte=int(sats_per_vbyte),
+            amount_sat=int(sats),
         )
+        popup = PopupDropShadow(
+            title="Open Channel Result", size_hint=(None, None), size=(dp(200), dp(200))
+        )
+        popup.add_widget(TextInput(text=str(out)))
+        popup.open()
+        print(out)

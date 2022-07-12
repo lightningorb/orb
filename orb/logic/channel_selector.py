@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-24 16:29:09
+# @Last Modified time: 2022-07-10 14:00:17
 
 from random import choice
 from orb.misc import data_manager
@@ -42,7 +42,7 @@ def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
         enough_available_inbound = int(num_sats) < chan.local_balance
         more_than_half_inbound = (
             (chan.local_balance - num_sats) / int(chan.capacity)
-        ) > balanced_ratio
+        ) > chan.balanced_ratio
         good_candidate = enough_available_inbound and more_than_half_inbound
         if good_candidate:
             chans.append(chan)

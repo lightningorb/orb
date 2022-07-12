@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 13:19:47
+# @Last Modified time: 2022-07-10 16:44:07
 
 from traceback import print_exc
 import concurrent.futures
@@ -18,9 +18,10 @@ from kivy.app import App
 from orb.misc.channel import Channel
 from orb.misc.utils import pref
 from orb.misc import data_manager
+from orb.logic.balanced_ratio import BalancedRatioMixin
 
 
-class Channels(EventDispatcher):
+class Channels(EventDispatcher, BalancedRatioMixin):
 
     """
     This class should hold all the currently existing Channels,
@@ -53,6 +54,7 @@ class Channels(EventDispatcher):
         and sorts channel data.
         """
         self.lnd = lnd
+        self.app = App.get_running_app()
         self.get()
         Clock.schedule_once(self.compute_balanced_ratios, 0)
         Clock.schedule_interval(self.compute_balanced_ratios, 30)
@@ -128,66 +130,25 @@ class Channels(EventDispatcher):
 
     @property
     def local_balance(self):
-        return sum(x.local_balance for x in self.channels.values())
+        return sum([x.local_balance for x in self.channels.values()])
 
     @property
     def local_balance_include_pending(self):
-        return sum(x.local_balance_include_pending for x in self.channels.values())
+        return sum([x.local_balance_include_pending for x in self.channels.values()])
 
     @property
     def remote_balance(self):
-        return sum(x.remote_balance for x in self.channels.values())
+        return sum([x.remote_balance for x in self.channels.values()])
 
     @property
     def remote_balance_include_pending(self):
-        return sum(x.remote_balance_include_pending for x in self.channels.values())
+        return sum([x.remote_balance_include_pending for x in self.channels.values()])
 
     @property
     def capacity(self):
         local = self.local_balance_include_pending
         remote = self.remote_balance_include_pending
         return local + remote
-
-    def compute_balanced_ratios(self, *_):
-        solution = []
-        channels = [x for x in self.channels.values()]
-        for c in channels:
-            solution.append(
-                App.get_running_app()
-                .store.get("balanced_ratio", {})
-                .get(str(c.chan_id), -1)
-            )
-        gr = self.global_ratio
-        indices = [i for i, x in enumerate(solution) if x == -1]
-        capacity = self.capacity
-        if capacity == 0:
-            return
-
-        def search(solution, indices, global_ratio):
-            low, mid, high, n = 0, 0, 1, 0
-            while low <= high:
-                mid = (high + low) / 2
-                for i in indices:
-                    solution[i] = mid
-                ratio = (
-                    sum(
-                        [
-                            x.capacity * y
-                            for x, y in zip([*self.channels.values()], solution)
-                        ]
-                    )
-                    / capacity
-                )
-                abs_diff = abs(ratio - global_ratio)
-                n += 1
-                if abs_diff < 1 / 1e5 or n > 100:
-                    return ratio
-                low, high = (mid, high) if ratio < global_ratio else (low, mid)
-            return ratio
-
-        search(solution, indices, gr)
-        for i, c in enumerate(channels):
-            channels[i].balanced_ratio = solution[i]
 
     def __len__(self):
         return len(self.sorted_chan_ids)

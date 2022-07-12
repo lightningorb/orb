@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 18:05:34
+# @Last Modified time: 2022-07-10 13:22:46
 
 from kivy.app import App
 from kivymd.uix.tab import MDTabsBase
@@ -16,7 +16,7 @@ from orb.misc.utils import mobile
 from orb.misc.decorators import guarded
 from orb.misc.macaroon_secure import MacaroonSecure
 from orb.misc.certificate_secure import CertificateSecure
-from orb.misc.sec_rsa import get_sec_keys, get_cert_command, get_mac_command
+from orb.misc.sec_rsa import get_sec_keys
 
 
 class TypeSpinnerOption(SpinnerOption):
@@ -129,3 +129,17 @@ class ConnectionSettings(MDScreen):
         if error:
             self.ids.connect.text = f"Error: {error}"
             self.ids.connect.md_bg_color = (0.8, 0.2, 0.2, 1)
+
+
+def get_cert_command(public_key):
+    cert_path = "~/.lnd/tls.cert"
+    if pref("host.type") == "umbrel":
+        cert_path = "~/umbrel/lnd/tls.cert"
+    return f"""python3 -c "import rsa; import base64; import os; p = rsa.PublicKey.load_pkcs1({public_key}); c = open(os.path.expanduser('{cert_path}')).read(); print('\\n'.join([base64.b64encode(rsa.encrypt(c[i : i + 53].encode(), p)).decode() for i in range(0, len(c), 53)]))"  """
+
+
+def get_mac_command(public_key):
+    mac_path = "~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+    if pref("host.type") == "umbrel":
+        mac_path = "~/umbrel/lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+    return f"""python3 -c "import rsa; import os; import codecs; import base64; pub = rsa.PublicKey.load_pkcs1({public_key}); message = codecs.encode(open(os.path.expanduser('{mac_path}'), 'rb' ).read(), 'hex',).decode(); print('\\n'.join([base64.b64encode(rsa.encrypt(message[i : i + 53].encode('utf8'), pub)).decode() for i in range(0, len(message), 53)]))"  """

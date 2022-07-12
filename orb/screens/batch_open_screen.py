@@ -105,16 +105,19 @@ class BatchOpenScreen(PopupDropShadow):
 
         def func(*args):
             for pk, amount in zip(pks, amounts):
-                info = Lnd().get_node_info(pk)
-                display("-" * 50)
-                display(Lnd().get_node_alias(pk))
-                display("-" * 50)
-                for address in info.node.addresses:
-                    display(f"Connecting to: {pk}@{address.addr}")
-                    try:
-                        Lnd().connect(f"{pk}@{address.addr}")
-                        display("Success.")
-                    except Exception as e:
-                        display(e.args[0].details)
+                try:
+                    info = Lnd().get_node_info(pk)
+                    display("-" * 50)
+                    display(Lnd().get_node_alias(pk))
+                    display("-" * 50)
+                    for address in info.node.addresses:
+                        display(f"Connecting to: {pk}@{address.addr}")
+                        try:
+                            Lnd().connect(f"{pk}@{address.addr}")
+                            display("Attempted.")
+                        except Exception as e:
+                            display(e.args[0].details)
+                except Exception as e:
+                    display(e)
 
         threading.Thread(target=func).start()

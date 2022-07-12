@@ -102,7 +102,10 @@ class ChannelsWidget(ScatterLayout):
         if self.channels:
             self.channels.sort_channels()
             for i, chan_id in enumerate(self.channels.sorted_chan_ids):
-                self.cn[chan_id].update(i, len(self.cn))
+                if chan_id in self.cn:
+                    self.cn[chan_id].update(i, len(self.cn))
+                else:
+                    print(f"Channel {chan_id} not found in channels_widget")
 
     def on_touch_move(self, touch):
         if data_manager.data_man.menu_visible:

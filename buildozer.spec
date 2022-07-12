@@ -29,7 +29,7 @@ source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, i
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.15.3
+version = 0.15.3.2
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -37,7 +37,7 @@ version = 0.15.3
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1
+requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome,custom_lib
 # android,cryptography,bcrypt,attrs,cffi,fabric,pyinvoke
 
 
@@ -45,11 +45,13 @@ requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
+requirements.source.custom_lib = lib/custom_lib
+
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = images/bg_big_square.jpeg
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/images/bg.jpeg
+icon.filename = %(source.dir)s/images/bg.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = all
@@ -82,7 +84,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
+android.presplash_color = #00000000
 
 # (string) Presplash animation using Lottie format.
 # see https://lottiefiles.com/ for examples and https://airbnb.design/lottie/
@@ -102,6 +104,9 @@ android.permissions = INTERNET,WAKE_LOCK
 
 # (int) Target Android API, should be as high as possible.
 android.api = 30
+
+# minimum version of google play store bumps to 31 soon
+#android.api = 31
 
 # (int) Minimum API your APK / AAB will support.
 #android.minapi = 21
@@ -293,13 +298,13 @@ android.allow_backup = True
 #
 
 # (str) python-for-android URL to use for checkout
-p4a.url = https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/python-for-android.git
+#p4a.url = https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/python-for-android.git
 
 # (str) python-for-android fork to use in case if p4a.url is not specified, defaults to upstream (kivy)
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = master
+#p4a.branch = master
 
 # (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
 #p4a.commit = HEAD
@@ -308,7 +313,7 @@ p4a.branch = master
 #p4a.source_dir =
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
-#p4a.local_recipes =
+p4a.local_recipes = ./local_recipes
 
 # (str) Filename to the hook for p4a
 #p4a.hook =

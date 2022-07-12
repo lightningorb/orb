@@ -4,8 +4,10 @@
 # @Last Modified by:   lnorb.com
 # @Last Modified time: 2022-07-01 11:21:56
 
-from orb.components.popup_drop_shadow import PopupDropShadow
+from kivy.app import App
+
 from orb.misc import data_manager
+from orb.components.popup_drop_shadow import PopupDropShadow
 
 
 class HighlighterDialog(PopupDropShadow):
