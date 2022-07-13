@@ -2,18 +2,22 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 05:32:23
+# @Last Modified time: 2022-07-13 11:08:41
 
-# GREEN
 from colour import Color as LibColour
 
 
 class Colour:
-    def __init__(self, *args, selected=False, alpha=1, **kwargs):
-        lum = (0.5, 0.6)[selected]
-        sat = (0.5, 0.5)[selected]
+    def __init__(self, rgb, active=False, selected=False, alpha=1):
         self.alpha = alpha
-        self.col = LibColour(*args, luminance=lum, saturation=sat, **kwargs)
+        if not active:
+            rgb = "#333333"
+            self.col = LibColour(rgb)
+            return
+        if selected:
+            self.col = LibColour(rgb, luminance=0.6, saturation=0.5)
+            return
+        self.col = LibColour(rgb, luminance=0.5, saturation=0.5)
 
     @property
     def rgba(self):

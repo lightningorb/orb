@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 16:44:07
+# @Last Modified time: 2022-07-13 09:38:07
 
 from traceback import print_exc
+from threading import Thread
+from functools import cmp_to_key
 import concurrent.futures
 import urllib.request
-from threading import Thread
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
@@ -114,11 +115,21 @@ class Channels(EventDispatcher, BalancedRatioMixin):
             "total-received": lambda x: self.channels[x].total_satoshis_received,
             "out-ppm": lambda x: self.channels[x].fee_rate_milli_msat,
         }
+        criteria = pref("display.channel_sort_criteria")
 
-        self.sorted_chan_ids.sort(
-            key=sorter[pref("display.channel_sort_criteria")],
-            reverse=True,
-        )
+        def cmp(ca, cb):
+            a = sorter[criteria](ca)
+            b = sorter[criteria](cb)
+            if a < b:
+                return -1
+            elif a > b:
+                return 1
+            elif a == b:
+                return (1, -1)[
+                    self.channels[ca].remote_pubkey > self.channels[ca].remote_pubkey
+                ]
+
+        self.sorted_chan_ids.sort(key=cmp_to_key(cmp), reverse=True)
 
     @property
     def global_ratio(self):

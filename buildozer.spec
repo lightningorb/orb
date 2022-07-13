@@ -22,14 +22,14 @@ source.include_patterns = VERSION,images/*
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, images, license, lnappstore, server, site, tests, tutes, user, worklogs
+source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, images, license, lnappstore, server, site, tests, tutes, user, local_recipes
 
 # (list) List of exclusions using pattern matching
 # Do not prefix with './'
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.15.3.2
+version = 0.16.0.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]

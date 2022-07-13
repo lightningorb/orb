@@ -2449,6 +2449,10 @@ Builder.load_string('''
             ContextMenu:
                 id: help_context_menu
                 ContextMenuTextItem:
+                    text: "Documentation"
+                    on_press: app_menu.close_all()
+                    on_release: webbrowser.open('https://lnorb.com/docs')
+                ContextMenuTextItem:
                     text: "About"
                     on_press: app_menu.close_all()
                     on_release: About().open()
@@ -2492,6 +2496,289 @@ Builder.load_string('''
                         ContextMenuTextItem:
                             text: "BitcoinFaucet"
                             on_release: webbrowser.open("https://bitcoinfaucet.uo1.net")
+
+''')
+Builder.load_string('''
+<AFView>:
+    title: 'Auto Fees'
+    size_hint: .9, .9
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        StackLayout:
+            size_hint_y: 0.1
+            MDTextField:
+                text: str(root.obj['frequency'])
+                helper_text: 'Run Frequency'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(100)
+                on_text_validate: root.update_obj('frequency', eval(self.text))
+            MDTextField:
+                text: str(root.obj['spam_prevention'])
+                helper_text: 'Time before next update'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(150)
+                on_text_validate: root.update_obj('spam_prevention', eval(self.text))
+            MDTextField:
+                text: str(root.obj['fee_drop_factor'])
+                helper_text: 'Fee drop factor'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(100)
+                on_text_validate: root.update_obj('fee_drop_factor', eval(self.text))
+            MDTextField:
+                text: str(root.obj['fee_bump_factor'])
+                helper_text: 'Fee bump factor'
+                helper_text_mode: "persistent"
+                size_hint_x: None
+                width: dp(100)
+                on_text_validate: root.update_obj('fee_bump_factor', eval(self.text))
+        ScrollView:
+            size_hint: 1, 0.9
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            GridLayout:
+                id: rules
+                cols: 1
+                padding: 10
+                spacing: 10
+                size_hint: 1, None
+                height: self.minimum_height
+                do_scroll_x: False
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: self.minimum_height
+            MDIconButton:
+                icon: "check-network-outline"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.add_match_rule()
+            MDIconButton:
+                icon: "clock-start"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.start()
+
+
+<MatchView@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    canvas:
+        Color:
+            rgba: .8, .9, .8, .025
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "Rule: Match"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    MDTextField:
+        text: root.rule.alias
+        helper_text: 'Rule Name'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('alias', self.text)
+
+    MDTextField:
+        text: str(root.rule.priority)
+        helper_text: 'Priority'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('priority', int(self.text))
+
+    MDTextField:
+        text: '{}'.format(root.rule.fee_rate)
+        helper_text: 'Fee Rate (PPM)'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('fee_rate', self.text)
+
+    MDTextField:
+        text: root.rule.all[0]
+        helper_text: 'Match rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('all', [self.text])
+
+    MDIconButton:
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.parent_view.delete_rule(root.index)
+
+''')
+Builder.load_string('''
+#: import dp kivy.metrics.dp
+#: import webbrowser webbrowser
+
+<ABView>:
+    title: ''
+    size_hint: .9, .9
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            pos_hint: {'top':1}
+            ActionView:
+                use_separator: False
+                ActionGroup:
+                    text: 'Help' 
+                    mode: 'spinner'
+                    ActionButton:
+                        text: 'Docs'
+                        on_release: webbrowser.open('https://lnorb.com/docs/automated_rebalancing.html')
+                ActionPrevious:
+                    title: 'Auto Balance'
+                    app_icon: ''
+                    with_previous: False
+        MDTextField:
+            id: num_threads
+            text: str(root.obj.threads) if root.obj else '0'
+            helper_text: 'Number of concurrent rebalances'
+            helper_text_mode: "persistent"
+            size_hint_x: None
+            width: dp(100)
+            on_text_validate: root.update_obj('threads', int(self.text))
+        # MDTextField:
+        #     id: max_budget
+        #     text: str(root.obj.max_budget) if root.obj else '0'
+        #     helper_text: 'Max rebalance budget ({}% of earnings)'.format(int(float(self.text) * 100))
+        #     helper_text_mode: "persistent"
+        #     size_hint_x: None
+        #     width: dp(100)
+        #     on_text_validate: root.update_obj('max_budget', float(self.text))
+        ScrollView:
+            size_hint: 1, 1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            GridLayout:
+                id: rules
+                cols: 1
+                padding: 10
+                spacing: 10
+                size_hint: 1, None
+                height: self.minimum_height
+                do_scroll_x: False
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: self.minimum_height
+            MDIconButton:
+                icon: "check-network-outline"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.add_from_to_rule()
+            MDIconButton:
+                icon: "close-network-outline"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.add_ignore_rule()
+            MDIconButton:
+                icon: "clock-start"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.start()
+
+
+<FromToView@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    canvas:
+        Color:
+            rgba: .8, .9, .8, .025
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "Rule: from - to"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    MDTextField:
+        text: root.rule.alias
+        helper_text: 'Rule Name'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('alias', self.text)
+
+    # Label:
+    #     text: "Match fee rate:"
+    #     size_hint_y: None
+    #     height: self.texture_size[1]
+
+    # MDCheckbox:
+    #     id: match
+    #     size_hint_y: None
+    #     height: dp(50)
+
+    MDTextField:
+        text: str(root.rule.fee_rate)
+        helper_text: 'Max Fee Rate (PPM)'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('fee_rate', self.text)
+
+    MDTextField:
+        text: '{:_}'.format(root.rule.num_sats)
+        helper_text: 'Amount (SAT)'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('num_sats', int(self.text))
+
+    MDTextField:
+        text: root.rule.from_all[0]
+        helper_text: 'From rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('from_all', [self.text])
+
+    MDTextField:
+        text: root.rule.to_all[0] if len(root.rule.to_all) else ''
+        helper_text: 'To rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('to_all', [self.text])
+
+    MDIconButton:
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.parent_view.delete_rule(root.index)
+
+
+<IgnoreView@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    canvas:
+        Color:
+            rgba: .8, .9, .8, .025
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "Rule: Ignore"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    MDTextField:
+        text: root.rule.alias
+        helper_text: 'Rule Name'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('alias', self.text)
+
+    MDTextField:
+        text: root.rule.all[0] if len(root.rule.all) else ''
+        helper_text: 'rule'
+        helper_text_mode: "persistent"
+        on_text_validate: root.update_rule('all', [self.text])
+
+    MDIconButton:
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.parent_view.delete_rule(root.index)
+
 
 ''')
 Builder.load_string('''

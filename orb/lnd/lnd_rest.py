@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-29 06:51:44
+# @Last Modified time: 2022-07-13 09:32:11
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -225,7 +225,7 @@ class LndREST(LndBase):
         for l in r.iter_lines():
             j = json.loads(l.decode())
             j = dict2obj(j)
-            if hasattr(j, 'result'):
+            if hasattr(j, "result"):
                 yield j.result
 
     def get_forwarding_history(

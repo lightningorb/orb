@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 09:57:51
+# @Last Modified time: 2022-07-13 06:57:32
 
 from time import sleep
 from kivy.clock import Clock
@@ -14,15 +14,14 @@ from orb.misc.plugin import Plugin
 from orb.misc import data_manager
 from kivy.utils import platform
 
-ios = platform == "ios"
-
 
 class MaxPolicy:
     half_cap = 0
-    local_balance = 1
+    half_cap_0_depleted = 1
+    local_balance = 2
 
 
-max_policy = MaxPolicy.local_balance
+max_policy = MaxPolicy.half_cap_0_depleted
 
 
 class UpdateMaxHTLC(StoppableThread):
@@ -32,6 +31,10 @@ class UpdateMaxHTLC(StoppableThread):
             max_htlc = round(int(int(c.max_htlc_msat) / 1_000))
             if max_policy == MaxPolicy.half_cap:
                 new_max_htlc = round(int(c.capacity * 0.5))
+            if max_policy == MaxPolicy.half_cap_0_depleted:
+                new_max_htlc = (
+                    round(int(c.capacity * 0.5)) if c.ratio_include_pending > 0.1 else 0
+                )
             elif max_policy == MaxPolicy.local_balance:
                 new_max_htlc = round(int(c.local_balance))
             needs_update = max_htlc != new_max_htlc

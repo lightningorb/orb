@@ -227,6 +227,10 @@
             ContextMenu:
                 id: help_context_menu
                 ContextMenuTextItem:
+                    text: "Documentation"
+                    on_press: app_menu.close_all()
+                    on_release: webbrowser.open('https://lnorb.com/docs')
+                ContextMenuTextItem:
                     text: "About"
                     on_press: app_menu.close_all()
                     on_release: About().open()

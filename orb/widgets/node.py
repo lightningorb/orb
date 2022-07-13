@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-08 02:39:35
+# @Last Modified time: 2022-07-13 09:16:39
 
 from threading import Thread
 
@@ -20,6 +20,7 @@ class Node(Button):
     touch_start = ListProperty([0, 0])
     touch_end = ListProperty([0, 0])
     round = BooleanProperty(False)
+    selected = BooleanProperty(False)
 
     def __init__(self, *args, **kwargs):
         super(Node, self).__init__(*args, **kwargs)
@@ -30,22 +31,36 @@ class Node(Button):
                 )
             ).start()
         App.get_running_app().bind(selection=self.set_selected)
-
-    def set_selected(self, widget, channel):
         if self.channel:
-            sel = channel == self.channel
+            self.channel.bind(active=self.set_active)
+            self.anim_col()
+
+    @property
+    def colour(self):
+        if self.channel.active:
             new_col_str = (
                 "display.node_background_color",
                 "display.node_selected_background_color",
-            )[sel]
-            new_col = prefs_col(new_col_str)
-            col = self.canvas.before.get_group("b")[0]
-            (
-                Animation(
-                    rgba=new_col,
-                    duration=0.2,
-                )
-            ).start(col)
+            )[self.selected]
+            return prefs_col(new_col_str)
+        return (0.1, 0.1, 0.1, 1)
+
+    def set_active(self, widget, active):
+        self.anim_col()
+
+    def set_selected(self, widget, channel):
+        if self.channel:
+            self.selected = channel == self.channel
+            self.anim_col()
+
+    def anim_col(self):
+        col = self.canvas.before.get_group("b")[0]
+        (
+            Animation(
+                rgba=self.colour,
+                duration=0.2,
+            )
+        ).start(col)
 
     def anim_to_pos(self, pos):
         Animation(pos=pos, duration=1).start(self)

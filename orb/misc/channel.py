@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 16:54:55
+# @Last Modified time: 2022-07-13 09:38:52
 
 from threading import Thread, Lock
 
@@ -33,6 +33,8 @@ class Channel(EventDispatcher):
     capacity = NumericProperty(0)
     #: The channel's remote_pubkey
     remote_pubkey = StringProperty("")
+    #: The channel's channel_point
+    channel_point = StringProperty("")
     #: The channel's local_balance
     local_balance = NumericProperty(0)
     #: The channel's remote_balance
@@ -53,6 +55,8 @@ class Channel(EventDispatcher):
     initiator = BooleanProperty(False)
     #: Balanced ratio, i.e the ratio at which the channel needs to be for the node to be balanced
     balanced_ratio = NumericProperty(-1)
+    #: Whether the channel is active or not
+    active = BooleanProperty(True)
 
     # POLICY
 
@@ -75,10 +79,6 @@ class Channel(EventDispatcher):
         self.update(channel)
 
         self._policies_are_bound = False
-
-    @property
-    def active(self):
-        return self.channel.active
 
     def get_policies(self):
         """
@@ -158,6 +158,7 @@ class Channel(EventDispatcher):
         self.commit_fee = channel.commit_fee
         self.unsettled_balance = channel.unsettled_balance
         self.channel_point = channel.channel_point
+        self.active = channel.active
         self.channel = channel
 
     @property

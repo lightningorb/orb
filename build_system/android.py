@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 14:40:12
+# @Last Modified time: 2022-07-13 12:14:21
 
 from fabric import Connection
 from invoke import task, Responder
@@ -131,18 +131,18 @@ def build(
                 object_name=f"customer_builds/{build_name.name}",
             )
 
-    stdout = c.run(f"buildozer android debug", env=env).stdout
-    stdout = c.run(f"buildozer android release", env=env).stdout
-    c.run("cp -f ~/orb/bin/* ~/lnorb_com/")
+    # stdout = c.run(f"buildozer android debug", env=env).stdout
+    # stdout = c.run(f"buildozer android release", env=env).stdout
     # do_upload("*.apk")
-    # c.run(f"buildozer android release", env=env)
+    c.run(f"buildozer android release", env=env)
+    c.run("cp -f ~/orb/bin/* ~/lnorb_com/")
     # do_upload("*.aab")
 
 
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.15.3.2-arm64-v8a_armeabi-v7a-release.aab",
+    release_path="/home/ubuntu/orb/bin/orb-0.16.0.0-arm64-v8a_armeabi-v7a-release.aab",
     password="",
 ):
     keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"

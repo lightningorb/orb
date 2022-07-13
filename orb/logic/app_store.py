@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-02 03:30:12
+# @Last Modified time: 2022-07-12 17:57:22
 
 import os
 import sys
@@ -17,6 +17,7 @@ from kivy.app import App as KivyApp
 from orb.misc.utils import pref_path
 from orb.misc.plugin import Plugin
 from orb.logic.app_store_api import API
+import orb
 import uuid
 import zipfile
 from orb.misc import data_manager
@@ -34,9 +35,14 @@ class Apps(EventDispatcher):
         self.apps = {}
 
     def load_from_disk(self):
-        for d in [pref_path("app"), Path(__file__).parent.parent / "apps"]:
+        user_apps_dir = pref_path("app")
+        default_apps_dir = Path(orb.__file__).parent / "apps"
+        for d in [user_apps_dir, default_apps_dir]:
+            print(f"Searching: {str(d)}")
             for plugin_info_file in d.glob("*/appinfo.yaml"):
+                print(f"Found: {str(plugin_info_file)}")
                 app = LocalApp(plugin_info_file)
+                print(f"Created local app: {app.uuid}")
                 self.apps[app.uuid] = app
 
     def load_all_apps(self):

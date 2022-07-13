@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 11:22:00
+# @Last Modified time: 2022-07-13 09:58:26
 
 from time import time
 from threading import Thread
@@ -86,17 +86,23 @@ class ChannelWidget(Widget):
     @property
     def remote_col(self):
         s = self.selected
-        return Colour("#7f7fcc", alpha=(op(), 1)[s], selected=s).rgba
+        return Colour(
+            ("#7f7fcc"), active=self.channel.active, alpha=(op(), 1)[s], selected=s
+        ).rgba
 
     @property
     def local_col(self):
         s = self.selected
-        return Colour("#7fcc7f", alpha=(op(), 1)[s], selected=s).rgba
+        return Colour(
+            "#7fcc7f", active=self.channel.active, alpha=(op(), 1)[s], selected=s
+        ).rgba
 
     @property
     def pending_col(self):
         s = self.selected
-        return Colour("#ff7f7f", alpha=(op(), 1)[s], selected=s).rgba
+        return Colour(
+            "#ff7f7f", active=self.channel.active, alpha=(op(), 1)[s], selected=s
+        ).rgba
 
     @property
     def selected(self):
@@ -104,7 +110,7 @@ class ChannelWidget(Widget):
             return self._selected
         highlighted = False
         app = App.get_running_app()
-        if not hasattr(app, 'store'):
+        if not hasattr(app, "store"):
             return
         h = app.store.get("highlighter", {})
         text = h.get("highlight", "")
@@ -218,8 +224,6 @@ class ChannelWidget(Widget):
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
         receive = htlc.event_type == "RECEIVE"
-        if receive:
-            pass
         settle = htlc.event_outcome == "settle_event"
         link_fail = htlc.event_outcome == "link_fail_event"
         forward_fail = htlc.event_outcome == "forward_fail_event"

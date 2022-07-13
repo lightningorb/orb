@@ -2,8 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-13 11:49:38
+# @Last Modified time: 2022-07-13 11:06:06
 
+import codecs
 import threading
 from time import sleep
 from traceback import format_exc
@@ -37,22 +38,49 @@ class ChannelsThread(threading.Thread):
                             return
                         print(e)
                         if hasattr(e, "inactive_channel"):
-                            print(dir(e.inactive_channel))
-                            """
-                            inactive_channel {
-                              funding_txid_bytes: "\350\035\010\310\204WC}\341\301\r\345Fn\273>\326\366_\213\251E\334%\346$\2447\301\032\267,"
-                              output_index: 1
-                            }
-                            """
+                            print(e.inactive_channel)
+                            c = e.inactive_channel
+                            funding_txid_bytes = (
+                                c.funding_txid_bytes.encode()
+                                if type(c.funding_txid_bytes) is str
+                                else c.funding_txid_bytes
+                            )
+                            funding_txid_str = codecs.encode(
+                                funding_txid_bytes, "hex"
+                            ).decode()
+                            cp = f"{funding_txid_str}:{c.output_index}"
+                            chan = next(
+                                iter(
+                                    x
+                                    for x in self.inst.channels.channels.values()
+                                    if x.channel_point == cp
+                                ),
+                                None,
+                            )
+                            if chan:
+                                chan.active = False
                         if hasattr(e, "active_channel"):
-                            print(dir(e.active_channel))
-                            """
-                            active_channel {
-                              funding_txid_bytes: "\230&\303o\r\\m\204G\322?N\241\243\336j\333(\333\t\203\']\363\320Y\370\361\005\216\302\313"
-                              output_index: 5
-                            }
-                            type: ACTIVE_CHANNEL
-                            """
+                            print(e.active_channel)
+                            c = e.active_channel
+                            funding_txid_bytes = (
+                                c.funding_txid_bytes.encode()
+                                if type(c.funding_txid_bytes) is str
+                                else c.funding_txid_bytes
+                            )
+                            funding_txid_str = codecs.encode(
+                                funding_txid_bytes, "hex"
+                            ).decode()
+                            cp = f"{funding_txid_str}:{c.output_index}"
+                            chan = next(
+                                iter(
+                                    x
+                                    for x in self.inst.channels.channels.values()
+                                    if x.channel_point == cp
+                                ),
+                                None,
+                            )
+                            if chan:
+                                chan.active = True
                         if hasattr(e, "open_channel"):
                             o = e.open_channel
                             self.inst.channels.get()

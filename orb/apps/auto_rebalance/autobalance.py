@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 09:36:49
+# @Last Modified time: 2022-07-13 06:52:53
 
 import os
 from time import sleep
@@ -416,9 +416,9 @@ class IgnoreView(BaseView):
 
 class AutoBalance(Plugin):
     def main(self):
-        kv_path = (Path(__file__).parent / "autobalance.kv").as_posix()
-        Builder.unload_file(kv_path)
-        Builder.load_file(kv_path)
+        # kv_path = (Path(__file__).parent / "autobalance.kv").as_posix()
+        # Builder.unload_file(kv_path)
+        # Builder.load_file(kv_path)
         self.view = ABView()
         self.view.open()
 

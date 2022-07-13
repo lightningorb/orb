@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-28 14:50:53
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-04 13:27:00
+# @Last Modified time: 2022-07-13 06:33:15
 
 import os
 import sys
@@ -14,6 +14,7 @@ from kivy.utils import platform
 
 is_dev = "main.py" in sys.argv[0]
 orig_stdout = sys.stdout.write
+
 
 class AppCommon(MDApp):
     consumables = deque()
@@ -99,15 +100,11 @@ class AppCommon(MDApp):
                 kvs_found = False
                 for path in d.rglob("*.kv"):
                     kvs_found = True
-                    if apps_path.as_posix() in path.as_posix():
-                        # apps handle their kvs themselves
-                        continue
                     print(f"compiling: {path}")
                     kv = path.open().read().replace("\\n", "\\\n")
                     kvs.append(f"Builder.load_string('''\n{kv}\n''')")
                 return kvs_found
 
-            apps_path = main_dir / "orb/apps"
             kvs_found = load_kvs_from(main_dir / "orb")
             kvs_found |= load_kvs_from(main_dir / "third_party")
             if kvs_found:
