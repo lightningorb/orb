@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-15 13:22:44
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 12:27:52
+# @Last Modified time: 2022-07-14 09:22:38
 
 from collections import deque
-
+import sys
 from kivy.app import App
 from kivy.clock import (
     Clock,
@@ -21,7 +21,7 @@ keep = lambda _: _
 keep(ConsoleInput)
 keep(ConsoleOutput)
 
-MAX_TIME = 1 / 5
+MAX_TIME = 1 / 5.0
 
 
 class ConsoleScreen(Screen):
@@ -77,6 +77,7 @@ class ConsoleScreen(Screen):
         Print to the console's output section.
         Print the last line on the status line.
         """
+        _print = lambda x: (sys.stdout.orig_write(str(x) + "\n"), sys.stdout.flush())
         app = App.get_running_app()
         if hasattr(app, "consumables"):
             while app.consumables and time() < (Clock.get_time() + MAX_TIME):

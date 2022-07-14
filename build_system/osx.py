@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:40:47
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-29 13:10:13
+# @Last Modified time: 2022-07-13 18:02:39
 
 from invoke import task
 import os
@@ -19,6 +19,12 @@ def requirements(c, env=dict(PATH=os.environ["PATH"])):
 def run(c, env=dict(PATH=os.environ["PATH"])):
     with c.cd("dist/"):
         c.run(f"./{name}")
+
+
+@task
+def cython(c, env=dict(PATH=os.environ["PATH"])):
+    c.run(f"python3 build_system/setup.py build_ext --inplace", env=env)
+    c.run(f"python3 main.py", env=env)
 
 
 @task

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 09:38:07
+# @Last Modified time: 2022-07-13 15:40:53
 
 from traceback import print_exc
 from threading import Thread
@@ -18,7 +18,6 @@ from kivy.app import App
 
 from orb.misc.channel import Channel
 from orb.misc.utils import pref
-from orb.misc import data_manager
 from orb.logic.balanced_ratio import BalancedRatioMixin
 
 

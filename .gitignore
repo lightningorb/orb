@@ -1,3 +1,5 @@
+*.c
+*.so
 .buildozer/
 bin/
 lnappstore.zip

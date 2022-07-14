@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-17 08:34:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 09:33:33
+# @Last Modified time: 2022-07-13 15:08:13
 
 import os
 import re
@@ -24,7 +24,10 @@ from orb.lnd.lnd_conf import LNDConf as LNDConfParser
 def md5checksum(fname):
     md5 = hashlib.md5()
     f = open(fname, "r")
-    while chunk := f.read(4096):
+    while True:
+        chunk = f.read(4096)
+        if not chunk:
+            break
         md5.update(chunk.encode())
     return md5.hexdigest()
 

@@ -1,58 +1,5 @@
 from kivy.lang import Builder
 Builder.load_string('''
-<OrbConnector>:
-    orientation: 'vertical'
-    ScreenManager:
-        id: sm
-        OrbConnectorMain:
-        UmbrelNode:
-        VoltageNode:
-        ConnectionWizard:
-        ConnectionSettings:
-        ExportConnectionSettings:
-        ImportConnectionSettings:
-        ConsoleScreen:
-    StatusLine
-        id: status_line
-''')
-Builder.load_string('''
-<OrbConnectorMain>:
-    name: "main"
-    FitImage:
-        source: "images/bg.jpeg"
-        opacity: 0.1
-    GridLayout:
-        id: grid
-        cols:1
-        Splitter:
-            horizontal: True
-            height: dp(5)
-            size_hint_y: 1
-        Label:
-            text: 'The Lightning Network'
-            multiline: True
-            font_name: 'DejaVuSans'
-            font_size: '24sp'
-            size_hint_y: None
-            height: self.texture_size[1]
-        Label:
-            text: 'just got way more fun!'
-            multiline: True
-            font_name: 'DejaVuSans'
-            font_size: '24sp'
-            size_hint_y: None
-            height: self.texture_size[1]
-        Splitter:
-            horizontal: True
-            height: dp(5)
-            size_hint_y: 1
-    MDFloatingActionButtonSpeedDial:
-        data: app.data
-        root_button_anim: True
-        callback: root.add_released
-        icon: 'orbit'
-''')
-Builder.load_string('''
 <AttributeEditor>:
     orientation: "vertical"
     padding: "8dp"
@@ -858,6 +805,59 @@ Builder.load_string('''
     StatusLineOutput:
         id: line_output
 
+''')
+Builder.load_string('''
+<OrbConnector>:
+    orientation: 'vertical'
+    ScreenManager:
+        id: sm
+        OrbConnectorMain:
+        UmbrelNode:
+        VoltageNode:
+        ConnectionWizard:
+        ConnectionSettings:
+        ExportConnectionSettings:
+        ImportConnectionSettings:
+        ConsoleScreen:
+    StatusLine
+        id: status_line
+''')
+Builder.load_string('''
+<OrbConnectorMain>:
+    name: "main"
+    FitImage:
+        source: "images/bg.jpeg"
+        opacity: 0.1
+    GridLayout:
+        id: grid
+        cols:1
+        Splitter:
+            horizontal: True
+            height: dp(5)
+            size_hint_y: 1
+        Label:
+            text: 'The Lightning Network'
+            multiline: True
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Label:
+            text: 'just got way more fun!'
+            multiline: True
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Splitter:
+            horizontal: True
+            height: dp(5)
+            size_hint_y: 1
+    MDFloatingActionButtonSpeedDial:
+        data: app.data
+        root_button_anim: True
+        callback: root.add_released
+        icon: 'orbit'
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
@@ -2977,7 +2977,7 @@ Builder.load_string('''
 
 <HUDBTCPrice>:
     size_hint: [None, None]
-    size: [300, 150]
+    size: [dp(200), dp(100)]
     canvas.before:
         Color:
             rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
@@ -3010,7 +3010,7 @@ Builder.load_string('''
     Label:
         id: rate
         pos: [0, root.height - self.texture_size[1]-30]
-        font_size: '10sp'
+        font_size: '13sp'
         size_hint: [None, None]
         markup: True
         size: [self.texture_size[0]+40, self.texture_size[1]+30]

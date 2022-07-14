@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 13:22:46
+# @Last Modified time: 2022-07-13 15:42:07
 
 from kivy.app import App
 from kivymd.uix.tab import MDTabsBase
@@ -12,6 +12,7 @@ from kivy.properties import StringProperty
 from kivy.uix.spinner import SpinnerOption
 from kivymd.uix.floatlayout import MDFloatLayout
 
+from orb.misc.utils import pref
 from orb.misc.utils import mobile
 from orb.misc.decorators import guarded
 from orb.misc.macaroon_secure import MacaroonSecure

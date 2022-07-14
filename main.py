@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 17:57:48
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-04 13:25:59
+# @Last Modified time: 2022-07-13 21:52:47
 
 import sys
 
@@ -17,7 +17,7 @@ from traceback import format_exc
 from pathlib import Path
 
 from kivy.uix.textinput import TextInput
-from orb.core.logging import get_logger
+from orb.core.orb_logging import get_logger
 from kivy.app import App
 
 main_logger = get_logger(__name__)
@@ -61,8 +61,8 @@ error = ""
 
 from orb.dialogs.umbrel_node.umbrel_node import UmbrelNode
 from orb.dialogs.voltage_node.voltage_node import VoltageNode
-from orb.orb_connector_main import OrbConnectorMain
-from orb.orb_connector_app import OrbConnectorApp
+from orb.connector.orb_connector_main import OrbConnectorMain
+from orb.connector.orb_connector_app import OrbConnectorApp
 from orb.misc.monkey_patch import do_monkey_patching
 
 

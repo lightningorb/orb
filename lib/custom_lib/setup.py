@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-09 13:50:14
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 08:46:14
+# @Last Modified time: 2022-07-13 14:30:26
 
 from pathlib import Path
 from os import getenv
@@ -40,6 +40,7 @@ else:
     FILES = [fn.with_suffix(".c") for fn in FILES]
 
 print("DOING THE BUILDDD")
+print(FILES)
 # create the extension
 setup(
     name="custom_lib",
@@ -47,7 +48,7 @@ setup(
     cmdclass={"build_ext": build_ext},
     install_requires=INSTALL_REQUIRES,
     setup_requires=SETUP_REQUIRES,
-    ext_modules=cythonize([str(fn) for fn in FILES]),
+    ext_modules=[Extension(x.stem, [x.as_posix()]) for x in FILES],
     extras_require={
         "dev": [],
         "ci": [],

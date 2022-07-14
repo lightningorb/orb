@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-26 18:25:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 11:21:17
+# @Last Modified time: 2022-07-13 15:05:47
 
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.uix.splitter import Splitter
+from kivy.app import App
 
 
 class ConsoleSplitter(Splitter):

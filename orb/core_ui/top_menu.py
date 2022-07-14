@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-21 10:11:54
+# @Last Modified time: 2022-07-13 15:04:56
 
 from traceback import format_exc
 
@@ -52,7 +52,7 @@ class TopMenu(AppMenu):
                 def run(widget):
                     kivyApp = KivyApp.get_running_app()
                     kivyApp.root.ids.app_menu.close_all()
-                    self.exec(widget.app.menu_run_code)
+                    self.execute(widget.app.menu_run_code)
                     return True
 
                 widget = ContextMenuTextItem(text=c[d], on_release=run)
@@ -76,7 +76,7 @@ class TopMenu(AppMenu):
         """
         data_manager.data_man.menu_visible = True
 
-    def exec(self, text):
+    def execute(self, text):
         try:
             exec(text)
         except:

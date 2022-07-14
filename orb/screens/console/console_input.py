@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 12:24:46
+# @Last Modified time: 2022-07-13 15:05:23
 
 import uuid
 from traceback import format_exc
@@ -40,14 +40,14 @@ class ConsoleInput(CodeInput):
                 return False
         return super(ConsoleInput, self).on_touch_down(touch)
 
-    def exec(self, text):
+    def execute(self, text):
         try:
             exec(text)
         except:
             print(format_exc())
 
     def run(self, *_):
-        self.exec(self.text)
+        self.execute(self.text)
 
     def open_file(self, *_):
         dialog = ConsoleFileChooser()
@@ -74,7 +74,7 @@ class ConsoleInput(CodeInput):
     def keyboard_on_key_up(self, window, keycode):
         App.get_running_app().store.put("console_input", text=self.text)
         if self.do_eval:
-            self.exec(self.selection_text)
+            self.execute(self.selection_text)
             return True
         # super(ConsoleInput, self).keyboard_on_key_up(window, keycode)
         return True

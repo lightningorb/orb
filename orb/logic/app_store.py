@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-12 17:57:22
+# @Last Modified time: 2022-07-14 06:46:13
 
 import os
 import sys
@@ -49,7 +49,7 @@ class Apps(EventDispatcher):
         for app in self.apps.values():
             app._import()
             app.load()
-            # app.add_to_ui()
+            app.debug()
 
     def get_remote_apps(self):
         print("Requesting available apps")
@@ -143,6 +143,16 @@ class LocalApp(EventDispatcher):
         self.classname = None
         self.is_remote = False
 
+    def debug(self):
+        print(
+            f"""Main Python file: {self.py}
+            Directory: {self.directory}
+            Module name: {self.module_name}
+            Class Name: {self.classname}
+            Is Remote: {self.is_remote}
+            """
+        )
+
     @property
     def menu_run_code(self):
         code = dedent(
@@ -175,9 +185,10 @@ class LocalApp(EventDispatcher):
         cls = next(
             iter(
                 [
-                    cls
-                    for cls in Plugin.__subclasses__()
-                    if cls.__module__ == self.module_name
+                    c
+                    for c in Plugin.__subclasses__()
+                    if (c.__module__).split(".")[-1] == self.module_name
+                    # hack: this means apps need unique module names; not good.
                 ]
             ),
             None,
@@ -189,12 +200,6 @@ class LocalApp(EventDispatcher):
             self.classname = cls.__name__
             self.instance = inst
             self.instance.set_app(self)
-
-    # def add_to_ui(self):
-    # self.instance.add_to_ui()
-
-    # def remove_from_ui(self):
-    # self.instance.remove_from_ui()
 
     def uninstall(self):
         if self.module_name in sys.modules:

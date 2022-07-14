@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 22:43:48
+# @Last Modified time: 2022-07-13 23:39:53
 
 import threading
 import requests
@@ -295,8 +295,7 @@ class HUDMempool(BorderedLabel):
         @silent
         def func():
             fees = mempool.get_fees()
-            text = f"""\
-Low priority: {fees["hourFee"]} sat/vB
+            text = f"""Low priority: {fees["hourFee"]} sat/vB
 Medium priority: {fees["halfHourFee"]} sat/vB
 High priority: {fees["fastestFee"]} sat/vB"""
             update_gui(text)

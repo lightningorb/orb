@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-18 19:01:49
+# @Last Modified time: 2022-07-14 07:04:27
 
 from threading import Thread
 
@@ -51,7 +51,7 @@ class FeeWidget(Widget):
             self.circle_1 = Line(circle=(150, 150, 50))
             self.circle_2 = Line(circle=(150, 150, 50))
             self.line = Line(points=[0, 0, 0, 0])
-            Color(0.5, 0.5, 0.5, 0.5)
+            Color(255 / 255.0, 164 / 255.0, 0 / 255.0, 0.4)
             self.line_balanced_ratio = Line(points=[0, 0, 0, 0])
 
         self.label = FeeWidgetLabel(text="", color=(0.5, 1, 0.5, 0))

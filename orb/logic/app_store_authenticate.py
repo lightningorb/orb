@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:47:33
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 15:13:20
+# @Last Modified time: 2022-07-13 15:01:28
 
 import requests
 import json
@@ -65,27 +65,3 @@ def login(username, password):
 
 def get_password():
     return Lnd().sign_message("orb_password")
-
-
-def authenticate():
-    creds = get_creds()
-    lnd = Lnd()
-    print("getting identity")
-    username = lnd.get_info().identity_pubkey
-    print("signing password")
-    password = lnd.sign_message("orb_password")
-    # if we have creds then return
-    if False:
-        return creds
-    else:
-        # first try logging in
-        login(username, password)
-        if r.status_code == 200 and "access_token" in resp:
-            set_creds(resp)
-            print("login successful")
-        elif r.status_code == 401 and resp.get("detail") == "User does not exist":
-            register(username, password)
-        else:
-            print(r.status_code)
-            print("Problem logging in! Maybe your token is expired. Please try again.")
-            clear_creds()

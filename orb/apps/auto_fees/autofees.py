@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-31 06:40:46
+# @Last Modified time: 2022-07-14 06:51:11
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -423,9 +423,9 @@ class MatchView(BaseView):
 
 class AutoFeesPlugin(Plugin):
     def main(self):
-        kv_path = (Path(__file__).parent / "autofees.kv").as_posix()
-        Builder.unload_file(kv_path)
-        Builder.load_file(kv_path)
+        # kv_path = (Path(__file__).parent / "autofees.kv").as_posix()
+        # Builder.unload_file(kv_path)
+        # Builder.load_file(kv_path)
         self.view = AFView()
         self.view.open()
 

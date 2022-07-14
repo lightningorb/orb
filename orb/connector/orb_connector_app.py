@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 23:12:38
+# @Last Modified time: 2022-07-14 12:16:57
 
 import shutil
 from pathlib import Path
@@ -21,7 +21,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from orb.misc.utils import mobile
 from orb.misc.macaroon import Macaroon
 from orb.misc.decorators import guarded
-from orb.orb_connector import OrbConnector
+from orb.connector.orb_connector import OrbConnector
 from orb.core_ui.app_common import AppCommon
 from orb.misc.utils import get_available_nodes
 from orb.misc.macaroon_secure import MacaroonSecure
@@ -43,7 +43,7 @@ class OrbConnectorApp(AppCommon):
     def add_public_testnet_node(self, *args):
         self.node_settings["host.hostname"] = "orb-public.t.voltageapp.io"
         self.node_settings["lnd.macaroon_admin"] = MacaroonSecure.init_from_plain(
-            "0201036C6E6402F801030A102E2F33256E0173F3226178B99CC38AD01201301A160A0761646472657373120472656164120577726974651A130A04696E666F120472656164120577726974651A170A08696E766F69636573120472656164120577726974651A210A086D616361726F6F6E120867656E6572617465120472656164120577726974651A160A076D657373616765120472656164120577726974651A170A086F6666636861696E120472656164120577726974651A160A076F6E636861696E120472656164120577726974651A140A057065657273120472656164120577726974651A180A067369676E6572120867656E657261746512047265616400000620948B88E4F7ABB8F5CC0BD78FD31AAE9994809C29B8B704F86D893E6B850FFC82".encode()
+            "0201036C6E640278030A102F2F33256E0173F3226178B99CC38AD01201301A0F0A07616464726573731204726561641A0C0A04696E666F1204726561641A0F0A076D6573736167651204726561641A100A086F6666636861696E1204726561641A0F0A076F6E636861696E1204726561641A0D0A05706565727312047265616400000620299220FACE39C4B66A6E0CC0B5EA88389CB52AD2E5302D4D69C0DE95E4150C1D".encode()
         ).macaroon_secure.decode()
         self.node_settings["lnd.network"] = "testnet"
         self.node_settings["lnd.protocol"] = "rest"

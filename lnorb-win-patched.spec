@@ -40,7 +40,7 @@ a = Analysis(
         ("VERSION", "."),
     ],
     hiddenimports=[
-        "orb.kvs",
+        "orb.core_ui.kvs",
         "orb.misc",
         "kivymd.effects.stiffscroll.StiffScrollEffect",
         "pkg_resources",

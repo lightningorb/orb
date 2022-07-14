@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-28 14:50:53
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 06:33:15
+# @Last Modified time: 2022-07-14 09:09:50
 
 import os
 import sys
@@ -14,6 +14,7 @@ from kivy.utils import platform
 
 is_dev = "main.py" in sys.argv[0]
 orig_stdout = sys.stdout.write
+sys.stdout.orig_write = sys.stdout.write
 
 
 class AppCommon(MDApp):
@@ -87,7 +88,7 @@ class AppCommon(MDApp):
 
     def load_kvs(self):
         """
-        Compile all the kvs into an orb/kvs.py file.
+        Compile all the kvs into an orb/core_ui/kvs.py file.
         This greatly simplifies deployment.
         """
         if is_dev:
@@ -108,11 +109,11 @@ class AppCommon(MDApp):
             kvs_found = load_kvs_from(main_dir / "orb")
             kvs_found |= load_kvs_from(main_dir / "third_party")
             if kvs_found:
-                path = main_dir / "orb/kvs.py"
+                path = main_dir / "orb/core_ui/kvs.py"
                 print(f"Saving to: {path}")
                 open(path, "w").write("\n".join(kvs))
 
-        import orb.kvs
+        import orb.core_ui.kvs
 
     def override_stdout(self):
         """
@@ -130,6 +131,7 @@ class AppCommon(MDApp):
             content = " ".join(args)
             # print them out the regular way
             orig_stdout(content)
+            sys.stdout.flush()
             # print them out to Orb's console
             self.consumables.append(content)
             # console_output(content)

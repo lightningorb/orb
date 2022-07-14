@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-28 07:16:51
+# @Last Modified time: 2022-07-13 22:36:00
 
 try:
     # not all actions install all requirements
@@ -131,7 +131,7 @@ def build_common(c, env, sep=":"):
     print("DATA PATHS")
     print(data)
     print("=" * 50)
-    hidden_imports = "--hidden-import plyer.platforms.macosx.uniqueid --hidden-import orb.kvs --hidden-import orb.misc --hidden-import jaraco.text --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
+    hidden_imports = "--hidden-import plyer.platforms.macosx.uniqueid --hidden-import orb.core_ui.kvs --hidden-import orb.misc --hidden-import jaraco.text --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
     pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --{'windowed' if sep == ':' else 'console'} "
     expiry = arrow.utcnow().shift(years=1)
     c.run(

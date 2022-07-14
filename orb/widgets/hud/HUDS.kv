@@ -129,7 +129,7 @@
 
 <HUDBTCPrice>:
     size_hint: [None, None]
-    size: [300, 150]
+    size: [dp(200), dp(100)]
     canvas.before:
         Color:
             rgba: [ a*b for a,b in zip(prefs_col('display.channels_background_color'), [1,1,1,root.alpha*0.7])]
@@ -162,7 +162,7 @@
     Label:
         id: rate
         pos: [0, root.height - self.texture_size[1]-30]
-        font_size: '10sp'
+        font_size: '13sp'
         size_hint: [None, None]
         markup: True
         size: [self.texture_size[0]+40, self.texture_size[1]+30]

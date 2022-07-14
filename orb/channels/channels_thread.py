@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 11:06:06
+# @Last Modified time: 2022-07-14 08:42:23
 
 import codecs
 import threading
@@ -59,6 +59,8 @@ class ChannelsThread(threading.Thread):
                             )
                             if chan:
                                 chan.active = False
+                            else:
+                                print(f"Channel point not found: {cp}")
                         if hasattr(e, "active_channel"):
                             print(e.active_channel)
                             c = e.active_channel
@@ -81,6 +83,8 @@ class ChannelsThread(threading.Thread):
                             )
                             if chan:
                                 chan.active = True
+                            else:
+                                print(f"Channel point not found: {cp}")
                         if hasattr(e, "open_channel"):
                             o = e.open_channel
                             self.inst.channels.get()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 23:53:41
+# @Last Modified time: 2022-07-14 09:24:39
 
 import os
 import sys
@@ -27,7 +27,7 @@ from kivy.properties import NumericProperty
 from kivy.storage.jsonstore import JsonStore
 
 from orb.logic.cron import Cron
-from orb.core.logging import get_logger
+from orb.core.orb_logging import get_logger
 from orb.core_ui.app_common import AppCommon
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.misc.utils import pref
@@ -218,7 +218,10 @@ class OrbApp(AppCommon):
         debug("loading main layout")
         self.main_layout = MainLayout()
         from kivy.clock import Clock
-        Clock.schedule_interval(self.main_layout.ids.sm.get_screen('console').consume, 0)
+
+        Clock.schedule_interval(
+            self.main_layout.ids.sm.get_screen("console").consume, 0
+        )
 
         debug("showing license info")
         self.show_licence_info()

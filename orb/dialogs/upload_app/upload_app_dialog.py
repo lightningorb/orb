@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:26:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-22 11:19:10
+# @Last Modified time: 2022-07-13 15:07:34
 
 import base64
 import time
@@ -63,18 +63,18 @@ class UploadAppDialog(PopupDropShadow):
         self.ids.drop_item.text = app.name
 
         self.menu.dismiss()
-        self.print(f"App selected: {app.name}")
-        self.print("Checking...")
+        self.sprint(f"App selected: {app.name}")
+        self.sprint("Checking...")
         self.upload_app = UploadApp(app)
         validation = self.upload_app.validate_for_upload()
         if validation == "ok":
-            self.print("App is valid for archive creation")
+            self.sprint("App is valid for archive creation")
             self.ids.archive_button.disabled = False
         else:
-            self.print(validation)
+            self.sprint(validation)
             return
 
-    def print(self, txt):
+    def sprint(self, txt):
         self.ids.output.text += f"{txt}\n"
 
     def sign(self):
@@ -82,18 +82,18 @@ class UploadAppDialog(PopupDropShadow):
         self.upload_app.sign()
 
     def archive(self):
-        self.print("Starting archiving")
+        self.sprint("Starting archiving")
         self.menu.dismiss()
         if self.upload_app.zip():
-            self.print("App is valid for uplading to the app-store")
+            self.sprint("App is valid for uplading to the app-store")
             self.ids.upload_button.disabled = False
         else:
-            self.print("Archive creation failed")
+            self.sprint("Archive creation failed")
             self.ids.upload_button.disabled = True
 
     def upload(self):
-        self.print("Starting archive upload")
+        self.sprint("Starting archive upload")
         self.menu.dismiss()
         ret = self.upload_app.upload()
-        self.print(str(ret))
-        self.print("Archive uploaded")
+        self.sprint(str(ret))
+        self.sprint("Archive uploaded")

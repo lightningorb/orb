@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-05 10:19:41
+# @Last Modified time: 2022-07-13 15:04:13
 
 import threading
 from time import sleep
@@ -101,18 +101,18 @@ class PayScreen(PopupDropShadow):
                 self.thread_n = thread_n
                 thread_manager.add_thread(self)
 
-            def print(self, *args):
+            def sprint(self, *args):
                 print(f'PT{self.thread_n}: {" ".join(args)}')
 
             def run(self):
-                self.print("Running payment thread")
+                self.sprint("Running payment thread")
                 try:
                     self.__run()
                 except:
-                    self.print("exception in payment thread")
+                    self.sprint("exception in payment thread")
                     print(format_exc())
                 finally:
-                    self.print("stopping payment thread in finally")
+                    self.sprint("stopping payment thread in finally")
                     self.stop()
 
             def __run(self):
@@ -135,11 +135,11 @@ class PayScreen(PopupDropShadow):
                         payment_request = Lnd().decode_request(invoice.raw)
                     else:
                         if not all_invoices:
-                            self.print("no more usable invoices")
-                            self.print(f"THREAD {self.thread_n} EXITING")
+                            self.sprint("no more usable invoices")
+                            self.sprint(f"THREAD {self.thread_n} EXITING")
                             return
                         elif not usable_invoices:
-                            self.print("all invoices are in-flight, sleeping")
+                            self.sprint("all invoices are in-flight, sleeping")
                             sleep(30)
                             continue
                     if not auto:
@@ -158,7 +158,7 @@ class PayScreen(PopupDropShadow):
                             if chan_id:
                                 chan_ignore.add(chan_id)
                     if not chan_id:
-                        self.print("no more channels left to rebalance")
+                        self.sprint("no more channels left to rebalance")
                         sleep(60)
                     if chan_id:
                         try:
@@ -173,7 +173,7 @@ class PayScreen(PopupDropShadow):
                                 payment_request_raw=invoice.raw,
                             )
                         except:
-                            self.print("Exception in pay_thread")
+                            self.sprint("Exception in pay_thread")
                             print(format_exc())
                             status = PaymentStatus.exception
 
@@ -195,9 +195,9 @@ class PayScreen(PopupDropShadow):
                             or status == PaymentStatus.max_paths_exceeded
                         ):
                             if status == PaymentStatus.no_routes:
-                                self.print("no routes found")
+                                self.sprint("no routes found")
                             if status == PaymentStatus.max_paths_exceeded:
-                                self.print("max paths exceeded")
+                                self.sprint("max paths exceeded")
                             with invoices_lock:
                                 self.inst.inflight.remove(invoice)
                         else:

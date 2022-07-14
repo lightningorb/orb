@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2021-12-31 05:47:11
+# @Last Modified time: 2022-07-13 15:03:32
+
+from kivy.uix.textinput import TextInput
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-
 from orb.misc.decorators import guarded
 from orb.lnd import Lnd
+from kivy.metrics import dp
 
 
 class OpenChannelScreen(PopupDropShadow):
