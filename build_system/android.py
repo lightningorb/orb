@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 12:38:00
+# @Last Modified time: 2022-07-14 23:34:01
 
 import os
 from hashlib import sha256
@@ -14,6 +14,7 @@ from invoke import task, Responder
 
 to_compile = set(
     [
+        "orb/orb_main.py",
         "orb/lnd/lnd.py",
         "orb/lnd/lnd_base.py",
         "orb/lnd/lnd_grpc.py",
@@ -98,7 +99,7 @@ def build(
                 object_name=f"customer_builds/{build_name.name}",
             )
 
-    stdout = c.run(f"buildozer android debug", env=env).stdout
+    # stdout = c.run(f"buildozer android debug", env=env).stdout
     stdout = c.run(f"buildozer android release", env=env).stdout
     # do_upload("*.apk")
     c.run("cp -f ~/orb/bin/* ~/lnorb_com/")
@@ -108,7 +109,7 @@ def build(
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.16.0.1-arm64-v8a_armeabi-v7a-release.aab",
+    release_path="/home/ubuntu/orb/bin/orb-0.16.0.3-arm64-v8a_armeabi-v7a-release.aab",
     password="",
 ):
     keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
@@ -168,18 +169,25 @@ def cython(c, env=os.environ):
         pyx = Path(f"/home/ubuntu/orb/lib/custom_lib/{uid}.pyx")
         py = Path(f"/home/ubuntu/orb/{str(p)}")
         with py.open() as pyf:
-            pycontent = "\n".join(
-                ["# cython: language_level=3", "echo 'from {uid} import *"]
-                + pyf.readlines()
-            )
+            pycontent = "\n".join(["# cython: language_level=3"] + pyf.readlines())
+        write = False
         if pyx.exists():
-            with pyx.open("w") as pyxf:
+            with pyx.open("r") as pyxf:
                 pyxcontent = pyxf.read()
-                if (
-                    sha256(pycontent.encode()).hexdigest()
-                    != sha256(pyxcontent.encode()).hexdigest()
-                ):
-                    pyxf.write(pyxcontent)
+            if (
+                sha256(pycontent.encode()).hexdigest()
+                != sha256(pyxcontent.encode()).hexdigest()
+            ):
+                write = True
+        else:
+            write = True
+        if write:
+            with pyx.open("w") as pyxf:
+                pyxf.write(pycontent)
+        with pyx.open("w") as pyxf:
+            pyxf.write(pycontent)
+        with py.open("w") as pyf:
+            pyf.write(f"from {uid} import *")
 
 
 @task

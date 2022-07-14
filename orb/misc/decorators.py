@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-26 18:25:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 11:15:40
+# @Last Modified time: 2022-07-14 14:10:19
 
 import functools
 
 from traceback import format_exc
+from orb.lnd import Lnd
 
 
 def guarded(func):
@@ -28,5 +29,14 @@ def silent(func):
             return func(*args, **kwargs)
         except:
             pass
+
+    return wrapper_decorator
+
+
+def public_restrict(func):
+    @functools.wraps(func)
+    def wrapper_decorator(*args, **kwargs):
+        if Lnd().get_info().alias.lower() == "orb-public":
+            raise Exception("Operation not permitted on public node")
 
     return wrapper_decorator

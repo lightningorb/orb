@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-12 06:59:12
+# @Last Modified time: 2022-07-14 15:54:33
 
 import base64
 import time
@@ -13,6 +13,7 @@ from kivy.clock import mainthread
 
 from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
+from orb.misc.decorators import guarded, public_restrict
 from orb.components.popup_drop_shadow import PopupDropShadow
 
 
@@ -31,6 +32,8 @@ class MailDialog(PopupDropShadow):
         self.get_mail()
         super(MailDialog, self).open(self, *args)
 
+    @guarded
+    @public_restrict
     def get_mail(self):
         @mainthread
         def update(text):
