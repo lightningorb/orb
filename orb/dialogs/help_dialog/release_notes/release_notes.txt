@@ -1,6 +1,13 @@
 0.16.0
 ----
 
+remove hardcoded string
+
+
+v0.16.0
+-------
+
+version bump
 multiplatform compat
 submitted review to play store
 cython migration complete
