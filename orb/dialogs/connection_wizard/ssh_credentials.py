@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 06:35:32
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 08:50:17
+# @Last Modified time: 2022-07-15 14:40:07
 
 from kivy.properties import StringProperty
 from kivy.app import App
@@ -44,7 +44,6 @@ class SSHCredentials(Tab):
             )
         if not self.certificate_text_field:
             self.certificate_text_field = MDTextField(
-                text="/Users/orb/.rln/lnd4/lnd4.pem",
                 helper_text="Certificate Path",
                 helper_text_mode="persistent",
                 height=dp(60),
