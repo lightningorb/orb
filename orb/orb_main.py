@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 22:20:13
+# @Last Modified time: 2022-07-15 13:52:47
 
 import sys
 
@@ -39,8 +39,6 @@ from orb.misc.utils import get_available_nodes
 import argparse
 
 debug("importing orb modules")
-
-from orb.core_ui.hidden_imports import *
 
 
 error = ""
