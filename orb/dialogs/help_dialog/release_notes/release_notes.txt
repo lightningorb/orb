@@ -1,6 +1,44 @@
-0.15.2
+0.16.0
 ----
 
+multiplatform compat
+submitted review to play store
+cython migration complete
+lots of changes
+obfuscated android build, and many changes
+change user group link to firewall ink
+added aab code signing and app icon
+add desktop image to site
+build android in debug and release mode, and upload to S3
+added android image to site
+apks on site
+copy apk to S3 after build
+ignored channels during payments were not being ignored
+multiple console outputs working correctly
+show platform name in about dialog
+added ability to launch directly into a node with --pubkey flag
+orb connector makes it easier to connect to, and manage nodes
+face lift of all dialogs, ingest invoices automatically pastes from
+    clipboard, sorting channels happens live
+cleaner ingest invoices dialog, auto-paste invoices that are in the
+    Clipboard
+removed old video_library code
+Audio not working on android [#247]
+on android app, keep screen on
+android tweaks
+Android build [#244]
+add internet permission to android build
+android more stable - still not connecting
+launches on andoird
+added missing dependencies
+moved to proper main.py
+calc app running with imports
+android build system
+added
+added
+added calc
+added buildozer spec file
+release hotfix
 missing import in main
 
 
