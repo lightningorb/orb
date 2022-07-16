@@ -1,6 +1,7 @@
 0.16.1
 ----
 
+version bump
 updated release notes
 fix ubuntu build
 updated release notes
