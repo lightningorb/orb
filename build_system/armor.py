@@ -85,7 +85,7 @@ def ubuntu_boostrap_3_9():
 #!/bin/bash
 
 apt-get update;
-apt-get -y install python3-pip;
+apt-get -y install python3-pip python3.9-dev xsel;
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 apt install software-properties-common -y;
 add-apt-repository ppa:deadsnakes/ppa -y;
@@ -99,8 +99,7 @@ pip3.9 install PyYaml==6.0;
 pip3.9 install simplejson==3.17.6;
 pip3.9 install Kivy==2.0.0;
 pip3.9 install google-api-python-client;
-pip3.9 install grpcio;
-# pip3.9 install ffpyplayer==4.2.0;
+pip3.9 install grpcio
 pip3.9 install python-dateutil==2.8.2;
 pip3.9 install pyinstaller==4.9;
 pip3.9 install pyarmor==6.6.2;
@@ -108,6 +107,8 @@ pip3.9 install fabric;
 pip3.9 install plyer;
 pip3.9 install semver;
 pip3.9 install memoization;
+pip3.9 install --force-reinstall --no-binary :all: cffi
+pip3.9 install --upgrade --force-reinstall pillow
     """
 
 

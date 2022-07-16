@@ -12,7 +12,7 @@ from pathlib import Path
 from kivymd.app import MDApp
 from kivy.utils import platform
 
-is_dev = "main.py" in sys.argv[0]
+is_dev = os.environ.get("IS_DEV", False)
 orig_stdout = sys.stdout.write
 sys.stdout.orig_write = sys.stdout.write
 
