@@ -8,7 +8,6 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.core.window import Window
 from kivy.uix.behaviors import ButtonBehavior
-from kivy.lang import Builder
 from kivy.clock import Clock
 from functools import partial
 
@@ -85,10 +84,12 @@ class ContextMenu(GridLayout, AbstractMenu):
     def __init__(self, *args, **kwargs):
         super(ContextMenu, self).__init__(*args, **kwargs)
         self.orig_parent = None
+        self.mod = 0
         # self._on_visible(False)
 
     def hide(self):
         self.visible = False
+
 
     def show(self, x=None, y=None):
         self.visible = True
@@ -103,18 +104,27 @@ class ContextMenu(GridLayout, AbstractMenu):
         if root_parent is None:
             return
 
-        point_relative_to_root = root_parent.to_local(*self.to_window(x, y))
+        window_width = Window.size[0]
+        # convert to window coordinate, so we can get the point relative to the parent
+        x_win, y_win = self.to_window(x, y)
+        # convert to a coordinate in the space of the parent
+        x_local, y_local = root_parent.to_local(x_win, y_win)
 
         # Choose the best position to open the menu
         if x is not None and y is not None:
-            if point_relative_to_root[0] + self.width < root_parent.width:
+            fits_x = x_local + self.width < root_parent.width
+            if fits_x:
                 pos_x = x
             else:
-                pos_x = x - self.width
-                if issubclass(self.parent.__class__, AbstractMenuItem):
-                    pos_x -= self.parent.width
+                parent_is_context = issubclass(self.parent.__class__, ContextMenuTextItem)
+                parent_is_abstract = issubclass(self.parent.__class__, AbstractMenuItem)
+                if not parent_is_context:
+                    self.mod = ((x + self.width) - root_parent.width)
+                    pos_x = x - self.mod
+                else:
+                    pos_x = x - self.mod - self.parent.width - self.width
 
-            if point_relative_to_root[1] - self.height < 0:
+            if y_local - self.height < 0:
                 pos_y = y
                 if issubclass(self.parent.__class__, AbstractMenuItem):
                     pos_y -= self.parent.height + self.spacer.height
@@ -314,7 +324,9 @@ class ContextMenuDivider(ContextMenuText):
 
 
 class ContextMenuTextItem(ButtonBehavior, ContextMenuText, AbstractMenuItemHoverable):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(ContextMenuTextItem, self).__init__(*args, **kwargs)
+        self.mod = 0
 
 
 _path = os.path.dirname(os.path.realpath(__file__))
