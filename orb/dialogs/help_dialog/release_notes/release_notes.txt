@@ -1,6 +1,10 @@
-0.16.0
+0.16.1
 ----
 
+fix ubuntu build
+updated release notes
+Menus display incorrectly on small devices #258
+release hotfix
 remove hardcoded string
 
 
