@@ -75,8 +75,7 @@ class ConsoleInput(CodeInput):
         App.get_running_app().store.put("console_input", text=self.text)
         if self.do_eval:
             self.execute(self.selection_text)
-            return True
-        # super(ConsoleInput, self).keyboard_on_key_up(window, keycode)
+        super(ConsoleInput, self).keyboard_on_key_up(window, keycode)
         return True
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
