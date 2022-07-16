@@ -58,14 +58,14 @@ def release(c, minor=False, patch=False, hotfix=False):
         c.run("git commit -am 'release hotfix'")
     else:
         c.run("git commit -am 'version bump'")
-    c.run("git push")
+    c.run("git push --set-upstream origin main")
     if not hotfix:
         tags.tag(c)
         tags.push(c)
     for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
         c.run(f"git checkout {branch}")
         c.run("git rebase main")
-        c.run("git push")
+        c.run(f"git push --set-upstream origin {branch}")
     c.run("git checkout main")
 
 
