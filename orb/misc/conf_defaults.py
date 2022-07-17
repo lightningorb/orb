@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 18:30:54
+# @Last Modified time: 2022-07-18 00:07:47
 
 
 def set_conf_defaults(config, node_config):
@@ -25,7 +25,7 @@ def set_conf_defaults(config, node_config):
         "lnd", "tls_certificate", node_config.get("lnd.tls_certificate", "") or ""
     )
     config.set("lnd", "tls_certificate_path", "")
-    config.set("lnd", "network", "mainnet")
+    config.set("lnd", "network", node_config.get("lnd.network", "mainnet") or "")
     config.set("lnd", "macaroon_admin", node_config.get("lnd.macaroon_admin", "") or "")
     config.set("lnd", "macaroon_admin_path", "")
     config.set("lnd", "path", "")
