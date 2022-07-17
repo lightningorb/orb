@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 08:42:23
+# @Last Modified time: 2022-07-17 23:28:47
 
 import codecs
 import threading
@@ -88,9 +88,9 @@ class ChannelsThread(threading.Thread):
                         if hasattr(e, "open_channel"):
                             o = e.open_channel
                             self.inst.channels.get()
-                            self.inst.add_channel(
-                                self.inst.channels.channels[o.chan_id], update=True
-                            )
+                            channel = self.inst.channels.channels[o.chan_id]
+                            self.inst.add_channel(channel, update=True)
+                            channel.get_policies()
                         if hasattr(e, "pending_open_channel"):
                             p = e.pending_open_channel
                             print(
@@ -109,6 +109,7 @@ class ChannelsThread(threading.Thread):
                                 print(f"removing channel {to_remove.chan_id}")
                                 self.inst.channels.remove(to_remove)
                                 self.inst.remove_channel(to_remove)
+                                self.inst.update()
             except:
                 print("Exception getting Channels - let's sleep")
                 print(format_exc())
