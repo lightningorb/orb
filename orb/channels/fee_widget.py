@@ -2,22 +2,23 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 07:04:27
+# @Last Modified time: 2022-07-18 00:02:04
 
 from threading import Thread
 
 from kivy.uix.label import Label
-from kivy.graphics.context_instructions import Color
+from kivy.clock import mainthread
+from kivy.uix.widget import Widget
+from kivy.animation import Animation
+from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import NumericProperty
-from kivy.properties import ListProperty
 from kivy.graphics.vertex_instructions import Line
-from kivy.animation import Animation
-from kivy.uix.widget import Widget
+from kivy.graphics.context_instructions import Color
 
-from orb.misc.utils import closest_point_on_line
 from orb.math.Vector import Vector
-from kivy.clock import mainthread
+from orb.misc.decorators import guarded
+from orb.misc.utils import closest_point_on_line
 
 
 from orb.lnd import Lnd
@@ -70,6 +71,7 @@ class FeeWidget(Widget):
             + Animation(rgba=(0.5, 1, 0.5, 1), duration=0.2)
         ).start(self.col)
 
+    @guarded
     def update(self, *args):
         self.to_fee_norm = min(int(self.channel.fee_rate_milli_msat) / 1000 * 30, 30)
         A = Vector(*self.a)
@@ -96,6 +98,7 @@ class FeeWidget(Widget):
     def set_points(self, a, b, c):
         self.a, self.b, self.c = a, b, c
 
+    @guarded
     def on_touch_down(self, touch):
         if not touch.is_mouse_scrolling:
             B = Vector(touch.pos[0], touch.pos[1])
@@ -108,6 +111,7 @@ class FeeWidget(Widget):
                     return True
         return super(FeeWidget, self).on_touch_down(touch)
 
+    @guarded
     def on_touch_up(self, touch):
         if self.touch_pos:
             self.touch_pos = None
@@ -122,6 +126,7 @@ class FeeWidget(Widget):
             return True
         return super(FeeWidget, self).on_touch_down(touch)
 
+    @guarded
     def on_touch_move(self, touch):
         if self.touch_pos:
             C = closest_point_on_line(
