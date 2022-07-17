@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 09:58:26
+# @Last Modified time: 2022-07-17 21:59:02
 
 from time import time
 from threading import Thread
@@ -250,14 +250,14 @@ class ChannelWidget(Widget):
 
         if send and outgoing:
             if htlc.event_outcome == "forward_fail_event":
-                col = Colour("red").rgba
+                col = [255 / 255.0, 71 / 255.0, 71 / 255.0, 0.6]  # Colour("red").rgba
                 pending = get_pending_outgoing_event(htlc)
                 # should always be there...
                 if pending:
                     c.pending_htlcs.remove(pending)
                     c.local_balance += pending.amount
             else:
-                col = Colour("blue").rgba
+                col = [71 / 255.0, 71 / 255.0, 255 / 255.0, 0.6]
                 self.anim_outgoing()
                 if settle:
                     audio_manager.play_send_settle()
@@ -283,7 +283,7 @@ class ChannelWidget(Widget):
             self.anim_incoming()
         elif forward:
             if forward_fail:
-                col = Colour("red").rgba
+                col = [255 / 255.0, 71 / 255.0, 71 / 255.0, 0.6]
             if outgoing:
                 if forward_fail:
                     pending = get_pending_outgoing_event(htlc)
@@ -341,7 +341,7 @@ class ChannelWidget(Widget):
                 self.anim_incoming()
 
         if link_fail:
-            col = Colour("red").rgba
+            col = [255 / 255.0, 71 / 255.0, 71 / 255.0, 0.6]
             if hasattr(htlc, "wire_failure"):
                 """
                 Not yet available for REST
