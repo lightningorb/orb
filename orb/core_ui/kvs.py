@@ -79,6 +79,7 @@ Builder.load_string('''
             helper_text_mode: "persistent"
         MDTextField:
             id: sats_per_vbyte
+            text: '1'
             helper_text: 'Sats per v/byte'
             helper_text_mode: "persistent"
         Widget:
