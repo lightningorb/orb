@@ -55,6 +55,7 @@ class Rebalance(PopupDropShadow):
             chan_id=self.chan_id,
             last_hop_pubkey=self.last_hop_pubkey,
             fee_rate=int(self.ids.fee_rate.text),
+            time_pref=self.ids.time_pref.value,
             max_paths=int(self.ids.max_paths.text),
             name="RebalanceThread",
             thread_n=0,

@@ -90,22 +90,19 @@
         normal_color: app.theme_cls.accent_color
         on_text_validate: root.update_rule('alias', self.text)
 
-    # Label:
-    #     text: "Match fee rate:"
-    #     size_hint_y: None
-    #     height: self.texture_size[1]
-
-    # MDCheckbox:
-    #     id: match
-    #     size_hint_y: None
-    #     height: dp(50)
-
     MDTextField:
         text: str(root.rule.fee_rate)
         helper_text: 'Max Fee Rate (PPM)'
         helper_text_mode: "persistent"
         normal_color: app.theme_cls.accent_color
         on_text_validate: root.update_rule('fee_rate', self.text)
+
+    MDTextField:
+        text: str(root.rule.time_pref)
+        helper_text: 'Time Preference'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('time_pref', self.text)
 
     MDTextField:
         text: '{:_}'.format(root.rule.num_sats)

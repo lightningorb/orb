@@ -31,7 +31,7 @@ from orb.misc import data_manager
 
 chan_ignore = set([])
 
-version = "0.0.5"
+version = "0.0.6"
 yaml_name = f"autobalance_v{version}.yaml"
 
 
@@ -88,6 +88,7 @@ class FromTo:
         fee_rate,
         num_sats=100_000,
         priority=0,
+        time_pref=0.5,
         from_all=[],
         from_any=[],
         to_all=[],
@@ -99,6 +100,7 @@ class FromTo:
         self._to = To(all=to_all, any=to_any)
         self.alias = alias
         self.fee_rate = fee_rate
+        self.time_pref = time_pref
         self.num_sats = num_sats
         self.priority = priority
 
@@ -141,6 +143,7 @@ def get_dumper():
             "!FromTo",
             {
                 "fee_rate": inst.fee_rate,
+                "time_pref": inst.time_pref,
                 "num_sats": inst.num_sats,
                 "from_all": inst.from_all if hasattr(inst, "from_all") else [],
                 "to_all": inst.to_all if hasattr(inst, "to_all") else [],
@@ -161,17 +164,19 @@ class RuleBase:
 
 
 class Setter(RuleBase):
-    def __init__(self, _from, _to, fee_rate, num_sats, pk_ignore, priority=0):
+    def __init__(self, _from, _to, fee_rate, time_pref, num_sats, pk_ignore, priority=0):
         super(Setter, self).__init__(fee_rate, priority, num_sats)
         self._from = _from
         self._to = _to
         self.pk_ignore = pk_ignore
         self.thread = None
+        self.time_pref = time_pref
 
     def set(self):
         self.thread = RebalanceThread(
             amount=self.num_sats,
             fee_rate=self.eval_fee_rate(),
+            time_pref=self.time_pref,
             chan_id=self._from.chan_id,
             last_hop_pubkey=self._to.remote_pubkey,
             max_paths=1000,
@@ -280,6 +285,7 @@ class Rebalance(StoppableThread):
                                     _to=to_channel,
                                     pk_ignore=pk_ignore,
                                     fee_rate=rule_copy.fee_rate,
+                                    time_pref=rule_copy.time_pref,
                                     num_sats=rule_copy.num_sats,
                                     priority=rule_copy.priority,
                                 )
@@ -312,15 +318,16 @@ class ABView(Popup):
 max_budget: 0.3
 rules:
 - !Ignore
-  alias: LOOP
+  alias: Ignore LOOP
   all:
-  - channel.remote_pubkey == '021c97a90a411ff2b10dc2a8e32de2f29d2fa49d41bfbb52bd416e460db0747d0d'
+  - channel.alias == 'LOOP'
   any: null
 - !FromTo
   alias: From high outbound to low outbound
-  fee_rate: '500'
+  fee_rate: to_channel.fee_rate_milli_msat
+  time_pref: 0.5
   from_all:
-  - channel.ratio  - 0.1 > channel.balanced_ratio
+  - channel.ratio - 0.1 > channel.balanced_ratio
   from_any: []
   num_sats: 100000
   to_all:

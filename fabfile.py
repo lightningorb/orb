@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 07:27:43
+# @Last Modified time: 2022-07-18 06:59:13
 
 import re
 import os
@@ -11,6 +11,7 @@ from build_system.monkey_patch import fix_annotations
 
 fix_annotations()
 
+from build_system import lnd
 from build_system import ssh
 from build_system import android
 from build_system import ios
@@ -70,6 +71,7 @@ def release(c, minor=False, patch=False, hotfix=False):
 
 
 namespace = Collection(
+    lnd,
     ssh,
     katching,
     release,

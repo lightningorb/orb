@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 00:07:47
+# @Last Modified time: 2022-07-18 10:28:53
 
 
 def set_conf_defaults(config, node_config):
@@ -18,6 +18,7 @@ def set_conf_defaults(config, node_config):
     config.set(
         "lnd", "identity_pubkey", node_config.get("lnd.identity_pubkey", "") or ""
     )
+    config.set("lnd", "version", node_config.get("lnd.rest_port", "v0.15.0-beta") or "")
     config.set("lnd", "rest_port", node_config.get("lnd.rest_port", "8080") or "")
     config.set("lnd", "grpc_port", node_config.get("lnd.grpc_port", "10009") or "")
     config.set("lnd", "protocol", node_config.get("lnd.protocol", "mock") or "")

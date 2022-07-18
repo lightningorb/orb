@@ -101,6 +101,7 @@ def pay_thread(
     stopped,
     thread_n,
     fee_rate,
+    time_pref,
     payment_request,
     outgoing_chan_id,
     last_hop_pubkey,
@@ -122,6 +123,7 @@ def pay_thread(
         outgoing_chan_id=outgoing_chan_id,
         last_hop_pubkey=last_hop_pubkey,
         fee_limit_msat=fee_limit_msat,
+        time_pref=time_pref
     )
     has_next = False
     count = 0

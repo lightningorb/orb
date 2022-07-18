@@ -5,7 +5,7 @@
 # @Last Modified time: 2022-01-11 11:03:59
 
 import threading
-from traceback import print_exc
+from traceback import format_exc
 
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.channel_selector import get_low_outbound_channel
@@ -23,6 +23,7 @@ class RebalanceThread(threading.Thread):
         last_hop_pubkey,
         max_paths,
         fee_rate,
+        time_pref,
         name,
         thread_n,
         *args,
@@ -35,6 +36,7 @@ class RebalanceThread(threading.Thread):
         self.last_hop_pubkey = last_hop_pubkey
         self.max_paths = max_paths
         self.fee_rate = fee_rate
+        self.time_pref = time_pref
         self.name = name
         self.thread_n = thread_n
         self.lnd = Lnd()
@@ -43,8 +45,8 @@ class RebalanceThread(threading.Thread):
     def run(self):
         try:
             self.__run()
-        except:
-            print_exc()
+        except Exception as e:
+            print(format_exc())
         finally:
             self.stop()
 
@@ -78,6 +80,7 @@ class RebalanceThread(threading.Thread):
             stopped=self.stopped,
             thread_n=0,
             fee_rate=self.fee_rate,
+            time_pref=self.time_pref,
             payment_request=payment_request,
             payment_request_raw=raw,
             outgoing_chan_id=self.chan_id,

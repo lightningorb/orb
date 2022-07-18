@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-03 06:42:24
+# @Last Modified time: 2022-07-18 10:36:00
 
 import base64
 
@@ -26,6 +26,7 @@ class Routes:
         outgoing_chan_id,
         last_hop_pubkey,
         fee_limit_msat,
+        time_pref,
     ):
         self.lnd = lnd
         self.pub_key = pub_key
@@ -33,6 +34,7 @@ class Routes:
         self.last_hop_pubkey = last_hop_pubkey
         self.outgoing_chan_id = outgoing_chan_id
         self.fee_limit_msat = fee_limit_msat
+        self.time_pref = time_pref
         self.output = Output()
 
     def has_next(self):
@@ -65,6 +67,7 @@ class Routes:
             last_hop_pubkey=self.last_hop_pubkey,
             outgoing_chan_id=self.outgoing_chan_id,
             fee_limit_msat=self.fee_limit_msat,
+            time_pref=float(self.time_pref),
         )
         if routes is None:
             self.num_requested_routes = MAX_ROUTES_TO_REQUEST

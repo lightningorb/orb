@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:04:13
+# @Last Modified time: 2022-07-18 12:05:09
 
 import threading
 from time import sleep
@@ -167,6 +167,7 @@ class PayScreen(PopupDropShadow):
                                 thread_n=self.thread_n,
                                 fee_rate=int(self.inst.ids.fee_rate.text),
                                 payment_request=payment_request,
+                                time_pref=float(self.inst.ids.time_pref.value),
                                 outgoing_chan_id=chan_id,
                                 last_hop_pubkey=None,
                                 max_paths=int(self.inst.ids.max_paths.text),

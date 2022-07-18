@@ -65,6 +65,20 @@
       "key":"identity_pubkey"
    },
    {
+      "type":"options",
+      "title":"Version",
+      "desc":"The version of LND",
+      "section":"lnd",
+      "key":"version",
+      "options": [
+        "v0.14.0-beta",
+        "v0.14.1-beta",
+        "v0.14.2-beta",
+        "v0.14.3-beta",
+        "v0.15.0-beta"
+     ]
+   },
+   {
       "type":"string",
       "title":"GRPC Port",
       "desc":"The node's GRPC port, usually 10009",

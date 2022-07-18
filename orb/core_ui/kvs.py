@@ -526,9 +526,18 @@ Builder.load_string('''
             helper_text_mode: "persistent"
         MDTextField:
             id: max_paths
-            text: str(10)
+            text: '10_000'
             helper_text: 'Max Paths'
             helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0.5
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
         Label:
             text: "First Hop Channel"
             font_name: 'DejaVuSans'
@@ -627,9 +636,18 @@ Builder.load_string('''
             helper_text_mode: "persistent"
         MDTextField:
             id: max_paths
-            text: str(100)
+            text: '10_000'
             helper_text: 'Max Paths'
             helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0.5
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
         Label:
             text: "First Hop Channel"
             font_name: 'DejaVuSans'
@@ -2704,22 +2722,19 @@ Builder.load_string('''
         normal_color: app.theme_cls.accent_color
         on_text_validate: root.update_rule('alias', self.text)
 
-    # Label:
-    #     text: "Match fee rate:"
-    #     size_hint_y: None
-    #     height: self.texture_size[1]
-
-    # MDCheckbox:
-    #     id: match
-    #     size_hint_y: None
-    #     height: dp(50)
-
     MDTextField:
         text: str(root.rule.fee_rate)
         helper_text: 'Max Fee Rate (PPM)'
         helper_text_mode: "persistent"
         normal_color: app.theme_cls.accent_color
         on_text_validate: root.update_rule('fee_rate', self.text)
+
+    MDTextField:
+        text: str(root.rule.time_pref)
+        helper_text: 'Time Preference'
+        helper_text_mode: "persistent"
+        normal_color: app.theme_cls.accent_color
+        on_text_validate: root.update_rule('time_pref', self.text)
 
     MDTextField:
         text: '{:_}'.format(root.rule.num_sats)

@@ -27,9 +27,18 @@
             helper_text_mode: "persistent"
         MDTextField:
             id: max_paths
-            text: str(10)
+            text: '10_000'
             helper_text: 'Max Paths'
             helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
         Label:
             text: "First Hop Channel"
             font_name: 'DejaVuSans'

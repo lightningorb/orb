@@ -2,8 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-29 17:43:21
+# @Last Modified time: 2022-07-18 10:30:34
 
+import sys
+from pathlib import Path
 from traceback import format_exc
 
 from orb.misc.certificate_secure import CertificateSecure
@@ -38,6 +40,7 @@ def Lnd(
     cert=None,
     rest_port=None,
     grpc_port=None,
+    version=None,
 ):
     """
     Return the appropriate Lnd class based on protocol.
@@ -51,9 +54,11 @@ def Lnd(
         cert_secure = pref("lnd.tls_certificate")
         rest_port = int(pref("lnd.rest_port"))
         grpc_port = int(pref("lnd.grpc_port"))
+        version = pref("lnd.version")
 
     if lnd.get(protocol) is None or not cache:
         if protocol == Protocol.grpc:
+            set_lnd_grpc_path_for_version(version=version)
             from orb.lnd.lnd_grpc import LndGRPC
 
             try:
@@ -94,11 +99,7 @@ def Lnd(
                     f.write(cert)
 
             lnd[protocol] = LndREST(
-                tls_certificate=(
-                    cert_path(use_tmp=True).as_posix()
-                    if cert
-                    else None
-                ),
+                tls_certificate=(cert_path(use_tmp=True).as_posix() if cert else None),
                 server=hostname,
                 macaroon=mac,
                 port=rest_port,
@@ -116,3 +117,14 @@ def Lnd(
         del lnd[protocol]
         return ret
     return lnd[protocol]
+
+
+def set_lnd_grpc_path_for_version(version="v0.15.0-beta"):
+    """
+    Make sure the path to lnd's grpc libraries are in python's path
+    """
+    version_dir = version.replace(".", "_").replace("-", "_")
+    main_dir = Path(sys.argv[0]).parent
+    path = (main_dir / Path(f"orb/lnd/grpc_generated/{version_dir}")).as_posix()
+    if path not in sys.path:
+        sys.path.append(path)

@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-29 08:05:05
+# @Last Modified time: 2022-07-18 11:08:04
 import sys
 import base64
+import re
 import os
 import json
 from functools import lru_cache
@@ -56,6 +57,7 @@ class LndGRPC(LndBase):
         self.stub = lnrpc.LightningStub(grpc_channel)
         self.router_stub = lnrouterrpc.RouterStub(grpc_channel)
         self.invoices_stub = invoicesrpc.InvoicesStub(grpc_channel)
+        self.version = None
 
     @staticmethod
     def get_credentials(tls_certificate, macaroon):
@@ -147,6 +149,7 @@ class LndGRPC(LndBase):
         last_hop_pubkey,
         outgoing_chan_id,
         fee_limit_msat,
+        time_pref: float = 0.5,
     ):
         if fee_limit_msat:
             fee_limit = {"fixed_msat": int(fee_limit_msat)}
@@ -154,7 +157,7 @@ class LndGRPC(LndBase):
             fee_limit = None
         if last_hop_pubkey:
             last_hop_pubkey = base64.b16decode(last_hop_pubkey, True)
-        request = ln.QueryRoutesRequest(
+        kwargs = dict(
             pub_key=pub_key,
             last_hop_pubkey=last_hop_pubkey,
             outgoing_chan_id=outgoing_chan_id,
@@ -164,6 +167,9 @@ class LndGRPC(LndBase):
             ignored_nodes=ignored_nodes,
             use_mission_control=True,
         )
+        if self.get_version() >= "0.15.0":
+            kwargs["time_pref"] = time_pref
+        request = ln.QueryRoutesRequest(**kwargs)
         try:
             response = self.stub.QueryRoutes(request)
             return response.routes
