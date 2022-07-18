@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-15 13:38:26
+# @Last Modified time: 2022-07-18 09:34:00
 
 try:
     # not all actions install all requirements
@@ -85,7 +85,7 @@ def ubuntu_boostrap_3_9():
 #!/bin/bash
 
 apt-get update;
-apt-get -y install python3-pip python3.9-dev xsel;
+apt-get -y install python3-pip python3.9-dev xsel libffi-dev;
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 apt install software-properties-common -y;
 add-apt-repository ppa:deadsnakes/ppa -y;
