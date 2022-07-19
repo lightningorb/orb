@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 11:06:43
+# @Last Modified time: 2022-07-18 22:10:17
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -29,6 +29,7 @@ class LndREST(LndBase):
             if type(macaroon) is str
             else macaroon
         }
+        self.version = None
 
     @property
     def fqdn(self):

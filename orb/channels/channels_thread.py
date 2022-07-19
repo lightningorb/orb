@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-17 23:28:47
+# @Last Modified time: 2022-07-19 09:24:19
 
 import codecs
 import threading
@@ -87,10 +87,11 @@ class ChannelsThread(threading.Thread):
                                 print(f"Channel point not found: {cp}")
                         if hasattr(e, "open_channel"):
                             o = e.open_channel
-                            self.inst.channels.get()
-                            channel = self.inst.channels.channels[o.chan_id]
-                            self.inst.add_channel(channel, update=True)
-                            channel.get_policies()
+                            if o.chan_id:
+                                self.inst.channels.get()
+                                channel = self.inst.channels.channels[o.chan_id]
+                                self.inst.add_channel(channel, update=True)
+                                channel.get_policies()
                         if hasattr(e, "pending_open_channel"):
                             p = e.pending_open_channel
                             print(

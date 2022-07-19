@@ -531,7 +531,7 @@ Builder.load_string('''
             helper_text_mode: "persistent"
         Slider:
             id: time_pref
-            value: 0.5
+            value: 0
             min: -1
             max: 1
             step: 0.01
@@ -641,7 +641,7 @@ Builder.load_string('''
             helper_text_mode: "persistent"
         Slider:
             id: time_pref
-            value: 0.5
+            value: 0
             min: -1
             max: 1
             step: 0.01
@@ -2446,10 +2446,6 @@ Builder.load_string('''
                     on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
-                    text: "Files"
-                    on_press: app_menu.close_all()
-                    on_release: webbrowser.open('file://' + App.get_running_app().user_data_dir)
-                ContextMenuTextItem:
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
                     on_release: app_menu.close_all()
@@ -2526,7 +2522,7 @@ Builder.load_string('''
     BoxLayout:
         orientation: 'vertical'
         StackLayout:
-            size_hint_y: 0.1
+            size_hint_y: 0.1 if root.size[0] > dp(450) else 0.2
             MDTextField:
                 text: str(root.obj['frequency'])
                 helper_text: 'Run Frequency'
@@ -2556,7 +2552,7 @@ Builder.load_string('''
                 width: dp(100)
                 on_text_validate: root.update_obj('fee_bump_factor', eval(self.text))
         ScrollView:
-            size_hint: 1, 0.9
+            size_hint: 1, (0.9 if root.size[0] > dp(450) else 0.8)
             pos_hint: {'center_x': .5, 'center_y': .5}
             GridLayout:
                 id: rules

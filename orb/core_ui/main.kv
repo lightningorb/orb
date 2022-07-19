@@ -205,10 +205,6 @@
                     on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
-                    text: "Files"
-                    on_press: app_menu.close_all()
-                    on_release: webbrowser.open('file://' + App.get_running_app().user_data_dir)
-                ContextMenuTextItem:
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
                     on_release: app_menu.close_all()
