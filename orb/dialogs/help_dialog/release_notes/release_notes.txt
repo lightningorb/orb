@@ -1,6 +1,19 @@
-0.16.1
+0.17.0
 ----
 
+android workflow
+changes before 0.17.0
+minor bug fixes
+auto-fee dialog widgets support for small screens
+add time_pref field in SendPayment for lnd 0.15 [#248] [#249]
+Test Linux build [#257]
+When a channel gets added and becomes active, get its fee info #254
+conf defaults needs to save node config passed in
+add guard on fee widget methods
+brighter flashes for HTLC attempts in the UI
+Cannot force close channels over REST #260
+In the console, the shift key is sticky #259
+release hotfix
 fix release script
 release hotfix
 version bump
