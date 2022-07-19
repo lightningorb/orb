@@ -6,7 +6,7 @@
     BoxLayout:
         orientation: 'vertical'
         StackLayout:
-            size_hint_y: 0.1
+            size_hint_y: 0.1 if root.size[0] > dp(450) else 0.2
             MDTextField:
                 text: str(root.obj['frequency'])
                 helper_text: 'Run Frequency'
@@ -36,7 +36,7 @@
                 width: dp(100)
                 on_text_validate: root.update_obj('fee_bump_factor', eval(self.text))
         ScrollView:
-            size_hint: 1, 0.9
+            size_hint: 1, (0.9 if root.size[0] > dp(450) else 0.8)
             pos_hint: {'center_x': .5, 'center_y': .5}
             GridLayout:
                 id: rules

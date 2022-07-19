@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 06:51:11
+# @Last Modified time: 2022-07-19 09:30:53
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -312,6 +312,7 @@ class FeesAuto(StoppableThread):
 class AFView(Popup):
     def __init__(self, *args, **kwargs):
         self.path = (pref_path("yaml") / yaml_name).as_posix()
+        self.autofees = None
         if not os.path.exists(self.path):
             default = """
 default_fee: 100
