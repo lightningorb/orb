@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+    branches: [ build_android ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer android debug
+          workir: src
+          buildozer_version: stable
