@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 22:10:17
+# @Last Modified time: 2022-07-19 10:26:50
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -140,7 +140,6 @@ class LndREST(LndBase):
         """
         https://github.com/lightningnetwork/lnd/issues/6133
         """
-        print(f"TIME PREF: {time_pref}")
         url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}?use_mission_control=true&fee_limit.fixed_msat={int(fee_limit_msat)}&outgoing_chan_id={outgoing_chan_id}"
         if self.get_version() >= "0.15.0":
             url += f"&time_pref={time_pref}"

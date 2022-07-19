@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 09:24:39
+# @Last Modified time: 2022-07-19 17:01:22
 
 import os
 import sys
 import json
+from time import time
 from pathlib import Path
 from textwrap import dedent
 from traceback import print_exc
@@ -15,6 +16,7 @@ from collections import deque
 from threading import Thread
 import shutil
 
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.config import Config
 from kivy.utils import platform
@@ -70,7 +72,8 @@ class OrbApp(AppCommon):
     update_channels_widget = NumericProperty()
     apps = None
     version = StringProperty("")
-    # consumables = deque()
+    window_size = []
+    last_window_size_update = 0
 
     def make_dirs(self):
         """
@@ -173,14 +176,27 @@ class OrbApp(AppCommon):
         ):
             self.config["host"]["type"] = self.config["lnd"]["type"]
 
+    def check_window_size_changed(self, *_):
+        if (
+            self.window_size != Window.size
+            and time() - self.last_window_size_update > 1_000
+        ):
+            print(Window.size)
+            self.window_size = Window.size
+            self.root.ids.sm.get_screen("channels").refresh()
+            self.last_window_size_update = time()
+
     def build(self):
         """
         Main build method for the app.
         """
         Config.set("graphics", "window_state", "maximized")
-        Config.set("graphics", "fullscreen", "auto")
+        Config.set("graphics", "fullscreen", 0)
         if Window:
             Window.maximize()
+        self.window_size = Window.size
+        self.last_window_size_update = time()
+        Window.bind(size=self.check_window_size_changed)
         debug("overriding stdout")
         self.override_stdout()
         debug("overriding make_dirs")
@@ -217,7 +233,6 @@ class OrbApp(AppCommon):
         self.icon = "orb.png"
         debug("loading main layout")
         self.main_layout = MainLayout()
-        from kivy.clock import Clock
 
         Clock.schedule_interval(
             self.main_layout.ids.sm.get_screen("console").consume, 0

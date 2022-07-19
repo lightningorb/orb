@@ -29,7 +29,7 @@ source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, i
 source.exclude_patterns = fabfile.py, build.py
 
 # (str) Application versioning (method 1)
-version = 0.16.0.3
+version = 0.17.0.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]

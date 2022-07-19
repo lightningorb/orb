@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-15 13:52:47
+# @Last Modified time: 2022-07-19 17:03:41
 
 import sys
 
@@ -29,6 +29,9 @@ from kivy.utils import platform
 if platform == "win":
     debug("windows detected, setting graphics multisampling to 0")
     Config.set("graphics", "multisamples", "0")
+
+Config.set("graphics", "fullscreen", "0")
+Config.write()
 
 if platform == "macosx":
     os.environ["KIVY_DPI"] = "240"

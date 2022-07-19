@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:40:47
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 18:02:39
+# @Last Modified time: 2022-07-19 09:26:55
 
 from invoke import task
 import os
@@ -24,6 +24,12 @@ def run(c, env=dict(PATH=os.environ["PATH"])):
 @task
 def cython(c, env=dict(PATH=os.environ["PATH"])):
     c.run(f"python3 build_system/setup.py build_ext --inplace", env=env)
+    c.run(f"python3 main.py", env=env)
+
+
+@task
+def python(c, env=dict(PATH=os.environ["PATH"])):
+    c.run(f"rm -rf `find . -name '*.so'`", env=env)
     c.run(f"python3 main.py", env=env)
 
 

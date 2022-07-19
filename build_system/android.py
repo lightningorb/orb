@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 23:34:01
+# @Last Modified time: 2022-07-19 17:06:59
 
 import os
 from hashlib import sha256
@@ -82,7 +82,7 @@ def build(
     # )
     # minify(c, env=env)
     c.run("rm -rf ~/orb/bin/*")
-    c.run("rm -rf ~/orb/tmp*")
+    c.run("rm -rf ~/orb/tmp/*")
     env[
         "PATH"
     ] = "/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
@@ -99,7 +99,7 @@ def build(
                 object_name=f"customer_builds/{build_name.name}",
             )
 
-    # stdout = c.run(f"buildozer android debug", env=env).stdout
+    stdout = c.run(f"buildozer android debug", env=env).stdout
     stdout = c.run(f"buildozer android release", env=env).stdout
     # do_upload("*.apk")
     c.run("cp -f ~/orb/bin/* ~/lnorb_com/")
@@ -109,7 +109,7 @@ def build(
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.16.0.3-arm64-v8a_armeabi-v7a-release.aab",
+    release_path="/home/ubuntu/orb/bin/orb-0.17.0.0-arm64-v8a_armeabi-v7a-release.aab",
     password="",
 ):
     keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"

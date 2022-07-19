@@ -2,8 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-19 09:24:19
+# @Last Modified time: 2022-07-19 15:52:33
 
+import base64
 import codecs
 import threading
 from time import sleep
@@ -38,13 +39,12 @@ class ChannelsThread(threading.Thread):
                             return
                         print(e)
                         if hasattr(e, "inactive_channel"):
-                            print(e.inactive_channel)
                             c = e.inactive_channel
+                            tb = c.funding_txid_bytes
                             funding_txid_bytes = (
-                                c.funding_txid_bytes.encode()
-                                if type(c.funding_txid_bytes) is str
-                                else c.funding_txid_bytes
+                                tb if type(tb) is bytes else base64.b64decode(tb)
                             )
+                            print(e.inactive_channel)
                             funding_txid_str = codecs.encode(
                                 funding_txid_bytes, "hex"
                             ).decode()
@@ -65,9 +65,7 @@ class ChannelsThread(threading.Thread):
                             print(e.active_channel)
                             c = e.active_channel
                             funding_txid_bytes = (
-                                c.funding_txid_bytes.encode()
-                                if type(c.funding_txid_bytes) is str
-                                else c.funding_txid_bytes
+                                tb if type(tb) is bytes else base64.b64decode(tb)
                             )
                             funding_txid_str = codecs.encode(
                                 funding_txid_bytes, "hex"
