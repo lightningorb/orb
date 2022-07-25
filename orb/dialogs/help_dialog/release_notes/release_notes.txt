@@ -1,6 +1,14 @@
-0.17.0
+0.17.1
 ----
 
+padding issue with certificate in lndconnecturl #265
+added android link
+
+
+v0.17.0
+-------
+
+version bump
 android workflow
 changes before 0.17.0
 minor bug fixes
