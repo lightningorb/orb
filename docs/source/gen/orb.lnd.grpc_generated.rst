@@ -6,17 +6,14 @@ orb.lnd.grpc\_generated package
    :undoc-members:
    :show-inheritance:
 
-Submodules
-----------
+Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4
 
-   orb.lnd.grpc_generated.autopilot_pb2
-   orb.lnd.grpc_generated.autopilot_pb2_grpc
-   orb.lnd.grpc_generated.invoices_pb2
-   orb.lnd.grpc_generated.invoices_pb2_grpc
-   orb.lnd.grpc_generated.lightning_pb2
-   orb.lnd.grpc_generated.lightning_pb2_grpc
-   orb.lnd.grpc_generated.router_pb2
-   orb.lnd.grpc_generated.router_pb2_grpc
+   orb.lnd.grpc_generated.v0_14_0_beta
+   orb.lnd.grpc_generated.v0_14_1_beta
+   orb.lnd.grpc_generated.v0_14_2_beta
+   orb.lnd.grpc_generated.v0_14_3_beta
+   orb.lnd.grpc_generated.v0_15_0_beta

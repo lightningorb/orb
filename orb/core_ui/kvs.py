@@ -500,79 +500,6 @@ Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
-<SpinnerOption>:
-    size_hint: None, None
-    size: dp(400), dp(25)
-
-<PayScreen>:
-    title: 'Pay Invoices'
-    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [None, None]
-    BoxLayout:
-        orientation: 'vertical'
-        Splitter:
-            horizontal: True
-        MDTextField:
-            id: fee_rate
-            text: str(500)
-            helper_text: 'Fee Rate PPM'
-            helper_text_mode: "persistent"
-        MDTextField:
-            id: num_threads
-            text: str(3)
-            helper_text: 'Threads'
-            helper_text_mode: "persistent"
-        MDTextField:
-            id: max_paths
-            text: '10_000'
-            helper_text: 'Max Paths'
-            helper_text_mode: "persistent"
-        Slider:
-            id: time_pref
-            value: 0
-            min: -1
-            max: 1
-            step: 0.01
-            orientation: 'horizontal'
-        Label:
-            text: 'Time Preference'
-        Label:
-            text: "First Hop Channel"
-            font_name: 'DejaVuSans'
-            font_size: '24sp'
-            size_hint_y: None
-            height: dp(25)
-            canvas.before:
-                PushMatrix
-                Scale:
-                    origin: self.center
-                    xyz: .5, .5, 1
-            canvas.after:
-                PopMatrix
-        Spinner:
-            id: spinner_id
-            text: 'any'
-            height: dp(25)
-            size_hint_y: 0
-            size_hint_x: 1
-            on_text: root.first_hop_spinner_click(spinner_id.text)
-        Splitter:
-            horizontal: True
-        MDRaisedButton:
-            text: 'Pay'
-            font_size: '12sp'
-            on_release: root.pay() 
-            size_hint_y: None
-            size_hint_x: 1
-            height: dp(40)
-
-''')
-Builder.load_string('''
-#:import dp kivy.metrics.dp
-#:import Window kivy.core.window.Window
-
 <SendCoins>:
     title: "Send Coins"
     size: min(dp(500), Window.size[0]), min(dp(500), Window.size[1])
@@ -2239,6 +2166,172 @@ Builder.load_string('''
                 height: dp(40)
 ''')
 Builder.load_string('''
+#:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: dp(450), dp(25)
+
+<PayLNURLDialog>:
+    title: 'Pay LNURL'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(600))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        Splitter:
+            horizontal: True
+        MDTextField:
+            id: lnurl
+            text: 'LNURLXXXX...'
+            helper_text: 'LNUrl'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: rate_limit
+            text: '5'
+            helper_text: 'Rate Limitting'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: sats
+            text: '1_000_000'
+            helper_text: 'Satoshis'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: chunks
+            text: str(10)
+            helper_text: 'Chunks'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: fee_rate
+            text: str(500)
+            helper_text: 'Fee Rate PPM'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: num_threads
+            text: str(3)
+            helper_text: 'Threads'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: max_paths
+            text: '10_000'
+            helper_text: 'Max Paths'
+            helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
+        Label:
+            text: "First Hop Channel"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: dp(25)
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_id
+            text: 'any'
+            height: dp(25)
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.first_hop_spinner_click(spinner_id.text)
+        Splitter:
+            horizontal: True
+        MDRaisedButton:
+            text: 'Pay'
+            font_size: '12sp'
+            on_release: root.pay() 
+            size_hint_y: None
+            size_hint_x: 1
+            height: dp(40)
+
+''')
+Builder.load_string('''
+#:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: dp(400), dp(25)
+
+<PayInvoicesDialog>:
+    title: 'Pay Invoices'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        Splitter:
+            horizontal: True
+        MDTextField:
+            id: fee_rate
+            text: str(500)
+            helper_text: 'Fee Rate PPM'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: num_threads
+            text: str(3)
+            helper_text: 'Threads'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: max_paths
+            text: '10_000'
+            helper_text: 'Max Paths'
+            helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
+        Label:
+            text: "First Hop Channel"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: dp(25)
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_id
+            text: 'any'
+            height: dp(25)
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.first_hop_spinner_click(spinner_id.text)
+        Splitter:
+            horizontal: True
+        MDRaisedButton:
+            text: 'Pay'
+            font_size: '12sp'
+            on_release: root.pay() 
+            size_hint_y: None
+            size_hint_x: 1
+            height: dp(40)
+
+''')
+Builder.load_string('''
 #:kivy 2.0.0
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
@@ -2248,7 +2341,8 @@ Builder.load_string('''
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
-#:import PayScreen orb.screens.pay_screen.PayScreen
+#:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
+#:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
 #:import BatchOpenScreen orb.screens.batch_open_screen.BatchOpenScreen
@@ -2319,8 +2413,15 @@ Builder.load_string('''
                     on_press: app.root.ids.sm.current = 'channels'
                 ContextMenuTextItem:
                     text: "Pay"
-                    on_release: app_menu.close_all()
-                    on_press:  PayScreen().open()
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Pay Invoices"
+                            on_release: app_menu.close_all()
+                            on_press:  PayInvoicesDialog().open()
+                        ContextMenuTextItem:
+                            text: "Pay LNURL"
+                            on_release: app_menu.close_all()
+                            on_press:  PayLNURLDialog().open()
                 ContextMenuTextItem:
                     text: "Rebalance"
                     on_release: app_menu.close_all()
@@ -2389,6 +2490,9 @@ Builder.load_string('''
                                 ContextMenuTextItem:
                                     text: "out-ppm"
                                     on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'), channels.channels_widget.update())
+                                ContextMenuTextItem:
+                                    text: "alias"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'alias'), channels.channels_widget.update())
 
 
         AppMenuTextItem:
@@ -2794,6 +2898,42 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
+#: import dp kivy.metrics.dp
+#: import webbrowser webbrowser
+
+<UpdateMaxHTLCView>:
+    title: 'Update Max HTLC MSat'
+    size_hint: None, None
+    size: dp(400), dp(300)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Set to 0 when depleted:"
+        MDCheckbox:
+            active: root.config['config']['disable_depleted']
+            on_active: root.config['config']['disable_depleted'] = str(self.active)
+        MDTextField:
+            text: root.config['config']['depletion_ratio']
+            on_text: root.config['config']['depletion_ratio'] = self.text
+            helper_text: 'Depletion Ratio'
+            helper_text_mode: 'persistent'
+        Spinner:
+            id: nodes
+            text: "Balanced Ratio"
+            height: dp(30)
+            width: dp(300)
+            size_hint: None, None
+            values: ['Balanced Ratio', 'Half Capacity', 'Local Balance']
+        Widget:
+        MDIconButton:
+            icon: "clock-start"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.start()
+
+''')
+Builder.load_string('''
 
 ''')
 Builder.load_string('''
@@ -2895,7 +3035,7 @@ Builder.load_string('''
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
-<HUDDPI>:
+<HUDSystem>:
     id: hud_label
     text: root.hud
     size_hint: [None, None]
@@ -3106,7 +3246,7 @@ Builder.load_string('''
         HUDUIMode
         HUDProtocol
         HUDThreadManager
-        HUDDPI
+        HUDSystem
 
 
 <HUDSE>:

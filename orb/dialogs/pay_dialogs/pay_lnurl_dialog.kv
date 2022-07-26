@@ -3,11 +3,11 @@
 
 <SpinnerOption>:
     size_hint: None, None
-    size: dp(400), dp(25)
+    size: dp(450), dp(25)
 
-<PayScreen>:
-    title: 'Pay Invoices'
-    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
+<PayLNURLDialog>:
+    title: 'Pay LNURL'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(600))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -15,6 +15,26 @@
         orientation: 'vertical'
         Splitter:
             horizontal: True
+        MDTextField:
+            id: lnurl
+            text: 'LNURLXXXX...'
+            helper_text: 'LNUrl'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: rate_limit
+            text: '5'
+            helper_text: 'Rate Limitting'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: sats
+            text: '1_000_000'
+            helper_text: 'Satoshis'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: chunks
+            text: str(10)
+            helper_text: 'Chunks'
+            helper_text_mode: "persistent"
         MDTextField:
             id: fee_rate
             text: str(500)

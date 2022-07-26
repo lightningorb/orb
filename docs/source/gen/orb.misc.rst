@@ -21,15 +21,19 @@ Submodules
    orb.misc.conf_defaults
    orb.misc.data_manager
    orb.misc.decorators
+   orb.misc.decrypt
+   orb.misc.device_id
    orb.misc.enums
    orb.misc.fab_factory
    orb.misc.forex
+   orb.misc.get_platform_name
    orb.misc.lndconnect_url
    orb.misc.macaroon
    orb.misc.macaroon_secure
    orb.misc.mempool
    orb.misc.monkey_patch
    orb.misc.output
+   orb.misc.patch_rand_bits
    orb.misc.plugin
    orb.misc.prefs
    orb.misc.sec_rsa

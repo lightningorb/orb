@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 11:08:04
+# @Last Modified time: 2022-07-25 00:09:51
 import sys
 import base64
 import re
@@ -271,7 +271,17 @@ class LndGRPC(LndBase):
 
     def get_channel_events(self):
         request = ln.ChannelEventSubscription()
-        return self.stub.SubscribeChannelEvents(request)
+        for e in self.stub.SubscribeChannelEvents(request):
+            json_obj = json.loads(
+                MessageToJson(
+                    e,
+                    including_default_value_fields=True,
+                    preserving_proto_field_name=True,
+                    sort_keys=True,
+                )
+            )
+            obj = dict2obj(json_obj)
+            yield obj
 
     def get_forwarding_history(
         self, start_time=None, end_time=None, index_offset=0, num_max_events=100

@@ -7,7 +7,8 @@
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
-#:import PayScreen orb.screens.pay_screen.PayScreen
+#:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
+#:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
 #:import BatchOpenScreen orb.screens.batch_open_screen.BatchOpenScreen
@@ -78,8 +79,15 @@
                     on_press: app.root.ids.sm.current = 'channels'
                 ContextMenuTextItem:
                     text: "Pay"
-                    on_release: app_menu.close_all()
-                    on_press:  PayScreen().open()
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Pay Invoices"
+                            on_release: app_menu.close_all()
+                            on_press:  PayInvoicesDialog().open()
+                        ContextMenuTextItem:
+                            text: "Pay LNURL"
+                            on_release: app_menu.close_all()
+                            on_press:  PayLNURLDialog().open()
                 ContextMenuTextItem:
                     text: "Rebalance"
                     on_release: app_menu.close_all()
@@ -148,6 +156,9 @@
                                 ContextMenuTextItem:
                                     text: "out-ppm"
                                     on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'out-ppm'), channels.channels_widget.update())
+                                ContextMenuTextItem:
+                                    text: "alias"
+                                    on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'alias'), channels.channels_widget.update())
 
 
         AppMenuTextItem:

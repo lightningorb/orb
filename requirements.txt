@@ -10,6 +10,8 @@ simplejson==3.17.6
 plyer
 rsa
 memoization
+bech32
+psutil
 
 # DESKTOP ONLY
 

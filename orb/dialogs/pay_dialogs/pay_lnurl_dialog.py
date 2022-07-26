@@ -2,14 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 12:05:09
+# @Last Modified time: 2022-07-26 10:45:53
 
 import threading
 from time import sleep
 from random import choice
 from traceback import format_exc
 from functools import lru_cache
-
 import arrow
 
 from kivy.clock import mainthread
@@ -18,10 +17,10 @@ from kivy.app import App
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.pay_logic import pay_thread, PaymentStatus
+from orb.logic.lnurl_invoice_generator import LNUrlInvoiceGenerator
 from orb.logic.thread_manager import thread_manager
 from orb.misc import data_manager
 from orb.lnd import Lnd
-
 
 chan_ignore = set([])
 lock = threading.Lock()
@@ -33,12 +32,7 @@ class PaymentUIOption:
     user_selected_first_hop = 1
 
 
-@lru_cache(maxsize=None)
-def alias(lnd, pk):
-    return lnd.get_node_alias(pk)
-
-
-class PayScreen(PopupDropShadow):
+class PayLNURLDialog(PopupDropShadow):
     def __init__(self, **kwargs):
         self.in_flight = set([])
         PopupDropShadow.__init__(self, **kwargs)
@@ -46,6 +40,7 @@ class PayScreen(PopupDropShadow):
         self.chan_id = None
         self.inflight = set([])
         self.inflight_times = {}
+        self.total_amount_paid = 0
 
         channels = data_manager.data_man.channels
 
@@ -62,7 +57,9 @@ class PayScreen(PopupDropShadow):
             self.ids.spinner_id.values = chans_pk
 
         def func():
-            chans_pk = [f"{c.chan_id}: {alias(lnd, c.remote_pubkey)}" for c in channels]
+            chans_pk = [
+                f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}" for c in channels
+            ]
             delayed(chans_pk)
 
         threading.Thread(target=func).start()
@@ -78,7 +75,7 @@ class PayScreen(PopupDropShadow):
             .select()
             .where(model.Invoice.expired() == False, model.Invoice.paid == False)
         )
-        return invoices
+        return [x for x in invoices]
 
     def get_ignored_chan_ids(self):
         return set(
@@ -116,6 +113,9 @@ class PayScreen(PopupDropShadow):
                     self.stop()
 
             def __run(self):
+                while self.inst.invoice_generator.num_usable_invoices() == 0:
+                    print("waiting for invoices to be generated")
+                    sleep(5)
                 payment_opt = (
                     PaymentUIOption.user_selected_first_hop
                     if self.inst.chan_id
@@ -134,7 +134,10 @@ class PayScreen(PopupDropShadow):
                     if invoice:
                         payment_request = Lnd().decode_request(invoice.raw)
                     else:
-                        if not all_invoices:
+                        if (
+                            not all_invoices
+                            and self.inst.invoice_generator.paid_everything()
+                        ):
                             self.sprint("no more usable invoices")
                             self.sprint(f"THREAD {self.thread_n} EXITING")
                             return
@@ -158,7 +161,7 @@ class PayScreen(PopupDropShadow):
                             if chan_id:
                                 chan_ignore.add(chan_id)
                     if not chan_id:
-                        self.sprint("no more channels left to rebalance")
+                        self.sprint("no more channels left for payments")
                         sleep(60)
                     if chan_id:
                         try:
@@ -186,11 +189,17 @@ class PayScreen(PopupDropShadow):
                         elif status in [
                             PaymentStatus.success,
                             PaymentStatus.already_paid,
+                            # PaymentStatus.unknown_payment_details,
                         ]:
-                            with invoices_lock:
+
+                            def update_invoice():
                                 invoice.paid = True
                                 invoice.save()
-                                self.inst.inflight.remove(invoice)
+
+                            print("setting invoice to paid..")
+                            update_invoice()
+                            print("done")
+                            self.inst.inflight.remove(invoice)
                         elif (
                             status == PaymentStatus.no_routes
                             or status == PaymentStatus.max_paths_exceeded
@@ -205,8 +214,8 @@ class PayScreen(PopupDropShadow):
                             with invoices_lock:
                                 self.inst.inflight.remove(invoice)
 
-                    if not auto:
-                        break
+                    # if not auto:
+                    #     break
 
                     sleep(5)
 
@@ -215,6 +224,15 @@ class PayScreen(PopupDropShadow):
 
             def stopped(self):
                 return self._stop_event.is_set()
+
+        self.invoice_generator = LNUrlInvoiceGenerator(
+            url=self.ids.lnurl.text,
+            total_amount_sat=int(self.ids.sats.text),
+            chunks=int(self.ids.chunks.text),
+            num_threads=int(self.ids.num_threads.text),
+            rate_limit=int(self.ids.rate_limit.text),
+        )
+        self.invoice_generator.start()
 
         for i in range(int(self.ids.num_threads.text)):
             self.thread = PayThread(inst=self, name="PayThread", thread_n=i)

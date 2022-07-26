@@ -19,6 +19,7 @@ Click `close` and restart Orb.
    HUD
    invoice_ingestion
    pay
+   pay_lnurl
    rebalance
    connect
    open_channel
@@ -30,3 +31,4 @@ Click `close` and restart Orb.
    channel_highlighter
    automated_fees
    automated_rebalancing
+   max_htlc_msat

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 14:41:04
+# @Last Modified time: 2022-07-26 13:08:32
 
 import os
 import zipfile
@@ -78,7 +78,8 @@ def build(c, env=os.environ):
         "--ext-autodoc --module-first --follow-links --ext-coverage --separate --force"
     )
     c.run(
-        f"sphinx-apidoc {flags} -o docs/source/gen/ orb orb/logic/licensing.py", env=env
+        f"sphinx-apidoc {flags} -o docs/source/gen/ orb orb/logic/licensing.py orb/misc/device_id.py orb/misc/sec_rsa.py",
+        env=env,
     )
     c.run("sphinx-build -b html docs/source docs/docsbuild", env=env)
 

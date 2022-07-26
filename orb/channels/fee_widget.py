@@ -2,12 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 00:02:04
+# @Last Modified time: 2022-07-24 09:44:48
 
 from threading import Thread
 
 from kivy.uix.label import Label
-from kivy.clock import mainthread
 from kivy.uix.widget import Widget
 from kivy.animation import Animation
 from kivy.properties import ListProperty
@@ -64,6 +63,20 @@ class FeeWidget(Widget):
         self.channel.bind(fee_rate_milli_msat=self.update)
         self.channel.bind(fee_rate_milli_msat=self.flash)
         self.channel.bind(balanced_ratio=self.update_balanced_ratio_line)
+        self.channel.bind(max_htlc_msat=self.update_max_htlc_msat)
+        self.update_max_htlc_msat()
+
+    def update_max_htlc_msat(self, *_):
+        if self.channel.max_htlc_msat <= 1000:
+            (
+                Animation(rgba=(1, 1, 1, 1), duration=0.2)
+                + Animation(rgba=(0.1, 0.1, 1, 1), duration=0.2)
+            ).start(self.col)
+        else:
+            (
+                Animation(rgba=(1, 1, 1, 1), duration=0.2)
+                + Animation(rgba=(0.5, 1, 0.5, 1), duration=0.2)
+            ).start(self.col)
 
     def flash(self, *_):
         (

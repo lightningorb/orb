@@ -2,9 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 11:26:39
+# @Last Modified time: 2022-07-26 08:11:47
 
-from traceback import print_exc
+from traceback import format_exc
 
 from kivy.properties import BooleanProperty
 from kivy.properties import NumericProperty
@@ -48,7 +48,7 @@ class DataManager(EventDispatcher):
         try:
             self.pubkey = self.lnd.get_info().identity_pubkey
         except:
-            print_exc()
+            print(format_exc())
             print("Error getting pubkey")
 
         self.plugin_registry = {}
@@ -57,19 +57,22 @@ class DataManager(EventDispatcher):
 
         from orb.store import db_create_tables
 
-        for db in [
-            forwarding_events_db_name,
+        dbs = [
             aliases_db_name,
+            forwarding_events_db_name,
             invoices_db_name,
             htlcs_db_name,
             channel_stats_db_name,
             payments_db_name,
-        ]:
+        ]
+        for db in dbs:
             try:
                 get_db(db).connect()
-            except:
-                # most likely already connected
-                pass
+            except Exception as e:
+                print(e)
+                print(format_exc())
+                print(f"issue connecting with: {db}")
+                assert False
 
         db_create_tables.create_forwarding_tables()
         db_create_tables.create_aliases_tables()
@@ -79,6 +82,8 @@ class DataManager(EventDispatcher):
         db_create_tables.create_payments_tables()
         db_create_tables.create_path_finding_tables()
 
+        # for db in dbs:
+        #     get_db(db).close()
 
 
 data_man = None

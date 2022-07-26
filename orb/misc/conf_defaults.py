@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 10:28:53
+# @Last Modified time: 2022-07-26 09:06:22
 
 
 def set_conf_defaults(config, node_config):
@@ -53,8 +53,6 @@ def set_conf_defaults(config, node_config):
     config.set("display", "primary_palette", "Red")
     config.add_section("audio")
     config.set("audio", "volume", 0.2)
-    config.add_section("autobalance")
-    config.set("autobalance", "enable", 0)
     config.add_section("debug")
     config.set("debug", "layouts", 0)
     config.set("debug", "htlcs", True)
@@ -66,6 +64,7 @@ def set_conf_defaults(config, node_config):
     config.set("path", "video", "videos")
     config.set("path", "db", "store/dbs")
     config.set("path", "yaml", "store/yaml")
+    config.set("path", "app_conf", "store/apps_conf")
     config.set("path", "json", "store/json")
     config.set("path", "cert", "certs")
     config.set("path", "app", "apps")
@@ -78,5 +77,4 @@ def set_conf_defaults(config, node_config):
     config.add_section("url")
     config.set("url", "appstore", "https://lnappstore.com")
     config.add_section("system")
-    config.set("system", "identifier", "plyer")
     config.set("system", "orb_version", "undefined")

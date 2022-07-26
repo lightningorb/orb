@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-19 09:30:53
+# @Last Modified time: 2022-07-21 15:32:34
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -172,7 +172,7 @@ class Match(Base):
 
     def eval_fee_rate(self):
         channel = self.channel
-        best_fee = self.best_fee
+        # best_fee = self.best_fee
         return int(eval(str(self.fee_rate)))
 
 

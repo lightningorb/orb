@@ -12,10 +12,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   orb.apps
    orb.attribute_editor
    orb.audio
    orb.channels
    orb.components
+   orb.connector
    orb.core
    orb.core_ui
    orb.dialogs
@@ -34,4 +36,4 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   orb.kvs
+   orb.orb_main

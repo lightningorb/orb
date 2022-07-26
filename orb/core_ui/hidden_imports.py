@@ -2,14 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-06-28 15:44:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-29 10:22:06
+# @Last Modified time: 2022-07-20 09:32:42
 
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.screens.close_channel import CloseChannel
 from orb.screens.rebalance import Rebalance
 from orb.screens.channels_screen import ChannelsScreen
-from orb.screens.pay_screen import PayScreen
+from orb.dialogs.pay_dialogs.pay_invoices_dialog import PayInvoicesDialog
+from orb.dialogs.pay_dialogs.pay_lnurl_dialog import PayLNURLDialog
 from orb.screens.open_channel_screen import OpenChannelScreen
 from orb.screens.connect_screen import ConnectScreen
 from orb.dialogs.ingest_invoices.ingest_invoices import IngestInvoices
@@ -54,7 +55,8 @@ keep(Rebalance)
 keep(CloseChannel)
 keep(Rebalance)
 keep(ChannelsScreen)
-keep(PayScreen)
+keep(PayInvoicesDialog)
+keep(PayLNURLDialog)
 keep(OpenChannelScreen)
 keep(ConnectScreen)
 keep(IngestInvoices)

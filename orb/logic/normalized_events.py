@@ -2,34 +2,34 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:55:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-31 06:17:33
+# @Last Modified time: 2022-07-21 15:31:33
 
 from dataclasses import dataclass
 from orb.math.normal_distribution import NormalDistribution
 from orb.lnd import Lnd
 
 
-@dataclass
 class ChanRoutingData:
     """
     Simple dataclass that holds data for
     normal distribution calculation.
     """
 
-    alias: str
-    chan_id: str
-    vals: float
+    def __init__(self, alias, chan_id, vals):
+        self.alias = alias
+        self.chan_id = chan_id
+        self.vals = vals
 
 
-@dataclass
 class Event:
     """
     Simple dataclass that holds an Event for
     normal distribution calculation.
     """
 
-    amt: int
-    ppm: int
+    def __init__(self, amt, ppm):
+        self.amt = amt
+        self.ppm = ppm
 
     def __lt__(self, other):
         return self.ppm < other.ppm

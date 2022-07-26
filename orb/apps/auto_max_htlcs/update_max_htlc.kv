@@ -1,0 +1,33 @@
+#: import dp kivy.metrics.dp
+#: import webbrowser webbrowser
+
+<UpdateMaxHTLCView>:
+    title: 'Update Max HTLC MSat'
+    size_hint: None, None
+    size: dp(400), dp(300)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Set to 0 when depleted:"
+        MDCheckbox:
+            active: root.config['config']['disable_depleted']
+            on_active: root.config['config']['disable_depleted'] = str(self.active)
+        MDTextField:
+            text: root.config['config']['depletion_ratio']
+            on_text: root.config['config']['depletion_ratio'] = self.text
+            helper_text: 'Depletion Ratio'
+            helper_text_mode: 'persistent'
+        Spinner:
+            id: nodes
+            text: "Balanced Ratio"
+            height: dp(30)
+            width: dp(300)
+            size_hint: None, None
+            values: ['Balanced Ratio', 'Half Capacity', 'Local Balance']
+        Widget:
+        MDIconButton:
+            icon: "clock-start"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.start()

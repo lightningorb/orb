@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:40:53
+# @Last Modified time: 2022-07-23 18:19:54
 
 from traceback import print_exc
 from threading import Thread
@@ -57,7 +57,7 @@ class Channels(EventDispatcher, BalancedRatioMixin):
         self.app = App.get_running_app()
         self.get()
         Clock.schedule_once(self.compute_balanced_ratios, 0)
-        Clock.schedule_interval(self.compute_balanced_ratios, 30)
+        Clock.schedule_interval(self.compute_balanced_ratios, 5)
         Clock.schedule_once(lambda *_: Thread(target=self.get_chan_policies).start(), 5)
         Clock.schedule_interval(
             lambda *_: Thread(target=self.get_chan_policies).start(), 5 * 60
@@ -113,12 +113,15 @@ class Channels(EventDispatcher, BalancedRatioMixin):
             "total-sent": lambda x: self.channels[x].total_satoshis_sent,
             "total-received": lambda x: self.channels[x].total_satoshis_received,
             "out-ppm": lambda x: self.channels[x].fee_rate_milli_msat,
+            "alias": lambda x: self.channels[x].alias.lower(),
         }
         criteria = pref("display.channel_sort_criteria")
 
         def cmp(ca, cb):
             a = sorter[criteria](ca)
             b = sorter[criteria](cb)
+            if criteria == "alias":
+                a, b = b, a
             if a < b:
                 return -1
             elif a > b:

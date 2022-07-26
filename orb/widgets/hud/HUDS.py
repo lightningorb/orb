@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 23:39:53
+# @Last Modified time: 2022-07-26 08:23:16
 
+import os
 import threading
 import requests
 import random
 import time
 
+from kivy.metrics import Metrics
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.clock import mainthread
@@ -202,20 +204,31 @@ class HUDBalance(BorderedLabel):
         threading.Thread(target=func).start()
 
 
-class HUDDPI(BorderedLabel):
+class HUDSystem(BorderedLabel):
     """
-    DPI HUD
+    Memory Usage HUD
     """
 
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
         BorderedLabel.__init__(self, *args, **kwargs)
-        from kivy.metrics import Metrics
 
-        dpi_info = Metrics.dpi
-        pixel_density_info = Metrics.density
-        self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+        def func():
+            while True:
+                try:
+                    import psutil
+
+                    process = psutil.Process(os.getpid())
+                    usage = f"{process.memory_info().rss:_} bytes"
+                    self.hud = usage
+                except:
+                    dpi_info = Metrics.dpi
+                    pixel_density_info = Metrics.density
+                    self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+                time.sleep(1)
+
+        threading.Thread(target=func).start()
         self.show()
 
 

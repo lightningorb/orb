@@ -43,12 +43,17 @@ The ``A`` represents the Automated rebalancing thread (spawned during auto-rebal
 U
 ..
 
-The ``U`` stands for Update Max HTLC (available from the App Store).
+The ``U`` stands for Update Max HTLC.
 
 P
 ..
 
 The ``P`` stands for Payment threads (spawned during payments).
+
+L
+..
+
+The ``L`` stands for the LNURL invoice generator.
 
 
 .. note::

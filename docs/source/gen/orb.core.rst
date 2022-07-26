@@ -12,5 +12,5 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   orb.core.logging
+   orb.core.orb_logging
    orb.core.stoppable_thread

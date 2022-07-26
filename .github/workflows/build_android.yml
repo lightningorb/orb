@@ -1,19 +1,26 @@
 name: CI
 on:
   push:
-    branches: [ build_android ]
+    branches: [ lnurl2 ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
+      # - uses: actions/setup-python@v2
+      #   with:
+      #     python-version: '3.9'
+      #     cache: 'pip'
+      # - run: pip install fabric
+      # - run: python ./build.py android.cython
+      - uses: ArtemSBulgakov/buildozer-action@v1
         with:
           command: buildozer android debug
-          workir: src
           buildozer_version: stable
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install fabric semver
+      - run: python ./build.py android.upload

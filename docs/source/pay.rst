@@ -68,3 +68,12 @@ What this really specifies is, that if after attempt ``10`` payment paths, the p
 
 This works well because the path building uses **Mission Control** which *remembers* failed channels in the network. As such, even though the payment process gives up, if we attempt payments through the same channel later, we resume where we left off, as opposed to attemping payments through channels in the network that recently failed.
 
+
+Time Preference
+---------------
+
+With a low time preference (-1) LND performs a very exhaustive path search, starting with very cheap paths.
+
+With a normal time preference (0, the default prior to LND v0.15.0) LND performs the path search as it did in versions prior to v0.15.0.
+
+With a high time preference (1) LND performs a non-exhaustive path search, thereby prefering more expensive routes with a higher chance of success.

@@ -188,6 +188,17 @@
    },
    {
       "type":"title",
+      "title":"Liquidity"
+   },
+   {
+      "type":"bool",
+      "title":"Auto-Compute Balanced Ratio",
+      "desc":"Enable automatic recomputation of balanced ratio",
+      "section":"liquidity",
+      "key":"auto_compute_balanced_ratio"
+   },
+   {
+      "type":"title",
       "title":"Debug"
    },
    {
@@ -407,6 +418,13 @@
    },
    {
       "type":"string",
+      "title":"apps_conf",
+      "desc":"Path where app configurations are stored",
+      "section":"path",
+      "key":"app_conf"
+   },
+   {
+      "type":"string",
       "title":"export",
       "desc":"Path where data is exported",
       "section":"path",
@@ -456,14 +474,10 @@
       "title":"System"
    },
    {
-      "type":"options",
-      "title":"Device Identifier",
-      "desc":"Library used to indentify your device",
+      "type":"string",
+      "title":"Orb Version",
+      "desc":"Version of Orb (for internal use)",
       "section":"system",
-      "key":"identifier",
-      "options":[
-         "uuid",
-         "plyer"
-      ]
+      "key":"orb_version"
    }
 ]

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-19 17:06:59
+# @Last Modified time: 2022-07-21 13:34:44
 
 import os
 from hashlib import sha256
@@ -59,10 +59,37 @@ def install(c, env=os.environ):
     c.run(f"pip3 install python-for-android", env=env)
 
 
+def upload_to_site(path):
+    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    with Connection(
+        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
+    ) as c:
+        c.run("rm -rf /home/ubuntu/lnorb_com/*.apk")
+        c.run("rm -rf /home/ubuntu/lnorb_com/*.aab")
+        c.put(path, "/home/ubuntu/lnorb_com/")
+
+
 @task
-def minify(c, env=os.environ):
-    for p in Path("orb/").rglob("*.py"):
-        c.run(f"/home/ubuntu/.local/bin/pyminify {p} --in-place")
+def upload(c):
+    apk = next(iter(Path("bin/").glob("*.apk")), None)
+    if apk:
+        upload_to_site(apk.as_posix())
+    aab = next(iter(Path("bin/").glob("*.aab")), None)
+    if aab:
+        upload_to_site(aab.as_posix())
+
+
+def do_upload(ext):
+    build_name = next(iter(Path("bin/").glob(ext)), None)
+    if build_name:
+        upload_to_s3(
+            env,
+            build_name.as_posix(),
+            "lnorb",
+            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
+            object_name=f"customer_builds/{build_name.name}",
+        )
 
 
 @task
@@ -72,38 +99,8 @@ def build(
     AWS_ACCESS_KEY_ID=None,
     AWS_SECRET_ACCESS_KEY=None,
 ):
-    """
-    need to set sqlite version to 3.38.0 or SQLITE_ENABLE_JSON1=1
-    ~/orb/.buildozer/android/platform/python-for-android/pythonforandroid/recipes/sqlite3/__init__.py
-    """
-    # c.run("mkdir -p ~/orb/.buildozer/android/platform")
-    # c.run(
-    #     "cp -r ~/pythonforandroid ~/orb/.buildozer/android/platform/python-for-android/"
-    # )
-    # minify(c, env=env)
-    c.run("rm -rf ~/orb/bin/*")
-    c.run("rm -rf ~/orb/tmp/*")
-    env[
-        "PATH"
-    ] = "/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
-
-    def do_upload(ext):
-        build_name = next(iter(Path("bin/").glob(ext)), None)
-        if build_name:
-            upload_to_s3(
-                env,
-                build_name.as_posix(),
-                "lnorb",
-                AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
-                AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
-                object_name=f"customer_builds/{build_name.name}",
-            )
-
     stdout = c.run(f"buildozer android debug", env=env).stdout
     stdout = c.run(f"buildozer android release", env=env).stdout
-    # do_upload("*.apk")
-    c.run("cp -f ~/orb/bin/* ~/lnorb_com/")
-    # do_upload("*.aab")
 
 
 @task
@@ -166,8 +163,8 @@ def cython(c, env=os.environ):
     for p in to_compile:
         p = Path(p)
         uid = "m" + sha256(p.as_posix().encode()).hexdigest()
-        pyx = Path(f"/home/ubuntu/orb/lib/custom_lib/{uid}.pyx")
-        py = Path(f"/home/ubuntu/orb/{str(p)}")
+        pyx = Path(f"lib/custom_lib/{uid}.pyx")
+        py = Path(f"{str(p)}")
         with py.open() as pyf:
             pycontent = "\n".join(["# cython: language_level=3"] + pyf.readlines())
         write = False
