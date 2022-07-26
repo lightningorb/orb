@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ lnurl2 ]
+    branches: [ build_android ]
 
 jobs:
   build:
