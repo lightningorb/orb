@@ -1,6 +1,12 @@
-0.17.2
+0.18.0
 ----
 
+
+
+v0.17.2
+-------
+
+version bump
 Merge branch 'main' of
     https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
     main
