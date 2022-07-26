@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-15 10:47:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-29 07:19:09
+# @Last Modified time: 2022-07-25 20:44:43
 
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
@@ -10,7 +10,7 @@ import base64
 
 
 def decode_cert(cert):
-    decoded_url = base64.urlsafe_b64decode(cert.strip().encode())
+    decoded_url = base64.urlsafe_b64decode(cert.strip().encode() + b"==")
     decoded = base64.b64encode(decoded_url).decode()
     header = "-----BEGIN CERTIFICATE-----"
     footer = "-----END CERTIFICATE-----"
