@@ -1,6 +1,16 @@
-0.17.1
+0.17.2
 ----
 
+Merge branch 'main' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    main
+ready for release
+
+
+v0.17.1
+-------
+
+version bump
 padding issue with certificate in lndconnecturl #265
 added android link
 
