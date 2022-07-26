@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-09 13:50:14
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 14:52:27
+# @Last Modified time: 2022-07-26 19:44:51
 
 from pathlib import Path
 from os import getenv
@@ -12,7 +12,6 @@ import shutil
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
-from Cython.Build import cythonize
 
 print("SETTTTTTUPPPPPP")
 
