@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-09 13:50:14
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 14:30:26
+# @Last Modified time: 2022-07-26 14:52:27
 
 from pathlib import Path
 from os import getenv
@@ -29,7 +29,7 @@ SETUP_REQUIRES = []
 # detect Python for android
 PLATFORM = sys.platform
 
-if getenv("NDKPLATFORM") and getenv("LIBLINK"):
+if getenv("LIBLINK"):
     PLATFORM = "android"
 
 # detect cython
