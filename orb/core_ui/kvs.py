@@ -1081,6 +1081,79 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: dp(400), dp(25)
+
+<DeezySwapDialog>:
+    title: 'Deezy Swap'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        Splitter:
+            horizontal: True
+        MDTextField:
+            id: fee_rate
+            text: str(500)
+            helper_text: 'Fee Rate PPM'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: num_threads
+            text: str(3)
+            helper_text: 'Threads'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: max_paths
+            text: '10_000'
+            helper_text: 'Max Paths'
+            helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
+        Label:
+            text: "First Hop Channel"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: dp(25)
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_id
+            text: 'any'
+            height: dp(25)
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.first_hop_spinner_click(spinner_id.text)
+        Splitter:
+            horizontal: True
+        MDRaisedButton:
+            text: 'Pay'
+            font_size: '12sp'
+            on_release: root.pay() 
+            size_hint_y: None
+            size_hint_x: 1
+            height: dp(40)
+
+''')
+Builder.load_string('''
+#:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
 
@@ -2342,6 +2415,7 @@ Builder.load_string('''
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
+#:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
@@ -2463,7 +2537,7 @@ Builder.load_string('''
                         ContextMenuTextItem:
                             text: "Deezy.io"
                             on_release: app_menu.close_all()
-                            on_press: PayInvoicesDialog().open()
+                            on_press: DeezySwapDialog().open()
                 ContextMenuTextItem:
                     text: "Rebalance"
                     on_release: app_menu.close_all()

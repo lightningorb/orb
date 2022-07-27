@@ -8,6 +8,7 @@
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
+#:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
@@ -129,7 +130,7 @@
                         ContextMenuTextItem:
                             text: "Deezy.io"
                             on_release: app_menu.close_all()
-                            on_press: PayInvoicesDialog().open()
+                            on_press: DeezySwapDialog().open()
                 ContextMenuTextItem:
                     text: "Rebalance"
                     on_release: app_menu.close_all()
