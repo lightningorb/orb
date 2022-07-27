@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-19 15:52:33
+# @Last Modified time: 2022-07-27 08:19:16
 
 import base64
 import codecs
@@ -64,6 +64,7 @@ class ChannelsThread(threading.Thread):
                         if hasattr(e, "active_channel"):
                             print(e.active_channel)
                             c = e.active_channel
+                            tb = c.funding_txid_bytes
                             funding_txid_bytes = (
                                 tb if type(tb) is bytes else base64.b64decode(tb)
                             )

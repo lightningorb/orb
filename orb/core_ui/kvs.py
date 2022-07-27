@@ -2409,66 +2409,19 @@ Builder.load_string('''
                 id: lightning_context_menu
                 ContextMenuTextItem:
                     text: "Channels"
-                    on_release: app_menu.close_all()
-                    on_press: app.root.ids.sm.current = 'channels'
-                ContextMenuTextItem:
-                    text: "Pay"
                     ContextMenu:
                         ContextMenuTextItem:
-                            text: "Pay Invoices"
+                            text: "Open Channel"
+                            on_press:  OpenChannelScreen().open()
                             on_release: app_menu.close_all()
-                            on_press:  PayInvoicesDialog().open()
                         ContextMenuTextItem:
-                            text: "Pay LNURL"
+                            text: "Batch Open"
+                            on_press:  BatchOpenScreen().open()
                             on_release: app_menu.close_all()
-                            on_press:  PayLNURLDialog().open()
-                ContextMenuTextItem:
-                    text: "Rebalance"
-                    on_release: app_menu.close_all()
-                    on_press:  Rebalance().open()
-                ContextMenuTextItem:
-                    text: "Mail"
-                    on_press:  app_menu.close_all()
-                    on_release: MailDialog().open()
-                ContextMenuTextItem:
-                    text: "Open Channel"
-                    on_press:  OpenChannelScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Batch Open"
-                    on_press:  BatchOpenScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Close Channel"
-                    on_press:  CloseChannel().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Connect"
-                    on_press:  ConnectScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Ingest Invoices"
-                    on_press: IngestInvoices().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Rankings"
-                    on_press: Rankings().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Forwarding History"
-                    ContextMenu:
                         ContextMenuTextItem:
-                            text: "Total Routing"
-                            on_release: (app_menu.close_all(), view_forwarding_history())
-                        ContextMenuTextItem:
-                            text: "Fees Earned"
-                            on_release: (app_menu.close_all(), graph_fees_earned())
-                        ContextMenuTextItem:
-                            text: "Fee Distribution"
-                            on_release: (app_menu.close_all(), FeeDistribution().open())
-                ContextMenuTextItem:
-                    text: "Channels"
-                    ContextMenu:
+                            text: "Close Channel"
+                            on_press:  CloseChannel().open()
+                            on_release: app_menu.close_all()
                         ContextMenuTextItem:
                             text: "Highlighter"
                             on_release: [HighlighterDialog().open(), app_menu.close_all()]
@@ -2493,7 +2446,56 @@ Builder.load_string('''
                                 ContextMenuTextItem:
                                     text: "alias"
                                     on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'alias'), channels.channels_widget.update())
-
+                ContextMenuTextItem:
+                    text: "Pay"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Pay Invoices"
+                            on_release: app_menu.close_all()
+                            on_press:  PayInvoicesDialog().open()
+                        ContextMenuTextItem:
+                            text: "Pay LNURL"
+                            on_release: app_menu.close_all()
+                            on_press:  PayLNURLDialog().open()
+                ContextMenuTextItem:
+                    text: "Swap"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Deezy.io"
+                            on_release: app_menu.close_all()
+                            on_press: PayInvoicesDialog().open()
+                ContextMenuTextItem:
+                    text: "Rebalance"
+                    on_release: app_menu.close_all()
+                    on_press:  Rebalance().open()
+                ContextMenuTextItem:
+                    text: "Mail"
+                    on_press:  app_menu.close_all()
+                    on_release: MailDialog().open()
+                ContextMenuTextItem:
+                    text: "Connect"
+                    on_press:  ConnectScreen().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Ingest Invoices"
+                    on_press: IngestInvoices().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Rankings"
+                    on_press: Rankings().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Forwarding History"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Total Routing"
+                            on_release: (app_menu.close_all(), view_forwarding_history())
+                        ContextMenuTextItem:
+                            text: "Fees Earned"
+                            on_release: (app_menu.close_all(), graph_fees_earned())
+                        ContextMenuTextItem:
+                            text: "Fee Distribution"
+                            on_release: (app_menu.close_all(), FeeDistribution().open())
 
         AppMenuTextItem:
             text: "On-Chain"
@@ -2515,23 +2517,6 @@ Builder.load_string('''
                     text: "Settings"
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
-                ContextMenuTextItem:
-                    text: "Umbrel Node / lndonnect"
-                    on_press: UmbrelNode().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Voltage Node"
-                    on_press: VoltageNode().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    id: ssh_connection_wizard
-                    text: "SSH Connection Wizard"
-                    on_press: ConnectionWizard().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Connection Settings"
-                    on_press: ConnectionSettings().open()
-                    on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     id: app_store_login
@@ -2549,6 +2534,10 @@ Builder.load_string('''
                     on_press: UploadAppDialog().open()
                     on_release: app_menu.close_all()
                 ContextMenuDivider
+                ContextMenuTextItem:
+                    text: "Channels"
+                    on_release: app_menu.close_all()
+                    on_press: app.root.ids.sm.current = 'channels'
                 ContextMenuTextItem:
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
