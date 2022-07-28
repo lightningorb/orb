@@ -2,24 +2,33 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-27 08:57:46
+# @Last Modified time: 2022-07-27 17:24:24
 
+import json
 import threading
 from time import sleep
 from random import choice
-from traceback import format_exc
 from functools import lru_cache
+from traceback import format_exc
 
 import arrow
+import requests
 
 from kivy.clock import mainthread
 from kivy.app import App
+from memoization import cached
 
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.pay_logic import pay_thread, PaymentStatus
+from orb.dialogs.swap_dialogs.deezy import Deezy, Network
+from orb.core.stoppable_thread import StoppableThread
 from orb.logic.thread_manager import thread_manager
+from orb.misc.decorators import guarded
+from orb.misc.auto_obj import dict2obj
+from orb.misc.mempool import get_fees
 from orb.misc import data_manager
+from orb.misc.utils import pref
 from orb.lnd import Lnd
 
 
@@ -37,11 +46,20 @@ class DeezySwapDialog(PopupDropShadow):
     def __init__(self, **kwargs):
         self.in_flight = set([])
         PopupDropShadow.__init__(self, **kwargs)
-        lnd = Lnd()
         self.chan_id = None
         self.inflight = set([])
         self.inflight_times = {}
+        self.address = None
 
+    def open(self):
+        super(DeezySwapDialog, self).open()
+        lnd = Lnd()
+        self.deezy = Deezy(
+            mode=Network.testnet
+            if pref("lnd.network") == "testnet"
+            else Network.mainnet
+        )
+        self.ids.swap.disabled = True
         channels = data_manager.data_man.channels
 
         def timeout_inflight_invoices(self):
@@ -57,6 +75,7 @@ class DeezySwapDialog(PopupDropShadow):
             self.ids.spinner_id.values = chans_pk
 
         def func():
+            self.estimate_cost(self.ids.amount_sats.text, self.ids.fee_rate.text)
             chans_pk = [
                 f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}" for c in channels
             ]
@@ -64,8 +83,61 @@ class DeezySwapDialog(PopupDropShadow):
 
         threading.Thread(target=func).start()
 
+    @cached(ttl=60)
+    def get_fees(self):
+        r = self.deezy.info()
+        mp_fee = get_fees("halfHourFee")
+        return r, mp_fee
+
+    @guarded
+    def estimate_cost(self, amount_sats: str, fee_rate: str):
+        amount_sats, fee_rate = int(amount_sats), int(fee_rate)
+        r, self.mp_fee = self.get_fees()
+
+        @mainthread
+        def update(disabled):
+            self.ids.swap.disabled = disabled
+
+        update(disabled=True)
+        if self.deezy.amount_sats_is_above_max(amount_sats=amount_sats):
+            print(f"Specified amount is too big, max: {r.max_swap_amount_sats}")
+            return
+        elif self.deezy.amount_sats_is_below_min(amount_sats=amount_sats):
+            print(f"Specified amount is too small, min: {r.min_swap_amount_sats}")
+            return
+        estimate = self.deezy.estimate_cost(
+            amount_sats=amount_sats, fee_rate=fee_rate, mp_fee=self.mp_fee
+        )
+        self.ids.cost_estimate.text = f"{estimate:,}"
+        print(f"Fee estimate is: {self.ids.cost_estimate.text} Sats")
+        update(disabled=not r.available)
+        if not r.available:
+            print("deezy.io is not currently availble!")
+
     def first_hop_spinner_click(self, chan):
         self.chan_id = int(chan.split(":")[0])
+
+    @guarded
+    def generate_invoice(self):
+        from orb.store import model
+
+        if not self.address:
+            self.address = Lnd().new_address().address
+        r = self.deezy.swap(
+            amount_sats=int(self.ids.amount_sats.text),
+            address=self.address,
+            mp_fee=self.mp_fee,
+        )
+        req = Lnd().decode_payment_request(r.bolt11_invoice)
+        invoice = model.Invoice(
+            raw=r.bolt11_invoice,
+            destination=req.destination,
+            num_satoshis=req.num_satoshis,
+            timestamp=req.timestamp,
+            expiry=req.expiry,
+            description=req.description,
+        )
+        invoice.save()
 
     def load(self):
         from orb.store import model
@@ -75,7 +147,7 @@ class DeezySwapDialog(PopupDropShadow):
             .select()
             .where(model.Invoice.expired() == False, model.Invoice.paid == False)
         )
-        return invoices
+        return [x for x in invoices]
 
     def get_ignored_chan_ids(self):
         return set(
@@ -88,15 +160,13 @@ class DeezySwapDialog(PopupDropShadow):
             ]
         )
 
-    def pay(self):
-        class PayThread(threading.Thread):
+    def swap(self):
+        class PayThread(StoppableThread):
             def __init__(self, inst, name, thread_n, *args, **kwargs):
                 super(PayThread, self).__init__(*args, **kwargs)
-                self._stop_event = threading.Event()
                 self.name = str(thread_n)
                 self.inst = inst
                 self.thread_n = thread_n
-                thread_manager.add_thread(self)
 
             def sprint(self, *args):
                 print(f'PT{self.thread_n}: {" ".join(args)}')
@@ -184,10 +254,9 @@ class DeezySwapDialog(PopupDropShadow):
                             PaymentStatus.success,
                             PaymentStatus.already_paid,
                         ]:
-                            with invoices_lock:
-                                invoice.paid = True
-                                invoice.save()
-                                self.inst.inflight.remove(invoice)
+                            invoice.paid = True
+                            invoice.save()
+                            self.inst.inflight.remove(invoice)
                         elif (
                             status == PaymentStatus.no_routes
                             or status == PaymentStatus.max_paths_exceeded
@@ -207,16 +276,6 @@ class DeezySwapDialog(PopupDropShadow):
 
                     sleep(5)
 
-            def stop(self):
-                self._stop_event.set()
-
-            def stopped(self):
-                return self._stop_event.is_set()
-
-        for i in range(int(self.ids.num_threads.text)):
-            self.thread = PayThread(inst=self, name="PayThread", thread_n=i)
-            self.thread.daemon = True
-            self.thread.start()
-
-    def kill(self):
-        self.thread.stop()
+        self.thread = PayThread(inst=self, name="PayThread", thread_n=0)
+        self.thread.daemon = True
+        self.thread.start()
