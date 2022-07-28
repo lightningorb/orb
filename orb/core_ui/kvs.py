@@ -1081,6 +1081,95 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: dp(400), dp(25)
+
+<DeezySwapDialog>:
+    title: 'Deezy Swap'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(600))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        Splitter:
+            horizontal: True
+        MDTextField:
+            id: amount_sats
+            text: '100_000'
+            helper_text: 'Sat Amount'
+            helper_text_mode: "persistent"
+            on_text: root.estimate_cost(amount_sats.text, fee_rate.text)
+        MDTextField:
+            id: fee_rate
+            text: str(500)
+            helper_text: 'Routing Max Fee Rate PPM'
+            helper_text_mode: "persistent"
+            on_text: root.estimate_cost(amount_sats.text, fee_rate.text)
+        MDTextField:
+            id: max_paths
+            text: '10_000'
+            helper_text: 'Max Paths'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: cost_estimate
+            text: '10_000'
+            helper_text: 'Cost Estimate'
+            helper_text_mode: "persistent"
+        Slider:
+            id: time_pref
+            value: 0
+            min: -1
+            max: 1
+            step: 0.01
+            orientation: 'horizontal'
+        Label:
+            text: 'Time Preference'
+        Label:
+            text: "First Hop Channel"
+            font_name: 'DejaVuSans'
+            font_size: '24sp'
+            size_hint_y: None
+            height: dp(25)
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    xyz: .5, .5, 1
+            canvas.after:
+                PopMatrix
+        Spinner:
+            id: spinner_id
+            text: 'any'
+            height: dp(25)
+            size_hint_y: 0
+            size_hint_x: 1
+            on_text: root.first_hop_spinner_click(spinner_id.text)
+        Splitter:
+            horizontal: True
+        MDRaisedButton:
+            id: generate_invoice
+            text: 'Generate Invoice'
+            font_size: '12sp'
+            on_release: root.generate_invoice() 
+            size_hint_y: None
+            size_hint_x: 1
+            height: dp(40)
+        MDRaisedButton:
+            id: swap
+            text: 'Swap'
+            font_size: '12sp'
+            on_release: root.swap() 
+            size_hint_y: None
+            size_hint_x: 1
+            height: dp(40)
+
+''')
+Builder.load_string('''
+#:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
 
@@ -2342,6 +2431,7 @@ Builder.load_string('''
 #:import SendCoins orb.screens.send_coins.SendCoins
 #:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
+#:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
@@ -2409,66 +2499,19 @@ Builder.load_string('''
                 id: lightning_context_menu
                 ContextMenuTextItem:
                     text: "Channels"
-                    on_release: app_menu.close_all()
-                    on_press: app.root.ids.sm.current = 'channels'
-                ContextMenuTextItem:
-                    text: "Pay"
                     ContextMenu:
                         ContextMenuTextItem:
-                            text: "Pay Invoices"
+                            text: "Open Channel"
+                            on_press:  OpenChannelScreen().open()
                             on_release: app_menu.close_all()
-                            on_press:  PayInvoicesDialog().open()
                         ContextMenuTextItem:
-                            text: "Pay LNURL"
+                            text: "Batch Open"
+                            on_press:  BatchOpenScreen().open()
                             on_release: app_menu.close_all()
-                            on_press:  PayLNURLDialog().open()
-                ContextMenuTextItem:
-                    text: "Rebalance"
-                    on_release: app_menu.close_all()
-                    on_press:  Rebalance().open()
-                ContextMenuTextItem:
-                    text: "Mail"
-                    on_press:  app_menu.close_all()
-                    on_release: MailDialog().open()
-                ContextMenuTextItem:
-                    text: "Open Channel"
-                    on_press:  OpenChannelScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Batch Open"
-                    on_press:  BatchOpenScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Close Channel"
-                    on_press:  CloseChannel().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Connect"
-                    on_press:  ConnectScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Ingest Invoices"
-                    on_press: IngestInvoices().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Rankings"
-                    on_press: Rankings().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Forwarding History"
-                    ContextMenu:
                         ContextMenuTextItem:
-                            text: "Total Routing"
-                            on_release: (app_menu.close_all(), view_forwarding_history())
-                        ContextMenuTextItem:
-                            text: "Fees Earned"
-                            on_release: (app_menu.close_all(), graph_fees_earned())
-                        ContextMenuTextItem:
-                            text: "Fee Distribution"
-                            on_release: (app_menu.close_all(), FeeDistribution().open())
-                ContextMenuTextItem:
-                    text: "Channels"
-                    ContextMenu:
+                            text: "Close Channel"
+                            on_press:  CloseChannel().open()
+                            on_release: app_menu.close_all()
                         ContextMenuTextItem:
                             text: "Highlighter"
                             on_release: [HighlighterDialog().open(), app_menu.close_all()]
@@ -2493,7 +2536,56 @@ Builder.load_string('''
                                 ContextMenuTextItem:
                                     text: "alias"
                                     on_release: (app_menu.close_all(), set_string_pref('display.channel_sort_criteria', 'alias'), channels.channels_widget.update())
-
+                ContextMenuTextItem:
+                    text: "Pay"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Pay Invoices"
+                            on_release: app_menu.close_all()
+                            on_press:  PayInvoicesDialog().open()
+                        ContextMenuTextItem:
+                            text: "Pay LNURL"
+                            on_release: app_menu.close_all()
+                            on_press:  PayLNURLDialog().open()
+                ContextMenuTextItem:
+                    text: "Swap"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Deezy.io"
+                            on_release: app_menu.close_all()
+                            on_press: DeezySwapDialog().open()
+                ContextMenuTextItem:
+                    text: "Rebalance"
+                    on_release: app_menu.close_all()
+                    on_press:  Rebalance().open()
+                ContextMenuTextItem:
+                    text: "Mail"
+                    on_press:  app_menu.close_all()
+                    on_release: MailDialog().open()
+                ContextMenuTextItem:
+                    text: "Connect"
+                    on_press:  ConnectScreen().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Ingest Invoices"
+                    on_press: IngestInvoices().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Rankings"
+                    on_press: Rankings().open()
+                    on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Forwarding History"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Total Routing"
+                            on_release: (app_menu.close_all(), view_forwarding_history())
+                        ContextMenuTextItem:
+                            text: "Fees Earned"
+                            on_release: (app_menu.close_all(), graph_fees_earned())
+                        ContextMenuTextItem:
+                            text: "Fee Distribution"
+                            on_release: (app_menu.close_all(), FeeDistribution().open())
 
         AppMenuTextItem:
             text: "On-Chain"
@@ -2515,23 +2607,6 @@ Builder.load_string('''
                     text: "Settings"
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
-                ContextMenuTextItem:
-                    text: "Umbrel Node / lndonnect"
-                    on_press: UmbrelNode().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Voltage Node"
-                    on_press: VoltageNode().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    id: ssh_connection_wizard
-                    text: "SSH Connection Wizard"
-                    on_press: ConnectionWizard().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Connection Settings"
-                    on_press: ConnectionSettings().open()
-                    on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     id: app_store_login
@@ -2549,6 +2624,10 @@ Builder.load_string('''
                     on_press: UploadAppDialog().open()
                     on_release: app_menu.close_all()
                 ContextMenuDivider
+                ContextMenuTextItem:
+                    text: "Channels"
+                    on_release: app_menu.close_all()
+                    on_press: app.root.ids.sm.current = 'channels'
                 ContextMenuTextItem:
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
