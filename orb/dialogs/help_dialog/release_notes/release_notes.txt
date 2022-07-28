@@ -1,6 +1,15 @@
-0.18.0
+0.19.0
 ----
 
+Deezy integration #262
+added deezy dialog
+started deezy integration
+
+
+v0.18.0
+-------
+
+version bump
 
 
 v0.17.2
