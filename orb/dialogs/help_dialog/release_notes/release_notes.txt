@@ -1,6 +1,14 @@
-0.19.1
+0.19.2
 ----
 
+updated release notes
+lnd version typo in conf defaults
+
+
+v0.19.1
+-------
+
+version bump
 Merge branch 'dev' into main
 move payment logic out of lnurl and deezy dialogs
 release hotfix
