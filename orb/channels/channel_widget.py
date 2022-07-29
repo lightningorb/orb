@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-17 21:59:02
+# @Last Modified time: 2022-07-29 14:44:18
 
 from time import time
 from threading import Thread
@@ -192,7 +192,9 @@ class ChannelWidget(Widget):
             self.c,
             self.b,
         )
-        dist = int(Vector(start[0], start[1]).dist(Vector(end[0], end[1])) / 500)
+        dist = max(
+            int(Vector(start[0], start[1]).dist(Vector(end[0], end[1])) / 500), 1
+        )
         anim = Animation(pos=start, size=(s, s), duration=0, t="in_quad")
         anim += Animation(pos=end, size=(s, s), duration=dist, t="in_quad")
         anim += Animation(pos=end, size=(1, 1), duration=0, t="in_quad")
@@ -207,7 +209,9 @@ class ChannelWidget(Widget):
             self.b,
             self.c,
         )
-        dist = int(Vector(start[0], start[1]).dist(Vector(end[0], end[1])) / 500)
+        dist = max(
+            int(Vector(start[0], start[1]).dist(Vector(end[0], end[1])) / 500), 1
+        )
         anim = Animation(pos=start, size=(s, s), duration=0, t="out_quad")
         anim += Animation(pos=end, size=(s, s), duration=dist, t="out_quad")
         anim.start(self.anim_rect)
