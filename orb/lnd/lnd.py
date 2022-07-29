@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 10:30:34
+# @Last Modified time: 2022-07-29 19:03:09
 
 import sys
 from pathlib import Path
@@ -55,6 +55,8 @@ def Lnd(
         rest_port = int(pref("lnd.rest_port"))
         grpc_port = int(pref("lnd.grpc_port"))
         version = pref("lnd.version")
+        if type(version) in [int, float]:
+            version = "v0.15.0-beta"
 
     if lnd.get(protocol) is None or not cache:
         if protocol == Protocol.grpc:
