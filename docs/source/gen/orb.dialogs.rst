@@ -18,6 +18,7 @@ Subpackages
    orb.dialogs.highlighter_dialog
    orb.dialogs.ingest_invoices
    orb.dialogs.pay_dialogs
+   orb.dialogs.swap_dialogs
    orb.dialogs.umbrel_node
    orb.dialogs.upload_app
    orb.dialogs.voltage_node

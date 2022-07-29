@@ -24,7 +24,6 @@ Submodules
    orb.logic.htlc_grpc
    orb.logic.htlc_rest
    orb.logic.htlcs_thread
-   orb.logic.licensing
    orb.logic.lnurl_invoice_generator
    orb.logic.normalized_events
    orb.logic.pay_logic

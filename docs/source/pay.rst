@@ -1,9 +1,14 @@
+.. _pay-invoices:
+
+
 Paying Invoices
 ===============
 
-.. image:: pay.png
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Orb_2022-07-29_13-18-51.png
    :align: center
-   :scale: 80%
+   :width: 300px
+
+
 
 
 Fee Rate PPM

@@ -1,3 +1,5 @@
+.. _ingest-invoices:
+
 Invoice Ingestion
 =================
 

@@ -22,7 +22,6 @@ Submodules
    orb.misc.data_manager
    orb.misc.decorators
    orb.misc.decrypt
-   orb.misc.device_id
    orb.misc.enums
    orb.misc.fab_factory
    orb.misc.forex
@@ -36,5 +35,4 @@ Submodules
    orb.misc.patch_rand_bits
    orb.misc.plugin
    orb.misc.prefs
-   orb.misc.sec_rsa
    orb.misc.utils
