@@ -1,6 +1,9 @@
-0.19.0
+0.19.1
 ----
 
+Merge branch 'dev' into main
+move payment logic out of lnurl and deezy dialogs
+release hotfix
 Deezy integration #262
 
 
