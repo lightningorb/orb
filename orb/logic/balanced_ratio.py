@@ -2,11 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-07-10 16:35:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 16:43:52
+# @Last Modified time: 2022-07-23 18:17:20
+
+from kivy.app import App
 
 
 class BalancedRatioMixin:
     def compute_balanced_ratios(self, *_):
+        App.get_running_app().store.get("exclude_from_balanced_ratio", {})
         solution = []
         channels = [x for x in self.channels.values()]
         for c in channels:

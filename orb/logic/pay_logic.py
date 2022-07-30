@@ -2,10 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 08:56:41
+# @Last Modified time: 2022-07-24 00:33:43
 
-import json
-import threading
 import arrow
 from collections import deque
 
@@ -17,16 +15,23 @@ from kivy.clock import (
     Clock,
     _default_time as time,
 )
+from orb.store.db_meta import path_finding_db_name
+from orb.misc.decorators import db_connect
 
 MAX_TIME = 1 / 5
 
 consumables = deque()
 
 
+@db_connect(path_finding_db_name)
+def do_save(doc):
+    doc.save()
+
+
 def consume(*_):
     while consumables and time() < (Clock.get_time() + MAX_TIME):
         doc = consumables.popleft()
-        doc.save()
+        do_save(doc)
 
 
 Clock.schedule_interval(consume, 0)
@@ -42,6 +47,7 @@ class PaymentStatus:
     max_paths_exceeded = 6
     inflight = 7
     already_paid = 8
+    unknown_payment_details = 9
 
 
 def get_failure_source_pubkey(response, route):
@@ -123,7 +129,7 @@ def pay_thread(
         outgoing_chan_id=outgoing_chan_id,
         last_hop_pubkey=last_hop_pubkey,
         fee_limit_msat=fee_limit_msat,
-        time_pref=time_pref
+        time_pref=time_pref,
     )
     has_next = False
     count = 0
@@ -189,9 +195,14 @@ def pay_thread(
                 attempt.succeeded = True
                 payment.succeeded = True
                 payment.fees = route.total_fees
-                for hop in attempt.hops:
-                    hop.succeeded = True
-                    consumables.append(hop)
+
+                @db_connect(path_finding_db_name)
+                def set_hop_succeeded():
+                    for hop in attempt.hops:
+                        hop.succeeded = True
+                        consumables.append(hop)
+
+                set_hop_succeeded()
                 consumables.append(attempt)
                 consumables.append(payment)
                 return PaymentStatus.success
@@ -204,6 +215,8 @@ def pay_thread(
                 )
                 consumables.append(attempt)
                 handle_error(response, route, routes)
+                if response and response.failure.code == 1:
+                    return PaymentStatus.unknown_payment_details
     if not has_next:
         print(f"T{thread_n}: No routes found!")
         return PaymentStatus.no_routes

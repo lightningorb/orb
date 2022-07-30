@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 18:48:49
+# @Last Modified time: 2022-07-23 21:10:13
 
 import functools
 from threading import Lock
 import string
 
 from kivy.app import App
+
+from orb.store.db_meta import *
 
 printable = set(string.printable)
 to_ascii = lambda s: "".join(filter(lambda x: x in printable, s))
@@ -41,13 +43,17 @@ def aliases_cache(func):
         if pk in cache:
             return cache[pk]
         with lock:
+            db = get_db(aliases_db_name)
+            db.connect()
             alias = model.Alias().select().where(model.Alias.pk == pk)
             if alias:
                 cache[pk] = to_ascii(alias.get().alias)
+                db.close()
                 return cache[pk]
             alias = to_ascii(func(*args, **kwargs))
             model.Alias(pk=pk, alias=alias).save()
             cache[pk] = alias
+            db.close()
         return cache[pk]
 
     return wrapper_decorator

@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-23 12:07:57
+# @Last Modified time: 2022-07-30 10:58:42
 
 import arrow
 from threading import Thread, Lock
 from collections import defaultdict
 from orb.misc import data_manager
 from orb.lnd import Lnd
+from orb.store.db_meta import channel_stats_db_name, payments_db_name
+from orb.misc.decorators import db_connect
 
 lock = Lock()
 
@@ -131,6 +133,8 @@ def download_payment_history(*_, **__):
                 s.debt = 0
                 s.save()
 
+    @db_connect(name=channel_stats_db_name, lock=False)
+    @db_connect(name=payments_db_name, lock=False)
     def func():
         if lock.locked():
             return

@@ -2,37 +2,39 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 08:23:16
+# @Last Modified time: 2022-07-30 12:56:25
 
 import os
-import threading
-import requests
-import random
 import time
+import random
+import requests
+import threading
 
+from kivy.app import App
+from kivy.clock import Clock
 from kivy.metrics import Metrics
-from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.clock import mainthread
-from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.button import Button
+from kivy.uix.widget import Widget
+from kivy.core.window import Window
+from kivy.uix.image import AsyncImage
 from kivy.properties import ListProperty
 from kivy.properties import ObjectProperty
-from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.app import App
-from kivy.uix.image import AsyncImage
+from kivy.uix.floatlayout import FloatLayout
 
-from orb.misc.prefs import is_rest
-from orb.misc.decorators import silent, guarded
-from orb.misc import mempool, data_manager
-from orb.misc.forex import forex
-from orb.logic.thread_manager import thread_manager
-from orb.lnd import Lnd
-from orb.misc.utils import desktop, pref
-from orb.logic import licensing
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
+from orb.logic.thread_manager import thread_manager
+from orb.misc.decorators import silent, guarded
+from orb.store.db_meta import payments_db_name
+from orb.misc.decorators import db_connect
+from orb.misc import mempool, data_manager
+from orb.misc.utils import desktop, pref
+from orb.misc.prefs import is_rest
+from orb.misc.forex import forex
+from orb.logic import licensing
+from orb.lnd import Lnd
 
 
 class HUDFeeSummary(BorderedLabel):
@@ -83,6 +85,7 @@ class HUDSpentFeeSummary(BorderedLabel):
             self.hud = text
             self.show()
 
+        @db_connect(payments_db_name)
         @silent
         def func():
             from orb.store.model import LNDPayment
@@ -206,7 +209,7 @@ class HUDBalance(BorderedLabel):
 
 class HUDSystem(BorderedLabel):
     """
-    Memory Usage HUD
+    Various system usage stats
     """
 
     hud = ObjectProperty("")
@@ -214,22 +217,35 @@ class HUDSystem(BorderedLabel):
     def __init__(self, *args, **kwargs):
         BorderedLabel.__init__(self, *args, **kwargs)
 
+        class Mode:
+            mem = 0
+            open_files = 1
+
+        self.mode = Mode.open_files
+        psutil_installed = False
+        try:
+            import psutil
+
+            psutil_installed = True
+        except:
+            psutil_installed = False
+
         def func():
             while True:
-                try:
-                    import psutil
-
-                    process = psutil.Process(os.getpid())
-                    usage = f"{process.memory_info().rss:_} bytes"
-                    self.hud = usage
-                except:
-                    dpi_info = Metrics.dpi
-                    pixel_density_info = Metrics.density
-                    self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+                process = psutil.Process(os.getpid())
+                if self.mode == Mode.mem:
+                    self.hud = f"{process.memory_info().rss:_} bytes"
+                elif self.mode == Mode.open_files:
+                    self.hud = f"{len(process.open_files()):_} open files"
                 time.sleep(1)
 
-        threading.Thread(target=func).start()
-        self.show()
+        if psutil_installed:
+            threading.Thread(target=func).start()
+            self.show()
+        else:
+            dpi_info = Metrics.dpi
+            pixel_density_info = Metrics.density
+            self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
 
 
 class HUDBTCPrice(FloatLayout, Hideable):
@@ -485,16 +501,14 @@ class HUDEvaluation(Label):
 class HUDBanner(AsyncImage):
     def __init__(self, *args, **kwargs):
         super(HUDBanner, self).__init__(*args, **kwargs)
-        # if licensing.is_free() or licensing.is_trial():
-        if True:
+        self.last_motion = time.time()
+
+        def on_motion(*_):
             self.last_motion = time.time()
 
-            def on_motion(*_):
-                self.last_motion = time.time()
-
-            self.change_banner()
-            Clock.schedule_interval(self.change_banner, 60)
-            Window.bind(on_motion=on_motion)
+        self.change_banner()
+        Clock.schedule_interval(self.change_banner, 60)
+        Window.bind(on_motion=on_motion)
 
     def change_banner(self, *_):
         if time.time() - self.last_motion < 60:

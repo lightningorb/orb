@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 09:18:55
+# @Last Modified time: 2022-07-30 11:05:20
 
 import arrow
 from threading import Thread, Lock
 
 from orb.lnd import Lnd
 from orb.misc.decorators import guarded
+from orb.misc.decorators import db_connect
+from orb.store.db_meta import channel_stats_db_name, forwarding_events_db_name
 
 lock = Lock()
 
@@ -53,11 +55,14 @@ def download_forwarding_history(*_, **__):
                 s.save()
 
     @guarded
+    @db_connect(channel_stats_db_name, lock=False)
+    @db_connect(forwarding_events_db_name, lock=False)
     def func():
         if lock.locked():
             return
         with lock:
             chunk_size = 100
+
             last = (
                 model.ForwardEvent.select()
                 .order_by(model.ForwardEvent.timestamp_ns.desc())

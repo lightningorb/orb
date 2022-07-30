@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-27 13:36:03
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-27 16:46:43
+# @Last Modified time: 2022-07-30 11:11:28
 
 import requests
 import json
@@ -24,15 +24,15 @@ class Deezy:
         self.version: str = version
 
     @property
-    def __prefix(self) -> str:
+    def __prefix(self) -> unicode:
         return ("api-testnet.", "api.")[self.mode == Network.mainnet]
 
     @property
-    def __fqdn(self) -> str:
+    def __fqdn(self) -> unicode:
         return f"https://{self.__prefix}deezy.io"
 
     @property
-    def __url(self) -> str:
+    def __url(self) -> unicode:
         return f"{self.__fqdn}/v{self.version}"
 
     @cached(ttl=60)

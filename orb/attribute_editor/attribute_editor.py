@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 11:22:03
+# @Last Modified time: 2022-07-23 18:18:27
 
 from threading import Thread
 
@@ -293,6 +293,17 @@ class AttributeEditor(BoxLayout):
         vals[str(self.channel.chan_id)] = active.active
         App.get_running_app().store.put("pay_through_channel", **vals)
 
+    def exclude_from_balanced_ratio(self, active, widget):
+        """
+        Callback for when the 'exclude from balanced ratio' checkbox is ticked.
+
+        :param active: whether to activate or deactivate exclude from balanced ratio.
+        :type active: field
+        """
+        vals = App.get_running_app().store.get("exclude_from_balanced_ratio", {})
+        vals[str(self.channel.chan_id)] = active.active
+        App.get_running_app().store.put("exclude_from_balanced_ratio", **vals)
+
     def on_balanced_ratio(self, ratio):
         """
         Callback for when the balance ratio field is modified.
@@ -376,6 +387,29 @@ class AttributeEditor(BoxLayout):
         ptc.bind(active=self.pay_through_channel)
 
         self.ids.md_list.add_widget(ptc)
+
+        self.ids.md_list.add_widget(
+            ItemDrawer(
+                icon="arrow-expand-right",
+                text="Exclude from balanced ratio:",
+                size_hint_y=None,
+                height=dp(60),
+            )
+        )
+
+        efbr = MDSwitch(
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            active=App.get_running_app()
+            .store.get("exclude_from_balanced_ratio", {})
+            .get(str(self.channel.chan_id if self.channel else ""), False),
+            size_hint_y=None,
+            height=dp(50),
+        )
+
+        efbr.bind(active=self.exclude_from_balanced_ratio)
+
+        self.ids.md_list.add_widget(efbr)
+
         self.ids.md_list.add_widget(
             ItemDrawer(
                 icon="chart-bell-curve-cumulative",

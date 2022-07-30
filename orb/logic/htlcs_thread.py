@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-09 07:25:14
+# @Last Modified time: 2022-07-24 00:27:48
 import json
 import threading
 from time import sleep
@@ -53,7 +53,7 @@ class HTLCsThread(threading.Thread):
 
                     with db_lock:
                         htlc = Htlc.init(e)
-                        htlc.save()
+                        # htlc.save()
 
                     # prevent routing from a low outbound channel to
                     # a channel with zero fees. or for example prevent

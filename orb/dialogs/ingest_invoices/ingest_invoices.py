@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-28 09:57:29
+# @Last Modified time: 2022-07-24 11:15:49
 
 from traceback import print_exc
 from threading import Thread
@@ -16,6 +16,8 @@ from orb.lnd import Lnd
 from orb.logic import licensing
 from orb.dialogs.ingest_invoices.invoice import Invoice
 from orb.components.popup_drop_shadow import PopupDropShadow
+from orb.misc.decorators import db_connect
+from orb.store.db_meta import invoices_db_name
 
 
 class IngestInvoices(PopupDropShadow):
@@ -25,8 +27,19 @@ class IngestInvoices(PopupDropShadow):
     def __init__(self, **kwargs):
         super(IngestInvoices, self).__init__(**kwargs)
         self.ids.scroll_view.clear_widgets()
-        for inv in self.load():
-            self.ids.scroll_view.add_widget(Invoice(**inv.__data__))
+
+    def open(self, *args):
+        super(IngestInvoices, self).open()
+
+        @mainthread
+        def add_invoice_widget(inv):
+            self.ids.scroll_view.add_widget(inv)
+
+        def func():
+            for inv in self.load():
+                add_invoice_widget(Invoice(**inv.__data__))
+
+        Thread(target=func).start()
         self.schedule = Clock.schedule_interval(self.update, 1)
 
     def update(self, *args):
@@ -43,6 +56,7 @@ class IngestInvoices(PopupDropShadow):
         Clock.unschedule(self.schedule)
         return super(IngestInvoices, self).dismiss(*args)
 
+    @db_connect(invoices_db_name)
     def load(self):
         from orb.store import model
 
@@ -58,7 +72,7 @@ class IngestInvoices(PopupDropShadow):
         if restrict and len(invoices) >= 1:
             self.ids.ingest_button.disabled = True
 
-        return invoices
+        return [x for x in invoices]
 
     def do_ingest(self, text):
         @mainthread
@@ -69,6 +83,7 @@ class IngestInvoices(PopupDropShadow):
         def update(not_ingested):
             self.ids.invoices.text = "\n".join(not_ingested)
 
+        @db_connect(invoices_db_name)
         def func():
             from orb.store import model
 
