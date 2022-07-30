@@ -2,13 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 09:18:55
+# @Last Modified time: 2022-07-24 01:23:42
 
 import arrow
 from threading import Thread, Lock
 
 from orb.lnd import Lnd
 from orb.misc.decorators import guarded
+from orb.misc.decorators import db_connect
+from orb.store.db_meta import channel_stats_db_name, forwarding_events_db_name
 
 lock = Lock()
 
@@ -16,6 +18,7 @@ lock = Lock()
 def download_forwarding_history(*_, **__):
     from orb.store import model
 
+    @db_connect(channel_stats_db_name)
     def update_stats(f, ev):
         out_stats = (
             model.ChannelStats()
@@ -44,6 +47,7 @@ def download_forwarding_history(*_, **__):
             )
         in_stats.save()
 
+    @db_connect(channel_stats_db_name)
     def clear_stats():
         stats = model.ChannelStats().select()
         if stats:
@@ -53,11 +57,13 @@ def download_forwarding_history(*_, **__):
                 s.save()
 
     @guarded
+    @db_connect(forwarding_events_db_name)
     def func():
         if lock.locked():
             return
         with lock:
             chunk_size = 100
+
             last = (
                 model.ForwardEvent.select()
                 .order_by(model.ForwardEvent.timestamp_ns.desc())

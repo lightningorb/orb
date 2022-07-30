@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 09:38:52
+# @Last Modified time: 2022-07-24 09:27:21
 
 from threading import Thread, Lock
 
@@ -15,6 +15,8 @@ from kivy.event import EventDispatcher
 from kivy.clock import mainthread
 
 from orb.lnd import Lnd
+from orb.store.db_meta import channel_stats_db_name
+from orb.misc.decorators import db_connect
 
 
 class Channel(EventDispatcher):
@@ -130,6 +132,7 @@ class Channel(EventDispatcher):
         Update LND with the channel policies specified
         in tbis object.
         """
+        print("updating")
         result = Lnd().update_channel_policy(
             channel=self,
             fee_rate=max(self.fee_rate_milli_msat / 1e6, 1e-06),
@@ -138,6 +141,7 @@ class Channel(EventDispatcher):
             max_htlc_msat=self.max_htlc_msat,
             min_htlc_msat=self.min_htlc_msat,
         )
+        print("updated?")
         print(result)
 
     def update(self, channel):
@@ -206,6 +210,7 @@ class Channel(EventDispatcher):
         return self.earned - self.debt
 
     @property
+    @db_connect(channel_stats_db_name)
     def debt(self):
         """
         How much was spent rebalancing towards that channel.
@@ -222,6 +227,7 @@ class Channel(EventDispatcher):
         return 0
 
     @property
+    @db_connect(channel_stats_db_name)
     def earned(self):
         """
         How much the channel has earned in fees.
@@ -238,6 +244,7 @@ class Channel(EventDispatcher):
         return 0
 
     @property
+    @db_connect(channel_stats_db_name)
     def helped_earn(self):
         """
         How much the channel helped earned in fees.

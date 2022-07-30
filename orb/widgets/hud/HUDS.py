@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 08:23:16
+# @Last Modified time: 2022-07-30 09:34:36
 
 import os
 import threading
@@ -33,6 +33,8 @@ from orb.lnd import Lnd
 from orb.misc.utils import desktop, pref
 from orb.logic import licensing
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
+from orb.store.db_meta import payments_db_name
+from orb.misc.decorators import db_connect
 
 
 class HUDFeeSummary(BorderedLabel):
@@ -83,6 +85,7 @@ class HUDSpentFeeSummary(BorderedLabel):
             self.hud = text
             self.show()
 
+        @db_connect(payments_db_name)
         @silent
         def func():
             from orb.store.model import LNDPayment
@@ -204,7 +207,22 @@ class HUDBalance(BorderedLabel):
         threading.Thread(target=func).start()
 
 
-class HUDSystem(BorderedLabel):
+class HUDDPI(BorderedLabel):
+    """
+    DPI HUD
+    """
+
+    hud = ObjectProperty("")
+
+    def __init__(self, *args, **kwargs):
+        BorderedLabel.__init__(self, *args, **kwargs)
+        dpi_info = Metrics.dpi
+        pixel_density_info = Metrics.density
+        self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+        self.show()
+
+
+class HUDMemUsage(BorderedLabel):
     """
     Memory Usage HUD
     """
@@ -213,23 +231,53 @@ class HUDSystem(BorderedLabel):
 
     def __init__(self, *args, **kwargs):
         BorderedLabel.__init__(self, *args, **kwargs)
+        process = psutil.Process(os.getpid())
 
         def func():
             while True:
-                try:
-                    import psutil
-
-                    process = psutil.Process(os.getpid())
-                    usage = f"{process.memory_info().rss:_} bytes"
-                    self.hud = usage
-                except:
-                    dpi_info = Metrics.dpi
-                    pixel_density_info = Metrics.density
-                    self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+                usage = f"{process.memory_info().rss:_} bytes"
+                self.hud = usage
                 time.sleep(1)
 
         threading.Thread(target=func).start()
         self.show()
+
+
+class HUDSystem(BorderedLabel):
+    """
+    Various system usage stats
+    """
+
+    hud = ObjectProperty("")
+
+    def __init__(self, *args, **kwargs):
+        BorderedLabel.__init__(self, *args, **kwargs)
+
+        class Mode:
+            mem = 0
+            open_files = 1
+
+        self.mode = Mode.open_files
+        psutil_installed = False
+        try:
+            import psutil
+
+            psutil_installed = True
+        except:
+            psutil_installed = False
+
+        def func():
+            while True:
+                process = psutil.Process(os.getpid())
+                if self.mode == Mode.mem:
+                    self.hud = f"{process.memory_info().rss:_} bytes"
+                elif self.mode == Mode.open_files:
+                    self.hud = f"{len(process.open_files()):_} open files"
+                time.sleep(1)
+
+        if psutil_installed:
+            threading.Thread(target=func).start()
+            self.show()
 
 
 class HUDBTCPrice(FloatLayout, Hideable):

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-01 08:23:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 08:11:47
+# @Last Modified time: 2022-07-23 19:58:02
 
 from traceback import format_exc
 
@@ -82,8 +82,8 @@ class DataManager(EventDispatcher):
         db_create_tables.create_payments_tables()
         db_create_tables.create_path_finding_tables()
 
-        # for db in dbs:
-        #     get_db(db).close()
+        for db in dbs:
+            get_db(db).close()
 
 
 data_man = None

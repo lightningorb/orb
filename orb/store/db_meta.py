@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 18:48:31
+# @Last Modified time: 2022-07-24 00:11:09
 
 from pathlib import Path
 from functools import lru_cache
@@ -22,9 +22,23 @@ channel_stats_db_name = "channel_stats_v2"
 htlcs_db_name = "htlcs_v4"
 
 
+class OrbSqliteExtDatabase(SqliteExtDatabase):
+    def connect(self):
+        # print("=" * 50)
+        # print(f"CONNECTING to {self}")
+        super(OrbSqliteExtDatabase, self).connect()
+        # print("-" * 50)
+
+    def close(self):
+        # print("=" * 50)
+        # print(f"CLOSING {self}")
+        super(OrbSqliteExtDatabase, self).close()
+        # print("-" * 50)
+
+
 @lru_cache(None)
 def get_db(name):
     app = App.get_running_app()
     if app:
         path = Path(app.user_data_dir) / pref("path.db") / f"{name}.db"
-        return SqliteExtDatabase(path)
+        return OrbSqliteExtDatabase(path, autoconnect=False)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 06:52:53
+# @Last Modified time: 2022-07-22 05:49:23
 
 import os
 from time import sleep
@@ -164,7 +164,9 @@ class RuleBase:
 
 
 class Setter(RuleBase):
-    def __init__(self, _from, _to, fee_rate, time_pref, num_sats, pk_ignore, priority=0):
+    def __init__(
+        self, _from, _to, fee_rate, time_pref, num_sats, pk_ignore, priority=0
+    ):
         super(Setter, self).__init__(fee_rate, priority, num_sats)
         self._from = _from
         self._to = _to
