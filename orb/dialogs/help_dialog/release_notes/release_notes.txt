@@ -1,6 +1,14 @@
 0.19.3
 ----
 
+Merge branch 'dev' into main
+portability
+
+
+v0.19.3
+-------
+
+version bump
 updated release notes
 Merge branch 'dev' into main
 memory leak / db locks should be fixed
