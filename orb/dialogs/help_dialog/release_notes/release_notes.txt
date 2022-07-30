@@ -1,6 +1,21 @@
-0.19.2
+0.19.3
 ----
 
+updated release notes
+Merge branch 'dev' into main
+memory leak / db locks should be fixed
+trying to gain explicit control over db opens and closes
+Merge branch 'dev' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    dev
+added testflight link to site
+lnd version typo in conf defaults
+
+
+v0.19.2
+-------
+
+version bump
 updated release notes
 lnd version typo in conf defaults
 
