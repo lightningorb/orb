@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-25 15:17:49
+# @Last Modified time: 2022-07-30 10:58:42
 
 import arrow
 from threading import Thread, Lock
@@ -18,8 +18,6 @@ lock = Lock()
 def download_payment_history(*_, **__):
     from orb.store import model
 
-    @db_connect(channel_stats_db_name)
-    @db_connect(payments_db_name)
     def save_payment(p):
         pay = model.LNDPayment(
             creation_date=p.creation_date,
@@ -112,7 +110,6 @@ def download_payment_history(*_, **__):
         pay.total_fees_msat = last_route.total_fees_msat
         pay.save()
 
-    @db_connect(payments_db_name)
     def payment_exists(p):
         return (
             model.LNDPayment()
@@ -121,7 +118,6 @@ def download_payment_history(*_, **__):
             .first()
         )
 
-    @db_connect(payments_db_name)
     def get_last_payment():
         return (
             model.LNDPayment()
@@ -130,7 +126,6 @@ def download_payment_history(*_, **__):
             .first()
         )
 
-    @db_connect(channel_stats_db_name)
     def clear_stats():
         stats = model.ChannelStats().select()
         if stats:
@@ -138,6 +133,8 @@ def download_payment_history(*_, **__):
                 s.debt = 0
                 s.save()
 
+    @db_connect(name=channel_stats_db_name, lock=False)
+    @db_connect(name=payments_db_name, lock=False)
     def func():
         if lock.locked():
             return

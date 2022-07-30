@@ -3069,13 +3069,6 @@ Builder.load_string('''
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
-<HUDMemUsage>:
-    id: hud_label
-    text: root.hud
-    size_hint: [None, None]
-    markup: True
-    size: [self.texture_size[0]+40, self.texture_size[1]+30]
-
 <HUDMempool>:
     id: hud_label
     text: root.hud

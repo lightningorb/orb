@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-20 10:18:48
+# @Last Modified time: 2022-07-30 11:34:08
 
 import threading
 from time import sleep
@@ -19,6 +19,8 @@ from orb.logic.channel_selector import get_low_inbound_channel
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.thread_manager import thread_manager
+from orb.store.db_meta import invoices_db_name
+from orb.misc.decorators import db_connect
 from orb.misc import data_manager
 from orb.lnd import Lnd
 
@@ -112,6 +114,7 @@ class PayInvoicesDialog(PopupDropShadow):
                     self.sprint("stopping payment thread in finally")
                     self.stop()
 
+            @db_connect(name=invoices_db_name, lock=False)
             def __run(self):
                 payment_opt = (
                     PaymentUIOption.user_selected_first_hop

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-26 18:25:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-24 01:57:28
+# @Last Modified time: 2022-07-30 10:08:03
 
 import functools
 import threading
@@ -47,15 +47,21 @@ def public_restrict(func):
     return wrapper_decorator
 
 
-def db_connect(name):
+def db_connect(name: str, lock: bool = False):
     def decorator(function):
         def wrapper(*args, **kwargs):
-            with locks[name]:
+            def run():
                 db = get_db(name)
                 db.connect()
                 result = function(*args, **kwargs)
                 db.close()
-            return result
+                return result
+
+            if lock:
+                with locks[name]:
+                    return run()
+            else:
+                return run()
 
         return wrapper
 

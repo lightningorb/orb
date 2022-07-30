@@ -2,19 +2,21 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-28 13:18:53
+# @Last Modified time: 2022-07-30 13:26:02
 
 from collections import defaultdict
 from threading import Thread
 import arrow
 
-from kivy.uix.popup import Popup
-from kivy_garden.graph import Graph, SmoothLinePlot
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.core.window import Window
 from kivy.metrics import dp
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.core.window import Window
+from kivy.uix.boxlayout import BoxLayout
+from kivy_garden.graph import Graph, SmoothLinePlot
 
+from orb.store.db_meta import forwarding_events_db_name
+from orb.misc.decorators import db_connect
 from orb.misc.forex import forex
 from orb.lnd import Lnd
 
@@ -25,51 +27,7 @@ def get_forwarding_history():
     return model.ForwardEvent().select()
 
 
-def download_forwarding_history(*args, **kwargs):
-    def func():
-        from orb.store import model
-
-        last = model.ForwardEvent.select().order_by(
-            model.ForwardEvent.timestamp_ns.desc()
-        )
-        if last:
-            last = last.first()
-        i = 0
-        start_time = int(last.timestamp) if last else None
-        while True:
-            # fwd returns object with forwarding_events and last_offset_index attributes
-            print("downloading from offset {}".format(i))
-            fwd = Lnd().get_forwarding_history(
-                start_time=start_time, index_offset=i, num_max_events=100
-            )
-
-            for j, f in enumerate(fwd.forwarding_events):
-                if j == 0 and start_time:
-                    # if this is not the first run, then skip the first
-                    # event, else it will show up as a duplicate
-                    continue
-
-                ev = model.ForwardEvent(
-                    timestamp=int(f.timestamp),
-                    chan_id_in=int(f.chan_id_in),
-                    chan_id_out=int(f.chan_id_out),
-                    amt_in=int(f.amt_in),
-                    amt_out=int(f.amt_out),
-                    fee=int(f.fee),
-                    fee_msat=int(f.fee_msat),
-                    amt_in_msat=int(f.amt_in_msat),
-                    amt_out_msat=int(f.amt_out_msat),
-                    timestamp_ns=int(f.timestamp_ns),
-                )
-                ev.save()
-            # i += 100
-            i = fwd.last_offset_index
-            if not fwd.forwarding_events:
-                break
-
-    Thread(target=func).start()
-
-
+@db_connect(name=forwarding_events_db_name, lock=False)
 def view_forwarding_history():
     from kivy.uix.popup import Popup
     from kivy.uix.label import Label
@@ -115,6 +73,7 @@ def sma(data, n=3):
     return ret
 
 
+@db_connect(name=forwarding_events_db_name, lock=False)
 def graph_fees_earned():
 
     fh = get_forwarding_history()

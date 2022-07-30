@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-20 11:23:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 08:50:43
+# @Last Modified time: 2022-07-30 11:55:23
 
 import threading
 import requests
@@ -12,6 +12,8 @@ from peewee import fn
 from lnurl import Lnurl, LnurlResponse
 
 from orb.core.stoppable_thread import StoppableThread
+from orb.store.db_meta import invoices_db_name
+from orb.misc.decorators import db_connect
 from orb.lnd import Lnd
 
 
@@ -106,6 +108,7 @@ class LNUrlInvoiceGenerator(StoppableThread):
         invoice.save()
         self.invoices.add(invoice.raw)
 
+    @db_connect(invoices_db_name)
     def run(self, *_):
         print("run")
         while not self.stopped():

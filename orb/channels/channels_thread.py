@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-27 08:19:16
+# @Last Modified time: 2022-07-30 11:50:59
 
 import base64
 import codecs
@@ -59,8 +59,8 @@ class ChannelsThread(threading.Thread):
                             )
                             if chan:
                                 chan.active = False
-                            else:
-                                print(f"Channel point not found: {cp}")
+                            # else:
+                            #     print(f"Channel point not found: {cp}")
                         if hasattr(e, "active_channel"):
                             print(e.active_channel)
                             c = e.active_channel
@@ -82,8 +82,8 @@ class ChannelsThread(threading.Thread):
                             )
                             if chan:
                                 chan.active = True
-                            else:
-                                print(f"Channel point not found: {cp}")
+                            # else:
+                            #     print(f"Channel point not found: {cp}")
                         if hasattr(e, "open_channel"):
                             o = e.open_channel
                             if o.chan_id:

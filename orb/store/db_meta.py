@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 10:04:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-24 00:11:09
+# @Last Modified time: 2022-07-30 09:53:13
 
 from pathlib import Path
 from functools import lru_cache
 
 from playhouse.sqlite_ext import SqliteExtDatabase
+from playhouse.sqliteq import SqliteQueueDatabase
 
 from kivy.app import App
 
@@ -22,7 +23,7 @@ channel_stats_db_name = "channel_stats_v2"
 htlcs_db_name = "htlcs_v4"
 
 
-class OrbSqliteExtDatabase(SqliteExtDatabase):
+class OrbSqliteExtDatabase(SqliteQueueDatabase):
     def connect(self):
         # print("=" * 50)
         # print(f"CONNECTING to {self}")
