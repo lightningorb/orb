@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-30 12:56:25
+# @Last Modified time: 2022-07-31 18:47:48
 
 import os
 import time
@@ -25,6 +25,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
+from orb.core.stoppable_thread import StoppableThread
 from orb.logic.thread_manager import thread_manager
 from orb.misc.decorators import silent, guarded
 from orb.store.db_meta import payments_db_name
@@ -230,22 +231,21 @@ class HUDSystem(BorderedLabel):
         except:
             psutil_installed = False
 
-        def func():
-            while True:
-                process = psutil.Process(os.getpid())
-                if self.mode == Mode.mem:
-                    self.hud = f"{process.memory_info().rss:_} bytes"
-                elif self.mode == Mode.open_files:
-                    self.hud = f"{len(process.open_files()):_} open files"
-                time.sleep(1)
+        def func(*_):
+            process = psutil.Process(os.getpid())
+            if self.mode == Mode.mem:
+                self.hud = f"{process.memory_info().rss:_} bytes"
+            elif self.mode == Mode.open_files:
+                self.hud = f"{len(process.open_files()):_} open files"
 
         if psutil_installed:
-            threading.Thread(target=func).start()
-            self.show()
+            Clock.schedule_interval(lambda _: threading.Thread(target=func).start(), 1)
+            Clock.schedule_once(lambda _: threading.Thread(target=func).start(), 1)
         else:
             dpi_info = Metrics.dpi
             pixel_density_info = Metrics.density
             self.hud = f"DPI: {dpi_info}, Pixel Density: {pixel_density_info}"
+        self.show()
 
 
 class HUDBTCPrice(FloatLayout, Hideable):

@@ -2580,6 +2580,10 @@ Builder.load_string('''
                     text: "Console"
                     on_press:  app.root.ids.sm.current = 'console'
                     on_release: app_menu.close_all()
+                ContextMenuTextItem:
+                    text: "Connector"
+                    on_press:  app.connector()
+                    on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Quit"

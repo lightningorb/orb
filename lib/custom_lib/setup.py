@@ -1,27 +1,21 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2022-07-09 13:50:14
+# @Date:   2022-07-31 07:52:43
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 14:30:26
+# @Last Modified time: 2022-07-31 07:52:56
 
+"""setup.py needs to be able to work without cython to build on android
+"""
 from pathlib import Path
 from os import getenv
-import os
 import sys
-import shutil
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
-from Cython.Build import cythonize
-
-print("SETTTTTTUPPPPPP")
 
 VERSION = "1.0"
 
-# shutil.copy("/home/ubuntu/orb/orb/misc/sec_rsa.py", "./sec_rsa_cython.pyx")
-
-FILES = list(Path(".").rglob("*.pyx"))
-# FILES = ["orb/misc/sec_rsa.py"]
+FILES = list(Path(".").rglob("*.pyx")) + list(Path(".").rglob("*.pxi"))
 
 INSTALL_REQUIRES = []
 SETUP_REQUIRES = []
@@ -29,7 +23,7 @@ SETUP_REQUIRES = []
 # detect Python for android
 PLATFORM = sys.platform
 
-if getenv("NDKPLATFORM") and getenv("LIBLINK"):
+if getenv("LIBLINK"):
     PLATFORM = "android"
 
 # detect cython
@@ -39,8 +33,6 @@ if PLATFORM != "android":
 else:
     FILES = [fn.with_suffix(".c") for fn in FILES]
 
-print("DOING THE BUILDDD")
-print(FILES)
 # create the extension
 setup(
     name="custom_lib",
@@ -48,7 +40,12 @@ setup(
     cmdclass={"build_ext": build_ext},
     install_requires=INSTALL_REQUIRES,
     setup_requires=SETUP_REQUIRES,
-    ext_modules=[Extension(x.stem, [x.as_posix()]) for x in FILES],
+    ext_modules=[
+        Extension(
+            "custom_lib",
+            [str(fn) for fn in FILES],
+        )
+    ],
     extras_require={
         "dev": [],
         "ci": [],

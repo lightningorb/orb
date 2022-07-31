@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-19 17:01:22
+# @Last Modified time: 2022-07-31 18:28:20
 
 import os
 import sys
@@ -286,3 +286,12 @@ class OrbApp(AppCommon):
         path = Path(__file__).parent.parent.parent / "orb/misc/settings.json"
         print(f"Settings file: {path.as_posix()}")
         settings.add_json_panel("Orb", self.config, filename=path.as_posix())
+
+    def connector(self):
+        """
+        Clear connector autostart settings so it runs on next start
+        """
+        conf_path = Path(self._get_user_data_dir()) / "../orbconnector/orbconnector.ini"
+        if conf_path.exists():
+            os.unlink(conf_path.as_posix())
+            self.stop()

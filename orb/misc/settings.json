@@ -188,17 +188,6 @@
    },
    {
       "type":"title",
-      "title":"Liquidity"
-   },
-   {
-      "type":"bool",
-      "title":"Auto-Compute Balanced Ratio",
-      "desc":"Enable automatic recomputation of balanced ratio",
-      "section":"liquidity",
-      "key":"auto_compute_balanced_ratio"
-   },
-   {
-      "type":"title",
       "title":"Debug"
    },
    {

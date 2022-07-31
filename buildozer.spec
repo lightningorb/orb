@@ -25,7 +25,6 @@ source.include_patterns = VERSION,images/*
 source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, images, license, lnappstore, server, site, tests, tutes, user, local_recipes, lib
 
 # (list) List of exclusions using pattern matching
-# Do not prefix with './'
 source.exclude_patterns = fabfile.py, build.py
 
 # (str) Application versioning (method 1)
@@ -33,19 +32,15 @@ version = 0.18.0.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/VERSION.py
+# version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome
-#,custom_lib
-# android,cryptography,bcrypt,attrs,cffi,fabric,pyinvoke
-
+requirements = python3,kivy==2.0.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome,bech32,custom_lib
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
-
 requirements.source.custom_lib = lib/custom_lib
 
 # (str) Presplash of the application
@@ -78,14 +73,14 @@ osx.kivy_version = 1.9.1
 #
 
 # (bool) Indicate if the application should be fullscreen or not
-fullscreen = false
+fullscreen = 0
 
 # (string) Presplash background color (for android toolchain)
 # Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-android.presplash_color = #00000000
+#android.presplash_color = #FFFFFF
 
 # (string) Presplash animation using Lottie format.
 # see https://lottiefiles.com/ for examples and https://airbnb.design/lottie/
@@ -93,23 +88,13 @@ android.presplash_color = #00000000
 # Lottie files can be created using various tools, like Adobe After Effect or Synfig.
 #android.presplash_lottie = "path/to/lottie/file.json"
 
-# (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
-#icon.adaptive_foreground.filename = %(source.dir)s/data/icon_fg.png
-#icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
-
 # (list) Permissions
-android.permissions = INTERNET,WAKE_LOCK
-
-# (list) features (adds uses-feature -tags to manifest)
-#android.features = android.hardware.usb.host
+android.permissions = INTERNET
 
 # (int) Target Android API, should be as high as possible.
-android.api = 30
+#android.api = 27
 
-# minimum version of google play store bumps to 31 soon
-#android.api = 31
-
-# (int) Minimum API your APK / AAB will support.
+# (int) Minimum API your APK will support.
 #android.minapi = 21
 
 # (int) Android SDK version to use
@@ -145,23 +130,7 @@ android.api = 30
 # android.accept_sdk_license = False
 
 # (str) Android entry point, default is ok for Kivy-based app
-#android.entrypoint = org.kivy.android.PythonActivity
-
-# (str) Full name including package path of the Java class that implements Android Activity
-# use that parameter together with android.entrypoint to set custom Java class instead of PythonActivity
-#android.activity_class_name = org.kivy.android.PythonActivity
-
-# (str) Extra xml to write directly inside the <manifest> element of AndroidManifest.xml
-# use that parameter to provide a filename from where to load your custom XML code
-#android.extra_manifest_xml = ./src/android/extra_manifest.xml
-
-# (str) Extra xml to write directly inside the <manifest><application> tag of AndroidManifest.xml
-# use that parameter to provide a filename from where to load your custom XML arguments:
-#android.extra_manifest_application_arguments = ./src/android/extra_manifest_application_arguments.xml
-
-# (str) Full name including package path of the Java class that implements Python Service
-# use that parameter to set custom Java class instead of PythonService
-#android.service_class_name = org.kivy.android.PythonService
+#android.entrypoint = org.renpy.android.PythonActivity
 
 # (str) Android app theme, default is ok for Kivy-based app
 # android.apptheme = "@android:style/Theme.NoTitleBar"
@@ -185,22 +154,13 @@ android.api = 30
 # directory containing the files)
 #android.add_src =
 
-# (list) Android AAR archives to add
+# (list) Android AAR archives to add (currently works only with sdl2_gradle
+# bootstrap)
 #android.add_aars =
 
-# (list) Put these files or directories in the apk assets directory.
-# Either form may be used, and assets need not be in 'source.include_exts'.
-# 1) android.add_assets = source_asset_relative_path
-# 2) android.add_assets = source_asset_path:destination_asset_relative_path
-#android.add_assets =
-
-# (list) Gradle dependencies to add
+# (list) Gradle dependencies to add (currently works only with sdl2_gradle
+# bootstrap)
 #android.gradle_dependencies =
-
-# (bool) Enable AndroidX support. Enable when 'android.gradle_dependencies'
-# contains an 'androidx' package, or any package from Kotlin source.
-# android.enable_androidx requires android.api >= 28
-#android.enable_androidx = False
 
 # (list) add java compile options
 # this can for example be necessary when importing certain java libraries using the 'android.gradle_dependencies' option
@@ -217,7 +177,7 @@ android.api = 30
 # can be necessary to solve conflicts in gradle_dependencies
 # please enclose in double quotes 
 # e.g. android.add_packaging_options = "exclude 'META-INF/common.kotlin_module'", "exclude 'META-INF/*.kotlin_module'"
-#android.add_packaging_options =
+#android.add_gradle_repositories =
 
 # (list) Java classes to add as activities to the manifest.
 #android.add_activities = com.example.ExampleActivity
@@ -244,7 +204,7 @@ android.api = 30
 
 # (bool) Indicate whether the screen should stay on
 # Don't forget to add the WAKE_LOCK permission if you set this to True
-android.wakelock = True
+#android.wakelock = False
 
 # (list) Android application meta-data to set (key=value format)
 #android.meta_data =
@@ -259,19 +219,11 @@ android.wakelock = True
 # (str) Android logcat filters to use
 #android.logcat_filters = *:S python:D
 
-# (bool) Android logcat only display log for activity's pid
-#android.logcat_pid_only = False
-
-# (str) Android additional adb arguments
-#android.adb_args = -H host.docker.internal
-
 # (bool) Copy library instead of making a libpymodules.so
 #android.copy_libs = 1
 
-# (list) The Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
-# In past, was `android.arch` as we weren't supporting builds for multiple archs at the same time.
-android.archs = arm64-v8a
-#, armeabi-v7a
+# (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
+android.arch = armeabi-v7a,arm64-v8a
 
 # (int) overrides automatic versionCode computation (used in build.gradle)
 # this is not the same as app version and should only be edited if you know what you're doing
@@ -280,42 +232,21 @@ android.archs = arm64-v8a
 # (bool) enables Android auto backup feature (Android API >=23)
 android.allow_backup = True
 
-# (str) XML file for custom backup rules (see official auto backup documentation)
-# android.backup_rules =
-
-# (str) If you need to insert variables into your AndroidManifest.xml file,
-# you can do so with the manifestPlaceholders property.
-# This property takes a map of key-value pairs. (via a string)
-# Usage example : android.manifest_placeholders = [myCustomUrl:\"org.kivy.customurl\"]
-# android.manifest_placeholders = [:]
-
-# (bool) disables the compilation of py to pyc/pyo files when packaging
-# android.no-compile-pyo = True
-
-# (str) The format used to package the app for release mode (aab or apk).
-# android.release_artifact = aab
-
 #
 # Python for android (p4a) specific
 #
 
-# (str) python-for-android URL to use for checkout
-#p4a.url = https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/python-for-android.git
-
-# (str) python-for-android fork to use in case if p4a.url is not specified, defaults to upstream (kivy)
+# (str) python-for-android fork to use, defaults to upstream (kivy)
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
 #p4a.branch = master
 
-# (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
-#p4a.commit = HEAD
-
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #p4a.source_dir =
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
-p4a.local_recipes = ./local_recipes
+p4a.local_recipes = local_recipes
 
 # (str) Filename to the hook for p4a
 #p4a.hook =
@@ -325,17 +256,6 @@ p4a.local_recipes = ./local_recipes
 
 # (int) port number to specify an explicit --port= p4a argument (eg for bootstrap flask)
 #p4a.port =
-
-# Control passing the --use-setup-py vs --ignore-setup-py to p4a
-# "in the future" --use-setup-py is going to be the default behaviour in p4a, right now it is not
-# Setting this to false will pass --ignore-setup-py, true will pass --use-setup-py
-# NOTE: this is general setuptools integration, having pyproject.toml is enough, no need to generate
-# setup.py if you're using Poetry, but you need to add "toml" to source.include_exts.
-p4a.setup_py = false
-
-# (str) extra command line arguments to pass when invoking pythonforandroid.toolchain
-#p4a.extra_args =
-
 
 [buildozer]
 
@@ -348,7 +268,7 @@ warn_on_root = 1
 # (str) Path to build artifact storage, absolute or relative to spec file
 # build_dir = ./.buildozer
 
-# (str) Path to build output (i.e. .apk, .aab, .ipa) storage
+# (str) Path to build output (i.e. .apk, .ipa) storage
 # bin_dir = ./bin
 
 #    -----------------------------------------------------------------------------

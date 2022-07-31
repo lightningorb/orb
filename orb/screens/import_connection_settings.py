@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-30 14:26:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 19:46:10
+# @Last Modified time: 2022-07-31 20:00:40
 
 from kivymd.uix.screen import MDScreen
 

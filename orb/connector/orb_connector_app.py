@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 12:16:57
+# @Last Modified time: 2022-07-31 20:02:32
 
 import shutil
 from pathlib import Path
@@ -21,10 +21,11 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from orb.misc.utils import mobile
 from orb.misc.macaroon import Macaroon
 from orb.misc.decorators import guarded
-from orb.connector.orb_connector import OrbConnector
 from orb.core_ui.app_common import AppCommon
 from orb.misc.utils import get_available_nodes
 from orb.misc.macaroon_secure import MacaroonSecure
+from orb.connector.orb_connector import OrbConnector
+from orb.misc.conf_defaults import set_lnd_defaults, set_host_defaults
 
 
 class OrbConnectorApp(AppCommon):
@@ -119,3 +120,12 @@ class OrbConnectorApp(AppCommon):
     def stop(self):
         Clock.unschedule(self.interval)
         super(OrbConnectorApp, self).stop()
+
+    def build_config(self, config):
+        """
+        Default config values.
+        """
+        config.add_section("host")
+        config.add_section("lnd")
+        # set_lnd_defaults(config, {})
+        # set_host_defaults(config, {})

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-21 15:14:45
+# @Last Modified time: 2022-07-31 15:24:50
 
 import sys
 from pathlib import Path
@@ -19,6 +19,10 @@ sys.path.append((parent_dir / Path("third_party/bezier/src/python/")).as_posix()
 sys.path.append((parent_dir / Path("third_party/colour/")).as_posix())
 sys.path.append((parent_dir / Path("third_party/currency-symbols/")).as_posix())
 sys.path.append((parent_dir / Path("third_party/lnurl/")).as_posix())
+
+import kivy
+
+kivy.require("2.1.0")
 
 from orb.orb_main import main
 from orb.core_ui.hidden_imports import *

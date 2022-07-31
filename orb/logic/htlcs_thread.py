@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-24 00:27:48
+# @Last Modified time: 2022-07-31 15:38:06
 import json
 import threading
 from time import sleep
 from traceback import print_exc
 from threading import Lock
+from kivy.clock import mainthread
 
 from orb.lnd import Lnd
 from orb.misc.prefs import is_rest
@@ -36,6 +37,14 @@ class HTLCsThread(threading.Thread):
             self.stop()
 
     def __run(self):
+        @mainthread
+        def mainthread_anim(cid, htlc):
+            self.inst.cn[cid].l.anim_htlc(htlc)
+            self.inst.ids.relative_layout.do_layout()
+
+        @mainthread
+        def mainthread_update():
+            self.inst.update()
 
         rest = is_rest()
         while not self.stopped():
@@ -71,10 +80,7 @@ class HTLCsThread(threading.Thread):
                     ]:
                         # this "should" update the balances
                         # on the channel object
-                        self.inst.cn[cid].l.anim_htlc(htlc)
-                        self.inst.ids.relative_layout.do_layout()
-
-                    self.inst.update()
+                        mainthread_anim(cid, htlc)
 
             except:
                 print("Exception getting HTLCs - let's sleep")

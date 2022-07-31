@@ -2,14 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2022-07-20 11:23:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-30 11:55:23
+# @Last Modified time: 2022-07-31 10:25:51
 
 import threading
 import requests
 from time import sleep
 
 from peewee import fn
-from lnurl import Lnurl, LnurlResponse
+
+try:
+    from lnurl import Lnurl, LnurlResponse
+except:
+    print("Error loading Lnurl library")
 
 from orb.core.stoppable_thread import StoppableThread
 from orb.store.db_meta import invoices_db_name

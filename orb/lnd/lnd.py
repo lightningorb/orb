@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-29 19:03:09
+# @Last Modified time: 2022-07-31 19:55:24
 
 import sys
 from pathlib import Path
@@ -55,12 +55,12 @@ def Lnd(
         rest_port = int(pref("lnd.rest_port"))
         grpc_port = int(pref("lnd.grpc_port"))
         version = pref("lnd.version")
-        if type(version) in [int, float]:
+        if type(version) in [int, float] or version is None:
             version = "v0.15.0-beta"
 
     if lnd.get(protocol) is None or not cache:
         if protocol == Protocol.grpc:
-            set_lnd_grpc_path_for_version(version=version)
+            set_lnd_grpc_path_for_version(version=version or "v0.15.0-beta")
             from orb.lnd.lnd_grpc import LndGRPC
 
             try:

@@ -2,32 +2,43 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-29 19:00:31
+# @Last Modified time: 2022-07-31 18:13:15
 
 
-def set_conf_defaults(config, node_config):
+def set_host_defaults(config, node_config):
     config.add_section("host")
     config.set("host", "type", "default")
-    config.set("host", "hostname", node_config.get("host.hostname", "") or "")
+    config.set("host", "hostname", node_config.get("host", "hostname", fallback=""))
     config.set("host", "port", "22")
     config.set("host", "username", "")
     config.set("host", "auth_type", "password")
     config.set("host", "password", "")
     config.set("host", "certificate", "")
+
+
+def set_lnd_defaults(config, node_config):
     config.add_section("lnd")
     config.set(
-        "lnd", "identity_pubkey", node_config.get("lnd.identity_pubkey", "") or ""
+        "lnd", "identity_pubkey", node_config.get("lnd", "identity_pubkey", fallback="")
     )
-    config.set("lnd", "version", node_config.get("lnd.version", "v0.15.0-beta") or "")
-    config.set("lnd", "rest_port", node_config.get("lnd.rest_port", "8080") or "")
-    config.set("lnd", "grpc_port", node_config.get("lnd.grpc_port", "10009") or "")
-    config.set("lnd", "protocol", node_config.get("lnd.protocol", "mock") or "")
     config.set(
-        "lnd", "tls_certificate", node_config.get("lnd.tls_certificate", "") or ""
+        "lnd", "version", node_config.get("lnd", "version", fallback="v0.15.0-beta")
+    )
+    config.set("lnd", "rest_port", node_config.get("lnd", "rest_port", fallback="8080"))
+    config.set(
+        "lnd", "grpc_port", node_config.get("lnd", "grpc_port", fallback="10009")
+    )
+    config.set("lnd", "protocol", node_config.get("lnd", "protocol", fallback="mock"))
+    config.set(
+        "lnd", "tls_certificate", node_config.get("lnd", "tls_certificate", fallback="")
     )
     config.set("lnd", "tls_certificate_path", "")
-    config.set("lnd", "network", node_config.get("lnd.network", "mainnet") or "")
-    config.set("lnd", "macaroon_admin", node_config.get("lnd.macaroon_admin", "") or "")
+    config.set("lnd", "network", node_config.get("lnd", "network", fallback="mainnet"))
+    config.set(
+        "lnd",
+        "macaroon_admin",
+        node_config.get("lnd", "macaroon_admin", fallback="mainnet"),
+    )
     config.set("lnd", "macaroon_admin_path", "")
     config.set("lnd", "path", "")
     config.set("lnd", "conf_path", "")
@@ -35,6 +46,9 @@ def set_conf_defaults(config, node_config):
     config.set("lnd", "channel_db_path", "")
     config.set("lnd", "stop_cmd", "")
     config.set("lnd", "start_cmd", "")
+
+
+def set_other_defaults(config, node_config):
     config.add_section("display")
     config.set("display", "channel_length", 1000)
     config.set("display", "inverted_channels", 0)
@@ -78,3 +92,9 @@ def set_conf_defaults(config, node_config):
     config.set("url", "appstore", "https://lnappstore.com")
     config.add_section("system")
     config.set("system", "orb_version", "undefined")
+
+
+def set_conf_defaults(config, node_config):
+    set_host_defaults(config, node_config)
+    set_lnd_defaults(config, node_config)
+    set_other_defaults(config, node_config)

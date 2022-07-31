@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 13:27:47
+# @Last Modified time: 2022-07-31 10:42:13
 
 import os
 
@@ -41,8 +41,6 @@ class MainLayout(BoxLayout):
         self.super = []
         self.shift = False
 
-        if mobile:
-            self.ids.ssh_connection_wizard.disabled = True
         if ios:
             self.ids.app_store_login.disabled = True
             self.ids.app_store.disabled = True
