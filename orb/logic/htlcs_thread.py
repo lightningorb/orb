@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 15:38:06
+# @Last Modified time: 2022-08-01 10:10:32
 import json
 import threading
 from time import sleep
@@ -39,35 +39,31 @@ class HTLCsThread(threading.Thread):
     def __run(self):
         @mainthread
         def mainthread_anim(cid, htlc):
-            self.inst.cn[cid].l.anim_htlc(htlc)
-            self.inst.ids.relative_layout.do_layout()
+            try:
+                self.inst.cn[cid].l.anim_htlc(htlc)
+                self.inst.ids.relative_layout.do_layout()
+            except:
+                pass
 
         @mainthread
         def mainthread_update():
             self.inst.update()
 
-        rest = is_rest()
         while not self.stopped():
             try:
                 lnd = Lnd()
+                # events = []
                 for e in lnd.get_htlc_events():
                     self.count += 1
+                    # events.append(e.todict())
                     if self.count % 20 == 0:
                         data_manager.data_man.channels.get()
-
+                    # with open("events.json", "w") as f:
+                    #     f.write(json.dumps(events, indent=4))
                     if self.stopped():
                         return
-                    if rest:
-                        e = dict2obj(json.loads(e)["result"])
-
-                    with db_lock:
-                        htlc = Htlc.init(e)
-                        # htlc.save()
-
-                    # prevent routing from a low outbound channel to
-                    # a channel with zero fees. or for example prevent
-                    # routing from a low local channel to LOOP
-                    # data_manager.data_man.lnd.htlc_interceptor(self, chan_id, htlc_id, action=1)
+                    htlc = Htlc.init(e)
+                    # htlc.save()
 
                     for plugin in data_manager.data_man.plugin_registry.values():
                         try:
@@ -78,8 +74,6 @@ class HTLCsThread(threading.Thread):
                     for cid in [
                         x for x in [e.outgoing_channel_id, e.incoming_channel_id] if x
                     ]:
-                        # this "should" update the balances
-                        # on the channel object
                         mainthread_anim(cid, htlc)
 
             except:

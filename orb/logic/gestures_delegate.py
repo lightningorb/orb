@@ -99,6 +99,7 @@ class GesturesDelegate:
                 chan_id=self.out_channel,
                 last_hop_pubkey=last_hop_pubkey,
                 fee_rate=500,
+                time_pref=0,
                 max_paths=1000,
                 name="RebalanceThread",
                 thread_n=0,

@@ -2,17 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2022-06-18 12:39:39
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-29 19:01:36
+# @Last Modified time: 2022-08-02 17:34:10
 
-from orb.misc.certificate_secure import CertificateSecure
 import codecs
 
 from kivy.app import App
-
 from kivymd.uix.screen import MDScreen
+
 from orb.misc.decorators import guarded
-from orb.misc.macaroon_secure import MacaroonSecure
 from orb.misc.lndconnect_url import decode_ln_url
+from orb.misc.macaroon_secure import MacaroonSecure
+from orb.dialogs.restart_dialog import RestartDialog
+from orb.misc.certificate_secure import CertificateSecure
 
 prot = {8080: "rest", 10009: "grpc"}
 
@@ -33,7 +34,10 @@ class UmbrelNode(MDScreen):
     @guarded
     def connect(self):
         if self.connected:
-            App.get_running_app().stop()
+            RestartDialog(
+                title="After exit, please restart Orb to launch new settings."
+            ).open()
+            return
         error = ""
         try:
             host, port, mac, cert = self.get()
@@ -63,9 +67,7 @@ class UmbrelNode(MDScreen):
 
                 info = lnd.get_info()
 
-                self.ids.connect.text = (
-                    f"Launch Orb with: {info.identity_pubkey[:5]}..."
-                )
+                self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
                 self.connected = True
                 self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)
                 app = App.get_running_app()

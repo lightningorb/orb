@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-23 18:19:54
+# @Last Modified time: 2022-08-01 09:11:42
 
 from traceback import print_exc
 from threading import Thread
@@ -88,11 +88,10 @@ class Channels(EventDispatcher, BalancedRatioMixin):
         """
         try:
             for c in self.lnd.get_channels():
-                chan_id = int(c.chan_id)
-                if chan_id in self.channels:
-                    self.channels[chan_id].update(c)
+                if c.chan_id in self.channels:
+                    self.channels[c.chan_id].update(c)
                 else:
-                    self.channels[chan_id] = Channel(c)
+                    self.channels[c.chan_id] = Channel(c)
             self.sorted_chan_ids = [int(x) for x in self.channels]
             self.sort_channels()
         except:

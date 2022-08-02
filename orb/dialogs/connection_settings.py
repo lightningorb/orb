@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:42:07
+# @Last Modified time: 2022-08-02 18:25:23
 
 from kivy.app import App
 from kivymd.uix.tab import MDTabsBase
@@ -15,9 +15,10 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from orb.misc.utils import pref
 from orb.misc.utils import mobile
 from orb.misc.decorators import guarded
-from orb.misc.macaroon_secure import MacaroonSecure
-from orb.misc.certificate_secure import CertificateSecure
 from orb.misc.sec_rsa import get_sec_keys
+from orb.misc.macaroon_secure import MacaroonSecure
+from orb.dialogs.restart_dialog import RestartDialog
+from orb.misc.certificate_secure import CertificateSecure
 
 
 class TypeSpinnerOption(SpinnerOption):
@@ -100,7 +101,10 @@ class ConnectionSettings(MDScreen):
     def connect(self):
         app = App.get_running_app()
         if self.connected:
-            app.stop()
+            RestartDialog(
+                title="After exit, please restart Orb to launch new settings."
+            ).open()
+            return
         error = ""
         try:
             from orb.lnd import Lnd
@@ -119,7 +123,7 @@ class ConnectionSettings(MDScreen):
 
             info = lnd.get_info()
 
-            self.ids.connect.text = f"Launch Orb with: {info.identity_pubkey[:5]}..."
+            self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
             self.connected = True
             app.node_settings["lnd.identity_pubkey"] = info.identity_pubkey
             self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)

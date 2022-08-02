@@ -70,7 +70,10 @@ class DeezySwapDialog(PopupDropShadow):
         estimate = self.deezy.estimate_cost(
             amount_sats=amount_sats, fee_rate=fee_rate, mp_fee=self.mp_fee
         )
-        self.ids.cost_estimate.text = f"{estimate:,}"
+        @mainthread
+        def update_estimate(estimate):
+            self.ids.cost_estimate.text = f"{estimate:,}"
+        update_estimate(estimate)
         print(f"Fee estimate is: {self.ids.cost_estimate.text} Sats")
         update(disabled=not r.available)
         if not r.available:

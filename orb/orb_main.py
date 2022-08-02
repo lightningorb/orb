@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 20:03:07
+# @Last Modified time: 2022-08-02 21:16:43
 
 import sys
 
@@ -69,11 +69,17 @@ def main():
     from kivy.config import ConfigParser
 
     config = ConfigParser()
-    config.add_section("host")
-    config.add_section("lnd")
+    os.makedirs(OrbConnectorApp()._get_user_data_dir(), exist_ok=True)
     config_path = Path(OrbConnectorApp()._get_user_data_dir()) / "orbconnector.ini"
-    if config_path.exists():
-        config.read(config_path.as_posix())
+    if not config_path.exists():
+        with config_path.open("w") as f:
+            f.write("")
+    config.read(config_path.as_posix())
+    try:
+        config.add_section("host")
+        config.add_section("lnd")
+    except:
+        pass
     # try:
     pk = config.get("lnd", "identity_pubkey", fallback="")
     if not pk:
@@ -83,7 +89,9 @@ def main():
         for k, v in app.node_settings.items():
             section, key = k.split(".")
             config.set(section, key, v)
-        config.write()
+            print("section", section, "key", key, "value", v)
+        print(f"writing config to: {config_path}")
+        assert config.write()
         sys.exit(0)
     else:
         from orb.core_ui.orb_app import OrbApp

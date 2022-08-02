@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-25 00:09:51
+# @Last Modified time: 2022-08-01 16:07:26
 import sys
 import base64
 import re
@@ -131,6 +131,11 @@ class LndGRPC(LndBase):
     def decode_payment_request(self, payment_request):
         request = ln.PayReqString(pay_req=payment_request)
         return self.stub.DecodePayReq(request)
+
+    def get_invoice_events(self):
+        return self.stub.SubscribeInvoices(
+            request=ln.InvoiceSubscription(add_index=None, settle_index=None)
+        )
 
     def get_channels(self, active_only=False):
         return [

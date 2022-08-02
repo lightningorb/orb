@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-19 10:26:50
+# @Last Modified time: 2022-08-01 17:08:30
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -10,6 +10,7 @@ import base64, json, requests, codecs
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from orb.misc.auto_obj import dict2obj, todict
+from orb.misc.channel import Channel
 
 from memoization import cached
 
@@ -53,7 +54,7 @@ class LndREST(LndBase):
             verify=self.cert_path,
             data={"active_only": active_only},
         )
-        return dict2obj(r.json()).channels
+        return [Channel(dict2obj(c)) for c in r.json()["channels"]]
 
     def get_info(self):
         url = f"{self.fqdn}/v1/getinfo"
@@ -213,15 +214,21 @@ class LndREST(LndBase):
 
     def get_htlc_events(self):
         url = f"{self.fqdn}/v2/router/htlcevents"
-        return requests.get(
+        for event in requests.get(
             url, headers=self.headers, verify=self.cert_path, stream=True
-        ).iter_lines()
+        ).iter_lines():
+            j = json.loads(event)
+            if "result" in j:
+                yield dict2obj(j["result"])
 
     def get_invoice_events(self):
         url = f"{self.fqdn}/v1/invoices/subscribe"
-        return requests.get(
+        for event in requests.get(
             url, headers=self.headers, verify=self.cert_path, stream=True
-        ).iter_lines()
+        ).iter_lines():
+            j = json.loads(event)
+            if "result" in j:
+                yield dict2obj(j["result"])
 
     def get_channel_events(self):
         url = f"{self.fqdn}/v1/channels/subscribe"

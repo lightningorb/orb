@@ -2,11 +2,8 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-24 09:27:21
+# @Last Modified time: 2022-08-01 10:53:34
 
-from threading import Thread, Lock
-
-from kivy.clock import Clock
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 from kivy.properties import ListProperty
@@ -37,9 +34,9 @@ class Channel(EventDispatcher):
     remote_pubkey = StringProperty("")
     #: The channel's channel_point
     channel_point = StringProperty("")
-    #: The channel's local_balance
+    #: The channel's local_balance in sats
     local_balance = NumericProperty(0)
-    #: The channel's remote_balance
+    #: The channel's remote_balance in sats
     remote_balance = NumericProperty(0)
     #: The channel's chan_id
     chan_id = NumericProperty(0)
@@ -154,7 +151,7 @@ class Channel(EventDispatcher):
         self.remote_pubkey = channel.remote_pubkey
         self.remote_balance = channel.remote_balance
         self.chan_id = int(channel.chan_id)
-        self.pending_htlcs = channel.pending_htlcs
+        self.pending_htlcs = channel.pending_htlcs[:]
         self.total_satoshis_sent = channel.total_satoshis_sent
         self.total_satoshis_received = channel.total_satoshis_received
         self.ListFields = channel.ListFields if hasattr(channel, "ListFields") else None

@@ -2,44 +2,45 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 18:28:20
+# @Last Modified time: 2022-08-02 11:52:05
 
 import os
 import sys
 import json
+import shutil
 from time import time
 from pathlib import Path
 from textwrap import dedent
-from traceback import print_exc
-from importlib import __import__
-from collections import deque
 from threading import Thread
-import shutil
+from collections import deque
+from importlib import __import__
+from traceback import print_exc
 
-from kivy.clock import Clock
-from kivy.lang import Builder
-from kivy.config import Config
-from kivy.utils import platform
-from kivy.uix.button import Button
-from kivy.core.window import Window
-from kivy.properties import ListProperty
-from kivy.properties import StringProperty
-from kivy.properties import ObjectProperty
-from kivy.properties import NumericProperty
 from kivy.storage.jsonstore import JsonStore
+from kivy.properties import NumericProperty
+from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
+from kivy.properties import ListProperty
+from kivy.core.window import Window
+from kivy.uix.button import Button
+from kivy.utils import platform
+from kivy.config import Config
+from kivy.lang import Builder
+from kivy.clock import Clock
 
 from orb.logic.cron import Cron
+from orb.misc.utils import pref
+from orb.misc.prefs import cert_path
+from orb.logic import thread_manager
+from orb.logic.app_store import Apps
+from orb.misc.decorators import guarded
 from orb.core.orb_logging import get_logger
 from orb.core_ui.app_common import AppCommon
-from orb.misc.conf_defaults import set_conf_defaults
-from orb.misc.utils import pref
-from orb.logic.app_store import Apps
-from orb.audio.audio_manager import audio_manager
-from orb.misc.decorators import guarded
-from orb.core_ui.main_layout import MainLayout
-from orb.logic import thread_manager
 from orb.misc.utils import pref_path, desktop
-from orb.misc.prefs import cert_path
+from orb.core_ui.main_layout import MainLayout
+from orb.audio.audio_manager import audio_manager
+from orb.misc.conf_defaults import set_conf_defaults
+from orb.dialogs.restart_dialog import RestartDialog
 
 from orb.misc import data_manager
 
@@ -291,7 +292,33 @@ class OrbApp(AppCommon):
         """
         Clear connector autostart settings so it runs on next start
         """
-        conf_path = Path(self._get_user_data_dir()) / "../orbconnector/orbconnector.ini"
-        if conf_path.exists():
-            os.unlink(conf_path.as_posix())
-            self.stop()
+        from kivymd.uix.dialog import MDDialog
+        from kivymd.uix.button import MDFlatButton
+
+        def func(*_):
+            conf_path = (
+                Path(self._get_user_data_dir()) / "../orbconnector/orbconnector.ini"
+            )
+            if conf_path.exists():
+                os.unlink(conf_path.as_posix())
+                self.stop()
+
+        dialog = MDDialog(
+            title="Please click 'Quit' and restart Orb to use connector",
+            buttons=[
+                MDFlatButton(
+                    text="Cancel",
+                    theme_text_color="Custom",
+                    text_color=self.theme_cls.primary_color,
+                    on_release=lambda x: dialog.dismiss(),
+                ),
+                MDFlatButton(
+                    text="Quit",
+                    theme_text_color="Custom",
+                    text_color=self.theme_cls.primary_color,
+                    on_release=func,
+                ),
+            ],
+        )
+
+        dialog.open()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-30 14:26:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 20:00:40
+# @Last Modified time: 2022-08-02 17:29:04
 
 from kivymd.uix.screen import MDScreen
 
@@ -15,11 +15,12 @@ from kivy.app import App
 from kivy.config import ConfigParser
 from kivymd.uix.screen import MDScreen
 
+from orb.misc.utils import mobile
 from orb.misc.decorators import guarded
 from orb.misc.utils import get_available_nodes
 from orb.misc.macaroon_secure import MacaroonSecure
+from orb.dialogs.restart_dialog import RestartDialog
 from orb.misc.certificate_secure import CertificateSecure
-from orb.misc.utils import mobile
 
 
 class ImportConnectionSettings(MDScreen):
@@ -57,7 +58,11 @@ class ImportConnectionSettings(MDScreen):
     def connect(self):
         app = App.get_running_app()
         if self.connected:
-            app.stop()
+            RestartDialog(
+                title="After exit, please restart Orb to launch new settings."
+            ).open()
+            return
+
         error = ""
         try:
             from orb.lnd import Lnd
@@ -76,7 +81,7 @@ class ImportConnectionSettings(MDScreen):
 
             info = lnd.get_info()
 
-            self.ids.connect.text = f"Launch Orb with: {info.identity_pubkey[:5]}..."
+            self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
             self.connected = True
             self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)
         except Exception as e:

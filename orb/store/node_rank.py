@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2021-12-10 08:11:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 08:42:00
+# @Last Modified time: 2022-08-02 13:11:52
 
 from collections import defaultdict
 import json
 from orb.logic.licensing import is_satoshi
 from orb.logic.licensing import is_digital_gold
+from orb.misc.decorators import db_connect
+from orb.store.db_meta import path_finding_db_name
 
 from orb.lnd import Lnd
 
@@ -91,6 +93,7 @@ def ingest(path):
     print("Ingestion done. Re-open the Rankings window.")
 
 
+@db_connect(path_finding_db_name)
 def count_successes_failures():
     if not (is_satoshi() or is_digital_gold()):
         return {}, []

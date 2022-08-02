@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-30 11:50:59
+# @Last Modified time: 2022-08-03 07:28:02
 
 import base64
 import codecs
@@ -37,14 +37,12 @@ class ChannelsThread(threading.Thread):
                     for e in it:
                         if self.stopped():
                             return
-                        print(e)
                         if hasattr(e, "inactive_channel"):
                             c = e.inactive_channel
                             tb = c.funding_txid_bytes
                             funding_txid_bytes = (
                                 tb if type(tb) is bytes else base64.b64decode(tb)
                             )
-                            print(e.inactive_channel)
                             funding_txid_str = codecs.encode(
                                 funding_txid_bytes, "hex"
                             ).decode()
@@ -62,7 +60,6 @@ class ChannelsThread(threading.Thread):
                             # else:
                             #     print(f"Channel point not found: {cp}")
                         if hasattr(e, "active_channel"):
-                            print(e.active_channel)
                             c = e.active_channel
                             tb = c.funding_txid_bytes
                             funding_txid_bytes = (

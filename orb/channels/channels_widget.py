@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-26 22:50:43
+# @Last Modified time: 2022-08-01 15:31:16
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -34,9 +34,12 @@ class ChannelsWidget(ScatterLayout):
         # importing model related things before the tables are created
         # is not allowed, which is why this is imported here
         from orb.logic.htlcs_thread import HTLCsThread
+        from orb.logic.invoices_thread import InvoicesThread
 
         self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
         self.htlcs_thread.daemon = True
+        self.invoices_thread = InvoicesThread(inst=self, name="InvoicesThread")
+        self.invoices_thread.daemon = True
         self.node = None
         self.channels = data_manager.data_man.channels
         if self.channels:
@@ -72,6 +75,7 @@ class ChannelsWidget(ScatterLayout):
         )
         if not is_mock():
             self.htlcs_thread.start()
+            self.invoices_thread.start()
         if not is_mock():
             self.channels_thread.start()
 

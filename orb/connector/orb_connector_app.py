@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 20:02:32
+# @Last Modified time: 2022-08-02 18:35:27
 
 import shutil
 from pathlib import Path
@@ -24,6 +24,7 @@ from orb.misc.decorators import guarded
 from orb.core_ui.app_common import AppCommon
 from orb.misc.utils import get_available_nodes
 from orb.misc.macaroon_secure import MacaroonSecure
+from orb.dialogs.restart_dialog import RestartDialog
 from orb.connector.orb_connector import OrbConnector
 from orb.misc.conf_defaults import set_lnd_defaults, set_host_defaults
 
@@ -52,7 +53,9 @@ class OrbConnectorApp(AppCommon):
         self.node_settings[
             "lnd.identity_pubkey"
         ] = "03373b5287484d081153491f674c023164c2343954e2f56e4ae4b23e686d8cf07d"
-        self.stop()
+        RestartDialog(
+            title="After exit, please restart Orb to launch new settings."
+        ).open()
 
     @guarded
     def update_node_buttons(self):
@@ -65,7 +68,9 @@ class OrbConnectorApp(AppCommon):
 
             def do_open(_, pk):
                 self.node_settings["lnd.identity_pubkey"] = pk
-                self.stop()
+                RestartDialog(
+                    title="After exit, please restart Orb to launch new settings."
+                ).open()
 
             def rm_node(_, pk, bl):
                 p = Path(self._get_user_data_dir()).parent / f"orb_{pk}"
@@ -85,9 +90,9 @@ class OrbConnectorApp(AppCommon):
             ib = MDIconButton(
                 icon="delete-forever", on_release=partial(rm_node, pk=pk, bl=bl)
             )
+            bl.add_widget(ib)
             bl.add_widget(button)
             self.node_buttons.append(bl)
-            bl.add_widget(ib)
             grid.add_widget(bl)
         if not has_nodes:
             button = MDRaisedButton(

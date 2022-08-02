@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-23 18:18:27
+# @Last Modified time: 2022-08-01 10:51:09
 
 from threading import Thread
 
@@ -101,9 +101,6 @@ class AttributeEditor(BoxLayout):
                     self.populate_profit()
                     self.populate_fees()
                     if is_rest():
-                        # TODO: calling channel.channel is a little problematic
-                        # ideally we should no longer refer to the channel.channel
-                        # object, and it should be removed from the Channel class
                         self.populate_rest(c=self.channel.channel.__dict__)
                     else:
                         self.populate_grpc()
@@ -227,9 +224,13 @@ class AttributeEditor(BoxLayout):
                 )
                 self.populate_rest(c=todict(c[field]))
             elif type(c[field]) in [int, str]:
-                val = c[field]
-                if type(c[field]) is int:
-                    val = f"{c[field]:_}"
+                val = (
+                    getattr(self.channel, field)
+                    if hasattr(self.channel, field)
+                    else c[field]
+                )
+                if type(val) is int:
+                    val = f"{val:_}"
                 widget = MDTextField(
                     helper_text=field,
                     helper_text_mode="persistent",

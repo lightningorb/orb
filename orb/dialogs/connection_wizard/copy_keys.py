@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 09:17:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 11:13:41
+# @Last Modified time: 2022-08-02 18:29:11
 
 import codecs
 from pathlib import Path
@@ -15,6 +15,7 @@ from orb.misc.decorators import guarded
 from orb.misc.fab_factory import Connection
 from orb.dialogs.connection_wizard.tab import Tab
 from orb.misc.macaroon_secure import MacaroonSecure
+from orb.dialogs.restart_dialog import RestartDialog
 from orb.misc.certificate_secure import CertificateSecure
 
 
@@ -77,7 +78,10 @@ class CopyKeys(Tab):
     def connect(self):
         app = App.get_running_app()
         if self.connected:
-            app.stop()
+            RestartDialog(
+                title="After exit, please restart Orb to launch new settings."
+            ).open()
+            return
         error = ""
         try:
             from orb.lnd import Lnd
@@ -96,7 +100,7 @@ class CopyKeys(Tab):
 
             info = lnd.get_info()
 
-            self.ids.connect.text = f"Launch Orb with: {info.identity_pubkey[:5]}..."
+            self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
             self.connected = True
             app.node_settings["lnd.identity_pubkey"] = info.identity_pubkey
             self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)

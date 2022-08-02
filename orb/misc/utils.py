@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 09:07:55
+# @Last Modified time: 2022-08-02 17:20:18
 
 import re
 from pathlib import Path
@@ -87,7 +87,7 @@ def get_available_nodes():
     data_dir = Path(AppCommon._get_user_data_dir_static())
     nodes = []
     for x in data_dir.glob("orb_*"):
-        m = re.match(r"orb_([a-zA-Z0-9]{66})", x.name)
+        m = re.match(r"^orb_([a-zA-Z0-9]{66})$", x.name)
         if m and x.is_dir():
             nodes.append(m.group(1))
     return nodes

@@ -2,16 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 11:58:46
+# @Last Modified time: 2022-08-02 17:38:14
 
 from threading import Thread
 
 from kivy.app import App
 
-from orb.misc.decorators import guarded
 from orb.misc.macaroon import Macaroon
-from orb.misc.macaroon_secure import MacaroonSecure
 from kivymd.uix.screen import MDScreen
+from orb.misc.decorators import guarded
+from orb.misc.macaroon_secure import MacaroonSecure
+from orb.dialogs.restart_dialog import RestartDialog
 
 
 class VoltageNode(MDScreen):
@@ -31,7 +32,9 @@ class VoltageNode(MDScreen):
         app = App.get_running_app()
 
         if self.connected:
-            App.get_running_app().stop()
+            RestartDialog(
+                title="After exit, please restart Orb to launch new settings."
+            ).open()
         error = ""
         if not error:
             try:
@@ -49,9 +52,7 @@ class VoltageNode(MDScreen):
 
                 info = lnd.get_info()
 
-                self.ids.connect.text = (
-                    f"Launch Orb with: {info.identity_pubkey[:5]}..."
-                )
+                self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
                 self.connected = True
                 self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)
                 if self.sec:

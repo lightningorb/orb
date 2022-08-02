@@ -2,14 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 08:39:26
+# @Last Modified time: 2022-08-03 06:28:36
 
 from kivy.clock import Clock
-from kivy.properties import ObjectProperty
+from kivy.clock import mainthread
 from kivy.uix.widget import Widget
-from kivy.graphics.context_instructions import Color
-from kivy.graphics.vertex_instructions import Line
 from kivy.animation import Animation
+from kivy.properties import ObjectProperty
+from kivy.graphics.vertex_instructions import Line
+from kivy.graphics.context_instructions import Color
 from kivy.graphics.instructions import InstructionGroup
 
 from orb.math.Vector import Vector
@@ -34,6 +35,7 @@ class SentReceivedWidget(Widget):
         self.update()
         Clock.schedule_interval(self.update, 60)
 
+    @mainthread
     def update(self, *_):
         alpha = 0.5
         self.lines[:] = []
