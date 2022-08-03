@@ -1,6 +1,17 @@
-0.19.3
+0.20.0
 ----
 
+buildozer version bump
+many REST and android-driven improvements (see release notes v0.20.0)
+android build works again
+site now lets users download old Orb versions
+Merge branch 'dev' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    dev
+Merge branch 'dev' of
+    https://github.com/bc31164b-cfd5-4a63-8144-875100622b2d/orb into
+    dev
+release hotfix
 Merge branch 'dev' into main
 portability
 
