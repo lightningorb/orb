@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 13:27:27
+# @Last Modified time: 2022-08-03 11:31:47
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -37,6 +37,7 @@ class ChannelsScreen(MDScreen):
 
     @guarded
     def build(self, *_):
+        @guarded
         @mainthread
         def delayed():
             self.gestures_delegate = GesturesDelegate(overlay=self.ids.gestures_overlay)

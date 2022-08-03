@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 19:05:46
+# @Last Modified time: 2022-08-03 11:36:47
 
 from orb.logic.forwarding_history import download_forwarding_history
 from orb.logic.payment_history import download_payment_history
@@ -19,10 +19,18 @@ class Cron:
             Clock.schedule_interval(download_forwarding_history, 60)
             Clock.schedule_once(download_payment_history, 5)
             Clock.schedule_interval(download_payment_history, 60)
+
+            def udpate_channels(*_):
+                app = App.get_running_app()
+                if app:
+                    cs = app.main_layout.ids.sm.get_screen("channels")
+                    if cs:
+                        cw = cs.channels_widget
+                        if cw:
+                            cw.update()
+
             Clock.schedule_interval(
-                lambda _: App.get_running_app()
-                .main_layout.ids.sm.get_screen("channels")
-                .channels_widget.update(),
+                udpate_channels,
                 10,
             )
             # Clock.schedule_once(is_registered, 80)

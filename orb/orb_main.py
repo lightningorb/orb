@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 21:16:43
+# @Last Modified time: 2022-08-03 11:22:13
 
 import sys
 
@@ -80,28 +80,28 @@ def main():
         config.add_section("lnd")
     except:
         pass
-    # try:
-    pk = config.get("lnd", "identity_pubkey", fallback="")
-    if not pk:
-        app = OrbConnectorApp()
-        app.run()
-        print(app.node_settings)
-        for k, v in app.node_settings.items():
-            section, key = k.split(".")
-            config.set(section, key, v)
-            print("section", section, "key", key, "value", v)
-        print(f"writing config to: {config_path}")
-        assert config.write()
-        sys.exit(0)
-    else:
-        from orb.core_ui.orb_app import OrbApp
+    try:
+        pk = config.get("lnd", "identity_pubkey", fallback="")
+        if not pk:
+            app = OrbConnectorApp()
+            app.run()
+            print(app.node_settings)
+            for k, v in app.node_settings.items():
+                section, key = k.split(".")
+                config.set(section, key, v)
+                print("section", section, "key", key, "value", v)
+            print(f"writing config to: {config_path}")
+            assert config.write()
+            sys.exit(0)
+        else:
+            from orb.core_ui.orb_app import OrbApp
 
-        OrbApp.__name__ = f"Orb_{pk}"
-        OrbApp().run(config)
-    # except Exception as e:
-    #     print(e)
-    #     text = str(e)
-    #     text += "\n"
-    #     text += format_exc()
-    #     app_crash_wrapper = OrbCrashWrapper(text)
-    #     app_crash_wrapper.run()
+            OrbApp.__name__ = f"Orb_{pk}"
+            OrbApp().run(config)
+    except Exception as e:
+        print(e)
+        text = str(e)
+        text += "\n"
+        text += format_exc()
+        app_crash_wrapper = OrbCrashWrapper(text)
+        app_crash_wrapper.run()
