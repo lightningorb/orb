@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-21 13:34:44
+# @Last Modified time: 2022-08-03 15:17:26
 
 import os
 from hashlib import sha256
@@ -106,7 +106,7 @@ def build(
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.17.0.0-arm64-v8a_armeabi-v7a-release.aab",
+    release_path="/home/ubuntu/orb/bin/orb-0.20.1.0-armeabi-v7a_arm64-v8a-release.aab",
     password="",
 ):
     keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
