@@ -2,23 +2,47 @@
 # @Author: lnorb.com
 # @Date:   2022-07-20 11:23:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 10:25:51
+# @Last Modified time: 2022-08-04 19:27:10
 
-import threading
 import requests
+import threading
 from time import sleep
+from typing import List, Set, Tuple
 
 from peewee import fn
-
-try:
-    from lnurl import Lnurl, LnurlResponse
-except:
-    print("Error loading Lnurl library")
+from bech32 import bech32_decode, bech32_encode, convertbits
 
 from orb.core.stoppable_thread import StoppableThread
 from orb.store.db_meta import invoices_db_name
 from orb.misc.decorators import db_connect
 from orb.lnd import Lnd
+
+
+def _bech32_decode(
+    bech32: str, *, allowed_hrp: Set[str] = None
+) -> Tuple[str, List[int]]:
+    hrp, data = bech32_decode(bech32)
+
+    if not hrp or not data or (allowed_hrp and hrp not in allowed_hrp):
+        raise ValueError(f"Invalid data or Human Readable Prefix (HRP): {hrp}.")
+
+    return hrp, data
+
+
+def _lnurl_clean(lnurl: str) -> str:
+    return (
+        lnurl.strip().replace("lightning:", "")
+        if lnurl.startswith("lightning:")
+        else lnurl
+    )
+
+
+def _lnurl_decode(lnurl: str) -> str:
+    return bytes(
+        convertbits(
+            _bech32_decode(_lnurl_clean(lnurl), allowed_hrp={"lnurl"})[1], 5, 8, False
+        )
+    ).decode("utf-8")
 
 
 class LNUrlInvoiceGenerator(StoppableThread):
@@ -43,13 +67,9 @@ class LNUrlInvoiceGenerator(StoppableThread):
         return self.total_amount_paid() >= self.total_amount_sat
 
     def get_callback_url(self, amount):
-        lnurl = Lnurl(self.url)
-        req = requests.get(lnurl.url).json()
-        print(req)
-        res = LnurlResponse.from_dict(req)
-        rurl = f"{res.callback}?amount={amount*1000}"
-        print(rurl)
-        return rurl
+        lnurl = _lnurl_decode(self.url)
+        req = requests.get(lnurl).json()
+        return f"{req['callback']}?amount={amount*1000}"
 
     def total_amount_paid(self):
         from orb.store import model
