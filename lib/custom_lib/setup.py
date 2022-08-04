@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
-# @Date:   2022-07-31 07:52:43
+# @Date:   2022-07-09 13:50:14
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 07:52:56
+# @Last Modified time: 2022-08-04 17:29:46
 
-"""setup.py needs to be able to work without cython to build on android
-"""
 from pathlib import Path
 from os import getenv
+import os
 import sys
+import shutil
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
 VERSION = "1.0"
 
-FILES = list(Path(".").rglob("*.pyx")) + list(Path(".").rglob("*.pxi"))
+FILES = list(Path(".").rglob("*.pyx"))
 
 INSTALL_REQUIRES = []
 SETUP_REQUIRES = []
@@ -40,12 +40,7 @@ setup(
     cmdclass={"build_ext": build_ext},
     install_requires=INSTALL_REQUIRES,
     setup_requires=SETUP_REQUIRES,
-    ext_modules=[
-        Extension(
-            "custom_lib",
-            [str(fn) for fn in FILES],
-        )
-    ],
+    ext_modules=[Extension(x.stem, [x.as_posix()]) for x in FILES],
     extras_require={
         "dev": [],
         "ci": [],
