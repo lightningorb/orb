@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-21 15:32:34
+# @Last Modified time: 2022-08-06 08:22:22
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -32,7 +32,7 @@ from orb.logic.normalized_events import get_best_fee
 from orb.core.stoppable_thread import StoppableThread
 from orb.misc.utils import pref_path
 from orb.lnd import Lnd
-from orb.misc import data_manager
+
 
 version = "0.0.4"
 yaml_name = f"autofees_v{version}.yaml"
@@ -145,7 +145,8 @@ class Match(Base):
         """
         most_frequent = get_best_fee(self.channel, include_zero=False) or 100
         ratio = self.channel.local_balance_include_pending / self.channel.capacity
-        global_ratio = data_manager.data_man.channels.global_ratio
+        app = App.get_running_app()
+        global_ratio = app.channels.global_ratio
         if ratio < global_ratio:
             best = lerp(0, 100, min(ratio / global_ratio, 1))
         else:
@@ -271,7 +272,8 @@ class FeesAuto(StoppableThread):
 
         obj_meta = load(meta_yaml_name)
         meta = {x.chan_id: x for x in obj_meta.get("meta", [])}
-        chans = data_manager.data_man.channels
+        app = App.get_running_app()
+        chans = app.channels
         setters = {}
         for c in chans:
             print(f"analyzing channel: {c.chan_id}")

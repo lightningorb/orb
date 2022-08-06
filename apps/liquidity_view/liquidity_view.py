@@ -2,19 +2,21 @@
 # @Author: lnorb.com
 # @Date:   2022-02-23 10:44:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 10:35:10
+# @Last Modified time: 2022-08-06 08:17:52
 
-from orb.misc.plugin import Plugin
-from orb.logic.pnl import pnl
-from orb.misc import data_manager
 import sys
+
+from kivy.app import App
+
+from orb.logic.pnl import pnl
+from orb.misc.plugin import Plugin
 
 
 class LiquidityView(Plugin):
     def main(self):
         import matplotlib.pyplot as plt
 
-        chans = data_manager.data_man.channels.channels.values()
+        chans = App.get_running_app().channels.channels.values()
         datas = []
         for i, c in enumerate(chans):
             if i > 10:

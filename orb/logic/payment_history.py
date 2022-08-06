@@ -2,12 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-30 10:58:42
+# @Last Modified time: 2022-08-06 10:28:47
 
 import arrow
 from threading import Thread, Lock
 from collections import defaultdict
-from orb.misc import data_manager
+
+from kivy.app import App
+
 from orb.lnd import Lnd
 from orb.store.db_meta import channel_stats_db_name, payments_db_name
 from orb.misc.decorators import db_connect
@@ -85,7 +87,8 @@ def download_payment_history(*_, **__):
                 hop.save()
 
         pay.dest_pubkey = last_route.hops[-1].pub_key
-        self_payment = data_manager.data_man.pubkey == pay.dest_pubkey
+        app = App.get_running_app()
+        self_payment = app.pubkey == pay.dest_pubkey
         if self_payment and len(last_route.hops) > 1:
             pay.last_hop_pubkey = last_route.hops[-2].pub_key
             pay.last_hop_chanid = last_route.hops[-1].chan_id

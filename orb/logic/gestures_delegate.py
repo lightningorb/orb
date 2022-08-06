@@ -2,11 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-01-11 06:55:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-30 16:47:29
+# @Last Modified time: 2022-08-06 10:27:20
 
 from kivy.graphics import Line, Ellipse, Color
 from kivy.gesture import Gesture, GestureDatabase
-from orb.misc import data_manager
+from kivy.app import App
 
 from orb.logic.rebalance_thread import RebalanceThread
 
@@ -22,10 +22,11 @@ def simplegesture(name, point_list):
 class GesturesDelegate:
     def __init__(self, overlay):
         """
-        Delegate's constructor. Simply binds to the data_manager.
+        Delegate's constructor.
         """
+        app = App.get_running_app()
         self.overlay = overlay
-        data_manager.data_man.bind(channels_widget_ux_mode=self.reset)
+        app.bind(channels_widget_ux_mode=self.reset)
 
     def init_gdb(self, channels_widget):
         """
@@ -68,6 +69,7 @@ class GesturesDelegate:
         Apply the inverse transformation Matrix to the point
         so they are in the Scatter's local space.
         """
+        app = App.get_running_app()
         if not touch.ud.get("line"):
             return
 
@@ -87,12 +89,12 @@ class GesturesDelegate:
                 self.channels_widget.cn[self.in_channel].l.flash(rgba=[0, 0, 1, 1])
 
         if self.out_channel and self.in_channel:
-            channels = data_manager.data_man.channels
+            channels = app.channels
             last_hop_pubkey = next(
                 c.remote_pubkey for c in channels if c.chan_id == self.in_channel
             )
 
-            data_manager.data_man.channels_widget_ux_mode = 0
+            app.channels_widget_ux_mode = 0
 
             thread = RebalanceThread(
                 amount=1_000,

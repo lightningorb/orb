@@ -2,31 +2,30 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 11:21:10
+# @Last Modified time: 2022-08-06 10:19:05
 
 import math
-from collections import defaultdict
-from functools import cmp_to_key
 from threading import Thread
-from random import shuffle, randrange
 from functools import lru_cache
+from functools import cmp_to_key
+from collections import defaultdict
+from random import shuffle, randrange
 
 from colour import Color as Colour
 
-from kivy.clock import Clock
-from kivy.uix.widget import Widget
-from kivy.graphics.context_instructions import Color
-from kivy.graphics.vertex_instructions import Line
-from kivy.graphics import Mesh
-from kivy.graphics.tesselator import Tesselator
-from kivy.animation import Animation
 from kivy.app import App
+from kivy.clock import Clock
+from kivy.graphics import Mesh
 from kivy.clock import mainthread
+from kivy.uix.widget import Widget
+from kivy.animation import Animation
+from kivy.graphics.tesselator import Tesselator
+from kivy.graphics.vertex_instructions import Line
+from kivy.graphics.context_instructions import Color
 
 from orb.math.Vector import Vector
 from orb.misc.prefs import is_mock
 from orb.math.lerp import lerp_vec
-from orb.misc import data_manager
 
 
 class Direction:
@@ -38,12 +37,13 @@ class ChordWidget(Widget):
     def __init__(self, channels, *args, **kwargs):
         super(ChordWidget, self).__init__(*args, **kwargs)
         self.channels = channels
+        app = App.get_running_app()
         Clock.schedule_once(lambda _: Thread(target=self.update).start(), 1)
         if channels:
             channels.bind(channels=self.update)
-        data_manager.data_man.bind(show_chords=self.update)
-        data_manager.data_man.bind(show_chord=self.show_chord)
-        data_manager.data_man.bind(chords_direction=self.update)
+        app.bind(show_chords=self.update)
+        app.bind(show_chord=self.show_chord)
+        app.bind(chords_direction=self.update)
 
     def show_chord(self, inst, chord):
         chord %= len(self.channels)
@@ -54,14 +54,15 @@ class ChordWidget(Widget):
     @mainthread
     def update(self, *args, **kwargs):
         self.canvas.clear()
+        app = App.get_running_app()
 
-        if not data_manager.data_man.show_chords:
+        if not app.show_chords:
             return
         self.radius = (
             int(App.get_running_app().config["display"]["channel_length"]) * 0.95
         )
 
-        matrix = self.get_matrix(direction=data_manager.data_man.chords_direction)
+        matrix = self.get_matrix(direction=app.chords_direction)
 
         with self.canvas:
             self.canvas.clear()

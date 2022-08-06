@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-26 18:25:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-30 10:08:03
+# @Last Modified time: 2022-08-05 09:12:46
 
 import functools
 import threading
@@ -52,9 +52,15 @@ def db_connect(name: str, lock: bool = False):
         def wrapper(*args, **kwargs):
             def run():
                 db = get_db(name)
-                db.connect()
+                try:
+                    db.connect()
+                except:
+                    pass
                 result = function(*args, **kwargs)
-                db.close()
+                try:
+                    db.close()
+                except:
+                    pass
                 return result
 
             if lock:

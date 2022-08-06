@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-07-22 05:36:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 09:20:29
+# @Last Modified time: 2022-08-06 08:22:33
 
 from time import sleep
 from threading import Thread
 
 from orb.core.stoppable_thread import StoppableThread
 from orb.misc.plugin import Plugin
-from orb.misc import data_manager
+
 from orb.lnd import Lnd
 from orb.misc.utils import pref_path
 
@@ -29,7 +29,8 @@ class UpdateMaxHTLC(StoppableThread, EventDispatcher):
         super(UpdateMaxHTLC, self).__init__()
 
     def main(self, *_):
-        for i, c in enumerate(data_manager.data_man.channels.channels.values()):
+        app = App.get_running_app()
+        for i, c in enumerate(app.channels.channels.values()):
             round = lambda x: int(int(x / 10_000) * 10_000)
             max_htlc = round(int(int(c.max_htlc_msat) / 1_000))
             if self.config["config"]["policy"] == "Half Capacity":

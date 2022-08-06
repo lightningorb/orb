@@ -2,10 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 14:00:17
+# @Last Modified time: 2022-08-06 10:26:10
 
 from random import choice
-from orb.misc import data_manager
 
 
 def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
@@ -13,7 +12,8 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
     Pick a channel for sending out sats.
     """
     chans = []
-    channels = data_manager.data_man.channels
+    app = App.get_running_app()
+    channels = app.channels
     for chan in channels:
         if chan.remote_pubkey in pk_ignore:
             continue
@@ -33,7 +33,8 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
 
 def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
     chans = []
-    channels = data_manager.data_man.channels
+    app = App.get_running_app()
+    channels = app.channels
     for chan in channels:
         if chan.remote_pubkey in pk_ignore:
             continue

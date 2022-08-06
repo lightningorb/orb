@@ -1749,25 +1749,6 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
-#:import dp kivy.metrics.dp
-#:import Window kivy.core.window.Window
-
-<ReleaseNotes>:
-    title: 'Release Notes'
-    size: min(dp(800), Window.size[0]), min(dp(500), Window.size[1])
-    size_hint: [None, None]
-    ScrollView:
-        size_hint: 1, 1
-        padding: dp(50)
-        spacing: dp(50)
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        Label:
-            id: release_notes
-            size_hint: None, None
-            size: self.texture_size
-            multiline: True
-''')
-Builder.load_string('''
 #: import dp kivy.metrics.dp
 
 <About>:
@@ -2372,7 +2353,7 @@ Builder.load_string('''
 #:kivy 2.0.0
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
-#:import data_manager orb.misc.data_manager
+
 #:import Lnd orb.lnd.Lnd
 #:import MailDialog orb.dialogs.mail_dialog.MailDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
@@ -2392,7 +2373,6 @@ Builder.load_string('''
 #:import graph_fees_earned orb.dialogs.forwarding_history.graph_fees_earned
 #:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
 #:import About orb.dialogs.help_dialog.about.about.About
-#:import ReleaseNotes orb.dialogs.help_dialog.release_notes.release_notes.ReleaseNotes
 #:import Rankings orb.screens.rankings.Rankings
 #:import ConnectionWizard orb.dialogs.connection_wizard.connection_wizard.ConnectionWizard
 #:import VoltageNode orb.dialogs.voltage_node.voltage_node.VoltageNode

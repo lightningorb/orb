@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:47:33
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:01:28
+# @Last Modified time: 2022-08-06 08:19:19
 
 import requests
 import json
 
 from kivy.app import App
 
-from orb.misc import data_manager
+
 from orb.lnd import Lnd
 from orb.misc.utils import pref
 

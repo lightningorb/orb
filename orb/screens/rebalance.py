@@ -2,16 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-10 10:13:46
+# @Last Modified time: 2022-08-06 10:22:38
 
 from functools import lru_cache
 
 from kivy.clock import mainthread
+from kivy.app import App
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.rebalance_thread import RebalanceThread
 from orb.lnd import Lnd
-from orb.misc import data_manager
 
 
 @lru_cache(maxsize=None)
@@ -32,7 +32,8 @@ class Rebalance(PopupDropShadow):
             self.ids.spinner_out_id.values = chans_pk
             self.ids.spinner_in_id.values = alias_to_pk
 
-        channels = data_manager.data_man.channels
+        app = App.get_running_app()
+        channels = app.channels
         self.alias_to_pk = {
             alias(self.lnd, c.remote_pubkey): c.remote_pubkey for c in channels
         }

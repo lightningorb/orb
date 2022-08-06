@@ -2,33 +2,32 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-06 11:02:08
+# @Last Modified time: 2022-08-06 08:16:50
 
 import os
-from functools import lru_cache
 from pathlib import Path
 from threading import Thread
+from functools import lru_cache
 
 import arrow
 from peewee import Model, SqliteDatabase, CharField, BooleanField
 
-from kivy.clock import Clock
 from kivy.app import App
+from kivy.metrics import dp
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.clock import mainthread
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
-from kivy.metrics import dp
-from kivy.uix.boxlayout import BoxLayout
-from kivy.clock import mainthread
 from kivy.properties import StringProperty
+from kivymd.uix.datatables import MDDataTable
 
 from orb.misc.plugin import Plugin
 from orb.store.model import Htlc
-from kivymd.uix.datatables import MDDataTable
 from orb.lnd import Lnd
-from orb.misc import data_manager
 
 
 class HtlcItem(Label):
@@ -45,7 +44,7 @@ class HtlcTopView(Popup):
         This gets called when the popup is first opened.
         """
         super(HtlcTopView, self).open(*args, **kwargs)
-        data_man = data_manager.data_man
+        app = App.get_running_app()
         lnd = Lnd()
 
         col_data = [
@@ -109,12 +108,12 @@ class HtlcTopView(Popup):
 
             for e in Htlc.select().order_by(Htlc.timestamp.desc()).limit(100):
                 if e.incoming_channel_id:
-                    in_channel = data_man.channels.channels[e.incoming_channel_id]
+                    in_channel = app.channels.channels[e.incoming_channel_id]
                     in_alias = lnd.get_node_alias(in_channel.remote_pubkey)
                 else:
                     in_alias = ""
                 if e.outgoing_channel_id:
-                    out_channel = data_man.channels.channels[e.outgoing_channel_id]
+                    out_channel = app.channels.channels[e.outgoing_channel_id]
                     out_alias = lnd.get_node_alias(out_channel.remote_pubkey)
                 else:
                     out_alias = ""

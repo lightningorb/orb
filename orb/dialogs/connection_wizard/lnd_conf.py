@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-17 08:34:57
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:08:13
+# @Last Modified time: 2022-08-06 10:22:00
 
 import os
 import re
@@ -34,10 +34,9 @@ def md5checksum(fname):
 
 class FocusTextInput(TextInput):
     def on_touch_down(self, touch):
-        from orb.misc import data_manager
-
+        app = App.get_running_app()
         if self.collide_point(*touch.pos):
-            if data_manager.data_man.menu_visible:
+            if app.menu_visible:
                 return False
         return super(FocusTextInput, self).on_touch_down(touch)
 

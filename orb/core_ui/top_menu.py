@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:04:56
+# @Last Modified time: 2022-08-06 10:18:40
 
 from traceback import format_exc
 
@@ -13,7 +13,7 @@ from kivy_garden.contextmenu import ContextMenuDivider
 from kivy_garden.contextmenu import ContextMenu
 from kivy.properties import ObjectProperty
 
-from orb.misc import data_manager
+
 from orb.misc.plugin import Plugin
 
 
@@ -68,13 +68,13 @@ class TopMenu(AppMenu):
 
     def on_hovered_menu_item(self, *_, **__):
         """
-        When the menu is hovered, tell data_manager.
+        When the menu is hovered, tell the kivy app.
         Sadly this doesn't seem to work as expected.
         :param _: args
         :param __: kwargs
         :return: None
         """
-        data_manager.data_man.menu_visible = True
+        KivyApp.get_running_app().menu_visible = True
 
     def execute(self, text):
         try:

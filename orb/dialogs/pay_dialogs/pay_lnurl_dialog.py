@@ -2,15 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-29 14:02:31
+# @Last Modified time: 2022-08-05 08:07:57
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.lnurl_invoice_generator import LNUrlInvoiceGenerator
-
-
-class PaymentUIOption:
-    auto_first_hop = 0
-    user_selected_first_hop = 1
 
 
 class PayLNURLDialog(PopupDropShadow):

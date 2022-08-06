@@ -2,32 +2,33 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-22 05:49:23
+# @Last Modified time: 2022-08-06 10:46:09
 
 import os
-from time import sleep
-from threading import Lock, Thread
 from copy import copy
-from random import shuffle
+from time import sleep
 from pathlib import Path
+from random import shuffle
 from functools import cmp_to_key
+from threading import Lock, Thread
 
 import yaml
 
+from kivy.app import App
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
-from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import DictProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
-from kivy.properties import DictProperty
-from kivy.uix.boxlayout import BoxLayout
 
-from orb.misc.utils import pref_path
 from orb.core.stoppable_thread import StoppableThread
 from orb.logic.rebalance_thread import RebalanceThread
+from orb.misc.utils import pref_path
 from orb.misc.plugin import Plugin
-from orb.misc import data_manager
+
 
 chan_ignore = set([])
 
@@ -243,7 +244,8 @@ class Rebalance(StoppableThread):
             if not obj:
                 return
             num_threads = obj["threads"]
-            chans = [*data_manager.data_man.channels.channels.values()]
+            app = App.get_running_app()
+            chans = [*app.channels.channels.values()]
             pk_ignore = set([])
             setters = {}
             for from_channel in chans:

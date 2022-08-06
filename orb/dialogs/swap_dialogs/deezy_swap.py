@@ -2,24 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-29 11:34:58
+# @Last Modified time: 2022-08-05 13:31:20
 
 import threading
 
 from kivy.clock import mainthread
 from memoization import cached
+from deezy import Deezy, Network
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.dialogs.swap_dialogs.deezy import Deezy, Network
 from orb.misc.decorators import guarded
 from orb.misc.mempool import get_fees
 from orb.misc.utils import pref
 from orb.lnd import Lnd
-
-
-class PaymentUIOption:
-    auto_first_hop = 0
-    user_selected_first_hop = 1
 
 
 class DeezySwapDialog(PopupDropShadow):
@@ -70,9 +65,11 @@ class DeezySwapDialog(PopupDropShadow):
         estimate = self.deezy.estimate_cost(
             amount_sats=amount_sats, fee_rate=fee_rate, mp_fee=self.mp_fee
         )
+
         @mainthread
         def update_estimate(estimate):
             self.ids.cost_estimate.text = f"{estimate:,}"
+
         update_estimate(estimate)
         print(f"Fee estimate is: {self.ids.cost_estimate.text} Sats")
         update(disabled=not r.available)

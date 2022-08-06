@@ -19,7 +19,6 @@ Submodules
    orb.misc.channels
    orb.misc.colors
    orb.misc.conf_defaults
-   orb.misc.data_manager
    orb.misc.decorators
    orb.misc.decrypt
    orb.misc.enums

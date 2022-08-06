@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-03 11:31:47
+# @Last Modified time: 2022-08-06 11:05:08
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -63,6 +63,7 @@ class ChannelsScreen(MDScreen):
     def refresh(self, *_, **__):
         if self.channels_widget:
             self.channels_widget.htlcs_thread.stop()
+            self.channels_widget.invoices_thread.stop()
             self.channels_widget.channels_thread.stop()
             self.ids.cw_layout.clear_widgets()
             self.build()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 10:42:13
+# @Last Modified time: 2022-08-06 10:20:13
 
 import os
 
@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 from kivy.uix.videoplayer import VideoPlayer
-from orb.misc import data_manager
+
 from orb.misc.utils import mobile, ios
 
 
@@ -63,10 +63,12 @@ class MainLayout(BoxLayout):
         and all Widgets in the application need to ensure not recieving
         clicks when the menu is showing.
         """
-        data_manager.data_man.menu_visible = self.menu_visible
+        app = App.get_running_app()
+        app.menu_visible = self.menu_visible
 
     def _keyboard_released(self, window=None, key=None):
-        if data_manager.data_man.disable_shortcuts:
+        app = App.get_running_app()
+        if app.disable_shortcuts:
             return
         if key:
             code, key = key
@@ -74,22 +76,23 @@ class MainLayout(BoxLayout):
                 self.shift = False
 
     def _keyboard_on_key_down(self, window, key, text, super):
-        data_man = data_manager.data_man
-        if data_man.disable_shortcuts:
+        # TODO: Get rid of this
+        app = App.get_running_app()
+        if app.disable_shortcuts:
             return
         code, key = key
         if key == "shift":
             self.shift = True
             return False
         if self.shift and key == "c":
-            data_man.show_chords = not data_man.show_chords
+            app.show_chords = not app.show_chords
             return False
         if key == "j":
-            data_man.show_chord += 1
+            app.show_chord += 1
         if key == "k":
-            data_man.show_chord -= 1
+            app.show_chord -= 1
         if key == "i":
-            data_man.chords_direction = 0
+            app.chords_direction = 0
         if key == "o":
-            data_man.chords_direction = 1
+            app.chords_direction = 1
         return False

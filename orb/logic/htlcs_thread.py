@@ -2,19 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 10:10:32
-import json
+# @Last Modified time: 2022-08-06 10:29:54
+
 import threading
 from time import sleep
-from traceback import print_exc
 from threading import Lock
+from traceback import print_exc
+
+from kivy.app import App
 from kivy.clock import mainthread
 
 from orb.lnd import Lnd
-from orb.misc.prefs import is_rest
 from orb.logic.thread_manager import thread_manager
-from orb.misc.auto_obj import dict2obj
-from orb.misc import data_manager
+
 
 from orb.logic.htlc import Htlc
 
@@ -49,23 +49,22 @@ class HTLCsThread(threading.Thread):
         def mainthread_update():
             self.inst.update()
 
+        app = App.get_running_app()
+
         while not self.stopped():
             try:
                 lnd = Lnd()
-                # events = []
                 for e in lnd.get_htlc_events():
                     self.count += 1
-                    # events.append(e.todict())
                     if self.count % 20 == 0:
-                        data_manager.data_man.channels.get()
-                    # with open("events.json", "w") as f:
-                    #     f.write(json.dumps(events, indent=4))
+                        app.channels.get()
                     if self.stopped():
                         return
                     htlc = Htlc.init(e)
-                    # htlc.save()
+                    if False:
+                        htlc.save()
 
-                    for plugin in data_manager.data_man.plugin_registry.values():
+                    for plugin in app.plugin_registry.values():
                         try:
                             plugin.htlc_event(htlc)
                         except:

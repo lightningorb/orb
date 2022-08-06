@@ -2,9 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 13:43:39
-
-from orb.misc import data_manager
+# @Last Modified time: 2022-08-06 10:32:27
 
 
 def patch_datatables():
@@ -138,14 +136,16 @@ def patch_text_input():
     Disable keyboard shortcuts when a TextInput is focussed.
     """
     from kivy.uix.textinput import TextInput
-    from orb.misc import data_manager
+    from kivy.app import App
+
+    app = App.get_running_app()
 
     def on_focus(_, inst, value):
-        if hasattr(data_manager.data_man, "disable_shortcuts"):
+        if hasattr(app, "disable_shortcuts"):
             if value:
-                data_manager.data_man.disable_shortcuts = True
+                app.disable_shortcuts = True
             else:
-                data_manager.data_man.disable_shortcuts = False
+                app.disable_shortcuts = False
 
     TextInput.on_focus = on_focus
 

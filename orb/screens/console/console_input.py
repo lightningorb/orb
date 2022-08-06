@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:05:23
+# @Last Modified time: 2022-08-06 10:21:38
 
 import uuid
 from traceback import format_exc
@@ -17,7 +17,6 @@ from kivy.uix.codeinput import CodeInput
 from kivy.uix.popup import Popup
 
 from orb.components.popup_drop_shadow import PopupDropShadow
-from orb.misc import data_manager
 
 
 class ConsoleFileChooser(PopupDropShadow):
@@ -35,8 +34,9 @@ class ConsoleInput(CodeInput):
         )
 
     def on_touch_down(self, touch):
+        app = App.get_running_app()
         if self.collide_point(*touch.pos):
-            if data_manager.data_man and data_manager.data_man.menu_visible:
+            if app.menu_visible:
                 return False
         return super(ConsoleInput, self).on_touch_down(touch)
 

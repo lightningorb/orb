@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-05 05:17:28
+# @Last Modified time: 2022-08-05 09:06:41
 
 from kivy.clock import Clock
 from kivy.properties import ListProperty
@@ -36,10 +36,12 @@ class ThreadManager(EventDispatcher):
         self.threads.clear()
 
     def check_alive(self, *args):
+        to_remove = []
         for t in self.threads:
             if t.stopped():
-                self.threads.remove(t)
-                return
+                to_remove.append(t)
+        for t in to_remove:
+            self.threads.remove(t)
 
     def add_thread(self, thread):
         self.threads.append(thread)

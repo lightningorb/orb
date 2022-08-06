@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 09:16:39
+# @Last Modified time: 2022-08-06 08:26:25
 
 from threading import Thread
 
@@ -70,10 +70,9 @@ class Node(Button):
             App.get_running_app().selection = self.channel
 
     def on_touch_down(self, touch):
-        from orb.misc import data_manager
-
+        app = App.get_running_app()
         if self.collide_point(*touch.pos):
-            if data_manager.data_man.menu_visible:
+            if app.menu_visible:
                 return False
         return super(Node, self).on_touch_down(touch)
 

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-10 09:17:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 09:41:55
+# @Last Modified time: 2022-08-06 10:23:20
 
 from threading import Thread
 
@@ -17,10 +17,9 @@ from orb.dialogs.connection_wizard.tab import Tab
 
 class FocusTextInput(TextInput):
     def on_touch_down(self, touch):
-        from orb.misc import data_manager
-
+        app = App.get_running_app()
         if self.collide_point(*touch.pos):
-            if data_manager.data_man.menu_visible:
+            if app.menu_visible:
                 return False
         return super(FocusTextInput, self).on_touch_down(touch)
 

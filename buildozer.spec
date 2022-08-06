@@ -28,7 +28,7 @@ source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, i
 source.exclude_patterns = fabfile.py, build.py
 
 # (str) Application versioning (method 1)
-version = 0.20.2.0
+version = 0.20.3.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -36,7 +36,7 @@ version = 0.20.2.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.1.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome,bech32,custom_lib
+requirements = python3,kivy==2.1.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome,bech32,psutil,custom_lib
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

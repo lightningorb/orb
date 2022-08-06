@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 15:31:16
+# @Last Modified time: 2022-08-06 08:27:02
 
 from time import time
 from kivy.properties import ObjectProperty
@@ -21,7 +21,6 @@ from orb.misc.decorators import guarded
 from orb.widgets.chord_widget import ChordWidget
 from orb.lnd import Lnd
 from orb.misc.enums import ChannelsWidgetUXMode
-from orb.misc import data_manager
 
 
 class ChannelsWidget(ScatterLayout):
@@ -36,12 +35,14 @@ class ChannelsWidget(ScatterLayout):
         from orb.logic.htlcs_thread import HTLCsThread
         from orb.logic.invoices_thread import InvoicesThread
 
+        app = App.get_running_app()
+
         self.htlcs_thread = HTLCsThread(inst=self, name="HTLCsThread")
         self.htlcs_thread.daemon = True
         self.invoices_thread = InvoicesThread(inst=self, name="InvoicesThread")
         self.invoices_thread.daemon = True
         self.node = None
-        self.channels = data_manager.data_man.channels
+        self.channels = app.channels
         if self.channels:
             self.channels.get()
         self.channels_thread = ChannelsThread(inst=self, name="ChannelsThread")
@@ -49,12 +50,12 @@ class ChannelsWidget(ScatterLayout):
         self.cn = {}
         self.touch_time = time()
         self.gestures_delegate = gestures_delegate
-        self.mode = data_manager.data_man.channels_widget_ux_mode
+        self.mode = app.channels_widget_ux_mode
 
         def update_mode(_, val):
             self.mode = val
 
-        data_manager.data_man.bind(channels_widget_ux_mode=update_mode)
+        app.bind(channels_widget_ux_mode=update_mode)
         self.lnd = Lnd()
         self.chord_widget = ChordWidget(self.channels)
         caps = self.get_caps(self.channels)
@@ -112,7 +113,8 @@ class ChannelsWidget(ScatterLayout):
                     print(f"Channel {chan_id} not found in channels_widget")
 
     def on_touch_move(self, touch):
-        if data_manager.data_man.menu_visible:
+        app = App.get_running_app()
+        if app.menu_visible:
             return False
         if self.mode == ChannelsWidgetUXMode.gestures:
             self.gestures_delegate.on_touch_move(touch)
@@ -129,7 +131,8 @@ class ChannelsWidget(ScatterLayout):
         """
         Touch down event in the channels widget.
         """
-        if data_manager.data_man.menu_visible:
+        app = App.get_running_app()
+        if app.menu_visible:
             return False
         if self.mode == ChannelsWidgetUXMode.gestures:
             self.gestures_delegate.on_touch_down(touch)

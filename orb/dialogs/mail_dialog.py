@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 15:54:33
+# @Last Modified time: 2022-08-06 10:19:19
 
 import base64
 import time
@@ -19,10 +19,10 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 
 class FocusTextInput(TextInput):
     def on_touch_down(self, touch):
-        from orb.misc import data_manager
+        app = App.get_running_app()
 
         if self.collide_point(*touch.pos):
-            if data_manager.data_man.menu_visible:
+            if app.menu_visible:
                 return False
         return super(FocusTextInput, self).on_touch_down(touch)
 

@@ -2,16 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2021-12-28 08:26:04
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-11 11:03:59
+# @Last Modified time: 2022-08-06 10:49:16
 
 import threading
 from traceback import format_exc
+
+from kivy.app import App
 
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.channel_selector import get_low_outbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.logic.thread_manager import thread_manager
-from orb.misc import data_manager
 from orb.lnd import Lnd
 
 
@@ -66,8 +67,8 @@ class RebalanceThread(threading.Thread):
                 chan_ignore=[],
                 num_sats=self.amount,
             )
-
-        from_pk = data_manager.data_man.channels.channels[self.chan_id].remote_pubkey
+        app = App.get_running_app()
+        from_pk = app.channels.channels[self.chan_id].remote_pubkey
         from_alias = Lnd().get_node_alias(from_pk)
         to_alias = Lnd().get_node_alias(self.last_hop_pubkey)
 

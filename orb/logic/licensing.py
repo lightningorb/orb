@@ -2,21 +2,23 @@
 # @Author: lnorb.com
 # @Date:   2022-02-15 13:04:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-01 11:21:46
+# @Last Modified time: 2022-08-06 10:30:48
 
+import json
+import codecs
+import requests
+from threading import Thread
+
+import rsa
 import arrow
-from orb.misc import data_manager
+
+from orb.misc.utils import pref
 from orb.misc.utils import mobile
 from orb.misc.sec_rsa import encrypt_long
 from orb.misc.sec_rsa import decrypt_long
+
 from kivy.clock import Clock
-from orb.misc.utils import pref
 from kivy.app import App
-from threading import Thread
-import rsa
-import json
-import requests
-import codecs
 
 
 def get_code():
@@ -80,7 +82,8 @@ def is_registered(*_):
     edition, invoice, paid_status = get_code().split("_")
     # if get_code() == "satoshi_0_paid":
     #     return
-    if data_manager.data_man.pubkey == "mock_pubkey":
+    app = App.get_running_app()
+    if app.pubkey == "mock_pubkey":
         return
 
     ks1_pub = rsa.PublicKey.load_pkcs1(
@@ -91,7 +94,6 @@ def is_registered(*_):
     )
 
     def do_exit(_):
-        data_manager.data_man = None
         App.get_running_app().stop()
 
     cached = App.get_running_app().store.get("licensing", {}).get("datav2", "")
@@ -118,7 +120,7 @@ def is_registered(*_):
                         encrypt_long(
                             json.dumps(
                                 dict(
-                                    pk=data_manager.data_man.pubkey,
+                                    pk=app.pubkey,
                                     edition=edition,
                                     invoice=invoice,
                                     paid_status=paid_status,

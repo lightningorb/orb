@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 11:52:05
+# @Last Modified time: 2022-08-06 10:55:51
 
 import os
 import sys
@@ -20,6 +20,7 @@ from kivy.storage.jsonstore import JsonStore
 from kivy.properties import NumericProperty
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
+from kivy.properties import DictProperty
 from kivy.properties import ListProperty
 from kivy.core.window import Window
 from kivy.uix.button import Button
@@ -42,7 +43,17 @@ from orb.audio.audio_manager import audio_manager
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.dialogs.restart_dialog import RestartDialog
 
-from orb.misc import data_manager
+from traceback import format_exc
+
+from kivy.properties import BooleanProperty
+from kivy.properties import NumericProperty
+from kivy.properties import StringProperty
+from kivy.event import EventDispatcher
+
+from orb.store.db_meta import *
+from orb.misc.channels import Channels
+from orb.lnd.lnd import Lnd
+
 
 ios = platform == "ios"
 
@@ -70,11 +81,21 @@ print(f"sys.argv[0] is {sys.argv[0]}")
 class OrbApp(AppCommon):
     title = "Orb"
     selection = ObjectProperty(allownone=True)
+    channels = ObjectProperty(allownone=True)
     update_channels_widget = NumericProperty()
     apps = None
     version = StringProperty("")
     window_size = []
     last_window_size_update = 0
+    pubkey = StringProperty("")
+    show_chords = BooleanProperty(False)
+    menu_visible = BooleanProperty(False)
+    disable_shortcuts = BooleanProperty(False)
+    plugin_registry = DictProperty(False)
+    show_chord = NumericProperty(0)
+    chords_direction = NumericProperty(0)
+    channels_widget_ux_mode = NumericProperty(0)
+    highlighter_updated = NumericProperty(0)
 
     def make_dirs(self):
         """
@@ -149,7 +170,7 @@ class OrbApp(AppCommon):
 
         def update_chans():
             print("updating channels")
-            data_manager.data_man.channels.get()
+            self.channels.get()
             print("channels updated")
 
         Thread(target=update_chans).start()
@@ -187,6 +208,37 @@ class OrbApp(AppCommon):
             self.root.ids.sm.get_screen("channels").refresh()
             self.last_window_size_update = time()
 
+    def create_tables(self):
+        from orb.store import db_create_tables
+
+        dbs = [
+            aliases_db_name,
+            forwarding_events_db_name,
+            invoices_db_name,
+            htlcs_db_name,
+            channel_stats_db_name,
+            payments_db_name,
+        ]
+        for db in dbs:
+            try:
+                get_db(db).connect()
+            except Exception as e:
+                print(e)
+                print(format_exc())
+                print(f"issue connecting with: {db}")
+                assert False
+
+        db_create_tables.create_forwarding_tables()
+        db_create_tables.create_aliases_tables()
+        db_create_tables.create_invoices_tables()
+        db_create_tables.create_htlcs_tables()
+        db_create_tables.create_channel_stats_tables()
+        db_create_tables.create_payments_tables()
+        db_create_tables.create_path_finding_tables()
+
+        for db in dbs:
+            get_db(db).close()
+
     def build(self):
         """
         Main build method for the app.
@@ -213,21 +265,13 @@ class OrbApp(AppCommon):
         debug("updating things")
         self.update_things()
         debug("loading data manager")
+        self.lnd = Lnd()
         try:
-            data_manager.data_man = data_manager.DataManager()
+            self.pubkey = self.lnd.get_info().identity_pubkey
         except:
-            from orb.misc.channels import Channels
-
-            class MockDataManager:
-                disable_shortcuts = True
-                show_chords = False
-                channels = None
-                channels_widget_ux_mode = 0
-
-                def bind(self, *args, **kwargs):
-                    pass
-
-            data_manager.data_man = MockDataManager()
+            print(format_exc())
+            print("Error getting pubkey")
+        self.channels = Channels(self.lnd)
         debug("setting theme")
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = self.config["display"]["primary_palette"]
@@ -238,7 +282,7 @@ class OrbApp(AppCommon):
         Clock.schedule_interval(
             self.main_layout.ids.sm.get_screen("console").consume, 0
         )
-
+        self.create_tables()
         debug("showing license info")
         self.show_licence_info()
         debug("setting up cron")

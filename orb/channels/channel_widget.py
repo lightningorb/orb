@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-29 14:44:18
+# @Last Modified time: 2022-08-06 08:25:20
 
 from time import time
 from threading import Thread
@@ -24,7 +24,6 @@ from orb.channels.fee_widget import FeeWidget
 from orb.math.lerp import lerp_2d
 from orb.misc.colors import *
 from orb.misc.auto_obj import dict2obj
-from orb.misc import data_manager
 from orb.misc.prefs import pref
 
 op = lambda: float(pref("display.channel_opacity"))
@@ -74,8 +73,9 @@ class ChannelWidget(Widget):
 
         self.bind(points=self.update)
 
-        App.get_running_app().bind(selection=self.set_selected)
-        data_manager.data_man.bind(
+        app = App.get_running_app()
+        app.bind(selection=self.set_selected)
+        app.bind(
             highlighter_updated=lambda *_: Thread(
                 target=lambda: self.animate_highlight()
             ).start()
@@ -232,6 +232,7 @@ class ChannelWidget(Widget):
         outgoing = htlc.outgoing_channel_id == self.channel.chan_id
         incoming = htlc.incoming_channel_id == self.channel.chan_id
         c = self.channel
+        app = App.get_running_app()
 
         get_pending_outgoing_event = lambda htlc: next(
             (
@@ -259,7 +260,7 @@ class ChannelWidget(Widget):
                 if pending:
                     c.pending_htlcs.remove(pending)
                     c.local_balance += pending.amount
-            elif htlc.event_outcome == 'forward_event':
+            elif htlc.event_outcome == "forward_event":
                 col = [71 / 255.0, 71 / 255.0, 255 / 255.0, 0.6]
                 self.anim_outgoing()
                 if settle:
@@ -284,7 +285,7 @@ class ChannelWidget(Widget):
                     )
                     c.pending_htlcs.append(phtlc)
                     c.local_balance -= out_amt_sat
-            elif htlc.event_outcome == 'settle_event':
+            elif htlc.event_outcome == "settle_event":
                 col = [71 / 255.0, 71 / 255.0, 255 / 255.0, 0.6]
                 self.anim_outgoing()
                 audio_manager.play_send_settle()
@@ -365,7 +366,7 @@ class ChannelWidget(Widget):
                 if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                     if htlc.incoming_channel_id and htlc.outgoing_channel_id:
                         print("FAIL!")
-                        outgoing_channel = data_manager.data_man.channels.channels[
+                        outgoing_channel = app.channels.channels[
                             htlc.outgoing_channel_id
                         ]
                         print(outgoing_channel.alias)

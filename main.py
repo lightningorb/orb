@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 15:24:50
+# @Last Modified time: 2022-08-05 15:04:25
 
 import sys
 from pathlib import Path
@@ -19,6 +19,7 @@ sys.path.append((parent_dir / Path("third_party/bezier/src/python/")).as_posix()
 sys.path.append((parent_dir / Path("third_party/colour/")).as_posix())
 sys.path.append((parent_dir / Path("third_party/currency-symbols/")).as_posix())
 sys.path.append((parent_dir / Path("third_party/lnurl/")).as_posix())
+sys.path.append((parent_dir / Path("third_party/deezy-py/")).as_posix())
 
 import kivy
 

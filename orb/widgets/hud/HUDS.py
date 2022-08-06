@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 18:47:48
+# @Last Modified time: 2022-08-06 10:36:50
 
 import os
 import time
@@ -30,11 +30,11 @@ from orb.logic.thread_manager import thread_manager
 from orb.misc.decorators import silent, guarded
 from orb.store.db_meta import payments_db_name
 from orb.misc.decorators import db_connect
-from orb.misc import mempool, data_manager
 from orb.misc.utils import desktop, pref
 from orb.misc.prefs import is_rest
 from orb.misc.forex import forex
 from orb.logic import licensing
+from orb.misc import mempool
 from orb.lnd import Lnd
 
 
@@ -222,7 +222,7 @@ class HUDSystem(BorderedLabel):
             mem = 0
             open_files = 1
 
-        self.mode = Mode.open_files
+        self.mode = Mode.mem
         psutil_installed = False
         try:
             import psutil
@@ -336,7 +336,8 @@ class ThreadWidget(Widget):
     thread = ObjectProperty(None, allownone=True)
 
     def on_release(self, *args):
-        if data_manager.data_man and not data_manager.data_man.menu_visible:
+        app = App.get_running_app()
+        if app and not app.menu_visible:
             self.thread.stop()
         return super(ThreadWidget, self).on_release(*args)
 
@@ -377,7 +378,8 @@ class HUDProtocol(Button):
         Allow the switching of protocol if on desktop
         """
 
-        if desktop and not data_manager.data_man.menu_visible:
+        app = App.get_running_app()
+        if desktop and not app.menu_visible:
             app = App.get_running_app()
             opt = {"rest": "grpc", "grpc": "rest"}
             app.config.set("lnd", "protocol", opt[pref("lnd.protocol")])
@@ -441,6 +443,8 @@ class HUDGlobalRatio(BorderedLabel):
 
     @guarded
     def check_connection(self, *_):
+        app = App.get_running_app()
+
         @mainthread
         def update_gui(text):
             self.text = text
@@ -448,7 +452,7 @@ class HUDGlobalRatio(BorderedLabel):
 
         @guarded
         def func():
-            channels = data_manager.data_man.channels
+            channels = app.channels
             if channels:
                 update_gui(f"Global Ratio: {channels.global_ratio:.2f}")
 
@@ -474,7 +478,8 @@ class HUDUIMode(Button):
         def update_text(widget, val):
             self.text = self.modes[val]
 
-        data_manager.data_man.bind(channels_widget_ux_mode=update_text)
+        app = App.get_running_app()
+        app.bind(channels_widget_ux_mode=update_text)
 
     def on_press(self, *args, **kwargs):
         return True
@@ -483,9 +488,9 @@ class HUDUIMode(Button):
         """
         Allow the switching of protocol if on desktop
         """
-
-        mode = data_manager.data_man.channels_widget_ux_mode
-        data_manager.data_man.channels_widget_ux_mode = [1, 0][mode]
+        app = App.get_running_app()
+        mode = app.channels_widget_ux_mode
+        app.channels_widget_ux_mode = [1, 0][mode]
 
 
 class HUDEvaluation(Label):

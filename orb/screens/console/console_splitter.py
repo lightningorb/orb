@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-26 18:25:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-13 15:05:47
+# @Last Modified time: 2022-08-06 08:19:12
 
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
@@ -23,7 +23,6 @@ class ConsoleSplitter(Splitter):
         self.output_pressed_height = 0
 
         def load_config(*_):
-            from orb.misc import data_manager
 
             input_height = (
                 App.get_running_app().store.get("console", {}).get("input_height", None)
@@ -56,7 +55,6 @@ class ConsoleSplitter(Splitter):
         return super(ConsoleSplitter, self).on_touch_down(touch)
 
     def on_touch_move(self, touch):
-        from orb.misc import data_manager
 
         if self.pressed:
             self.input.height = self.input_pressed_height + (

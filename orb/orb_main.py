@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-03 11:22:13
+# @Last Modified time: 2022-08-06 10:57:04
 
 import sys
 
@@ -17,6 +17,7 @@ from traceback import format_exc
 from pathlib import Path
 
 from kivy.uix.textinput import TextInput
+from kivy.storage.jsonstore import JsonStore
 from orb.core.orb_logging import get_logger
 from kivy.app import App
 
@@ -61,6 +62,9 @@ class OrbCrashWrapper(AppCommon):
 
     def build(self):
         self.text_input = TextInput(text=self.text)
+        self.store = JsonStore(
+            Path(self._get_user_data_dir()) / "orb_crash_wrapper.json"
+        )
         return self.text_input
 
 

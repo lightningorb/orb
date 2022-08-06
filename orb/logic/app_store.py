@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-18 09:39:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 06:46:13
+# @Last Modified time: 2022-08-06 10:43:40
 
 import os
 import sys
@@ -20,7 +20,7 @@ from orb.logic.app_store_api import API
 import orb
 import uuid
 import zipfile
-from orb.misc import data_manager
+
 
 from yaml import load
 
@@ -158,8 +158,9 @@ class LocalApp(EventDispatcher):
         code = dedent(
             f"""
             import sys
-            from orb.misc import data_manager
-            dm = data_manager.data_man
+            from kivy.app import App
+
+            dm = App.get_running_app()
             if '{self.module_name}' in dm.plugin_registry:
                 dm.plugin_registry['{self.module_name}'].cleanup()
                 del dm.plugin_registry['{self.module_name}']
