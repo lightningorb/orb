@@ -2,18 +2,19 @@
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
 
-#:import Lnd orb.lnd.Lnd
+#:import Ln orb.ln.Ln
 #:import MailDialog orb.dialogs.mail_dialog.MailDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
-#:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
+#:import IngestInvoices orb.dialogs.ingest_invoices.IngestInvoices
+#:import GenerateInvoice orb.dialogs.generate_invoice.GenerateInvoice
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
 #:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
-#:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
+#:import OpenChannel orb.dialogs.open_channel.OpenChannel
+#:import CloseChannel orb.dialogs.close_channel.CloseChannel
 #:import BatchOpenScreen orb.screens.batch_open_screen.BatchOpenScreen
-#:import CloseChannel orb.screens.close_channel.CloseChannel
 #:import Rebalance orb.screens.rebalance.Rebalance
 #:import prefs_col orb.misc.utils.prefs_col
 #:import set_string_pref orb.misc.utils.set_string_pref
@@ -22,7 +23,6 @@
 #:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
 #:import About orb.dialogs.help_dialog.about.about.About
 #:import Rankings orb.screens.rankings.Rankings
-#:import ConnectionWizard orb.dialogs.connection_wizard.connection_wizard.ConnectionWizard
 #:import VoltageNode orb.dialogs.voltage_node.voltage_node.VoltageNode
 #:import UmbrelNode orb.dialogs.umbrel_node.umbrel_node.UmbrelNode
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
@@ -78,7 +78,7 @@
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Open Channel"
-                            on_press:  OpenChannelScreen().open()
+                            on_press:  OpenChannel().open()
                             on_release: app_menu.close_all()
                         ContextMenuTextItem:
                             text: "Batch Open"
@@ -131,6 +131,17 @@
                             on_release: app_menu.close_all()
                             on_press: DeezySwapDialog().open()
                 ContextMenuTextItem:
+                    text: "Invoices"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Ingest Invoices"
+                            on_press: IngestInvoices().open()
+                            on_release: app_menu.close_all()
+                        ContextMenuTextItem:
+                            text: "Generate Invoice"
+                            on_press: GenerateInvoice().open()
+                            on_release: app_menu.close_all()
+                ContextMenuTextItem:
                     text: "Rebalance"
                     on_release: app_menu.close_all()
                     on_press:  Rebalance().open()
@@ -141,10 +152,6 @@
                 ContextMenuTextItem:
                     text: "Connect"
                     on_press:  ConnectScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Ingest Invoices"
-                    on_press: IngestInvoices().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Rankings"
@@ -231,6 +238,14 @@
                     on_press: app_menu.close_all()
                     on_release: webbrowser.open('https://lnorb.com/docs')
                 ContextMenuTextItem:
+                    text: "LND API"
+                    on_press: app_menu.close_all()
+                    on_release: webbrowser.open('https://api.lightning.community/')
+                ContextMenuTextItem:
+                    text: "CLN API"
+                    on_press: app_menu.close_all()
+                    on_release: webbrowser.open('https://lightning.readthedocs.io/')
+                ContextMenuTextItem:
                     text: "About"
                     on_press: app_menu.close_all()
                     on_release: About().open()
@@ -243,31 +258,31 @@
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Terminal"
-                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "Amboss"
-                            on_release: webbrowser.open("https://amboss.space/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://amboss.space/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LNRouter"
-                            on_release: webbrowser.open("https://lnrouter.app/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://lnrouter.app/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LNNodeInsight"
                             on_release: webbrowser.open("https://lnnodeinsight.com/")
                         ContextMenuTextItem:
                             text: "1ML"
-                            on_release: webbrowser.open("https://1ml.com/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://1ml.com/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "HashXP"
-                            on_release: webbrowser.open("https://hashxp.org/lightning/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://hashxp.org/lightning/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LN.plus"
-                            on_release: webbrowser.open("https://lightningnetwork.plus/nodes/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://lightningnetwork.plus/nodes/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "CheeseRobot"
-                            on_release: webbrowser.open("https://cheeserobot.org/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://cheeserobot.org/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "Acinq"
-                            on_release: webbrowser.open("https://explorer.acinq.co/n/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://explorer.acinq.co/n/" + Ln().get_info().identity_pubkey)
                 ContextMenuTextItem:
                     text: "Testnet Faucets"
                     ContextMenu:

@@ -2,22 +2,22 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-05 08:21:23
+# @Last Modified time: 2022-08-07 14:07:59
 
 from traceback import print_exc
 from threading import Thread
 
-from kivy.clock import mainthread
 from kivy.clock import Clock
-from kivy.properties import ObjectProperty
+from kivy.clock import mainthread
 from kivy.core.clipboard import Clipboard
+from kivy.properties import ObjectProperty
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.logic import licensing
-from orb.dialogs.ingest_invoices.invoice import Invoice
-from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import db_connect
 from orb.store.db_meta import invoices_db_name
+from orb.dialogs.ingest_invoices.invoice import Invoice
+from orb.components.popup_drop_shadow import PopupDropShadow
 
 
 class IngestInvoices(PopupDropShadow):
@@ -85,7 +85,7 @@ class IngestInvoices(PopupDropShadow):
                 line = line.strip()
                 if line:
                     try:
-                        req = Lnd().decode_payment_request(line)
+                        req = Ln().decode_payment_request(line)
                         if model.Invoice().select().where(model.Invoice.raw == line):
                             raise Exception("Already ingested")
                         invoice = model.Invoice(

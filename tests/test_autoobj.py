@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-02-20 10:19:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 11:56:29
+# @Last Modified time: 2022-08-07 07:39:31
 
 
 import unittest
@@ -15,6 +15,10 @@ class TestAutoObj(unittest.TestCase):
         gobj = to_num(sort_dict(grpc))
         robj = to_num(sort_dict(rest))
         self.assertDictEqual(gobj, robj)
+
+    def test_dict2obj(self):
+        ob = dict2obj([1, 2, 3])
+        self.assertEqual(ob["0"], 1)
 
 
 grpc = {

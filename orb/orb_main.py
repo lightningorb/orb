@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:57:04
+# @Last Modified time: 2022-08-20 12:07:22
 
 import sys
 
@@ -12,14 +12,12 @@ import os
 
 os.environ["KIVY_NO_ARGS"] = "1"
 
-from copy import copy
 from traceback import format_exc
 from pathlib import Path
 
 from kivy.uix.textinput import TextInput
 from kivy.storage.jsonstore import JsonStore
 from orb.core.orb_logging import get_logger
-from kivy.app import App
 
 main_logger = get_logger(__name__)
 debug = main_logger.debug
@@ -39,8 +37,6 @@ if platform == "macosx":
     os.environ["KIVY_METRICS_DENSITY"] = "1.5"
 
 from orb.core_ui.app_common import AppCommon
-from orb.misc.utils import get_available_nodes
-import argparse
 
 debug("importing orb modules")
 
@@ -48,9 +44,6 @@ debug("importing orb modules")
 error = ""
 
 
-from orb.dialogs.umbrel_node.umbrel_node import UmbrelNode
-from orb.dialogs.voltage_node.voltage_node import VoltageNode
-from orb.connector.orb_connector_main import OrbConnectorMain
 from orb.connector.orb_connector_app import OrbConnectorApp
 from orb.misc.monkey_patch import do_monkey_patching
 
@@ -81,11 +74,11 @@ def main():
     config.read(config_path.as_posix())
     try:
         config.add_section("host")
-        config.add_section("lnd")
+        config.add_section("ln")
     except:
         pass
     try:
-        pk = config.get("lnd", "identity_pubkey", fallback="")
+        pk = config.get("ln", "identity_pubkey", fallback="")
         if not pk:
             app = OrbConnectorApp()
             app.run()
@@ -104,6 +97,7 @@ def main():
             OrbApp().run(config)
     except Exception as e:
         print(e)
+        print(format_exc())
         text = str(e)
         text += "\n"
         text += format_exc()

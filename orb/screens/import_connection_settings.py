@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-30 14:26:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 17:29:04
+# @Last Modified time: 2022-08-08 12:26:25
 
 from kivymd.uix.screen import MDScreen
 
@@ -18,9 +18,7 @@ from kivymd.uix.screen import MDScreen
 from orb.misc.utils import mobile
 from orb.misc.decorators import guarded
 from orb.misc.utils import get_available_nodes
-from orb.misc.macaroon_secure import MacaroonSecure
 from orb.dialogs.restart_dialog import RestartDialog
-from orb.misc.certificate_secure import CertificateSecure
 
 
 class ImportConnectionSettings(MDScreen):
@@ -65,9 +63,9 @@ class ImportConnectionSettings(MDScreen):
 
         error = ""
         try:
-            from orb.lnd import Lnd
+            from orb.ln import Ln
 
-            lnd = Lnd(
+            ln = Ln(
                 fallback_to_mock=False,
                 cache=False,
                 use_prefs=False,
@@ -79,7 +77,7 @@ class ImportConnectionSettings(MDScreen):
                 grpc_port=10009,
             )
 
-            info = lnd.get_info()
+            info = ln.get_info()
 
             self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
             self.connected = True

@@ -1,11 +1,6 @@
 #:import Factory kivy.factory.Factory
 #:import get_available_nodes orb.misc.utils.get_available_nodes
 
-<NodeSpinnerOption@SpinnerOption>:
-    size_hint: None, None
-    size: dp(300), dp(30)
-
-
 <ExportConnectionSettings>:
     name: 'export_node_settings'
     BoxLayout:
@@ -13,7 +8,6 @@
         size_hint: (1, 1)
         Spinner:
             id: nodes
-            # option_cls: Factory.get("NodeSpinnerOption")
             text: "Select node to export"
             height: dp(30)
             width: dp(300)

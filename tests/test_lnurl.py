@@ -2,21 +2,22 @@
 # @Author: lnorb.com
 # @Date:   2022-06-08 10:18:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 10:43:23
+# @Last Modified time: 2022-08-24 10:55:06
 
 import unittest
 import requests
-from lnurl import Lnurl, LnurlResponse
+from orb.logic.lnurl import get_callback_url
 
 
 class TestLNURL(unittest.TestCase):
     def test_lnurl(self):
-        lnurl = Lnurl("")
-        req = requests.get(lnurl.url).json()
-        res = LnurlResponse.from_dict(req)
-        rurl = f"{res.callback}?amount={1000*1000}"
-        req = requests.get(rurl)
-        self.assertTrue("lnbc", req.json()["pr"])
+        lnurl = get_callback_url(
+            amount=1,
+            # url="user@domain.com", # this works too
+            url="LNURL1DP68GURN8GHJ7AMPD3KX2AR0VEEKZAR0WD5XJTNRDAKJ7TNHV4KXCTTTDEHHWM30D3H82UNVWQHHVCTVD9J8QCTJV4H8GV3CMHGV0A",
+        )
+        req = requests.get(lnurl).json()
+        self.assertTrue("lnbc" in req["pr"])
 
 
 if __name__ == "__main__":

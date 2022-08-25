@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-05 08:07:57
+# @Last Modified time: 2022-08-08 17:36:58
 
-from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.lnurl_invoice_generator import LNUrlInvoiceGenerator
+from orb.components.popup_drop_shadow import PopupDropShadow
+from orb.ln import Ln
 
 
 class PayLNURLDialog(PopupDropShadow):
@@ -20,5 +21,6 @@ class PayLNURLDialog(PopupDropShadow):
             chunks=int(self.ids.chunks.text),
             num_threads=int(self.ids.num_threads.text),
             rate_limit=int(self.ids.rate_limit.text),
+            ln=Ln(),
         )
         self.invoice_generator.start()

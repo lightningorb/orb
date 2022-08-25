@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 10:36:00
+# @Last Modified time: 2022-08-22 12:17:53
 
 import base64
 
@@ -20,22 +20,24 @@ class Routes:
 
     def __init__(
         self,
-        lnd,
         pub_key,
         payment_request,
         outgoing_chan_id,
         last_hop_pubkey,
         fee_limit_msat,
         time_pref,
+        cltv,
+        ln,
     ):
-        self.lnd = lnd
         self.pub_key = pub_key
         self.payment_request = payment_request
         self.last_hop_pubkey = last_hop_pubkey
         self.outgoing_chan_id = outgoing_chan_id
         self.fee_limit_msat = fee_limit_msat
         self.time_pref = time_pref
-        self.output = Output()
+        self.output = Output(ln)
+        self.cltv = cltv
+        self.ln = ln
 
     def has_next(self):
         self.update_routes()
@@ -59,22 +61,25 @@ class Routes:
 
     def request_route(self):
         amount = self.get_amount()
-        routes = self.lnd.get_route(
+        route = self.ln.get_route(
             pub_key=self.pub_key,
-            amount=amount,
+            amount_sat=amount,
             ignored_pairs=self.ignored_pairs,
             ignored_nodes=self.ignored_nodes,
             last_hop_pubkey=self.last_hop_pubkey,
             outgoing_chan_id=self.outgoing_chan_id,
             fee_limit_msat=self.fee_limit_msat,
             time_pref=float(self.time_pref),
+            cltv=self.cltv,
         )
-        if routes is None:
+        if route.hops and route.total_fees_msat > self.fee_limit_msat:
+            print("Route too expensive")
+            assert False
+        if not route.hops:
             self.num_requested_routes = MAX_ROUTES_TO_REQUEST
         else:
             self.num_requested_routes += 1
-            for route in routes:
-                self.add_route(route)
+            self.add_route(route)
 
     def add_route(self, route):
         if route is None:
@@ -89,9 +94,12 @@ class Routes:
         ignore_next = False
         for hop in route.hops:
             if ignore_next:
-                self.ignore_edge_from_to(
-                    hop.chan_id, failure_source_pubkey, hop.pub_key
-                )
+                if self.ln.node_type == "cln":
+                    self.ignored_nodes.append(f"{hop.chan_id}/{hop.direction}")
+                elif self.ln.node_type == "lnd":
+                    self.ignore_edge_from_to(
+                        hop.chan_id, failure_source_pubkey, hop.pub_key
+                    )
                 return
             if hop.pub_key == failure_source_pubkey:
                 ignore_next = True

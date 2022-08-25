@@ -12,7 +12,7 @@ from kivy.uix.button import Button
 from kivy.app import App
 
 from orb.misc.utils import prefs_col, pref
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class Node(Button):
@@ -27,7 +27,7 @@ class Node(Button):
         if self.channel:
             Thread(
                 target=lambda: setattr(
-                    self, "text", Lnd().get_node_alias(self.channel.remote_pubkey)
+                    self, "text", Ln().get_node_alias(self.channel.remote_pubkey)
                 )
             ).start()
         App.get_running_app().bind(selection=self.set_selected)

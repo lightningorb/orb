@@ -2,16 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-27 11:39:31
+# @Last Modified time: 2022-08-10 10:18:30
 
 import sys
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class Output:
-    def __init__(self):
-        self.lnd = Lnd()
+    def __init__(self, ln: Ln):
+        self.ln: Ln = ln
 
     def print_route(self, route):
         route_str = "\n".join(
@@ -25,16 +25,16 @@ class Output:
     def get_channel_representation(self, chan_id, pubkey_to, pubkey_from=None):
         channel_id_formatted = chan_id
         if pubkey_from:
-            alias_to_formatted = format_alias(self.lnd.get_node_alias(pubkey_to))
-            alias_from = format_alias(self.lnd.get_node_alias(pubkey_from))
+            alias_to_formatted = format_alias(self.ln.get_node_alias(pubkey_to))
+            alias_from = format_alias(self.ln.get_node_alias(pubkey_from))
             return f"{channel_id_formatted} ({alias_from} to {alias_to_formatted})"
-        alias_to_formatted = format_alias(f"{self.lnd.get_node_alias(pubkey_to):32}")
+        alias_to_formatted = format_alias(f"{self.ln.get_node_alias(pubkey_to):32}")
         return f"{channel_id_formatted} to {alias_to_formatted}"
 
     def get_fee_information(self, next_hop, route):
         hops = list(route.hops)
         if hops[0] == next_hop:
-            ppm = self.lnd.get_ppm_to(next_hop.chan_id)
+            ppm = self.ln.get_ppm_to(next_hop.chan_id)
             return f"(free, we usually charge {format_ppm(ppm)})"
         hop = hops[hops.index(next_hop) - 1]
         ppm = int(hop.fee_msat * 1_000_000 / hop.amt_to_forward_msat)

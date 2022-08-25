@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 13:26:13
+# @Last Modified time: 2022-08-16 15:00:16
 
 import threading
 
@@ -17,7 +17,7 @@ from kivymd.uix.datatables import MDDataTable
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 from orb.misc import mempool
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class Tab(MDFloatLayout, MDTabsBase):
@@ -65,7 +65,7 @@ class BatchOpenScreen(PopupDropShadow):
     def on_tab_switch(self, instance_tabs, instance_tab, instance_tab_label, tab_text):
         if tab_text == "confirm":
             pks, amounts = self.get_pks_amounts()
-            aliases = [Lnd().get_node_alias(pk) for pk in pks]
+            aliases = [Ln().get_node_alias(pk) for pk in pks]
             self.ids.table_layout.clear_widgets()
             self.ids.table_layout.add_widget(
                 MDDataTable(
@@ -82,7 +82,7 @@ class BatchOpenScreen(PopupDropShadow):
     def batch_open(self):
         pks, amounts = self.get_pks_amounts()
         try:
-            response = Lnd().batch_open(
+            response = Ln().batch_open(
                 pubkeys=pks,
                 amounts=amounts,
                 sat_per_vbyte=mempool.get_fees("fastestFee") + 1,
@@ -106,14 +106,14 @@ class BatchOpenScreen(PopupDropShadow):
         def func(*args):
             for pk, amount in zip(pks, amounts):
                 try:
-                    info = Lnd().get_node_info(pk)
+                    info = Ln().get_node_info(pk)
                     display("-" * 50)
-                    display(Lnd().get_node_alias(pk))
+                    display(Ln().get_node_alias(pk))
                     display("-" * 50)
-                    for address in info.node.addresses:
+                    for address in info.addresses:
                         display(f"Connecting to: {pk}@{address.addr}")
                         try:
-                            Lnd().connect(f"{pk}@{address.addr}")
+                            Ln().connect(f"{pk}@{address.addr}")
                             display("Attempted.")
                         except Exception as e:
                             display(e.args[0].details)

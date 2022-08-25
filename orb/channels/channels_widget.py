@@ -2,25 +2,26 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:27:02
+# @Last Modified time: 2022-08-24 08:56:07
 
 from time import time
-from kivy.properties import ObjectProperty
+
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.graphics.transformation import Matrix
 from kivy.properties import NumericProperty
 from kivy.app import App
 
 
-from orb.channels.channels_thread import ChannelsThread
-from orb.channels.CN_widget import CNWidget
+from orb.ln import Ln
+from orb.misc.utils import pref
 from orb.widgets.node import Node
-from orb.misc.utils import pref, prefs_col
 from orb.misc.prefs import is_mock
+from orb.misc.utils import prefs_col
 from orb.misc.decorators import guarded
-from orb.widgets.chord_widget import ChordWidget
-from orb.lnd import Lnd
+from orb.channels.CN_widget import CNWidget
 from orb.misc.enums import ChannelsWidgetUXMode
+from orb.widgets.chord_widget import ChordWidget
+from orb.channels.channels_thread import ChannelsThread
 
 
 class ChannelsWidget(ScatterLayout):
@@ -56,10 +57,10 @@ class ChannelsWidget(ScatterLayout):
             self.mode = val
 
         app.bind(channels_widget_ux_mode=update_mode)
-        self.lnd = Lnd()
+        self.ln = Ln(node_type=pref("host.type"))
         self.chord_widget = ChordWidget(self.channels)
         caps = self.get_caps(self.channels)
-        self.info = self.lnd.get_info()
+        self.info = self.ln.get_info()
         if self.channels:
             for c in self.channels:
                 self.add_channel(channel=c, caps=caps, update=False)
@@ -74,11 +75,19 @@ class ChannelsWidget(ScatterLayout):
         self.apply_transform(
             Matrix().scale(0.3, 0.3, 0.3), anchor=(self.size[0] / 2, self.size[1] / 2)
         )
+
         if not is_mock():
-            self.htlcs_thread.start()
-            self.invoices_thread.start()
-        if not is_mock():
-            self.channels_thread.start()
+            if pref("host.type") == "lnd":
+                self.htlcs_thread.start()
+                self.invoices_thread.start()
+                self.channels_thread.start()
+            elif pref("host.type") == "cln":
+                try:
+                    wss_hostname = pref("c-lightning-events.hostname")
+                    if wss_hostname:
+                        self.htlcs_thread.start()
+                except:
+                    pass
 
         self.gestures_delegate.init_gdb(self)
 
@@ -106,11 +115,15 @@ class ChannelsWidget(ScatterLayout):
             self.node.pos = (-(self.node.width_pref / 2), -(self.node.height_pref / 2))
         if self.channels:
             self.channels.sort_channels()
+            do_update = False
             for i, chan_id in enumerate(self.channels.sorted_chan_ids):
                 if chan_id in self.cn:
                     self.cn[chan_id].update(i, len(self.cn))
                 else:
                     print(f"Channel {chan_id} not found in channels_widget")
+                    self.add_channel(self.channels[chan_id], update=False)
+            if do_update:
+                self.update()
 
     def on_touch_move(self, touch):
         app = App.get_running_app()

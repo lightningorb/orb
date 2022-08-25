@@ -2,19 +2,18 @@
 # @Author: lnorb.com
 # @Date:   2022-07-10 16:35:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-23 18:17:20
-
-from kivy.app import App
+# @Last Modified time: 2022-08-10 09:32:27
 
 
 class BalancedRatioMixin:
     def compute_balanced_ratios(self, *_):
-        App.get_running_app().store.get("exclude_from_balanced_ratio", {})
+        from orb.app import App
+        app = App.get_running_app()
         solution = []
         channels = [x for x in self.channels.values()]
         for c in channels:
             solution.append(
-                self.app.store.get("balanced_ratio", {}).get(str(c.chan_id), -1)
+                app.store.get("balanced_ratio", {}).get(str(c.chan_id), -1)
             )
         gr = self.global_ratio
         indices = [i for i, x in enumerate(solution) if x == -1]

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:03:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-11 09:14:08
+# @Last Modified time: 2022-08-24 08:49:06
 
 from math import ceil
 from threading import Lock
@@ -58,6 +58,8 @@ class Segment(Widget):
         if self.label:
             self.label.pos = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
             self.label.show()
+        else:
+            self.label.hide()
 
         n = ceil(amt_sat / 1e6)
         diff = n - len(self.ig)

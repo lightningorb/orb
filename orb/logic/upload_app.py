@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 14:14:55
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-20 15:10:07
+# @Last Modified time: 2022-08-07 13:17:36
 
 import os
 import re
 import shutil
 from pathlib import Path
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.logic.app_store_api import API
 from orb.misc.utils import pref_path
 
@@ -35,7 +35,7 @@ class UploadApp:
         """
         Check whether this app is valid for upload
         """
-        pk = Lnd().get_info().identity_pubkey
+        pk = Ln().get_info().identity_pubkey
         if self.app.author != pk:
             return "Not app owner - please change author entry in appinfo.yaml"
         return "ok"

@@ -2,13 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-02 12:31:35
+# @Last Modified time: 2022-08-07 13:08:38
 
 import io
 
 from kivy.core.image import Image as CoreImage
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.misc.decorators import guarded
 from orb.components.popup_drop_shadow import PopupDropShadow
 
@@ -24,7 +24,7 @@ class NewAddress(PopupDropShadow):
     @guarded
     def open(self, *args):
         super(NewAddress, self).open(*args)
-        ad = Lnd().new_address()
+        ad = Ln().new_address()
         print(ad)
         self.ids.address.text = ad.address
         imgIO = io.BytesIO()

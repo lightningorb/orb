@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 09:50:20
+# @Last Modified time: 2022-08-07 12:20:42
 from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -12,7 +12,7 @@ from orb.misc.decorators import guarded
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.math.normal_distribution import NormalDistribution
 from orb.logic.normalized_events import get_descritized_routing_events
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class FeeDistribution(PopupDropShadow):
@@ -32,7 +32,7 @@ class FeeDistribution(PopupDropShadow):
             self.channel_n = 0
             i = 0
 
-            for c in Lnd().get_channels():
+            for c in Ln().get_channels():
                 routing_events = get_descritized_routing_events(c)
                 if routing_events:
                     self.chan_routing_data[i] = routing_events

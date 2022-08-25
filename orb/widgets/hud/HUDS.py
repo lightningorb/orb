@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:36:50
+# @Last Modified time: 2022-08-24 09:30:23
 
 import os
 import time
@@ -25,17 +25,15 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 
 from orb.widgets.hud.hud_common import Hideable, BorderedLabel
-from orb.core.stoppable_thread import StoppableThread
 from orb.logic.thread_manager import thread_manager
 from orb.misc.decorators import silent, guarded
 from orb.store.db_meta import payments_db_name
 from orb.misc.decorators import db_connect
 from orb.misc.utils import desktop, pref
-from orb.misc.prefs import is_rest
 from orb.misc.forex import forex
 from orb.logic import licensing
 from orb.misc import mempool
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class HUDFeeSummary(BorderedLabel):
@@ -58,7 +56,7 @@ class HUDFeeSummary(BorderedLabel):
 
         @silent
         def func():
-            fr = Lnd().fee_report()
+            fr = Ln().fee_report()
             update_gui(
                 f"Earned:\nDay: {forex(fr.day_fee_sum)}\nWeek"
                 f" {forex(fr.week_fee_sum)}\nMonth:"
@@ -115,7 +113,7 @@ class HUDSpentFeeSummary(BorderedLabel):
                 / 1000
             )
 
-            fr = Lnd().fee_report()
+            fr = Ln().fee_report()
             update_gui(
                 f"Spent:\nDay: {forex(today)}\nWeek"
                 f" {forex(this_week)}\nMonth:"
@@ -144,13 +142,13 @@ class HUDBalance(BorderedLabel):
             self.show()
 
         @silent
-        def func():
-            lnd = Lnd()
+        def func_lnd():
+            ln = Ln()
 
             ##################
             # Get chain totals
             ##################
-            chain_bal = lnd.get_balance()
+            chain_bal = ln.get_balance()
 
             hud = f"Chain Balance: {forex(chain_bal.total_balance)}\n"
             if chain_bal.total_balance != chain_bal.confirmed_balance:
@@ -162,8 +160,8 @@ class HUDBalance(BorderedLabel):
             ####################
             # Get channel totals
             ####################
-            channel_bal = lnd.channel_balance()
-            pending_channels = lnd.get_pending_channels()
+            channel_bal = ln.channel_balance()
+            pending_channels = ln.get_pending_channels()
             limbo_balance = pending_channels.total_limbo_balance
             pending_open = sum(
                 [
@@ -205,7 +203,35 @@ class HUDBalance(BorderedLabel):
             hud += f"Total: {forex(ln_on_chain + int(channel_bal.remote_balance.sat))}"
             update_gui(hud)
 
-        threading.Thread(target=func).start()
+        @silent
+        def func_cln():
+            ln = Ln(node_type=pref("host.type"))
+
+            ##################
+            # Get chain totals
+            ##################
+            chain_bal = ln.get_balance()
+
+            hud = f"Chain Balance: {forex(chain_bal.total_balance)}\n"
+            if chain_bal.total_balance != chain_bal.confirmed_balance:
+                hud += f"Conf. Chain Balance: {forex(chain_bal.confirmed_balance)}\n"
+                hud += (
+                    f"Unconf. Chain Balance: {forex(chain_bal.unconfirmed_balance)}\n"
+                )
+
+            local_remote_bal = ln.local_remote_bal()
+            hud += f"Local Balance: {forex(local_remote_bal.local_balance)}\n"
+            hud += f"Remote Balance: {forex(local_remote_bal.remote_balance)}\n"
+            hud += f"Pending Balance: {forex(local_remote_bal.pending_balance)}\n"
+            hud += f"Inactive Balance: {forex(local_remote_bal.inactive_balance)}\n"
+
+            update_gui(hud)
+
+        node_type = pref("host.type")
+        if node_type == "lnd":
+            threading.Thread(target=func_lnd).start()
+        if node_type == "cln":
+            threading.Thread(target=func_cln).start()
 
 
 class HUDSystem(BorderedLabel):
@@ -354,7 +380,8 @@ class HUDThreadManager(GridLayout, Hideable):
         with self.lock:
             self.clear_widgets()
             for t in thread_manager.threads:
-                self.add_widget(ThreadWidget(thread=t))
+                if t.visible:
+                    self.add_widget(ThreadWidget(thread=t))
 
 
 class HUDProtocol(Button):
@@ -402,28 +429,28 @@ class HUDProtocol(Button):
         def update_gui(text):
             self.text = text
 
-        data = {"success": False, "prev_protocol": pref("lnd.protocol")}
+        data = {"success": False, "prev_protocol": pref("ln.protocol")}
 
         def func():
             def inner_func():
                 data["success"] = False
                 try:
-                    Lnd().get_info()
-                    if pref("lnd.protocol") != data["prev_protocol"]:
+                    Ln().get_info()
+                    if pref("ln.protocol") != data["prev_protocol"]:
                         update_gui(f"connecting")
                     else:
-                        update_gui(f"{pref('lnd.protocol')} connected")
+                        update_gui(f"{pref('ln.protocol')} connected")
                     data["success"] = True
                 except:
                     data["success"] = False
-                    update_gui(f"{pref('lnd.protocol')} offline")
-                data["prev_protocol"] = pref("lnd.protocol")
+                    update_gui(f"{pref('ln.protocol')} offline")
+                data["prev_protocol"] = pref("ln.protocol")
 
             thread = threading.Thread(target=inner_func)
             thread.start()
             time.sleep(5)
             if not data["success"]:
-                update_gui(f"{pref('lnd.protocol')} offline")
+                update_gui(f"{pref('ln.protocol')} offline")
                 ctypes.pythonapi.PyThreadState_SetAsyncExc(
                     ctypes.c_long(thread.ident), ctypes.py_object(SystemExit)
                 )

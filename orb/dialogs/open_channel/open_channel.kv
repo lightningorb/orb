@@ -1,0 +1,81 @@
+#:import Window kivy.core.window.Window
+#:import Factory kivy.factory.Factory
+
+<FeeRateSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(300), dp(30)
+    background_color: .6, .6, .8, .9
+
+<CLNOpenChannel>:
+    title: 'Open Channel'
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            row_force_default: True
+            row_default_height: dp(60)
+            padding: dp(2)
+            spacing: dp(2)
+            MDTextField:
+                id: chan_id
+                helper_text: 'id'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: satoshis
+                helper_text: 'Sats'
+                helper_text_mode: "persistent"
+            Spinner:
+                id: fee_rate
+                background_color: .6, .6, .8, .9
+                text: "Fee Rate"
+                option_cls: Factory.get("FeeRateSpinnerOption")
+                height: dp(30)
+                width: dp(300)
+                size_hint: None, None
+                values: ['urgent', 'normal', 'slow', 'perkw', 'perkb']
+        Widget:
+        MDRaisedButton:
+            text: 'open'
+            on_release: root.open_channel(chan_id.text, satoshis.text, fee_rate.text)
+            size_hint: None, None
+            width: dp(80)
+            height: dp(40)
+
+
+<LNDOpenChannel>:
+    title: 'Open Channel'
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            row_force_default: True
+            row_default_height: dp(60)
+            padding: dp(2)
+            spacing: dp(2)
+            MDTextField:
+                id: pk
+                helper_text: 'Pubkey'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: sats
+                helper_text: 'Sats'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: sats_per_vbyte
+                helper_text: 'Sats per v/byte'
+                helper_text_mode: "persistent"
+        Widget:
+        MDRaisedButton:
+            text: 'open'
+            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
+            size_hint: None, None
+            width: dp(80)
+            height: dp(40)

@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-26 18:25:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-05 09:12:46
+# @Last Modified time: 2022-08-10 09:28:58
 
 import functools
 import threading
 from traceback import format_exc
 from collections import defaultdict
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.store.db_meta import get_db
 
 locks = defaultdict(threading.Lock)
@@ -41,7 +41,7 @@ def silent(func):
 def public_restrict(func):
     @functools.wraps(func)
     def wrapper_decorator(*args, **kwargs):
-        if Lnd().get_info().alias.lower() == "orb-public":
+        if Ln().get_info().alias.lower() == "orb-public":
             raise Exception("Operation not permitted on public node")
 
     return wrapper_decorator

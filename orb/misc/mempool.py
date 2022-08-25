@@ -2,13 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-17 07:37:58
+# @Last Modified time: 2022-08-10 10:59:25
 
 import requests
-from orb.misc.utils import pref
 
 
-def get_fees(which=None):
+def get_fees(which=None, use_prefs=True, network="mainnet"):
     """
     Get Mempool fees from mempool.space.
 
@@ -27,7 +26,12 @@ def get_fees(which=None):
     """
     # TODO: Should use an enum style class rather than strings.
     lut = dict(testnet="testnet/", signet="signet/", mainnet="")
-    path = lut[pref("lnd.network") or "mainnet"]
+    if use_prefs:
+        from orb.misc.utils_no_kivy import pref
+
+        path = lut[pref("ln.network") or "mainnet"]
+    else:
+        path = lut[network]
     url = f"https://mempool.space/{path}api/v1/fees/recommended"
     fees = requests.get(url).json()
     return fees[which] if which else fees

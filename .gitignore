@@ -1,3 +1,7 @@
+.coverage
+coverage
+*.macaroon
+*.pem
 events.json
 venv
 *.c

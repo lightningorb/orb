@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-10 08:11:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 13:11:52
+# @Last Modified time: 2022-08-07 12:29:47
 
 from collections import defaultdict
 import json
@@ -11,7 +11,7 @@ from orb.logic.licensing import is_digital_gold
 from orb.misc.decorators import db_connect
 from orb.store.db_meta import path_finding_db_name
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 def get_payments():
@@ -21,13 +21,13 @@ def get_payments():
 
 
 def print_logs():
-    lnd = Lnd()
+    ln = Ln()
     payments = get_payments()
     for r in payments.iterator():
         if not r.succeeded:
             continue
         print("=====================")
-        print(f"Payment of {r.amount} to {lnd.get_node_alias(r.dest)}")
+        print(f"Payment of {r.amount} to {ln.get_node_alias(r.dest)}")
         print(r.amount, r.dest, r.fees, r.succeeded)
         for a in r.attempts:
             print("----------")
@@ -35,16 +35,14 @@ def print_logs():
             prev = None
             for h in a.hops:
                 if prev:
-                    print(
-                        f"{lnd.get_node_alias(prev.pk)} -> {lnd.get_node_alias(h.pk)}"
-                    )
+                    print(f"{ln.get_node_alias(prev.pk)} -> {ln.get_node_alias(h.pk)}")
                 prev = h
             if a.succeeded:
                 print("SUCCESS!")
             else:
                 print(
                     f"Failed with code: {a.code} at"
-                    f" {lnd.get_node_alias(a.weakest_link_pk)}"
+                    f" {ln.get_node_alias(a.weakest_link_pk)}"
                 )
 
 
@@ -97,10 +95,10 @@ def ingest(path):
 def count_successes_failures():
     if not (is_satoshi() or is_digital_gold()):
         return {}, []
-    lnd = Lnd()
+    ln = Ln()
     payments = get_payments()
     nodes = defaultdict(lambda: dict(successes=0, failures=0))
-    remote_pubkeys = set([x.remote_pubkey for x in Lnd().get_channels()])
+    remote_pubkeys = set([x.remote_pubkey for x in Ln().get_channels()])
     for r in payments.iterator():
         if not r.succeeded:
             continue
@@ -118,7 +116,7 @@ def count_successes_failures():
     sorted_by_successes = sorted(
         [
             [
-                f"{lnd.get_node_alias(node)} {node[:10]}",
+                f"{ln.get_node_alias(node)} {node[:10]}",
                 rank_without_direct_peers[node]["successes"],
                 rank_without_direct_peers[node]["failures"],
                 node,

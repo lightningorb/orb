@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-05 13:31:20
+# @Last Modified time: 2022-08-07 14:05:22
 
 import threading
 
@@ -14,7 +14,7 @@ from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 from orb.misc.mempool import get_fees
 from orb.misc.utils import pref
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class DeezySwapDialog(PopupDropShadow):
@@ -81,13 +81,13 @@ class DeezySwapDialog(PopupDropShadow):
         from orb.store import model
 
         if not self.address:
-            self.address = Lnd().new_address().address
+            self.address = Ln().new_address().address
         r = self.deezy.swap(
             amount_sats=int(self.ids.amount_sats.text),
             address=self.address,
             mp_fee=self.mp_fee,
         )
-        req = Lnd().decode_payment_request(r.bolt11_invoice)
+        req = Ln().decode_payment_request(r.bolt11_invoice)
         invoice = model.Invoice(
             raw=r.bolt11_invoice,
             destination=req.destination,

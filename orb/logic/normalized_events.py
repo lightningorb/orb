@@ -2,11 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:55:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-21 15:31:33
+# @Last Modified time: 2022-08-07 13:58:59
 
 from dataclasses import dataclass
 from orb.math.normal_distribution import NormalDistribution
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class ChanRoutingData:
@@ -63,7 +63,7 @@ def get_descritized_routing_events(c):
         for n in range(int(e.amt / 10_000)):
             norm_vals.append(Event(ppm=e.ppm, amt=10_000))
 
-    alias = Lnd().get_node_alias(c.remote_pubkey)
+    alias = Ln().get_node_alias(c.remote_pubkey)
 
     # make sure we have more than one event
     if len(set(norm_vals)) >= 2:

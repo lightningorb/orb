@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:25:06
+# @Last Modified time: 2022-08-10 18:40:01
 
 import threading
 
 from kivy.clock import mainthread
 
-from orb.lnd import Lnd
-
+from orb.app import App
+from orb.ln import Ln
 from orb.logic.pay_invoices import PayInvoices
 from orb.components.popup_drop_shadow import PopupDropShadow
 
@@ -26,9 +26,9 @@ class PayInvoicesDialog(PopupDropShadow):
             self.ids.spinner_id.values = chans_pk
 
         def func():
-            lnd = Lnd()
+            ln = Ln()
             chans_pk = [
-                f"{c.chan_id}: {lnd.get_node_alias(c.remote_pubkey)}" for c in channels
+                f"{c.chan_id}: {ln.get_node_alias(c.remote_pubkey)}" for c in channels
             ]
             delayed(chans_pk)
 
@@ -44,5 +44,6 @@ class PayInvoicesDialog(PopupDropShadow):
             fee_rate=int(self.ids.fee_rate.text),
             time_pref=float(self.ids.time_pref.value),
             num_threads=int(self.ids.num_threads.text),
+            ln=Ln()
         )
         self.pay_invoices.start()

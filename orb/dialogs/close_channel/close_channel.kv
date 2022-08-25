@@ -1,0 +1,70 @@
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+#:import Ln orb.ln.Ln
+
+<CLNCloseChannel>:
+    title: 'Close Channel'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        height: self.minimum_height
+        MDTextField:
+            id: chan_id
+            helper_text: 'id'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: unilateral_timeout
+            text: '172800'
+            helper_text: 'Unilateral Timeout'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: dest
+            text: '' #Ln().new_address().address
+            helper_text: 'Destination'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: fee_neg_step
+            text: '50%'
+            helper_text: 'Fee Negotiation Step'
+            helper_text_mode: "persistent"
+        Widget:
+        MDRaisedButton:
+            text: 'close'
+            on_release: root.close_channel(id=chan_id.text, unilateral_timeout=unilateral_timeout.text, dest=dest.text)
+            size_hint: 1, None
+            height: dp(50)
+
+<LNDCloseChannel>:
+    title: 'Close Channel'
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        height: self.minimum_height
+        Label:
+            text: "force"
+            size_hint_y: None
+            height: self.texture_size[1]
+        MDCheckbox:
+            id: force
+        Widget:
+        MDTextField:
+            id: channel_point
+            helper_text: 'Channel Point'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: sats_per_vbyte
+            text: '1'
+            helper_text: 'Sats per v/byte'
+            helper_text_mode: "persistent"
+        Widget:
+        MDRaisedButton:
+            text: 'close'
+            on_release: root.close_channel(channel_point.text, sats_per_vbyte.text)
+            size_hint: 1, None
+            height: dp(50)

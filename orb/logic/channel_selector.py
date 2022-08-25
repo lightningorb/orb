@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:26:10
+# @Last Modified time: 2022-08-10 08:16:32
 
 from random import choice
+from orb.app import App
 
 
-def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
+def get_low_inbound_channel(pk_ignore, chan_ignore, num_sats):
     """
     Pick a channel for sending out sats.
     """
@@ -31,7 +32,7 @@ def get_low_inbound_channel(lnd, pk_ignore, chan_ignore, num_sats):
         return choice(chans).chan_id
 
 
-def get_low_outbound_channel(lnd, pk_ignore, chan_ignore, num_sats, ratio=0.5):
+def get_low_outbound_channel(pk_ignore, chan_ignore, num_sats, ratio=0.5):
     chans = []
     app = App.get_running_app()
     channels = app.channels

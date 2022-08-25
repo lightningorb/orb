@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-17 06:12:06
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:22:22
+# @Last Modified time: 2022-08-25 07:30:45
 
 """
 Set of classes to set fees via a convenient yaml file.
@@ -28,10 +28,9 @@ from kivy.lang import Builder
 from orb.store import model
 from orb.math.lerp import lerp
 from orb.misc.plugin import Plugin
-from orb.logic.normalized_events import get_best_fee
 from orb.core.stoppable_thread import StoppableThread
 from orb.misc.utils import pref_path
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 version = "0.0.4"
@@ -137,26 +136,6 @@ class Match(Base):
         ]
         return min(found_min) if found_min else 0
 
-    @property
-    def best_fee(self):
-        """
-        Calculate the optimal routing fee based on history,
-        and current channel liquidity.
-        """
-        most_frequent = get_best_fee(self.channel, include_zero=False) or 100
-        ratio = self.channel.local_balance_include_pending / self.channel.capacity
-        app = App.get_running_app()
-        global_ratio = app.channels.global_ratio
-        if ratio < global_ratio:
-            best = lerp(0, 100, min(ratio / global_ratio, 1))
-        else:
-            best = lerp(
-                most_frequent,
-                most_frequent + 10,
-                (ratio - global_ratio) / (1 - global_ratio),
-            )
-        return max(best, 100)
-
     def eval(self):
         channel = self.channel
         if self.all:
@@ -173,7 +152,6 @@ class Match(Base):
 
     def eval_fee_rate(self):
         channel = self.channel
-        # best_fee = self.best_fee
         return int(eval(str(self.fee_rate)))
 
 
@@ -196,7 +174,7 @@ class Setter(Base):
         ):
             print(f"{self.channel.alias}: last updated updated recently, ignoring")
             return
-        alias = Lnd().get_node_alias(self.channel.remote_pubkey)
+        alias = Ln().get_node_alias(self.channel.remote_pubkey)
         self.meta.fee_rate = self.fee_rate
         current_fee_rate = int(self.channel.fee_rate_milli_msat)
         print(
@@ -337,14 +315,6 @@ rules:
   fee_rate: '0'
   priority: 0
 - !Match
-  alias: Best Fee
-  all:
-  - (channel.local_balance > 500_000 or channel.ratio > 0.1) and channel.ratio_include_pending
-    <= 0.9
-  any: null
-  fee_rate: self.best_fee
-  priority: 1
-- !Match
   alias: LOOP
   all:
   - channel.alias == 'LOOP'
@@ -373,7 +343,7 @@ spam_prevention: 300
                 alias="New",
                 priority=0,
                 all=["False"],
-                fee_rate="best_fee",
+                fee_rate="500",
             )
         )
         self.ids.rules.clear_widgets()

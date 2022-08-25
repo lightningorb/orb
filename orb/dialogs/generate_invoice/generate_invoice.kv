@@ -1,0 +1,39 @@
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
+<GenerateInvoice>:
+    title: "Generate Invoice"
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(500))
+    size_hint: (None, None)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 20
+        padding: 20
+        MDTextField:
+            hint_text: "Satoshis"
+            text: '10_000'
+            id: satoshis
+            # height: dp(80)
+            # size_hint: (1, None)
+        Image:
+            id: img
+            source: ''
+        MDTextField:
+            id: address
+            # height: dp(80)
+            # size_hint: (1, None)
+        MDRaisedButton:
+            text: 'Generate'
+            size_hint_y: None
+            height: dp(50)
+            width: dp(200)
+            on_release: root.generate(satoshis=satoshis.text)
+        MDRaisedButton:
+            text: 'close'
+            size_hint_y: None
+            height: dp(50)
+            width: dp(200)
+            on_release: root.dismiss()

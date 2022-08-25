@@ -2,16 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 17:20:18
+# @Last Modified time: 2022-08-08 14:22:10
 
 import re
 from pathlib import Path
 
 from kivy.app import App
 from kivy.utils import platform
-
-from orb.math.Vector import Vector
-from orb.core_ui.app_common import AppCommon
 
 
 mobile = platform in ("ios", "android")
@@ -75,16 +72,10 @@ class hashabledict(dict):
         return hash(tuple(sorted(self.items())))
 
 
-def closest_point_on_line(p1, p2, p3):
-    dx, dy = p2.x - p1.x, p2.y - p1.y
-    det = dx * dx + dy * dy
-    a = (dy * (p3.y - p1.y) + dx * (p3.x - p1.x)) / det
-    return Vector(p1.x + a * dx, p1.y + a * dy)
-
-
 def get_available_nodes():
-
-    data_dir = Path(AppCommon._get_user_data_dir_static())
+    from orb.core_ui.app_common import AppCommon
+    path = AppCommon._get_user_data_dir_static()
+    data_dir = Path(path)
     nodes = []
     for x in data_dir.glob("orb_*"):
         m = re.match(r"^orb_([a-zA-Z0-9]{66})$", x.name)

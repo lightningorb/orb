@@ -2,21 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2021-12-28 08:26:04
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:49:16
+# @Last Modified time: 2022-08-10 10:21:22
 
-import threading
 from traceback import format_exc
 
-from kivy.app import App
+from orb.app import App
 
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.channel_selector import get_low_outbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
-from orb.logic.thread_manager import thread_manager
-from orb.lnd import Lnd
+from orb.core.stoppable_thread import StoppableThread
+from orb.ln import Ln
 
 
-class RebalanceThread(threading.Thread):
+class RebalanceThread(StoppableThread):
     def __init__(
         self,
         amount,
@@ -27,11 +26,11 @@ class RebalanceThread(threading.Thread):
         time_pref,
         name,
         thread_n,
+        ln,
         *args,
         **kwargs,
     ):
         super(RebalanceThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
         self.amount = amount
         self.chan_id = chan_id
         self.last_hop_pubkey = last_hop_pubkey
@@ -40,8 +39,7 @@ class RebalanceThread(threading.Thread):
         self.time_pref = time_pref
         self.name = name
         self.thread_n = thread_n
-        self.lnd = Lnd()
-        thread_manager.add_thread(self)
+        self.ln = ln
 
     def run(self):
         try:
@@ -54,7 +52,6 @@ class RebalanceThread(threading.Thread):
     def __run(self):
         if not self.chan_id:
             self.chan_id = get_low_inbound_channel(
-                lnd=self.lnd,
                 pk_ignore=[],
                 chan_ignore=[],
                 num_sats=self.amount,
@@ -62,22 +59,22 @@ class RebalanceThread(threading.Thread):
 
         if not self.last_hop_pubkey:
             _, self.last_hop_pubkey = get_low_outbound_channel(
-                lnd=self.lnd,
                 pk_ignore=[],
                 chan_ignore=[],
                 num_sats=self.amount,
             )
         app = App.get_running_app()
         from_pk = app.channels.channels[self.chan_id].remote_pubkey
-        from_alias = Lnd().get_node_alias(from_pk)
-        to_alias = Lnd().get_node_alias(self.last_hop_pubkey)
+        from_alias = self.ln.get_node_alias(from_pk)
+        to_alias = self.ln.get_node_alias(self.last_hop_pubkey)
 
         print(f"Rebalancing {self.amount} from {from_alias} to {to_alias}")
 
-        raw, payment_request = self.lnd.generate_invoice(
+        raw, payment_request = self.ln.generate_invoice(
             memo="rebalance", amount=self.amount
         )
         status = pay_thread(
+            ln=self.ln,
             stopped=self.stopped,
             thread_n=0,
             fee_rate=self.fee_rate,
@@ -91,13 +88,7 @@ class RebalanceThread(threading.Thread):
 
         if not status == PaymentStatus.success:
             try:
-                self.lnd.cancel_invoice(payment_request.payment_hash)
+                self.ln.cancel_invoice(payment_request.payment_hash)
             except:
                 pass
                 # print("Exception while cancelling invoice")
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()

@@ -2,16 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-15 05:22:18
+# @Last Modified time: 2022-08-07 14:18:44
 
-from kivy.clock import Clock
 from kivy.metrics import dp
+from kivy.clock import Clock
 from kivy.uix.textinput import TextInput
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
-from orb.lnd import Lnd
 from orb.misc.mempool import get_fees
+from orb.ln import Ln
 
 
 class SendCoins(PopupDropShadow):
@@ -41,7 +41,7 @@ class SendCoins(PopupDropShadow):
         sat_per_vbyte = int(sat_per_vbyte)
         print(f"sending: {amount} sats to {addr} at {sat_per_vbyte}")
         self.ids.send_button.disabled = True
-        out = Lnd().send_coins(addr, amount, sat_per_vbyte)
+        out = Ln().send_coins(addr, amount, sat_per_vbyte)
         popup = PopupDropShadow(
             title="Send Output", size_hint=(None, None), size=(dp(200), dp(200))
         )

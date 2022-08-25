@@ -2,33 +2,25 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:29:54
+# @Last Modified time: 2022-08-24 09:33:45
 
 import threading
 from time import sleep
-from threading import Lock
-from traceback import print_exc
+from traceback import format_exc
 
 from kivy.app import App
 from kivy.clock import mainthread
 
-from orb.lnd import Lnd
-from orb.logic.thread_manager import thread_manager
+from orb.ln import Ln
+from orb.core.stoppable_thread import StoppableThreadHidden
 
 
-from orb.logic.htlc import Htlc
-
-db_lock = Lock()
-
-
-class HTLCsThread(threading.Thread):
+class HTLCsThread(StoppableThreadHidden):
     def __init__(self, inst, name, *args, **kwargs):
         super(HTLCsThread, self).__init__(*args, **kwargs)
         self._stop_event = threading.Event()
         self.inst = inst
-        self.name = name
         self.count = 0
-        thread_manager.add_thread(self)
 
     def run(self):
         try:
@@ -53,16 +45,12 @@ class HTLCsThread(threading.Thread):
 
         while not self.stopped():
             try:
-                lnd = Lnd()
-                for e in lnd.get_htlc_events():
+                for htlc in Ln().get_htlc_events():
                     self.count += 1
                     if self.count % 20 == 0:
                         app.channels.get()
                     if self.stopped():
                         return
-                    htlc = Htlc.init(e)
-                    if False:
-                        htlc.save()
 
                     for plugin in app.plugin_registry.values():
                         try:
@@ -71,17 +59,13 @@ class HTLCsThread(threading.Thread):
                             print(f"HTLCs error in plugin: {plugin}")
 
                     for cid in [
-                        x for x in [e.outgoing_channel_id, e.incoming_channel_id] if x
+                        x
+                        for x in [htlc.outgoing_channel_id, htlc.incoming_channel_id]
+                        if x
                     ]:
                         mainthread_anim(cid, htlc)
 
             except:
                 print("Exception getting HTLCs - let's sleep")
-                print_exc()
+                print(format_exc())
                 sleep(10)
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 20:23:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-08 13:07:19
+# @Last Modified time: 2022-08-07 12:23:24
 
 from orb.misc.plugin import Plugin
 from kivymd.uix.button import MDFlatButton
@@ -12,14 +12,14 @@ from pathlib import Path
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.misc.decorators import guarded
 
 
 class KeysendDialogContent(BoxLayout):
     def update_alias(self, pk):
         try:
-            self.ids.alias.text = Lnd().get_node_alias(pk)
+            self.ids.alias.text = Ln().get_node_alias(pk)
         except:
             self.ids.alias.text = "Could not find alias"
 
@@ -34,7 +34,7 @@ class KeysendDialog(MDDialog):
             sats = int(content.ids.sats.text)
             recipient = content.ids.pubkey.text
             message = content.ids.message.text
-            Lnd().keysend(recipient, message, sats, 5, 60)
+            Ln().keysend(recipient, message, sats, 5, 60)
 
         super(KeysendDialog, self).__init__(
             content_cls=content,

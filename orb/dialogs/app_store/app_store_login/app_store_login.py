@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-20 16:08:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-28 11:53:07
+# @Last Modified time: 2022-08-07 12:21:43
 
 from threading import Thread
 
@@ -13,7 +13,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.misc.decorators import guarded
 from orb.logic.app_store_authenticate import get_password, register, login, get_creds
 
@@ -27,7 +27,7 @@ class LoginDialogContent(BoxLayout):
         super(LoginDialogContent, self).__init__(*args, **kwargs)
 
         def get_pk():
-            self.pk = Lnd().get_info().identity_pubkey
+            self.pk = Ln().get_info().identity_pubkey
 
         def get_store_password():
             self.password = get_password()

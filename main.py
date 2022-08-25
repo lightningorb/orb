@@ -1,32 +1,38 @@
+#!/usr/bin/env python3.9
 # -*- coding: utf-8 -*-
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-05 15:04:25
+# @Last Modified time: 2022-08-11 11:53:05
 
+import os
 import sys
 from pathlib import Path
 
-print("appending paths to include lnd and third party modules")
+os.environ["KIVY_NO_ARGS"] = "1"
+
 parent_dir = Path(__file__).parent
-# for p in (parent_dir / Path("third_party")).glob("*"):
-#     sys.path.append(p.as_posix())
-sys.path.append((parent_dir / Path("third_party/contextmenu")).as_posix())
-sys.path.append((parent_dir / Path("third_party/arrow")).as_posix())
-sys.path.append((parent_dir / Path("third_party/python-qrcode/")).as_posix())
-sys.path.append((parent_dir / Path("third_party/forex-python/")).as_posix())
-sys.path.append((parent_dir / Path("third_party/bezier/src/python/")).as_posix())
-sys.path.append((parent_dir / Path("third_party/colour/")).as_posix())
-sys.path.append((parent_dir / Path("third_party/currency-symbols/")).as_posix())
-sys.path.append((parent_dir / Path("third_party/lnurl/")).as_posix())
-sys.path.append((parent_dir / Path("third_party/deezy-py/")).as_posix())
+for p in (parent_dir / Path("third_party")).glob("*"):
+    sys.path.append(p.as_posix())
 
-import kivy
+if len(sys.argv) == 1:
+    import kivy
 
-kivy.require("2.1.0")
+    kivy.require("2.1.0")
 
-from orb.orb_main import main
-from orb.core_ui.hidden_imports import *
-from orb.core.orb_logging import get_logger
+    from orb.orb_main import main
+    from orb.core_ui.hidden_imports import *
 
-main()
+    main()
+else:
+
+    from fabric.main import program
+
+    if len(sys.argv) == 2:
+        if sys.argv[1] in ["-h", "--help"]:
+            sys.argv[1] = "-l"
+
+    sys.argv.insert(1, "-c")
+    sys.argv.insert(2, "faborb")
+
+    sys.exit(program.run())

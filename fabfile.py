@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 06:59:13
+# @Last Modified time: 2022-08-13 09:01:17
 
 import re
 import os
@@ -12,6 +12,7 @@ from build_system.monkey_patch import fix_annotations
 fix_annotations()
 
 from build_system import lnd
+from build_system import cln
 from build_system import ssh
 from build_system import android
 from build_system import ios
@@ -29,6 +30,7 @@ from build_system import armor
 from build_system import site
 from build_system import katching
 from build_system import alembic
+from build_system import cln_regtest
 
 
 @task
@@ -72,6 +74,7 @@ def release(c, minor=False, patch=False, hotfix=False):
 
 namespace = Collection(
     lnd,
+    cln,
     ssh,
     katching,
     release,
@@ -91,4 +94,5 @@ namespace = Collection(
     site,
     alembic,
     android,
+    cln_regtest,
 )

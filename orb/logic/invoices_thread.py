@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 17:33:58
+# @Last Modified time: 2022-08-24 09:34:07
 
 import threading
 from time import sleep
@@ -11,17 +11,14 @@ from traceback import print_exc
 from kivy.app import App
 from kivy.clock import mainthread
 
-from orb.lnd import Lnd
-from orb.logic.thread_manager import thread_manager
+from orb.ln import Ln
+from orb.core.stoppable_thread import StoppableThreadHidden
 
 
-class InvoicesThread(threading.Thread):
+class InvoicesThread(StoppableThreadHidden):
     def __init__(self, inst, name, *args, **kwargs):
         super(InvoicesThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
         self.inst = inst
-        self.name = name
-        thread_manager.add_thread(self)
 
     def run(self):
         try:
@@ -41,8 +38,7 @@ class InvoicesThread(threading.Thread):
 
         while not self.stopped():
             try:
-                lnd = Lnd()
-                for e in lnd.get_invoice_events():
+                for e in Ln().get_invoice_events():
                     if self.stopped():
                         return
                     if e.state == "SETTLED":
@@ -61,9 +57,3 @@ class InvoicesThread(threading.Thread):
                 print("Exception getting Invoices - let's sleep")
                 print_exc()
                 sleep(10)
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()

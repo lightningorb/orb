@@ -2,18 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2022-06-28 15:44:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-20 09:32:42
+# @Last Modified time: 2022-08-20 10:00:44
 
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
-from orb.screens.close_channel import CloseChannel
+from orb.dialogs.close_channel.close_channel import LNDCloseChannel
+from orb.dialogs.close_channel.close_channel import CLNCloseChannel
 from orb.screens.rebalance import Rebalance
 from orb.screens.channels_screen import ChannelsScreen
 from orb.dialogs.pay_dialogs.pay_invoices_dialog import PayInvoicesDialog
 from orb.dialogs.pay_dialogs.pay_lnurl_dialog import PayLNURLDialog
-from orb.screens.open_channel_screen import OpenChannelScreen
+from orb.dialogs.open_channel import OpenChannel
 from orb.screens.connect_screen import ConnectScreen
-from orb.dialogs.ingest_invoices.ingest_invoices import IngestInvoices
+from orb.dialogs.ingest_invoices import IngestInvoices
+from orb.dialogs.generate_invoice import GenerateInvoice
 from orb.screens.console.console_screen import ConsoleScreen
 from orb.screens.send_coins import SendCoins
 from orb.screens.rankings import Rankings
@@ -35,12 +37,12 @@ from orb.dialogs.fee_distribution import FeeDistribution
 from orb.dialogs.help_dialog.about.about import About
 from orb.dialogs.upload_app import UploadAppDialog
 from orb.dialogs.highlighter_dialog.highlighter_dialog import HighlighterDialog
-from orb.dialogs.connection_wizard.connection_wizard import ConnectionWizard
-from orb.dialogs.umbrel_node.umbrel_node import UmbrelNode
-from orb.dialogs.voltage_node.voltage_node import VoltageNode
 from orb.misc.device_id import device_id
 import colour
 from kivymd.effects.stiffscroll import StiffScrollEffect
+from orb.dialogs.umbrel_node.umbrel_node import UmbrelNode
+from orb.dialogs.voltage_node.voltage_node import VoltageNode
+from orb.connector.orb_connector_main import OrbConnectorMain
 
 from orb.core_ui.orb_app import OrbApp
 
@@ -48,16 +50,16 @@ keep = lambda _: _
 
 keep(VoltageNode)
 keep(UmbrelNode)
-keep(ConnectionWizard)
 keep(Lnd)
 keep(ChannelsWidget)
 keep(Rebalance)
-keep(CloseChannel)
+keep(LNDCloseChannel)
+keep(CLNCloseChannel)
 keep(Rebalance)
 keep(ChannelsScreen)
 keep(PayInvoicesDialog)
 keep(PayLNURLDialog)
-keep(OpenChannelScreen)
+keep(OpenChannel)
 keep(ConnectScreen)
 keep(IngestInvoices)
 keep(ConsoleScreen)

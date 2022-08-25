@@ -2,47 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2022-07-20 11:23:01
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-04 19:27:10
+# @Last Modified time: 2022-08-18 17:56:15
 
-import requests
-import threading
 from time import sleep
-from typing import List, Set, Tuple
+from traceback import format_exc
 
 from peewee import fn
-from bech32 import bech32_decode, bech32_encode, convertbits
-
+from orb.logic.lnurl import *
 from orb.core.stoppable_thread import StoppableThread
 from orb.store.db_meta import invoices_db_name
 from orb.misc.decorators import db_connect
-from orb.lnd import Lnd
-
-
-def _bech32_decode(
-    bech32: str, *, allowed_hrp: Set[str] = None
-) -> Tuple[str, List[int]]:
-    hrp, data = bech32_decode(bech32)
-
-    if not hrp or not data or (allowed_hrp and hrp not in allowed_hrp):
-        raise ValueError(f"Invalid data or Human Readable Prefix (HRP): {hrp}.")
-
-    return hrp, data
-
-
-def _lnurl_clean(lnurl: str) -> str:
-    return (
-        lnurl.strip().replace("lightning:", "")
-        if lnurl.startswith("lightning:")
-        else lnurl
-    )
-
-
-def _lnurl_decode(lnurl: str) -> str:
-    return bytes(
-        convertbits(
-            _bech32_decode(_lnurl_clean(lnurl), allowed_hrp={"lnurl"})[1], 5, 8, False
-        )
-    ).decode("utf-8")
+from orb.ln import Ln
 
 
 class LNUrlInvoiceGenerator(StoppableThread):
@@ -53,6 +23,8 @@ class LNUrlInvoiceGenerator(StoppableThread):
         chunks: int,
         num_threads: int,
         rate_limit: int,
+        ln: Ln = None,
+        wait: bool = True,
     ):
         self.total_amount_sat: int = total_amount_sat
         self.chunks: int = chunks
@@ -61,15 +33,12 @@ class LNUrlInvoiceGenerator(StoppableThread):
         self.num_threads: int = num_threads
         self.url: str = url
         self.rate_limit: str = rate_limit
+        self.ln = ln
+        self.wait: bool = wait
         super(LNUrlInvoiceGenerator, self).__init__()
 
     def paid_everything(self):
         return self.total_amount_paid() >= self.total_amount_sat
-
-    def get_callback_url(self, amount):
-        lnurl = _lnurl_decode(self.url)
-        req = requests.get(lnurl).json()
-        return f"{req['callback']}?amount={amount*1000}"
 
     def total_amount_paid(self):
         from orb.store import model
@@ -78,7 +47,6 @@ class LNUrlInvoiceGenerator(StoppableThread):
             model.Invoice()
             .select(fn.SUM(model.Invoice.num_satoshis))
             .where(
-                model.Invoice.expired() == False,
                 model.Invoice.paid == True,
                 model.Invoice.raw.in_(self.invoices),
             )
@@ -120,7 +88,7 @@ class LNUrlInvoiceGenerator(StoppableThread):
     def ingest_invoice(self, line):
         from orb.store import model
 
-        req = Lnd().decode_payment_request(line)
+        req = self.ln.decode_payment_request(line)
         invoice = model.Invoice(
             raw=line,
             destination=req.destination,
@@ -138,6 +106,8 @@ class LNUrlInvoiceGenerator(StoppableThread):
         while not self.stopped():
             print(".")
             paid_everything = self.total_amount_paid() >= self.total_amount_sat
+            print(f"total paid:      {self.total_amount_paid():_}")
+            print(f"total due:       {self.total_amount_sat:_}")
             print(f"paid_everything: {paid_everything}")
             if paid_everything:
                 self.stop()
@@ -150,7 +120,7 @@ class LNUrlInvoiceGenerator(StoppableThread):
             num_inv_to_create = min(num_inv_to_complete, num_inv_to_fill_threads)
             for i in range(num_inv_to_create):
                 try:
-                    rurl = self.get_callback_url(self.chunk_size)
+                    rurl = get_callback_url(self.chunk_size, self.url)
                     req = requests.get(rurl)
                     if req.status_code == 200:
                         resp = req.json()
@@ -164,5 +134,9 @@ class LNUrlInvoiceGenerator(StoppableThread):
                         print(req.text)
                 except Exception as e:
                     print(e)
+                    print(format_exc())
                 sleep(self.rate_limit)
-            sleep(5)
+            if self.wait:
+                sleep(5)
+            else:
+                break

@@ -11,6 +11,8 @@ rsa
 gitpython
 nose
 jaraco.text
+parameterized
+coverage
 
 # site
 

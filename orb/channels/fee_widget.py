@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2021-12-27 04:05:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-24 09:44:48
+# @Last Modified time: 2022-08-25 07:32:17
 
 from threading import Thread
 
+from kivy.clock import mainthread
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.animation import Animation
@@ -17,10 +18,7 @@ from kivy.graphics.context_instructions import Color
 
 from orb.math.Vector import Vector
 from orb.misc.decorators import guarded
-from orb.misc.utils import closest_point_on_line
-
-
-from orb.lnd import Lnd
+from orb.math import closest_point_on_line
 
 
 class FeeWidgetLabel(Label):
@@ -41,10 +39,9 @@ class FeeWidget(Widget):
 
     def __init__(self, **kwargs):
         super(FeeWidget, self).__init__(**kwargs)
-        self.lnd = Lnd()
-        self.P1 = Vector()
-        self.P2 = Vector()
-        self.touch_pos = None
+        self.handle1 = Vector()
+        self.handle2 = Vector()
+        self.touch_pos_down = None
 
         with self.canvas.before:
             self.col = Color(0.5, 1, 0.5, 1)
@@ -85,28 +82,35 @@ class FeeWidget(Widget):
         ).start(self.col)
 
     @guarded
-    def update(self, *args):
+    @mainthread
+    def update(self, *_):
         self.to_fee_norm = min(int(self.channel.fee_rate_milli_msat) / 1000 * 30, 30)
         A = Vector(*self.a)
         B = Vector(*self.c)
         AB = B - A
         AB_perp_normed = AB.perp().normalized()
-        self.P1 = B + AB_perp_normed * self.to_fee_norm
-        self.P2 = B - AB_perp_normed * self.to_fee_norm
-        self.circle_1.circle = (self.P1.x, self.P1.y, 5)
-        self.circle_2.circle = (self.P2.x, self.P2.y, 5)
-        self.line.points = (self.P1.x, self.P1.y, self.P2.x, self.P2.y)
+        self.handle1 = B + AB_perp_normed * (self.to_fee_norm or 1)
+        self.handle2 = B - AB_perp_normed * (self.to_fee_norm or 1)
+        self.circle_1.circle = (self.handle1.x, self.handle1.y, 5)
+        self.circle_2.circle = (self.handle2.x, self.handle2.y, 5)
+        self.line.points = (
+            self.handle1.x,
+            self.handle1.y,
+            self.handle2.x,
+            self.handle2.y,
+        )
         self.update_balanced_ratio_line()
 
+    @mainthread
     def update_balanced_ratio_line(self, *_):
         A = Vector(*self.a)
         B = Vector(*self.b)
         AB = B - A
         C = AB * self.channel.balanced_ratio
         AB_perp_normed = AB.perp().normalized()
-        P1 = A + C + AB_perp_normed * 5
-        P2 = A + C - AB_perp_normed * 5
-        self.line_balanced_ratio.points = (P1.x, P1.y, P2.x, P2.y)
+        handle1 = A + C + AB_perp_normed * 5
+        handle2 = A + C - AB_perp_normed * 5
+        self.line_balanced_ratio.points = (handle1.x, handle1.y, handle2.x, handle2.y)
 
     def set_points(self, a, b, c):
         self.a, self.b, self.c = a, b, c
@@ -114,24 +118,29 @@ class FeeWidget(Widget):
     @guarded
     def on_touch_down(self, touch):
         if not touch.is_mouse_scrolling:
-            B = Vector(touch.pos[0], touch.pos[1])
-            self.OP1, self.OP2 = self.P1, self.P2
+            touch_pos = Vector(touch.pos[0], touch.pos[1])
+            self.handle1_down, self.handle2_down = self.handle1, self.handle2
             self.orig_to_fee_norm = self.to_fee_norm
-            for P in (self.P1, self.P2):
-                if P.dist(B) < 5:
+            for handle in (self.handle1, self.handle2):
+                # if user touched close to a fee handle
+                if handle.dist(touch_pos) < 5:
                     self.label.show()
-                    self.touch_pos = closest_point_on_line(self.P1, self.P2, B)
+                    # get closest point on the line, this will help
+                    # compute the slide later
+                    self.touch_pos_down = closest_point_on_line(
+                        self.handle1, self.handle2, touch_pos
+                    )
                     return True
         return super(FeeWidget, self).on_touch_down(touch)
 
     @guarded
     def on_touch_up(self, touch):
-        if self.touch_pos:
-            self.touch_pos = None
-            self.channel.fee_rate_milli_msat = self.new_fee
+        if self.touch_pos_down:
+            self.touch_pos_down = None
+            self.channel.fee_rate_milli_msat = int(self.new_fee)
             self.label.hide()
 
-            def update_fees(*args):
+            def update_fees(*_):
                 print(f"Setting fees to: {self.channel.fee_rate_milli_msat / 1e6}")
                 self.channel.update_lnd_with_policies()
 
@@ -140,17 +149,20 @@ class FeeWidget(Widget):
         return super(FeeWidget, self).on_touch_down(touch)
 
     @guarded
-    def on_touch_move(self, touch):
-        if self.touch_pos:
-            C = closest_point_on_line(
-                self.OP1, self.OP2, Vector(touch.pos[0], touch.pos[1])
+    def on_touch_move(self, move):
+        if self.touch_pos_down:
+            # find the position (where the user is pressing now after sliding)
+            new_pos = closest_point_on_line(
+                self.handle1_down, self.handle2_down, Vector(move.pos[0], move.pos[1])
             )
-            mid = self.P1.mid(self.P2)
-            self.to_fee_norm = C.dist(mid)
-            diff = self.to_fee_norm / self.orig_to_fee_norm
-            self.new_fee = self.channel.fee_rate_milli_msat * diff
+            # get the mid-point between the two handles
+            mid = self.handle1.mid(self.handle2)
+            # what's the distance between the mid-point, and where the user is now
+            self.to_fee_norm = new_pos.dist(mid)
+            diff = self.to_fee_norm / (self.orig_to_fee_norm or 1)
+            self.new_fee = (self.channel.fee_rate_milli_msat or 1) * diff
             self.label.pos = (mid.x, mid.y)
             self.label.text = str(int(self.new_fee))
             return True
 
-        return super(FeeWidget, self).on_touch_move(touch)
+        return super(FeeWidget, self).on_touch_move(move)

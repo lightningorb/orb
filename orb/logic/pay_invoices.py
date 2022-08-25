@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-05 07:48:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-05 09:24:34
+# @Last Modified time: 2022-08-12 09:28:39
 
 import threading
 from time import sleep
@@ -11,14 +11,14 @@ from traceback import format_exc
 
 import arrow
 
-from kivy.app import App
+from orb.app import App
 
 from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.core.stoppable_thread import StoppableThread
 from orb.store.db_meta import invoices_db_name
 from orb.misc.decorators import db_connect
-from orb.lnd import Lnd
+from orb.ln import Ln, ResultType
 
 
 chan_ignore = set([])
@@ -34,11 +34,12 @@ class PaymentUIOption:
 class PayInvoices(StoppableThread):
     def __init__(
         self,
-        chan_id: int,
+        chan_id: str,
         max_paths: int,
         fee_rate: float,
-        time_pref: int,
+        time_pref: float,
         num_threads: int,
+        ln: Ln,
     ):
         super(PayInvoices, self).__init__()
         self.chan_id: int = chan_id
@@ -49,6 +50,7 @@ class PayInvoices(StoppableThread):
         self.inflight = set([])
         self.inflight_times = {}
         self.threads = set([])
+        self.ln: Ln = ln
 
     @db_connect(name=invoices_db_name, lock=True)
     def load(self):
@@ -64,7 +66,7 @@ class PayInvoices(StoppableThread):
     def get_ignored_chan_ids(self):
         return set(
             [
-                int(k)
+                k
                 for k, v in App.get_running_app()
                 .store.get("pay_through_channel", {})
                 .items()
@@ -105,6 +107,14 @@ class PayInvoices(StoppableThread):
                 )
                 auto = payment_opt == PaymentUIOption.auto_first_hop
 
+                while True:
+                    all_invoices = self.inst.load()
+                    if not all_invoices:
+                        print("Patiently awaiting for invoices before starting")
+                        sleep(5)
+                    else:
+                        break
+
                 while not self.stopped():
                     with invoices_lock:
                         all_invoices = self.inst.load()
@@ -114,7 +124,9 @@ class PayInvoices(StoppableThread):
                             self.inst.inflight_times[invoice] = arrow.now().timestamp()
                             self.inst.inflight.add(invoice)
                     if invoice:
-                        payment_request = Lnd().decode_request(invoice.raw)
+                        payment_request = self.inst.ln.decode_payment_request(
+                            invoice.raw
+                        )
                     else:
                         if not all_invoices:
                             self.sprint("no more usable invoices")
@@ -129,7 +141,6 @@ class PayInvoices(StoppableThread):
                     else:
                         with lock:
                             chan_id = get_low_inbound_channel(
-                                lnd=Lnd(),
                                 pk_ignore=[],
                                 chan_ignore=chan_ignore
                                 | self.inst.get_ignored_chan_ids(),
@@ -154,6 +165,7 @@ class PayInvoices(StoppableThread):
                                 last_hop_pubkey=None,
                                 max_paths=self.inst.max_paths,
                                 payment_request_raw=invoice.raw,
+                                ln=self.inst.ln,
                             )
                         except:
                             self.sprint("Exception in pay_thread")

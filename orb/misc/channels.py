@@ -2,22 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 09:11:42
+# @Last Modified time: 2022-08-10 09:31:55
 
-from traceback import print_exc
+from traceback import format_exc
 from threading import Thread
 from functools import cmp_to_key
 import concurrent.futures
-import urllib.request
 
 from kivy.event import EventDispatcher
 from kivy.properties import ListProperty
 from kivy.properties import DictProperty
 from kivy.clock import Clock
-from kivy.app import App
 
 from orb.misc.channel import Channel
-from orb.misc.utils import pref
+from orb.misc.utils_no_kivy import pref
 from orb.logic.balanced_ratio import BalancedRatioMixin
 
 
@@ -48,14 +46,14 @@ class Channels(EventDispatcher, BalancedRatioMixin):
     #: the sorted channels chan_ids
     sorted_chan_ids = ListProperty([])
 
-    def __init__(self, lnd):
+    def __init__(self, ln):
         """
         Class initializer. Takes the lnd object, and gets
         and sorts channel data.
         """
-        self.lnd = lnd
-        self.app = App.get_running_app()
+        self.ln = ln
         self.get()
+        self.compute_balanced_ratios()
         Clock.schedule_once(self.compute_balanced_ratios, 0)
         Clock.schedule_interval(self.compute_balanced_ratios, 5)
         Clock.schedule_once(lambda *_: Thread(target=self.get_chan_policies).start(), 5)
@@ -76,6 +74,7 @@ class Channels(EventDispatcher, BalancedRatioMixin):
                 try:
                     data = future.result()
                 except Exception as exc:
+                    print(format_exc())
                     print("%r generated an exception: %s" % (channel, exc))
 
     def remove(self, channel):
@@ -87,15 +86,15 @@ class Channels(EventDispatcher, BalancedRatioMixin):
         Get and sorts channel data.
         """
         try:
-            for c in self.lnd.get_channels():
+            for c in self.ln.get_channels():
                 if c.chan_id in self.channels:
                     self.channels[c.chan_id].update(c)
                 else:
                     self.channels[c.chan_id] = Channel(c)
-            self.sorted_chan_ids = [int(x) for x in self.channels]
+            self.sorted_chan_ids = [x for x in self.channels]
             self.sort_channels()
         except:
-            print_exc()
+            print(format_exc())
             print("Failed to get channels")
 
     def sort_channels(self):

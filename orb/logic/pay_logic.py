@@ -2,39 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-24 00:33:43
+# @Last Modified time: 2022-08-24 14:37:21
 
 import arrow
-from collections import deque
+from traceback import format_exc
+
+from orb.misc.forex import forex
 
 from orb.logic.routes import Routes
-from orb.misc.forex import forex
-from orb.lnd import Lnd
-from orb.misc.prefs import is_rest
-from kivy.clock import (
-    Clock,
-    _default_time as time,
-)
-from orb.store.db_meta import path_finding_db_name
 from orb.misc.decorators import db_connect
-
-MAX_TIME = 1 / 5
-
-consumables = deque()
-
-
-@db_connect(path_finding_db_name)
-def do_save(doc):
-    doc.save()
-
-
-def consume(*_):
-    while consumables and time() < (Clock.get_time() + MAX_TIME):
-        doc = consumables.popleft()
-        do_save(doc)
-
-
-Clock.schedule_interval(consume, 0)
+from orb.store.db_meta import path_finding_db_name
 
 
 class PaymentStatus:
@@ -113,23 +90,25 @@ def pay_thread(
     last_hop_pubkey,
     max_paths,
     payment_request_raw,
+    ln,
 ):
     from orb.store import model
 
     print(f"starting payment thread {thread_n} for chan: {outgoing_chan_id}")
     fee_limit_sat = fee_rate * int(payment_request.num_satoshis) / 1_000_000
     fee_limit_msat = fee_limit_sat * 1_000
-    print(f"amount: {payment_request.num_satoshis}")
-    print(f"fee_limit_sat: {fee_limit_sat}")
-    print(f"fee_limit_msat: {fee_limit_msat}")
+    print(f"amount: {payment_request.num_satoshis:_}")
+    print(f"fee_limit_sat: {int(fee_limit_sat):_}")
+    print(f"fee_limit_msat: {int(fee_limit_msat):_}")
     routes = Routes(
-        lnd=Lnd(),
+        ln=ln,
         pub_key=payment_request.destination,
         payment_request=payment_request,
         outgoing_chan_id=outgoing_chan_id,
         last_hop_pubkey=last_hop_pubkey,
         fee_limit_msat=fee_limit_msat,
         time_pref=time_pref,
+        cltv=payment_request.cltv_expiry,
     )
     has_next = False
     count = 0
@@ -140,7 +119,7 @@ def pay_thread(
         succeeded=False,
         timestamp=int(arrow.now().timestamp()),
     )
-    consumables.append(payment)
+    payment.save()
     while routes.has_next() and not stopped():
         if count > max_paths:
             return PaymentStatus.max_paths_exceeded
@@ -151,17 +130,18 @@ def pay_thread(
             attempt = model.Attempt(
                 payment=payment, weakest_link_pk="", code=0, succeeded=False
             )
-            consumables.append(attempt)
+            attempt.save()
             for j, hop in enumerate(route.hops):
-                node_alias = Lnd().get_node_alias(hop.pub_key)
+                node_alias = ln.get_node_alias(hop.pub_key)
                 text = f"{j:<5}:        {node_alias}"
                 print(f"T{thread_n}: {text}")
                 p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
-                consumables.append(p)
+                p.save()
             try:
-                response = Lnd().send_payment(payment_request, route)
+                response = ln.send_payment(payment_request, route.original)
             except Exception as e:
                 print(e)
+                print(format_exc())
                 code = e.args[0].code.name
                 details = e.args[0].details
                 # 'attempted value exceeds paymentamount'
@@ -177,7 +157,7 @@ def pay_thread(
                 print(f"T{thread_n}: exception.. not sure what's up")
                 return PaymentStatus.exception
 
-            if is_rest():
+            if ln.concrete.protocol == "rest":
                 if hasattr(response, "code"):
                     if response.code == 6:
                         print(f"T{thread_n}: INVOICE IS ALREADY PAID")
@@ -190,7 +170,7 @@ def pay_thread(
             )
             if is_successful:
                 print(
-                    f"T{thread_n}: SUCCESS: {forex(response.route.total_amt)} (fees: {forex(response.route.total_fees)})"
+                    f"T{thread_n}: SUCCESS: {forex(route.total_amt)} (fees: {route.total_fees_msat:_}msat)"
                 )
                 attempt.succeeded = True
                 payment.succeeded = True
@@ -200,11 +180,11 @@ def pay_thread(
                 def set_hop_succeeded():
                     for hop in attempt.hops:
                         hop.succeeded = True
-                        consumables.append(hop)
+                        hop.save()
 
                 set_hop_succeeded()
-                consumables.append(attempt)
-                consumables.append(payment)
+                attempt.save()
+                payment.save()
                 return PaymentStatus.success
             else:
                 attempt.code = response.failure.code if response else -1000
@@ -213,7 +193,7 @@ def pay_thread(
                     if response
                     else route.hops[-1].pub_key
                 )
-                consumables.append(attempt)
+                attempt.save()
                 handle_error(response, route, routes)
                 if response and response.failure.code == 1:
                     return PaymentStatus.unknown_payment_details

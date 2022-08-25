@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-22 05:36:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:22:33
+# @Last Modified time: 2022-08-10 18:37:57
 
 from time import sleep
 from threading import Thread
@@ -11,6 +11,7 @@ from orb.core.stoppable_thread import StoppableThread
 from orb.misc.plugin import Plugin
 
 from orb.lnd import Lnd
+from orb.app import App
 from orb.misc.utils import pref_path
 
 from kivy.properties import ObjectProperty

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 17:08:30
+# @Last Modified time: 2022-08-22 06:35:53
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -10,7 +10,6 @@ import base64, json, requests, codecs
 from orb.store.db_cache import aliases_cache
 from orb.lnd.lnd_base import LndBase
 from orb.misc.auto_obj import dict2obj, todict
-from orb.misc.channel import Channel
 
 from memoization import cached
 
@@ -22,6 +21,7 @@ encode_pk = lambda PK: base64.urlsafe_b64encode(
 
 class LndREST(LndBase):
     def __init__(self, tls_certificate, server, macaroon, port):
+        super(LndREST, self).__init__("rest")
         self.cert_path = tls_certificate
         self.hostname = server
         self.rest_port = port
@@ -37,16 +37,14 @@ class LndREST(LndBase):
         return f"https://{self.hostname}:{self.rest_port}"
 
     def get_balance(self):
-        url = f"{self.fqdn}/v1/balance/blockchain"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
+        return self.__get("/v1/balance/blockchain")
 
     def channel_balance(self):
-        url = f"{self.fqdn}/v1/balance/channels"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
+        return self.__get("/v1/balance/channels")
 
     def get_channels(self, active_only=False):
+        from orb.misc.channel import Channel
+
         url = f"{self.fqdn}/v1/channels"
         r = requests.get(
             url,
@@ -57,9 +55,8 @@ class LndREST(LndBase):
         return [Channel(dict2obj(c)) for c in r.json()["channels"]]
 
     def get_info(self):
-        url = f"{self.fqdn}/v1/getinfo"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
+        obj = self.__get("/v1/getinfo")
+        return obj
 
     @cached(ttl=5)
     def get_edge(self, channel_id):
@@ -106,7 +103,9 @@ class LndREST(LndBase):
         res = r.json()
         if res.get("code") == 5:
             print(res["message"])
-        return dict2obj(r.json()).node.alias
+        if not res.get("node"):
+            return pub_key[:10]
+        return dict2obj(res).node.alias
 
     @lru_cache(maxsize=None)
     def get_node_info(self, pub_key):
@@ -118,45 +117,43 @@ class LndREST(LndBase):
         return dict2obj(r.json())
 
     def decode_payment_request(self, payment_request):
-        url = f"{self.fqdn}/v1/payreq/{payment_request}"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
-
-    def decode_request(self, payment_request):
-        url = f"{self.fqdn}/v1/payreq/{payment_request}"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
+        return self.__get(f"/v1/payreq/{payment_request}")
 
     def get_route(
         self,
         pub_key,
-        amount,
+        amount_sat,
         ignored_pairs,
         ignored_nodes,
         last_hop_pubkey,
         outgoing_chan_id,
         fee_limit_msat,
-        time_pref=0.5,
+        time_pref=0,
+        source_pub_key=None,
     ):
         """
         https://github.com/lightningnetwork/lnd/issues/6133
         """
-        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount}?use_mission_control=true&fee_limit.fixed_msat={int(fee_limit_msat)}&outgoing_chan_id={outgoing_chan_id}"
-        if self.get_version() >= "0.15.0":
+        url = f"{self.fqdn}/v1/graph/routes/{pub_key}/{amount_sat}?use_mission_control=true&fee_limit.fixed_msat={int(fee_limit_msat)}"
+        if outgoing_chan_id:
+            url += f"&outgoing_chan_id={outgoing_chan_id}"
+        if time_pref and self.get_version() >= "0.15.0":
             url += f"&time_pref={time_pref}"
         if last_hop_pubkey:
             print(last_hop_pubkey)
             last_hop_pubkey = encode_pk(last_hop_pubkey)
             url += f"&last_hop_pubkey={last_hop_pubkey}"
-        if ignored_pairs:
-            # todo: encoding isn't correct, but mission control knows
-            # what to do even without the ignored nodes
-            pass
-            # print([x["from"] for x in ignored_pairs])
-            # ignored = ",".join([x["from"].decode() for x in ignored_pairs])
-            #     url += f"&ignored_nodes={ignored}"
+        # if ignored_pairs:
+        # ignored = ",".join([x["from"].decode() for x in ignored_pairs])
+        # url += f"&ignored_nodes={ignored}"
+        if ignored_nodes:
+            ignored = ",".join(encode_pk(pk) for pk in ignored_nodes)
+            url += f"&ignored_nodes={ignored}"
+        if source_pub_key:
+            url += f"&source_pub_key={source_pub_key}"
+        print(url)
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json()).get("routes")
+        return dict2obj(r.json()).get("routes", [])
 
     def send_payment(self, payment_request, route):
         """
@@ -276,7 +273,7 @@ class LndREST(LndBase):
         )
         return dict2obj(r.json())
 
-    def generate_invoice(self, memo, amount):
+    def generate_invoice(self, amount, memo: str = "Orb invoice"):
         url = f"{self.fqdn}/v1/invoices"
         data = dict(memo=memo, value=amount, expiry=3600)
         r = requests.post(
@@ -463,9 +460,11 @@ class LndREST(LndBase):
         """
         full_url = f"{self.fqdn}{url}"
         r = requests.get(full_url, headers=self.headers, verify=self.cert_path)
-        j = r.json()
-        o = dict2obj(j)
-        return o
+        if r.status_code != 200:
+            print(f"HTTP ERROR: {r.status_code}")
+            print(r.text)
+            raise Exception(r.text)
+        return dict2obj(r.json())
 
     def __post(self, url, data):
         """
@@ -476,10 +475,9 @@ class LndREST(LndBase):
 
         returns an autoobj
         """
-        full_url = f"{self.fqdn}{url}"
         jdata = json.dumps(todict(data))
         r = requests.post(
-            full_url, headers=self.headers, verify=self.cert_path, data=jdata
+            f"{self.fqdn}{url}", headers=self.headers, verify=self.cert_path, data=jdata
         )
         j = r.json()
         return dict2obj(j)

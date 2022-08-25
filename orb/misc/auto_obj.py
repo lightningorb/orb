@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-04 06:12:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-20 11:43:44
+# @Last Modified time: 2022-08-07 07:39:11
 
 import json
 
@@ -107,7 +107,7 @@ def dict2obj(dict1):
     """
     if dict1:
         if type(dict1) is list:
-            dict1 = {i: v for i, v in enumerate(dict1)}
+            dict1 = {int(i): v for i, v in enumerate(dict1)}
         to_num(dict1)
         return json.loads(json.dumps(dict1), object_hook=AutoObj)
     return {}

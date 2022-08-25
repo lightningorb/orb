@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-19 03:47:33
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:19:19
+# @Last Modified time: 2022-08-07 14:01:57
 
 import requests
 import json
@@ -10,7 +10,7 @@ import json
 from kivy.app import App
 
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.misc.utils import pref
 
 
@@ -64,4 +64,4 @@ def login(username, password):
 
 
 def get_password():
-    return Lnd().sign_message("orb_password")
+    return Ln().sign_message("orb_password")

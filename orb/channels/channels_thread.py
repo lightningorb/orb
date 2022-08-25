@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-03 07:28:02
+# @Last Modified time: 2022-08-24 09:35:33
 
 import base64
 import codecs
@@ -10,18 +10,14 @@ import threading
 from time import sleep
 from traceback import format_exc
 
-from orb.lnd import Lnd
-from orb.misc.channel import Channel
-from orb.logic.thread_manager import thread_manager
+from orb.ln import Ln
+from orb.core.stoppable_thread import StoppableThreadHidden
 
 
-class ChannelsThread(threading.Thread):
+class ChannelsThread(StoppableThreadHidden):
     def __init__(self, inst, name, *args, **kwargs):
         super(ChannelsThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
         self.inst = inst
-        self.name = name
-        thread_manager.add_thread(self)
 
     def run(self):
         try:
@@ -32,7 +28,7 @@ class ChannelsThread(threading.Thread):
     def __run(self):
         while not self.stopped():
             try:
-                it = Lnd().get_channel_events()
+                it = Ln().get_channel_events()
                 if it:
                     for e in it:
                         if self.stopped():
@@ -112,9 +108,3 @@ class ChannelsThread(threading.Thread):
                 print(format_exc())
                 sleep(10)
             sleep(10)
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()

@@ -2,12 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-30 11:05:20
+# @Last Modified time: 2022-08-07 14:01:16
 
 import arrow
 from threading import Thread, Lock
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.misc.decorators import guarded
 from orb.misc.decorators import db_connect
 from orb.store.db_meta import channel_stats_db_name, forwarding_events_db_name
@@ -72,7 +72,7 @@ def download_forwarding_history(*_, **__):
             if start_offset == 0:
                 clear_stats()
             while True:
-                fwd = Lnd().get_forwarding_history(
+                fwd = Ln().get_forwarding_history(
                     index_offset=start_offset, num_max_events=chunk_size
                 )
                 for f in fwd.forwarding_events:

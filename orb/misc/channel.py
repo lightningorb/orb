@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 10:53:34
+# @Last Modified time: 2022-08-22 07:48:10
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -11,7 +11,7 @@ from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
 from kivy.clock import mainthread
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.store.db_meta import channel_stats_db_name
 from orb.misc.decorators import db_connect
 
@@ -39,7 +39,7 @@ class Channel(EventDispatcher):
     #: The channel's remote_balance in sats
     remote_balance = NumericProperty(0)
     #: The channel's chan_id
-    chan_id = NumericProperty(0)
+    chan_id = StringProperty(0)
     #: The channel's pending_htlcs
     pending_htlcs = ListProperty([])
     #: The channel's total_satoshis_sent
@@ -86,7 +86,7 @@ class Channel(EventDispatcher):
         a fee policy is changed in Orb, it immediately gets updated
         in LND.
         """
-        policy_to = Lnd().get_policy_to(self.chan_id)
+        policy_to = Ln().get_policy_to(self)
 
         @mainthread
         def do_update(policy_to):
@@ -129,8 +129,7 @@ class Channel(EventDispatcher):
         Update LND with the channel policies specified
         in tbis object.
         """
-        print("updating")
-        result = Lnd().update_channel_policy(
+        result = Ln().update_channel_policy(
             channel=self,
             fee_rate=max(self.fee_rate_milli_msat / 1e6, 1e-06),
             base_fee_msat=self.fee_base_msat,
@@ -138,8 +137,6 @@ class Channel(EventDispatcher):
             max_htlc_msat=self.max_htlc_msat,
             min_htlc_msat=self.min_htlc_msat,
         )
-        print("updated?")
-        print(result)
 
     def update(self, channel):
         """
@@ -150,7 +147,7 @@ class Channel(EventDispatcher):
         self.capacity = channel.capacity
         self.remote_pubkey = channel.remote_pubkey
         self.remote_balance = channel.remote_balance
-        self.chan_id = int(channel.chan_id)
+        self.chan_id = str(channel.chan_id)
         self.pending_htlcs = channel.pending_htlcs[:]
         self.total_satoshis_sent = channel.total_satoshis_sent
         self.total_satoshis_received = channel.total_satoshis_received
@@ -164,7 +161,7 @@ class Channel(EventDispatcher):
 
     @property
     def alias(self):
-        return Lnd().get_node_alias(self.remote_pubkey)
+        return Ln().get_node_alias(self.remote_pubkey)
 
     @property
     def local_balance_include_pending(self):
@@ -217,7 +214,7 @@ class Channel(EventDispatcher):
         stats = (
             model.ChannelStats()
             .select()
-            .where(model.ChannelStats.chan_id == int(self.chan_id))
+            .where(model.ChannelStats.chan_id == self.chan_id)
         )
         if stats:
             return int(stats.first().debt_msat / 1000)
@@ -234,7 +231,7 @@ class Channel(EventDispatcher):
         out_stats = (
             model.ChannelStats()
             .select()
-            .where(model.ChannelStats.chan_id == int(self.chan_id))
+            .where(model.ChannelStats.chan_id == self.chan_id)
         )
         if out_stats:
             return int(out_stats.first().earned_msat / 1000)
@@ -251,7 +248,7 @@ class Channel(EventDispatcher):
         in_stats = (
             model.ChannelStats()
             .select()
-            .where(model.ChannelStats.chan_id == int(self.chan_id))
+            .where(model.ChannelStats.chan_id == self.chan_id)
         )
         if in_stats:
             return int(in_stats.first().helped_earn_msat / 1000)

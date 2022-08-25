@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 11:15:58
+# @Last Modified time: 2022-08-11 09:24:29
 
 import codecs
 import re
@@ -10,6 +10,9 @@ from typing import Union
 
 
 class LndBase:
+    def __init__(self, protocol):
+        self.protocol = protocol
+
     def get_alias_from_channel_id(self, chan_id) -> Union[str, None]:
         for channel in self.get_channels():
             if chan_id == channel.chan_id:

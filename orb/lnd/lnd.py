@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-31 19:55:24
+# @Last Modified time: 2022-08-20 10:05:43
 
 import sys
 from pathlib import Path
@@ -49,12 +49,12 @@ def Lnd(
         from orb.misc.utils import pref
 
         hostname = pref("host.hostname")
-        protocol = pref("lnd.protocol")
-        mac_secure = pref("lnd.macaroon_admin")
-        cert_secure = pref("lnd.tls_certificate")
-        rest_port = int(pref("lnd.rest_port"))
-        grpc_port = int(pref("lnd.grpc_port"))
-        version = pref("lnd.version")
+        protocol = pref("ln.protocol")
+        mac_secure = pref("ln.macaroon_admin")
+        cert_secure = pref("ln.tls_certificate")
+        rest_port = int(pref("ln.rest_port"))
+        grpc_port = int(pref("ln.grpc_port"))
+        version = pref("ln.version")
         if type(version) in [int, float] or version is None:
             version = "v0.15.0-beta"
 
@@ -86,7 +86,7 @@ def Lnd(
                 print(format_exc())
         elif protocol == Protocol.rest:
             from orb.lnd.lnd_rest import LndREST
-            from orb.misc.prefs import cert_path
+            from orb.misc.utils_no_kivy import cert_path
 
             if (not mac) and mac_secure:
                 mac = decode_pref_mac(mac_secure)
@@ -97,11 +97,13 @@ def Lnd(
                 cert = cert_secure_obj.as_plain_certificate().cert
 
             if cert:
-                with cert_path(use_tmp=True).open("w") as f:
+                with cert_path(hash(cert_secure)).open("w") as f:
                     f.write(cert)
 
             lnd[protocol] = LndREST(
-                tls_certificate=(cert_path(use_tmp=True).as_posix() if cert else None),
+                tls_certificate=(
+                    cert_path(hash(cert_secure)).as_posix() if cert else None
+                ),
                 server=hostname,
                 macaroon=mac,
                 port=rest_port,
@@ -126,7 +128,6 @@ def set_lnd_grpc_path_for_version(version="v0.15.0-beta"):
     Make sure the path to lnd's grpc libraries are in python's path
     """
     version_dir = version.replace(".", "_").replace("-", "_")
-    main_dir = Path(sys.argv[0]).parent
-    path = (main_dir / Path(f"orb/lnd/grpc_generated/{version_dir}")).as_posix()
+    path = (Path(__file__).parent / Path(f"grpc_generated/{version_dir}")).as_posix()
     if path not in sys.path:
         sys.path.append(path)

@@ -2,12 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-01 16:07:26
+# @Last Modified time: 2022-08-23 05:07:25
 import sys
-import base64
-import re
 import os
 import json
+import base64
+
+from typing import Union
 from functools import lru_cache
 from traceback import print_exc
 
@@ -16,7 +17,6 @@ from memoization import cached
 from orb.misc.auto_obj import dict2obj
 from orb.lnd.lnd_base import LndBase
 from orb.store.db_cache import aliases_cache
-from orb.misc.channel import Channel
 from google.protobuf.json_format import MessageToJson
 
 
@@ -40,6 +40,7 @@ MESSAGE_SIZE_MB = 50 * 1024 * 1024
 
 class LndGRPC(LndBase):
     def __init__(self, tls_certificate, server, port, macaroon):
+        super(LndGRPC, self).__init__("grpc")
         os.environ["GRPC_SSL_CIPHER_SUITES"] = "HIGH+ECDSA"
         combined_credentials = self.get_credentials(
             tls_certificate.encode()
@@ -71,10 +72,26 @@ class LndGRPC(LndBase):
         return combined_credentials
 
     def get_info(self):
-        return self.stub.GetInfo(ln.GetInfoRequest())
+        json_obj = json.loads(
+            MessageToJson(
+                self.stub.GetInfo(ln.GetInfoRequest()),
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return dict2obj(json_obj)
 
     def get_balance(self):
-        return self.stub.WalletBalance(ln.WalletBalanceRequest())
+        json_obj = json.loads(
+            MessageToJson(
+                self.stub.WalletBalance(ln.WalletBalanceRequest()),
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return dict2obj(json_obj)
 
     def channel_balance(self):
         request = ln.ChannelBalanceRequest()
@@ -93,9 +110,18 @@ class LndGRPC(LndBase):
 
     @lru_cache(maxsize=None)
     def get_node_info(self, pub_key):
-        return self.stub.GetNodeInfo(
+        response = self.stub.GetNodeInfo(
             ln.NodeInfoRequest(pub_key=pub_key, include_channels=True)
         )
+        json_obj = json.loads(
+            MessageToJson(
+                response,
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return dict2obj(json_obj)
 
     @lru_cache(maxsize=None)
     def get_node_channels_pubkeys(self, pub_key):
@@ -108,7 +134,7 @@ class LndGRPC(LndBase):
     def get_own_pubkey(self):
         return self.get_info().identity_pubkey
 
-    def generate_invoice(self, memo, amount):
+    def generate_invoice(self, amount: int, memo: str = "Orb invoice"):
         invoice_request = ln.Invoice(memo=memo, value=amount, expiry=3600)
         add_invoice_response = self.stub.AddInvoice(invoice_request)
         return add_invoice_response.payment_request, self.decode_payment_request(
@@ -130,7 +156,15 @@ class LndGRPC(LndBase):
     @lru_cache(None)
     def decode_payment_request(self, payment_request):
         request = ln.PayReqString(pay_req=payment_request)
-        return self.stub.DecodePayReq(request)
+        j = json.loads(
+            MessageToJson(
+                self.stub.DecodePayReq(request),
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return dict2obj(j)
 
     def get_invoice_events(self):
         return self.stub.SubscribeInvoices(
@@ -138,6 +172,8 @@ class LndGRPC(LndBase):
         )
 
     def get_channels(self, active_only=False):
+        from orb.misc.channel import Channel
+
         return [
             Channel(c)
             for c in self.stub.ListChannels(
@@ -147,14 +183,15 @@ class LndGRPC(LndBase):
 
     def get_route(
         self,
-        pub_key,
-        amount,
-        ignored_pairs,
-        ignored_nodes,
-        last_hop_pubkey,
-        outgoing_chan_id,
-        fee_limit_msat,
+        pub_key: str,
+        amount_sat: int,
+        ignored_pairs: list,
+        ignored_nodes: list,
+        last_hop_pubkey: Union[str, None],
+        outgoing_chan_id: Union[str, None],
+        fee_limit_msat: int,
         time_pref: float = 0.5,
+        source_pub_key: Union[str, None] = None,
     ):
         if fee_limit_msat:
             fee_limit = {"fixed_msat": int(fee_limit_msat)}
@@ -164,14 +201,16 @@ class LndGRPC(LndBase):
             last_hop_pubkey = base64.b16decode(last_hop_pubkey, True)
         kwargs = dict(
             pub_key=pub_key,
-            last_hop_pubkey=last_hop_pubkey,
-            outgoing_chan_id=outgoing_chan_id,
-            amt=amount,
+            amt=amount_sat,
             ignored_pairs=ignored_pairs,
             fee_limit=fee_limit,
             ignored_nodes=ignored_nodes,
             use_mission_control=True,
         )
+        if last_hop_pubkey:
+            kwargs["last_hop_pubkey"] = last_hop_pubkey
+        if outgoing_chan_id:
+            kwargs["outgoing_chan_id"] = int(outgoing_chan_id)
         if self.get_version() >= "0.15.0":
             kwargs["time_pref"] = time_pref
         request = ln.QueryRoutesRequest(**kwargs)
@@ -179,12 +218,20 @@ class LndGRPC(LndBase):
             response = self.stub.QueryRoutes(request)
             return response.routes
         except:
-            return None
+            return []
 
     @cached(ttl=5)
-    def get_edge(self, channel_id):
-        # with edge_mutex:
-        return self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=channel_id))
+    def get_edge(self, channel_id: str):
+        json_obj = json.loads(
+            MessageToJson(
+                self.stub.GetChanInfo(ln.ChanInfoRequest(chan_id=int(channel_id))),
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        obj = dict2obj(json_obj)
+        return obj
 
     @cached(ttl=5)
     def get_policy_to(self, channel_id):
@@ -212,11 +259,12 @@ class LndGRPC(LndBase):
 
     def send_payment(self, payment_request, route):
         last_hop = route.hops[-1]
-        last_hop.mpp_record.payment_addr = payment_request.payment_addr
+        import base64 as b64
+
+        last_hop.mpp_record.payment_addr = b64.b64decode(payment_request.payment_addr)
         last_hop.mpp_record.total_amt_msat = payment_request.num_msat
         request = lnrouter.SendToRouteRequest(route=route)
         request.payment_hash = self.hex_string_to_bytes(payment_request.payment_hash)
-        result = []
         res = self.router_stub.SendToRouteV2(request)
         return res
 
@@ -256,11 +304,22 @@ class LndGRPC(LndBase):
         pk, h = addr.split("@")
         ln_addr = ln.LightningAddress(pubkey=pk, host=h)
         request = ln.ConnectPeerRequest(addr=ln_addr, perm=False, timeout=10)
-        return self.stub.ConnectPeer(request)
+        response = self.stub.ConnectPeer(request)
+        json_obj = json.loads(
+            MessageToJson(
+                response,
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return dict2obj(json_obj)
 
-    def send_coins(self, addr, amount, sat_per_vbyte):
+    def send_coins(self, addr: str, amount: int, sat_per_vbyte: int):
         return self.stub.SendCoins(
-            ln.SendCoinsRequest(addr=addr, amount=amount, sat_per_vbyte=sat_per_vbyte)
+            ln.SendCoinsRequest(
+                addr=addr, amount=int(amount), sat_per_vbyte=int(sat_per_vbyte)
+            )
         )
         return response
 
@@ -309,6 +368,18 @@ class LndGRPC(LndBase):
             reversed=reversed,
         )
         response = self.stub.ListPayments(request)
+        json_obj = json.loads(
+            MessageToJson(
+                response,
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return dict2obj(json_obj)
+
+    def list_peers(self):
+        response = self.stub.ListPeers(ln.ListPeersRequest())
         json_obj = json.loads(
             MessageToJson(
                 response,
@@ -405,3 +476,19 @@ class LndGRPC(LndBase):
                     print("Failure Insufficient Balance")
             if response.status == 0:
                 print("Unknown Error")
+
+    def describe_graph(self, include_unannounced=False):
+        response = self.stub.DescribeGraph(
+            ln.ChannelGraphRequest(
+                include_unannounced=include_unannounced,
+            )
+        )
+        json_obj = json.loads(
+            MessageToJson(
+                response,
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        return json_obj

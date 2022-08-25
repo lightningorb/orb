@@ -2,13 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-06-18 12:39:39
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 17:34:10
+# @Last Modified time: 2022-08-07 14:04:59
 
 import codecs
 
 from kivy.app import App
 from kivymd.uix.screen import MDScreen
 
+from orb.ln import Ln
 from orb.misc.decorators import guarded
 from orb.misc.lndconnect_url import decode_ln_url
 from orb.misc.macaroon_secure import MacaroonSecure
@@ -46,14 +47,12 @@ class UmbrelNode(MDScreen):
 
         if not error:
             try:
-                from orb.lnd import Lnd
-
                 mac_secure = MacaroonSecure.init_from_plain(mac)
                 mac_encrypted = mac_secure.macaroon_secure.decode()
                 cert_secure = CertificateSecure.init_from_plain(cert)
                 cert_encrypted = cert_secure.cert_secure.decode()
 
-                lnd = Lnd(
+                ln = Ln(
                     fallback_to_mock=False,
                     cache=False,
                     use_prefs=False,
@@ -65,7 +64,7 @@ class UmbrelNode(MDScreen):
                     grpc_port=port,
                 )
 
-                info = lnd.get_info()
+                info = ln.get_info()
 
                 self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
                 self.connected = True

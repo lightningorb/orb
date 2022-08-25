@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:19:19
+# @Last Modified time: 2022-08-10 18:38:40
 
 import base64
 import time
@@ -11,7 +11,8 @@ from threading import Thread
 from kivy.uix.textinput import TextInput
 from kivy.clock import mainthread
 
-from orb.lnd import Lnd
+from orb.app import App
+from orb.ln import Ln
 from orb.misc.prefs import is_rest
 from orb.misc.decorators import guarded, public_restrict
 from orb.components.popup_drop_shadow import PopupDropShadow
@@ -41,7 +42,7 @@ class MailDialog(PopupDropShadow):
 
         def func():
             text = ""
-            for invoice in Lnd().list_invoices().invoices:
+            for invoice in Ln().list_invoices().invoices:
                 if invoice.settled:
                     htlc_records = [
                         htlc.custom_records

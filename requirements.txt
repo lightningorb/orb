@@ -1,5 +1,6 @@
 # IOS and DESKTOP
 
+cython
 kivymd==0.104.2
 peewee==3.14.8
 simplejson==3.17.6
@@ -12,6 +13,7 @@ rsa
 memoization
 bech32
 psutil
+simple_chalk
 
 # DESKTOP ONLY
 

@@ -2,21 +2,20 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:21:38
+# @Last Modified time: 2022-08-19 05:13:50
 
-import uuid
 from traceback import format_exc
-
+from string import *
 from pygments.lexers import CythonLexer
+import bisect
 
-from kivy import platform
 from kivy.app import App
 from kivy.properties import StringProperty
-from kivy.uix.button import Button
 from kivy.uix.codeinput import CodeInput
-from kivy.uix.popup import Popup
 
 from orb.components.popup_drop_shadow import PopupDropShadow
+
+ascii_dev_letters = ascii_letters + "_" + digits
 
 
 class ConsoleFileChooser(PopupDropShadow):
@@ -80,6 +79,7 @@ class ConsoleInput(CodeInput):
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
         meta = "meta" in modifiers
+        alt = "alt" in modifiers
         if meta and keycode[1] == "q":
             return False
         direction = (
@@ -87,16 +87,54 @@ class ConsoleInput(CodeInput):
             if keycode and keycode[1] in ("left", "right", "up", "down")
             else False
         )
-        if meta and direction:
-            if direction == "left":
-                line = self.text.split("\n")[self.cursor_row]
-                for i, c in enumerate(line, 1):
-                    if c not in (" ", "\t"):
-                        self._cursor = (i, self._cursor[1])
-                        break
-            elif direction == "right":
-                line = self.text.split("\n")[self.cursor_row]
-                self._cursor = (len(line) - 1, self._cursor[1])
+        if keycode[1] == "x" and meta:
+            lines = self.text.split("\n")
+            lines = lines[: self.cursor_row] + lines[self.cursor_row + 1 :]
+            cursor = self.cursor[:]
+            self._set_text("\n".join(lines))
+            self.cursor = cursor[:]
+        if direction in ("left", "right"):
+            get_line = lambda n: self.text.split("\n")[n]
+            line = get_line(self.cursor_row)
+            if alt:
+                if line:
+                    label = lambda x: next(
+                        iter(
+                            i
+                            for i, c in enumerate(
+                                [ascii_dev_letters, whitespace, punctuation], 1
+                            )
+                            if x in c
+                        ),
+                        0,
+                    )
+                    labels = [(i, label(x)) for i, x in enumerate(line)]
+                    ret = [
+                        v[0]
+                        for i, v in enumerate(labels, 1)
+                        if v[1] != labels[i - 2][1]
+                    ]
+                    if direction == "left":
+                        pos = ret[bisect.bisect_right(ret, self.cursor_col - 1) - 1]
+                    else:
+                        pos = ret[
+                            min(
+                                bisect.bisect_left(ret, self.cursor_col + 1) + 1,
+                                len(ret) - 1,
+                            )
+                        ]
+                    self.cursor = (pos + int(direction == "left"), self._cursor[1])
+            if meta:
+                if direction == "left":
+                    first_non_space_like = next(
+                        iter(i for i, c in enumerate(line) if c not in " \t"), 0
+                    )
+                    row = first_non_space_like * (
+                        first_non_space_like != self._cursor[0]
+                    )
+                    self._cursor = (row + 1, self._cursor[1])
+                elif direction == "right":
+                    self._cursor = (len(line) + 1, self._cursor[1])
         self.do_eval = keycode[1] == "enter" and self.selection_text
         if self.do_eval:
             return False

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-30 07:25:42
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 11:05:08
+# @Last Modified time: 2022-08-08 09:47:34
 
 from kivy.app import App
 from kivy.clock import Clock

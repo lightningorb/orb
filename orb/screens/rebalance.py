@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:22:38
+# @Last Modified time: 2022-08-10 08:12:08
 
 from functools import lru_cache
 
@@ -11,18 +11,18 @@ from kivy.app import App
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.logic.rebalance_thread import RebalanceThread
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 @lru_cache(maxsize=None)
-def alias(lnd, pk):
-    return lnd.get_node_alias(pk)
+def alias(ln, pk):
+    return ln.get_node_alias(pk)
 
 
 class Rebalance(PopupDropShadow):
     def __init__(self, **kwargs):
         PopupDropShadow.__init__(self, **kwargs)
-        self.lnd = Lnd()
+        self.ln = Ln()
         self.chan_id = None
         self.last_hop_pubkey = None
         self.alias_to_pk = {}
@@ -35,11 +35,9 @@ class Rebalance(PopupDropShadow):
         app = App.get_running_app()
         channels = app.channels
         self.alias_to_pk = {
-            alias(self.lnd, c.remote_pubkey): c.remote_pubkey for c in channels
+            alias(self.ln, c.remote_pubkey): c.remote_pubkey for c in channels
         }
-        chans_pk = [
-            f"{c.chan_id}: {alias(self.lnd, c.remote_pubkey)}" for c in channels
-        ]
+        chans_pk = [f"{c.chan_id}: {alias(self.ln, c.remote_pubkey)}" for c in channels]
         delayed(chans_pk, self.alias_to_pk)
 
     def first_hop_spinner_click(self, chan):
@@ -60,6 +58,7 @@ class Rebalance(PopupDropShadow):
             max_paths=int(self.ids.max_paths.text),
             name="RebalanceThread",
             thread_n=0,
+            ln=self.ln,
         )
         self.thread.daemon = True
         self.thread.start()

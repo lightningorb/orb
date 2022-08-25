@@ -2,24 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2022-01-25 05:28:09
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-10 13:22:26
+# @Last Modified time: 2022-08-07 07:53:26
 
 
-import uuid
 import base64
-import binascii
+import random
+
 import rsa
-import struct
-import os
-import random
-from traceback import format_exc
-from orb.misc.utils import pref
-from orb.misc.utils import desktop
-from orb.misc.device_id import device_id
-import plyer
-import random
-import sys
+
 from orb.misc import patch_rand_bits
+from orb.misc.device_id import device_id
 
 keep = lambda _: _
 keep(patch_rand_bits)

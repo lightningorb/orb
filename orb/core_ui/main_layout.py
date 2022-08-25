@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:20:13
+# @Last Modified time: 2022-08-08 11:28:28
 
 import os
 
@@ -32,7 +32,7 @@ class MainLayout(BoxLayout):
         # them to the top. So we build this widget upside down and
         # then flip it.
         self.children = self.children[::-1]
-        if not mobile:
+        if False:
             keyboard = Window.request_keyboard(self._keyboard_released, self)
             keyboard.bind(
                 on_key_down=self._keyboard_on_key_down,

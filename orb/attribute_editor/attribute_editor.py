@@ -2,14 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:19:26
+# @Last Modified time: 2022-08-23 04:51:02
 
 from threading import Thread
 
 from kivy.clock import Clock
 from kivymd.uix.label import MDLabel
 from kivy.properties import StringProperty
-from kivy.properties import NumericProperty
 from kivymd.uix.list import MDList, OneLineIconListItem
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -24,7 +23,6 @@ from kivy.app import App
 from orb.misc.decorators import guarded
 from orb.misc.prefs import is_rest
 from orb.misc.auto_obj import AutoObj, todict
-from orb.lnd import Lnd
 
 
 class MyMDCheckbox(MDCheckbox):
@@ -70,6 +68,7 @@ class AttributeEditor(BoxLayout):
             self.channel = channel
 
         App.get_running_app().bind(selection=update_channel)
+        self.ptc = None
 
     def clear(self):
         """
@@ -79,6 +78,8 @@ class AttributeEditor(BoxLayout):
         self.channel = None
         self.alias = ""
         self.identity_pubkey = ""
+        if self.ptc:
+            self.ptc.unbind(active=self.pay_through_channel)
 
     def on_channel(self, inst, channel):
         """
@@ -95,13 +96,9 @@ class AttributeEditor(BoxLayout):
                     self.ids.md_list.clear_widgets()
                     self.populate_earned()
                     self.populate_helped_earn()
-                    # self.populate_debt()
                     self.populate_profit()
                     self.populate_fees()
-                    if is_rest():
-                        self.populate_rest(c=self.channel.channel.__dict__)
-                    else:
-                        self.populate_grpc()
+                    self.populate_rest(c=self.channel.channel.__dict__)
 
             Clock.schedule_once(update, 0.25)
         else:
@@ -145,19 +142,6 @@ class AttributeEditor(BoxLayout):
                 "{:_}".format(self.channel.profit if self.channel else 0)
             )
         ).start()
-
-    # @guarded
-    # def populate_debt(self):
-    #     @mainthread
-    #     def update(val):
-    #         self.ids.debt.text = val
-
-    #     self.ids.debt.text = ""
-    #     Thread(
-    #         target=lambda: update(
-    #             "{:_}".format(self.channel.debt if self.channel else 0)
-    #         )
-    #     ).start()
 
     @guarded
     def fee_rate_milli_msat_changed(self, val, *args):
@@ -237,49 +221,6 @@ class AttributeEditor(BoxLayout):
                 )
                 self.ids.md_list.add_widget(widget)
                 widget.readonly = True
-
-    def populate_grpc(self):
-        """
-        Populate fields when using the GRPC API.
-        """
-        for field in self.channel.ListFields():
-            if field[0].type == 8:
-                widget = BoxLayout(orientation="horizontal", size_hint_y=None)
-                widget.add_widget(MDLabel(text=field[0].name))
-                widget.add_widget(MDCheckbox(active=field[1]))
-                self.ids.md_list.add_widget(widget)
-                widget.height = dp(50)
-            elif field[0].type == 11:
-                self.ids.md_list.add_widget(
-                    Label(text=field[0].name, size_hint_y=None, height=dp(15))
-                )
-                try:
-                    for f in field[1].DESCRIPTOR.fields:
-                        if f.type in [3, 4] and f.name != "chan_id":
-                            val = f"{getattr(field[1], f.name):_}"
-                        else:
-                            val = str(getattr(field[1], f.name))
-                        widget = MDTextField(
-                            helper_text=f.name,
-                            helper_text_mode="persistent",
-                            text=val,
-                        )
-                        self.ids.md_list.add_widget(widget)
-                        widget.readonly = True
-                except:
-                    pass
-            else:
-                if field[0].type in [3, 4] and field[0].name != "chan_id":
-                    val = f"{field[1]:_}"
-                else:
-                    val = str(field[1])
-                widget = MDTextField(
-                    helper_text=field[0].name,
-                    helper_text_mode="persistent",
-                    text=val,
-                )
-                widget.readonly = True
-                self.ids.md_list.add_widget(widget)
 
     def pay_through_channel(self, active, widget):
         """
@@ -374,7 +315,7 @@ class AttributeEditor(BoxLayout):
             )
         )
 
-        ptc = MDSwitch(
+        self.ptc = MDSwitch(
             pos_hint={"center_x": 0.5, "center_y": 0.5},
             active=App.get_running_app()
             .store.get("pay_through_channel", {})
@@ -383,9 +324,9 @@ class AttributeEditor(BoxLayout):
             height=dp(50),
         )
 
-        ptc.bind(active=self.pay_through_channel)
+        self.ptc.bind(active=self.pay_through_channel)
 
-        self.ids.md_list.add_widget(ptc)
+        self.ids.md_list.add_widget(self.ptc)
 
         self.ids.md_list.add_widget(
             ItemDrawer(

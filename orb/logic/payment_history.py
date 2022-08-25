@@ -2,15 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 10:28:47
+# @Last Modified time: 2022-08-07 13:22:51
 
 import arrow
 from threading import Thread, Lock
-from collections import defaultdict
 
 from kivy.app import App
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.store.db_meta import channel_stats_db_name, payments_db_name
 from orb.misc.decorators import db_connect
 
@@ -88,6 +87,8 @@ def download_payment_history(*_, **__):
 
         pay.dest_pubkey = last_route.hops[-1].pub_key
         app = App.get_running_app()
+        if not app.pubkey:
+            return
         self_payment = app.pubkey == pay.dest_pubkey
         if self_payment and len(last_route.hops) > 1:
             pay.last_hop_pubkey = last_route.hops[-2].pub_key
@@ -148,7 +149,7 @@ def download_payment_history(*_, **__):
             if start_offset == 0:
                 clear_stats()
             while True:
-                res = Lnd().list_payments(
+                res = Ln().list_payments(
                     include_incomplete=False,
                     index_offset=start_offset,
                     max_payments=chunk_size,

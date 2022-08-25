@@ -7,11 +7,6 @@
 
 <Tab>
 
-<TypeSpinnerOption@SpinnerOption>:
-    size_hint: None, None
-    size: dp(150), dp(25)
-
-
 <ConnectionSettings>:
     name: 'connection_settings'
     BoxLayout:
@@ -23,16 +18,15 @@
                 BoxLayout:
                     orientation: 'vertical'
                     MDLabel:
-                        text: 'Specify the type of node. Set as default, or Umbrel.'
+                        text: 'Specify the type of node.'
                         size_hint_y: 1
                         multiline: True
                     Spinner:
                         id: spinner_in_id
-                        option_cls: Factory.get("TypeSpinnerOption")
+                        text: "lnd"
                         height: dp(30)
-                        width: dp(150)
-                        text: 'default'
-                        values: ["default", "umbrel"]
+                        width: dp(300)
+                        values: ['lnd', 'cln']
                         size_hint: None, None
                         on_text: root.set_and_save('host.type', spinner_in_id.text)
                     MDLabel:
@@ -77,7 +71,6 @@
                             MDSwitch:
                                 id: rest
                                 on_release: root.save_protocol('rest')
-                                # active: pref('lnd.protocol') == 'rest'
                             MDLabel:
                                 text: 'REST'
                         BoxLayout:
@@ -85,7 +78,6 @@
                             MDSwitch:
                                 id: grpc
                                 on_release: root.save_protocol('grpc')
-                                # active: pref('lnd.protocol') == 'grpc'
                             MDLabel:
                                 text: 'GRPC'
                         BoxLayout:
@@ -93,7 +85,6 @@
                             MDSwitch:
                                 id: mock
                                 on_release: root.save_protocol('mock')
-                                # active: pref('lnd.protocol') == 'mock'
                             MDLabel:
                                 text: 'MOCK'
                     MDLabel:
@@ -128,7 +119,7 @@
                             size_hint: (None, None)
                         MDRaisedButton:
                             text: 'Save'
-                            on_release: (root.set_and_save('lnd.rest_port', rest_port.text), root.set_and_save('lnd.grpc_port', grpc_port.text))
+                            on_release: (root.set_and_save('ln.rest_port', rest_port.text), root.set_and_save('ln.grpc_port', grpc_port.text))
                             size_hint_x: None
                             width: dp(100)
                             height: dp(40)
@@ -202,12 +193,12 @@
                         height: dp(40)
             Tab:
                 title: 'Connect'
-                id: connect
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint: (1, 1)
                     Widget:
                     MDRaisedButton:
+                        id: connect
                         text: 'Connect'
                         on_release: root.connect()
                         size_hint: (None, None)

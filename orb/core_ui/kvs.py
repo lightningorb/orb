@@ -43,51 +43,9 @@ Builder.load_string('''
         helper_text: 'Profit'
         helper_text_mode: 'persistent'
 
-    # MDTextField:
-    #     id: debt
-    #     helper_text: 'Debt'
-    #     helper_text_mode: 'persistent'
-
     ScrollView:
         DrawerList:
             id: md_list
-
-''')
-Builder.load_string('''
-#:import Window kivy.core.window.Window
-#:import dp kivy.metrics.dp
-
-<CloseChannel>:
-    title: 'Close Channel'
-    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [None, None]
-    BoxLayout:
-        orientation: 'vertical'
-        height: self.minimum_height
-        Label:
-            text: "force"
-            size_hint_y: None
-            height: self.texture_size[1]
-        MDCheckbox:
-            id: force
-        Widget:
-        MDTextField:
-            id: channel_point
-            helper_text: 'Channel Point'
-            helper_text_mode: "persistent"
-        MDTextField:
-            id: sats_per_vbyte
-            text: '1'
-            helper_text: 'Sats per v/byte'
-            helper_text_mode: "persistent"
-        Widget:
-        MDRaisedButton:
-            text: 'close'
-            on_release: root.close_channel(channel_point.text, sats_per_vbyte.text)
-            size_hint: 1, None
-            height: dp(50)
 
 ''')
 Builder.load_string('''
@@ -132,11 +90,6 @@ Builder.load_string('''
 #:import Factory kivy.factory.Factory
 #:import get_available_nodes orb.misc.utils.get_available_nodes
 
-<NodeSpinnerOption@SpinnerOption>:
-    size_hint: None, None
-    size: dp(300), dp(30)
-
-
 <ExportConnectionSettings>:
     name: 'export_node_settings'
     BoxLayout:
@@ -144,7 +97,6 @@ Builder.load_string('''
         size_hint: (1, 1)
         Spinner:
             id: nodes
-            # option_cls: Factory.get("NodeSpinnerOption")
             text: "Select node to export"
             height: dp(30)
             width: dp(300)
@@ -459,44 +411,6 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
-#:import Window kivy.core.window.Window
-
-<OpenChannelScreen>:
-    title: 'Open Channel'
-    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [None, None]
-    BoxLayout:
-        orientation: 'vertical'
-        GridLayout:
-            cols: 1
-            row_force_default: True
-            row_default_height: dp(60)
-            padding: dp(2)
-            spacing: dp(2)
-            MDTextField:
-                id: pk
-                helper_text: 'Pubkey'
-                helper_text_mode: "persistent"
-            MDTextField:
-                id: sats
-                helper_text: 'Sats'
-                helper_text_mode: "persistent"
-            MDTextField:
-                id: sats_per_vbyte
-                helper_text: 'Sats per v/byte'
-                helper_text_mode: "persistent"
-        Widget:
-        MDRaisedButton:
-            text: 'open'
-            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
-            size_hint: None, None
-            width: dp(80)
-            height: dp(40)
-
-''')
-Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -760,7 +674,6 @@ Builder.load_string('''
         OrbConnectorMain:
         UmbrelNode:
         VoltageNode:
-        ConnectionWizard:
         ConnectionSettings:
         ExportConnectionSettings:
         ImportConnectionSettings:
@@ -815,11 +728,6 @@ Builder.load_string('''
 
 <Tab>
 
-<TypeSpinnerOption@SpinnerOption>:
-    size_hint: None, None
-    size: dp(150), dp(25)
-
-
 <ConnectionSettings>:
     name: 'connection_settings'
     BoxLayout:
@@ -831,16 +739,15 @@ Builder.load_string('''
                 BoxLayout:
                     orientation: 'vertical'
                     MDLabel:
-                        text: 'Specify the type of node. Set as default, or Umbrel.'
+                        text: 'Specify the type of node.'
                         size_hint_y: 1
                         multiline: True
                     Spinner:
                         id: spinner_in_id
-                        option_cls: Factory.get("TypeSpinnerOption")
+                        text: "lnd"
                         height: dp(30)
-                        width: dp(150)
-                        text: 'default'
-                        values: ["default", "umbrel"]
+                        width: dp(300)
+                        values: ['lnd', 'cln']
                         size_hint: None, None
                         on_text: root.set_and_save('host.type', spinner_in_id.text)
                     MDLabel:
@@ -885,7 +792,6 @@ Builder.load_string('''
                             MDSwitch:
                                 id: rest
                                 on_release: root.save_protocol('rest')
-                                # active: pref('lnd.protocol') == 'rest'
                             MDLabel:
                                 text: 'REST'
                         BoxLayout:
@@ -893,7 +799,6 @@ Builder.load_string('''
                             MDSwitch:
                                 id: grpc
                                 on_release: root.save_protocol('grpc')
-                                # active: pref('lnd.protocol') == 'grpc'
                             MDLabel:
                                 text: 'GRPC'
                         BoxLayout:
@@ -901,7 +806,6 @@ Builder.load_string('''
                             MDSwitch:
                                 id: mock
                                 on_release: root.save_protocol('mock')
-                                # active: pref('lnd.protocol') == 'mock'
                             MDLabel:
                                 text: 'MOCK'
                     MDLabel:
@@ -936,7 +840,7 @@ Builder.load_string('''
                             size_hint: (None, None)
                         MDRaisedButton:
                             text: 'Save'
-                            on_release: (root.set_and_save('lnd.rest_port', rest_port.text), root.set_and_save('lnd.grpc_port', grpc_port.text))
+                            on_release: (root.set_and_save('ln.rest_port', rest_port.text), root.set_and_save('ln.grpc_port', grpc_port.text))
                             size_hint_x: None
                             width: dp(100)
                             height: dp(40)
@@ -1010,12 +914,12 @@ Builder.load_string('''
                         height: dp(40)
             Tab:
                 title: 'Connect'
-                id: connect
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint: (1, 1)
                     Widget:
                     MDRaisedButton:
+                        id: connect
                         text: 'Connect'
                         on_release: root.connect()
                         size_hint: (None, None)
@@ -1271,7 +1175,7 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
-#:import Lnd orb.lnd.Lnd
+#:import Ln orb.ln.Ln
 
 <TipDialogContent>
     orientation: "vertical"
@@ -1281,7 +1185,7 @@ Builder.load_string('''
 
     MDTextField:
         hint_text: "Author Alias"
-        text: Lnd().get_node_alias(root.app.author)
+        text: Ln().get_node_alias(root.app.author)
         disabled: True
 
     MDTextField:
@@ -1471,7 +1375,6 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
-#:import Lnd orb.lnd.Lnd
 
 <LoginDialogContent>
     orientation: "vertical"
@@ -1749,6 +1652,79 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+#:import Ln orb.ln.Ln
+
+<CLNCloseChannel>:
+    title: 'Close Channel'
+    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(400))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        height: self.minimum_height
+        MDTextField:
+            id: chan_id
+            helper_text: 'id'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: unilateral_timeout
+            text: '172800'
+            helper_text: 'Unilateral Timeout'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: dest
+            text: '' #Ln().new_address().address
+            helper_text: 'Destination'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: fee_neg_step
+            text: '50%'
+            helper_text: 'Fee Negotiation Step'
+            helper_text_mode: "persistent"
+        Widget:
+        MDRaisedButton:
+            text: 'close'
+            on_release: root.close_channel(id=chan_id.text, unilateral_timeout=unilateral_timeout.text, dest=dest.text)
+            size_hint: 1, None
+            height: dp(50)
+
+<LNDCloseChannel>:
+    title: 'Close Channel'
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        height: self.minimum_height
+        Label:
+            text: "force"
+            size_hint_y: None
+            height: self.texture_size[1]
+        MDCheckbox:
+            id: force
+        Widget:
+        MDTextField:
+            id: channel_point
+            helper_text: 'Channel Point'
+            helper_text_mode: "persistent"
+        MDTextField:
+            id: sats_per_vbyte
+            text: '1'
+            helper_text: 'Sats per v/byte'
+            helper_text_mode: "persistent"
+        Widget:
+        MDRaisedButton:
+            text: 'close'
+            on_release: root.close_channel(channel_point.text, sats_per_vbyte.text)
+            size_hint: 1, None
+            height: dp(50)
+
+''')
+Builder.load_string('''
 #: import dp kivy.metrics.dp
 
 <About>:
@@ -1821,394 +1797,130 @@ Builder.load_string('''
 
 ''')
 Builder.load_string('''
-#:import dp kivy.metrics.dp
-#:import os os
 #:import Window kivy.core.window.Window
-#:import Clipboard kivy.core.clipboard.Clipboard
-#:import Factory kivy.factory.Factory
+#:import dp kivy.metrics.dp
 
-<Tab>
-
-<AuthSpinnerOption@SpinnerOption>:
-    size_hint: None, None
-    size: dp(300), dp(25)
-
-<CertFileChooser>:
-    title: 'Load Certificate'
-    size_hint: [.7,.7]
+<GenerateInvoice>:
+    title: "Generate Invoice"
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(500))
+    size_hint: (None, None)
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
+
     BoxLayout:
         orientation: 'vertical'
-        FileChooserIconView:
-            show_hidden: True
-            size_hint: [1,1]
-            id: filechooser
-            path: os.path.expanduser('~')
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint: None, None
-            height: dp(30)
-            MDRaisedButton:
-                text: 'Open'
-                size_hint_x: None
-                width: 30
-                size_hint_y: 1
-                on_release: root.selected_path = filechooser.selection[-1]; root.dismiss()
-            MDRaisedButton:
-                text: 'Cancel'
-                size_hint_x: None
-                width: 30
-                size_hint_y: 1
-                on_release: root.dismiss()
-
-
-<ConnectionWizard>:
-    name: 'ssh_wizard'
-    BoxLayout:
-        orientation: 'vertical'
-        MDTabs:
-            id: tabs
-            size_hint_y: 1
-            on_tab_switch: root.on_tab_switch(*args)
-            SSHCredentials:
-                id: ssh_credentials
-            NodeAndFiles:
-            LNDConf:
-            RestartLND:
-                id: restart_lnd
-            CopyKeys:
-        MDRaisedButton:
-            text: 'Back'
-            on_release:
-                app.screen.ids.sm.current = "main"
-                root.manager.transition.direction = "right"
-            size_hint_x: 1
-            height: dp(40)
-
-''')
-Builder.load_string('''
-#:import os os
-
-<LNDConf>:
-    title: 'lnd.conf'
-    ScrollView:
-        size_hint: 1, 1
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        GridLayout:
-            cols: 1
-            padding: 10
-            spacing: 10
-            size_hint: 1, None
-            height: self.minimum_height
-            do_scroll_x: False
-            MDLabel:
-                text: 'lnd.conf needs modifying for outside access.'
-                size_hint_y: None
-                height: dp(50)
-            Splitter:
-                horizontal: True
-                size_hint_y: None
-                height: dp(10)
-            MDRaisedButton:
-                text: 'Check lnd.conf'
-                on_release: root.check_lnd_conf()
-                size_hint_y: None
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-                
-            MDLabel:
-                id: report
-                text: ''
-                multiline: True
-                size_hint_y: None
-                height: self.texture_size[1]
-            FocusTextInput:
-                id: input
-                size_hint_x: .9
-                size_hint_y: None
-                height: dp(300)
-            Splitter:
-                horizontal: True
-                size_hint_y: None
-                height: dp(10)
-            MDRaisedButton:
-                text: 'Back up lnd.conf'
-                on_release: root.back_up_lnd_conf()
-                size_hint_y: None
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-                
-            MDRaisedButton:
-                text: 'Restore back-up'
-                on_release: root.restore_backup()
-                size_hint_y: None
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-                
-            MDRaisedButton:
-                text: 'Modify lnd.conf'
-                on_release: root.modify_lnd_conf()
-                size_hint_y: None
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-                
-            Widget:
-                size_hint_y: 1
-
-
-
-
-''')
-Builder.load_string('''
-<NodeAndFiles>:
-    title: 'Node & Files'
-    ScrollView:
-        size_hint: None, None
-        width: root.width
-        height: root.height
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        # pos: 0, dp(40)
-        GridLayout:
-            cols: 1
-            padding: 10
-            spacing: 10
-            size_hint: 1, None
-            height: self.minimum_height
-            do_scroll_x: False
-            MDRaisedButton:
-                text: 'Detect Node Type'
-                on_release: root.detect_node_type()
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-                
-            MDTextField:
-                id: node_type
-                text: 'default'
-                helper_text: 'Node Type'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: network
-                text: 'mainnet'
-                helper_text: 'Network'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: lnd_directory
-                text: ''
-                helper_text: 'LND directory'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: conf_path
-                text: ''
-                helper_text: 'lnd.conf path'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: tls_certificate_path
-                text: ''
-                helper_text: 'TLS certificate path'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: admin_macaroon_path
-                text: ''
-                helper_text: 'Admin Macaroon path'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: log_path
-                text: ''
-                helper_text: 'lnd.log path'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: channel_db_path
-                text: ''
-                helper_text: 'channel.db path'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: lnd_start_cmd
-                text: ''
-                helper_text: 'lnd start command'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-            MDTextField:
-                id: lnd_stop_cmd
-                text: ''
-                helper_text: 'lnd stop command'
-                helper_text_mode: "persistent"
-                height: dp(60)
-                width: dp(400)
-                size_hint: (None, None)
-        
-''')
-Builder.load_string('''
-<SSHCredentials>:
-    title: 'SSH Credentials'
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_y: 1
-        spacing: dp(5)
-        padding: dp(5)
-        MDLabel:
-            text: 'Enter SSH credential details to your node.'
-            size_hint_y: None
-            height: dp(60)
-            multiline: True
+        spacing: 20
+        padding: 20
+        MDTextField:
+            hint_text: "Satoshis"
+            text: '10_000'
+            id: satoshis
+            # height: dp(80)
+            # size_hint: (1, None)
+        Image:
+            id: img
+            source: ''
         MDTextField:
             id: address
-            helper_text: 'Host Address'
-            helper_text_mode: "persistent"
-            height: dp(60)
-            width: dp(200)
-            size_hint: (None, None)
-        MDTextField:
-            id: port
-            text: '22'
-            helper_text: 'SSH port'
-            helper_text_mode: "persistent"
-            height: dp(60)
-            width: dp(200)
-            size_hint: (None, None)
-        BoxLayout:
-            orientation: 'vertical'
-            height: dp(80)
-            width: dp(300)
+            # height: dp(80)
+            # size_hint: (1, None)
+        MDRaisedButton:
+            text: 'Generate'
             size_hint_y: None
-            size_hint_x: None
-            Label:
-                text: "Authentication"
-                size_hint_y: None
-            Spinner:
-                id: spinner_id
-                text: 'certificate'
-                option_cls: Factory.get("AuthSpinnerOption")
-                height: dp(25)
-                size_hint_y: 0
-                size_hint_x: 1
-                values: ["password", "certificate"]
-                on_text: root.cert_or_pass()
-        MDTextField:
-            id: username
-            text: 'ubuntu'
-            helper_text: 'Username'
-            helper_text_mode: "persistent"
-            height: dp(60)
+            height: dp(50)
             width: dp(200)
-            size_hint: (None, None)
-        BoxLayout:
-            orientation: 'vertical'
-            id: cert_or_pass
+            on_release: root.generate(satoshis=satoshis.text)
+        MDRaisedButton:
+            text: 'close'
+            size_hint_y: None
+            height: dp(50)
+            width: dp(200)
+            on_release: root.dismiss()
+
+''')
+Builder.load_string('''
+#:import Window kivy.core.window.Window
+#:import Factory kivy.factory.Factory
+
+<FeeRateSpinnerOption@SpinnerOption>:
+    size_hint: None, None
+    size: dp(300), dp(30)
+    background_color: .6, .6, .8, .9
+
+<CLNOpenChannel>:
+    title: 'Open Channel'
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            cols: 1
+            row_force_default: True
+            row_default_height: dp(60)
+            padding: dp(2)
+            spacing: dp(2)
+            MDTextField:
+                id: chan_id
+                helper_text: 'id'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: satoshis
+                helper_text: 'Sats'
+                helper_text_mode: "persistent"
+            Spinner:
+                id: fee_rate
+                background_color: .6, .6, .8, .9
+                text: "Fee Rate"
+                option_cls: Factory.get("FeeRateSpinnerOption")
+                height: dp(30)
+                width: dp(300)
+                size_hint: None, None
+                values: ['urgent', 'normal', 'slow', 'perkw', 'perkb']
         Widget:
         MDRaisedButton:
-            id: test_connection
-            text: 'Test Connection'
-            on_release: root.test_connection()
-            size_hint_x: None
-            width: dp(200)
+            text: 'open'
+            on_release: root.open_channel(chan_id.text, satoshis.text, fee_rate.text)
+            size_hint: None, None
+            width: dp(80)
             height: dp(40)
 
-''')
-Builder.load_string('''
 
-<RestartLND>:
-    title: 'Restart LND'
-    ScrollView:
-        size_hint: 1, 1
-        pos_hint: {'center_x': .5, 'center_y': .5}
+<LNDOpenChannel>:
+    title: 'Open Channel'
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    size_hint: [None, None]
+    BoxLayout:
+        orientation: 'vertical'
         GridLayout:
             cols: 1
-            padding: 10
-            spacing: 10
-            size_hint: 1, None
-            height: self.minimum_height
-            do_scroll_x: False
-            MDLabel:
-                text: 'LND needs restarting to generate new TLS certs.'
-                size_hint_y: None
-                height: dp(50)
-            Splitter:
-                horizontal: True
-                size_hint_y: None
-                height: dp(10)
-            MDRaisedButton:
-                text: 'Restart LND'
-                on_release: root.restart_lnd()
-                size_hint_y: None
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-                
-            FocusTextInput:
-                id: input
-                size_hint_x: .9
-                size_hint_y: None
-                height: dp(300)
+            row_force_default: True
+            row_default_height: dp(60)
+            padding: dp(2)
+            spacing: dp(2)
+            MDTextField:
+                id: pk
+                helper_text: 'Pubkey'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: sats
+                helper_text: 'Sats'
+                helper_text_mode: "persistent"
+            MDTextField:
+                id: sats_per_vbyte
+                helper_text: 'Sats per v/byte'
+                helper_text_mode: "persistent"
+        Widget:
+        MDRaisedButton:
+            text: 'open'
+            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
+            size_hint: None, None
+            width: dp(80)
+            height: dp(40)
 
-''')
-Builder.load_string('''
-
-<CopyKeys>:
-    title: 'Copy Keys'
-    ScrollView:
-        size_hint: 1, 1
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        GridLayout:
-            cols: 1
-            padding: 10
-            spacing: 10
-            size_hint: 1, None
-            height: self.minimum_height
-            do_scroll_x: False
-            MDLabel:
-                text: 'Copy TLS Cert, Macaroon, and set connection settings for LND API to connect to your node.'
-                size_hint_y: None
-                height: self.texture_size[1]
-                multiline: True
-            Splitter:
-                horizontal: True
-                size_hint_y: None
-                height: dp(10)
-            MDRaisedButton:
-                text: 'Copy keys'
-                on_release: root.copy_keys()
-                size_hint_y: None
-                size_hint_x: None
-                width: dp(100)
-                height: dp(40)
-            MDRaisedButton:
-                id: connect
-                text: 'Connect'
-                on_release: root.connect()
-                size_hint_x: 1
-                height: dp(40)
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
@@ -2354,18 +2066,19 @@ Builder.load_string('''
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
 
-#:import Lnd orb.lnd.Lnd
+#:import Ln orb.ln.Ln
 #:import MailDialog orb.dialogs.mail_dialog.MailDialog
 #:import NewAddress orb.screens.new_address_screen.NewAddress
 #:import SendCoins orb.screens.send_coins.SendCoins
-#:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
+#:import IngestInvoices orb.dialogs.ingest_invoices.IngestInvoices
+#:import GenerateInvoice orb.dialogs.generate_invoice.GenerateInvoice
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
 #:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
-#:import OpenChannelScreen orb.screens.open_channel_screen.OpenChannelScreen
+#:import OpenChannel orb.dialogs.open_channel.OpenChannel
+#:import CloseChannel orb.dialogs.close_channel.CloseChannel
 #:import BatchOpenScreen orb.screens.batch_open_screen.BatchOpenScreen
-#:import CloseChannel orb.screens.close_channel.CloseChannel
 #:import Rebalance orb.screens.rebalance.Rebalance
 #:import prefs_col orb.misc.utils.prefs_col
 #:import set_string_pref orb.misc.utils.set_string_pref
@@ -2374,7 +2087,6 @@ Builder.load_string('''
 #:import FeeDistribution orb.dialogs.fee_distribution.FeeDistribution
 #:import About orb.dialogs.help_dialog.about.about.About
 #:import Rankings orb.screens.rankings.Rankings
-#:import ConnectionWizard orb.dialogs.connection_wizard.connection_wizard.ConnectionWizard
 #:import VoltageNode orb.dialogs.voltage_node.voltage_node.VoltageNode
 #:import UmbrelNode orb.dialogs.umbrel_node.umbrel_node.UmbrelNode
 #:import ConnectionSettings orb.dialogs.connection_settings.ConnectionSettings
@@ -2430,7 +2142,7 @@ Builder.load_string('''
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Open Channel"
-                            on_press:  OpenChannelScreen().open()
+                            on_press:  OpenChannel().open()
                             on_release: app_menu.close_all()
                         ContextMenuTextItem:
                             text: "Batch Open"
@@ -2483,6 +2195,17 @@ Builder.load_string('''
                             on_release: app_menu.close_all()
                             on_press: DeezySwapDialog().open()
                 ContextMenuTextItem:
+                    text: "Invoices"
+                    ContextMenu:
+                        ContextMenuTextItem:
+                            text: "Ingest Invoices"
+                            on_press: IngestInvoices().open()
+                            on_release: app_menu.close_all()
+                        ContextMenuTextItem:
+                            text: "Generate Invoice"
+                            on_press: GenerateInvoice().open()
+                            on_release: app_menu.close_all()
+                ContextMenuTextItem:
                     text: "Rebalance"
                     on_release: app_menu.close_all()
                     on_press:  Rebalance().open()
@@ -2493,10 +2216,6 @@ Builder.load_string('''
                 ContextMenuTextItem:
                     text: "Connect"
                     on_press:  ConnectScreen().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    text: "Ingest Invoices"
-                    on_press: IngestInvoices().open()
                     on_release: app_menu.close_all()
                 ContextMenuTextItem:
                     text: "Rankings"
@@ -2583,6 +2302,14 @@ Builder.load_string('''
                     on_press: app_menu.close_all()
                     on_release: webbrowser.open('https://lnorb.com/docs')
                 ContextMenuTextItem:
+                    text: "LND API"
+                    on_press: app_menu.close_all()
+                    on_release: webbrowser.open('https://api.lightning.community/')
+                ContextMenuTextItem:
+                    text: "CLN API"
+                    on_press: app_menu.close_all()
+                    on_release: webbrowser.open('https://lightning.readthedocs.io/')
+                ContextMenuTextItem:
                     text: "About"
                     on_press: app_menu.close_all()
                     on_release: About().open()
@@ -2595,31 +2322,31 @@ Builder.load_string('''
                     ContextMenu:
                         ContextMenuTextItem:
                             text: "Terminal"
-                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://terminal.lightning.engineering/#/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "Amboss"
-                            on_release: webbrowser.open("https://amboss.space/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://amboss.space/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LNRouter"
-                            on_release: webbrowser.open("https://lnrouter.app/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://lnrouter.app/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LNNodeInsight"
                             on_release: webbrowser.open("https://lnnodeinsight.com/")
                         ContextMenuTextItem:
                             text: "1ML"
-                            on_release: webbrowser.open("https://1ml.com/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://1ml.com/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "HashXP"
-                            on_release: webbrowser.open("https://hashxp.org/lightning/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://hashxp.org/lightning/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "LN.plus"
-                            on_release: webbrowser.open("https://lightningnetwork.plus/nodes/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://lightningnetwork.plus/nodes/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "CheeseRobot"
-                            on_release: webbrowser.open("https://cheeserobot.org/node/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://cheeserobot.org/node/" + Ln().get_info().identity_pubkey)
                         ContextMenuTextItem:
                             text: "Acinq"
-                            on_release: webbrowser.open("https://explorer.acinq.co/n/" + Lnd().get_info().identity_pubkey)
+                            on_release: webbrowser.open("https://explorer.acinq.co/n/" + Ln().get_info().identity_pubkey)
                 ContextMenuTextItem:
                     text: "Testnet Faucets"
                     ContextMenu:
@@ -3305,7 +3032,6 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import prefs_col orb.misc.utils.prefs_col
-#:import Lnd orb.lnd.Lnd
 
 <ChannelsScreen>:
     name: 'channels'

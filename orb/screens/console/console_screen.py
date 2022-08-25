@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-15 13:22:44
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-14 09:22:38
+# @Last Modified time: 2022-08-08 09:47:45
 
 from collections import deque
 import sys
@@ -43,7 +43,6 @@ class ConsoleScreen(Screen):
         def delayed():
             # when 'output' changes on the console_input
             # then update 'output' on the console_output
-            # it's ok to bind this over and over
             self.ids.console_input.bind(output=self.ids.console_output.setter("output"))
             # retrieve the code stored in the prefs, and set it
             # in the console input
@@ -60,6 +59,7 @@ class ConsoleScreen(Screen):
         self.ids.console_output.output = self.output_text
 
     def on_pre_leave(self):
+        self.ids.console_input.unbind(output=self.ids.console_output.setter("output"))
         self.is_showing = False
 
     def update_output(self, text, last_line):

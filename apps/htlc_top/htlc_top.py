@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 17:51:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:16:50
+# @Last Modified time: 2022-08-07 13:12:23
 
 import os
 from pathlib import Path
@@ -27,7 +27,7 @@ from kivymd.uix.datatables import MDDataTable
 
 from orb.misc.plugin import Plugin
 from orb.store.model import Htlc
-from orb.lnd import Lnd
+from orb.ln import Ln
 
 
 class HtlcItem(Label):
@@ -45,7 +45,7 @@ class HtlcTopView(Popup):
         """
         super(HtlcTopView, self).open(*args, **kwargs)
         app = App.get_running_app()
-        lnd = Lnd()
+        ln = Ln()
 
         col_data = [
             ("Last Update", dp(60)),
@@ -109,12 +109,12 @@ class HtlcTopView(Popup):
             for e in Htlc.select().order_by(Htlc.timestamp.desc()).limit(100):
                 if e.incoming_channel_id:
                     in_channel = app.channels.channels[e.incoming_channel_id]
-                    in_alias = lnd.get_node_alias(in_channel.remote_pubkey)
+                    in_alias = ln.get_node_alias(in_channel.remote_pubkey)
                 else:
                     in_alias = ""
                 if e.outgoing_channel_id:
                     out_channel = app.channels.channels[e.outgoing_channel_id]
-                    out_alias = lnd.get_node_alias(out_channel.remote_pubkey)
+                    out_alias = ln.get_node_alias(out_channel.remote_pubkey)
                 else:
                     out_alias = ""
                 if e.event_outcome_info:

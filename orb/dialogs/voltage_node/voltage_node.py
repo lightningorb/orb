@@ -2,14 +2,16 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 17:38:14
+# @Last Modified time: 2022-08-20 16:22:15
 
 from threading import Thread
+from traceback import format_exc
 
 from kivy.app import App
-
-from orb.misc.macaroon import Macaroon
 from kivymd.uix.screen import MDScreen
+
+from orb.ln import Ln
+from orb.misc.macaroon import Macaroon
 from orb.misc.decorators import guarded
 from orb.misc.macaroon_secure import MacaroonSecure
 from orb.dialogs.restart_dialog import RestartDialog
@@ -38,9 +40,8 @@ class VoltageNode(MDScreen):
         error = ""
         if not error:
             try:
-                from orb.lnd import Lnd
-
-                lnd = Lnd(
+                ln = Ln(
+                    node_type="lnd",
                     fallback_to_mock=False,
                     cache=False,
                     use_prefs=False,
@@ -50,22 +51,24 @@ class VoltageNode(MDScreen):
                     rest_port="8080",
                 )
 
-                info = lnd.get_info()
+                info = ln.get_info()
 
                 self.ids.connect.text = f"Set {info.identity_pubkey[:5]} as default ..."
                 self.connected = True
                 self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)
                 if self.sec:
                     app.node_settings[
-                        "lnd.macaroon_admin"
+                        "ln.macaroon_admin"
                     ] = self.sec.macaroon_secure.decode()
                 app.node_settings["host.hostname"] = self.ids.address.text
-                app.node_settings["lnd.network"] = self.ids.network.text
-                app.node_settings["lnd.protocol"] = "rest"
-                app.node_settings["lnd.rest_port"] = "8080"
-                app.node_settings["lnd.identity_pubkey"] = info.identity_pubkey
+                app.node_settings["host.type"] = "lnd"
+                app.node_settings["ln.network"] = self.ids.network.text
+                app.node_settings["ln.protocol"] = "rest"
+                app.node_settings["ln.rest_port"] = "8080"
+                app.node_settings["ln.identity_pubkey"] = info.identity_pubkey
             except Exception as e:
                 print(e)
+                print(format_exc())
                 error = "Error connecting to LND"
 
         if error:

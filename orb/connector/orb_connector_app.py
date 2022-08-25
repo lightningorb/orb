@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-02 18:35:27
+# @Last Modified time: 2022-08-20 10:07:52
 
 import shutil
 from pathlib import Path
@@ -26,7 +26,7 @@ from orb.misc.utils import get_available_nodes
 from orb.misc.macaroon_secure import MacaroonSecure
 from orb.dialogs.restart_dialog import RestartDialog
 from orb.connector.orb_connector import OrbConnector
-from orb.misc.conf_defaults import set_lnd_defaults, set_host_defaults
+from orb.misc.conf_defaults import set_ln_defaults, set_host_defaults
 
 
 class OrbConnectorApp(AppCommon):
@@ -44,14 +44,14 @@ class OrbConnectorApp(AppCommon):
 
     def add_public_testnet_node(self, *args):
         self.node_settings["host.hostname"] = "orb-public.t.voltageapp.io"
-        self.node_settings["lnd.macaroon_admin"] = MacaroonSecure.init_from_plain(
+        self.node_settings["ln.macaroon_admin"] = MacaroonSecure.init_from_plain(
             "0201036C6E640278030A102F2F33256E0173F3226178B99CC38AD01201301A0F0A07616464726573731204726561641A0C0A04696E666F1204726561641A0F0A076D6573736167651204726561641A100A086F6666636861696E1204726561641A0F0A076F6E636861696E1204726561641A0D0A05706565727312047265616400000620299220FACE39C4B66A6E0CC0B5EA88389CB52AD2E5302D4D69C0DE95E4150C1D".encode()
         ).macaroon_secure.decode()
-        self.node_settings["lnd.network"] = "testnet"
-        self.node_settings["lnd.protocol"] = "rest"
-        self.node_settings["lnd.rest_port"] = "8080"
+        self.node_settings["ln.network"] = "testnet"
+        self.node_settings["ln.protocol"] = "rest"
+        self.node_settings["ln.rest_port"] = "8080"
         self.node_settings[
-            "lnd.identity_pubkey"
+            "ln.identity_pubkey"
         ] = "03373b5287484d081153491f674c023164c2343954e2f56e4ae4b23e686d8cf07d"
         RestartDialog(
             title="After exit, please restart Orb to launch new settings."
@@ -67,7 +67,7 @@ class OrbConnectorApp(AppCommon):
         for pk in get_available_nodes():
 
             def do_open(_, pk):
-                self.node_settings["lnd.identity_pubkey"] = pk
+                self.node_settings["ln.identity_pubkey"] = pk
                 RestartDialog(
                     title="After exit, please restart Orb to launch new settings."
                 ).open()

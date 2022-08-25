@@ -2,21 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 20:26:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-01-18 07:58:46
+# @Last Modified time: 2022-08-07 12:14:05
 
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 
-from orb.lnd import Lnd
+from orb.ln import Ln
 from orb.misc.plugin import Plugin
 from orb.components.popup_drop_shadow import PopupDropShadow
 
 
 class AliasAndPubkey(Plugin):
     def main(self):
-        lnd = Lnd()
-
-        info = lnd.get_info()
+        info = Ln().get_info()
 
         popup = PopupDropShadow(
             title="Node Info",

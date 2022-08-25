@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-03-04 06:10:04
+# @Last Modified time: 2022-08-06 19:58:23
 
 import arrow
 
@@ -81,7 +81,7 @@ class LNDHop(Model):
     amt_to_forward = IntegerField()
     amt_to_forward_msat = IntegerField()
     chan_capacity = IntegerField()
-    chan_id = IntegerField()
+    chan_id = CharField()
     custom_records = JSONField(default={})
     expiry = IntegerField()
     fee = IntegerField()
@@ -126,7 +126,7 @@ class Hop(Model):
 
 
 class ChannelStats(Model):
-    chan_id = IntegerField(index=True, unique=True)
+    chan_id = CharField(index=True, unique=True)
     earned_msat = IntegerField(default=0)
     helped_earn_msat = IntegerField(default=0)
     debt_msat = IntegerField(default=0)
@@ -137,8 +137,8 @@ class ChannelStats(Model):
 
 class ForwardEvent(Model):
     timestamp = IntegerField()
-    chan_id_in = IntegerField()
-    chan_id_out = IntegerField()
+    chan_id_in = CharField()
+    chan_id_out = CharField()
     amt_in = IntegerField()
     amt_out = IntegerField()
     fee = IntegerField()

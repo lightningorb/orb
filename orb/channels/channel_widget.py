@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 08:25:20
+# @Last Modified time: 2022-08-24 14:56:11
 
 from time import time
 from threading import Thread
@@ -121,6 +121,7 @@ class ChannelWidget(Widget):
             )
             if expired:
                 try:
+                    c = self.channel
                     highlighted = eval(text)
                 except:
                     highlighted = False
@@ -363,7 +364,7 @@ class ChannelWidget(Widget):
                 """
                 Not yet available for REST
                 """
-                if htlc.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
+                if htlc.link_fail_event.wire_failure == "TEMPORARY_CHANNEL_FAILURE":
                     if htlc.incoming_channel_id and htlc.outgoing_channel_id:
                         print("FAIL!")
                         outgoing_channel = app.channels.channels[
@@ -371,7 +372,7 @@ class ChannelWidget(Widget):
                         ]
                         print(outgoing_channel.alias)
                         print(htlc.__dict__)
-                        if htlc.failure_detail != "HTLC_EXCEEDS_MAX":
+                        if htlc.link_fail_event.failure_detail != "HTLC_EXCEEDS_MAX":
                             audio_manager.play_link_fail_event()
 
         # cols = {"forward_fail_event": RED, "link_fail_event": RED}

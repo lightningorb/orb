@@ -1,5 +1,5 @@
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
-#:import Lnd orb.lnd.Lnd
+#:import Ln orb.ln.Ln
 
 <TipDialogContent>
     orientation: "vertical"
@@ -9,7 +9,7 @@
 
     MDTextField:
         hint_text: "Author Alias"
-        text: Lnd().get_node_alias(root.app.author)
+        text: Ln().get_node_alias(root.app.author)
         disabled: True
 
     MDTextField:

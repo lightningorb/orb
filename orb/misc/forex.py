@@ -9,7 +9,7 @@ This module stores useful functions for foreign-exchange math.
 """
 
 from forex_python.bitcoin import BtcConverter
-from orb.misc.utils import pref
+from orb.misc.utils_no_kivy import pref
 from currency_symbols import CurrencySymbols
 
 b = BtcConverter()

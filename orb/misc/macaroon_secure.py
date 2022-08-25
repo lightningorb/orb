@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-09 08:41:00
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-17 07:30:07
+# @Last Modified time: 2022-08-22 09:14:20
 
 from orb.misc.macaroon import Macaroon
 from orb.misc.sec_rsa import *
@@ -18,6 +18,8 @@ class MacaroonSecure:
 
     @staticmethod
     def init_from_plain(bin_data, uid=None):
+        if type(bin_data) is str:
+            bin_data = bin_data.encode()
         _, pub = get_sec_keys(uid=uid)
         encrypted = encrypt_long(bin_data, pub, True)
         return MacaroonSecure(encrypted)
