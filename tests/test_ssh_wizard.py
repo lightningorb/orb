@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-08-21 12:39:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-22 12:05:51
+# @Last Modified time: 2022-08-25 09:59:28
 
 from unittest import TestCase
+import unittest
 from fabric import Connection
 from invoke.context import Context
 
@@ -13,6 +14,7 @@ from orb.ln import factory
 
 fix_annotations()
 from orb.cli import node
+from orb.cli.utils import get_default_id
 
 
 class TestSSHWizard(TestCase):
@@ -27,8 +29,9 @@ class TestSSHWizard(TestCase):
             protocol="rest",
             ln_cert_path="/home/ubuntu/dev/regtest-workbench/certificate.pem",
             ln_macaroon_path="/home/ubuntu/dev/regtest-workbench/access.macaroon",
+            use_node=True,
         )
-        pk = "02d74e4ffe22c95d78bea7d629907a631e0b0231376c7c674377bf4efaa1e2290e"
+        pk = get_default_id()
         ln = factory(pk)
         info = ln.get_info()
         self.assertTrue(info.alias == "regtest.cln.lnorb.com")
@@ -45,8 +48,9 @@ class TestSSHWizard(TestCase):
             protocol="rest",
             ln_cert_path="/home/ubuntu/dev/plebnet-playground-docker/volumes/lnd_datadir/tls.cert",
             ln_macaroon_path="/home/ubuntu/dev/plebnet-playground-docker/admin.macaroon",
+            use_node=True,
         )
-        pk = "0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47"
+        pk = get_default_id()
         ln = factory(pk)
         info = ln.get_info()
         self.assertTrue(info.alias in ["signet.lnd.lnorb.conf", "signet.lnd.lnorb.com"])
@@ -64,8 +68,12 @@ class TestSSHWizard(TestCase):
             ln_cert_path="/home/ubuntu/dev/plebnet-playground-docker/volumes/lnd_datadir/tls.cert",
             ln_macaroon_path="/home/ubuntu/dev/plebnet-playground-docker/admin.macaroon",
         )
-        pk = "0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47"
+        pk = get_default_id()
         ln = factory(pk)
         info = ln.get_info()
         self.assertTrue(info.alias in ["signet.lnd.lnorb.conf", "signet.lnd.lnorb.com"])
         node.delete(self.c, pubkey=pk)
+
+
+if __name__ == "__main__":
+    unittest.main()
