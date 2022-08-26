@@ -2,13 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-07 14:05:22
+# @Last Modified time: 2022-08-26 18:20:07
 
 import threading
 
 from kivy.clock import mainthread
 from memoization import cached
-from deezy import Deezy, Network
 
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
@@ -28,6 +27,8 @@ class DeezySwapDialog(PopupDropShadow):
 
     def open(self):
         super(DeezySwapDialog, self).open()
+        from deezy import Deezy, Network
+
         self.deezy = Deezy(
             mode=Network.testnet
             if pref("lnd.network") == "testnet"

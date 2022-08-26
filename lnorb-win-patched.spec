@@ -15,6 +15,7 @@ a = Analysis(
         "third_party/currency-symbols",
         "third_party/forex-python",
         "third_party/python-qrcode",
+        "third_party/deezy-py",
         "dist\\obf\\temp",
     ],
     binaries=[],
