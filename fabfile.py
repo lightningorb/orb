@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 03:26:57
+# @Last Modified time: 2022-08-27 03:27:27
 
 import re
 import os
@@ -59,15 +59,15 @@ def release(c, minor=False, patch=False, hotfix=False):
         c.run("git commit -am 'release hotfix'")
     else:
         c.run("git commit -am 'version bump'")
-    # c.run("git push --set-upstream origin main")
-    # if not hotfix:
-    #     tags.tag(c)
-    #     tags.push(c)
-    # for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
-    #     c.run(f"git checkout {branch}")
-    #     c.run("git rebase main")
-    #     c.run(f"git push --set-upstream origin {branch}")
-    # c.run("git checkout main")
+    c.run("git push --set-upstream origin main")
+    if not hotfix:
+        tags.tag(c)
+        tags.push(c)
+    for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
+        c.run(f"git checkout {branch}")
+        c.run("git rebase main")
+        c.run(f"git push --set-upstream origin {branch}")
+    c.run("git checkout main")
 
 
 namespace = Collection(
