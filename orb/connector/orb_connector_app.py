@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 04:45:35
+# @Last Modified time: 2022-08-27 05:12:28
 
 import shutil
 from pathlib import Path
@@ -68,20 +68,20 @@ class OrbConnectorApp(AppCommon):
         for b in self.node_buttons:
             grid.remove_widget(b)
         self.node_buttons = []
+
+        def do_open(_, pk):
+            self.node_settings["ln.identity_pubkey"] = pk
+            RestartDialog(
+                title="After exit, please restart Orb to launch new settings."
+            ).open()
+
+        def rm_node(_, pk, bl):
+            p = Path(self._get_user_data_dir()).parent / f"orb_{pk}"
+            if p.exists():
+                shutil.rmtree(p.as_posix())
+            self.update_node_buttons()
+
         for pk in get_available_nodes():
-
-            def do_open(_, pk):
-                self.node_settings["ln.identity_pubkey"] = pk
-                RestartDialog(
-                    title="After exit, please restart Orb to launch new settings."
-                ).open()
-
-            def rm_node(_, pk, bl):
-                p = Path(self._get_user_data_dir()).parent / f"orb_{pk}"
-                if p.exists():
-                    shutil.rmtree(p.as_posix())
-                self.update_node_buttons()
-
             button = MDRaisedButton(
                 text=f"Open {pk[:5]}",
                 size_hint=[1, None],
@@ -107,7 +107,12 @@ class OrbConnectorApp(AppCommon):
         bl = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50))
         self.node_buttons.append(bl)
         ib = MDIconButton(
-            icon="delete-forever", on_release=partial(rm_node, pk=pk, bl=bl)
+            icon="delete-forever",
+            on_release=partial(
+                rm_node,
+                pk="0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47",
+                bl=bl,
+            ),
         )
         bl.add_widget(ib)
         bl.add_widget(button)
