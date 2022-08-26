@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 16:04:47
+# @Last Modified time: 2022-08-26 17:22:11
 
 import re
 import os
@@ -41,7 +41,7 @@ def deploy_ios(c, bump: bool = False):
 
 @task
 def release(c, minor=False, patch=False, hotfix=False):
-    if not "working tree clean" in c.run("git status").stdout:
+    if not hotfix or not "working tree clean" in c.run("git status").stdout:
         print("Working directory not clean")
         return
     if not hotfix:
