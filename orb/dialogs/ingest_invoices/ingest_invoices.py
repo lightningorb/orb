@@ -5,11 +5,6 @@
 # @Last Modified time: 2022-08-07 14:07:59
 
 from traceback import print_exc
-from threading import Thread
-
-from kivy.clock import Clock
-from kivy.clock import mainthread
-from kivy.core.clipboard import Clipboard
 from kivy.properties import ObjectProperty
 
 from orb.ln import Ln
@@ -34,6 +29,8 @@ class IngestInvoices(PopupDropShadow):
             self.ids.scroll_view.add_widget(Invoice(**inv.__data__))
 
     def update(self, *args):
+        from kivy.core.clipboard import Clipboard
+
         clip = Clipboard.paste()
         if clip:
             if clip.startswith("ln"):

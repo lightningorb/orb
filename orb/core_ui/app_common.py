@@ -34,6 +34,8 @@ class AppCommon(MDApp):
             defaultpath = defaultpath.replace("/", "//")
         elif platform == "macosx":
             defaultpath = f"{self._get_user_data_dir()}/%(appname)s.ini"
+        elif platform == 'linux':
+            defaultpath = f"{self._get_user_data_dir()}/%(appname)s.ini"
         path = os.path.expanduser(defaultpath) % {
             "appname": self.name,
             "appdir": self.directory,

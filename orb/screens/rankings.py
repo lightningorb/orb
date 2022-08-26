@@ -7,12 +7,9 @@
 from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.metrics import dp
-from kivy.core.clipboard import Clipboard
 from kivymd.uix.datatables import MDDataTable
 
 from orb.misc.utils import mobile
-from orb.logic.licensing import is_satoshi
-from orb.logic.licensing import is_digital_gold
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.misc.decorators import guarded
 
@@ -102,6 +99,7 @@ class Rankings(PopupDropShadow):
         dialog.bind(selected_path=do_export)
 
     def copy_pks(self):
+        from kivy.core.clipboard import Clipboard
         Clipboard.copy("\n".join(self.checked_pks))
         print(f"Copied {len(self.checked_pks)} pubkeys to clipboard")
 

@@ -9,13 +9,10 @@ from traceback import format_exc
 from kivy.app import App
 from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.screen import MDScreen
-from kivy.core.clipboard import Clipboard
 from kivy.properties import StringProperty
-from kivy.uix.spinner import SpinnerOption
 from kivymd.uix.floatlayout import MDFloatLayout
 
 from orb.ln import Ln
-from orb.misc.utils import pref
 from orb.misc.utils import mobile
 from orb.misc.decorators import guarded
 from orb.misc.sec_rsa import get_sec_keys
@@ -94,10 +91,12 @@ class ConnectionSettings(MDScreen):
 
     def copy_cert_encrypt_command(self):
         _, public_key = get_sec_keys()
+        from kivy.core.clipboard import Clipboard
         Clipboard.copy(self.get_cert_command(public_key))
 
     def copy_mac_encrypt_command(self):
         _, public_key = get_sec_keys()
+        from kivy.core.clipboard import Clipboard
         Clipboard.copy(self.get_mac_command(public_key))
 
     @guarded
