@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-17 03:11:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-19 05:13:50
+# @Last Modified time: 2022-08-27 05:29:24
 
 from traceback import format_exc
 from string import *
@@ -35,7 +35,7 @@ class ConsoleInput(CodeInput):
     def on_touch_down(self, touch):
         app = App.get_running_app()
         if self.collide_point(*touch.pos):
-            if app.menu_visible:
+            if app and hasattr(app, "menu_visible") and app.menu_visible:
                 return False
         return super(ConsoleInput, self).on_touch_down(touch)
 
