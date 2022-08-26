@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 14:04:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 04:50:01
+# @Last Modified time: 2022-08-26 15:27:00
 
 import sys
 
 sys.argv = [sys.argv[0]]
 from pathlib import Path
 
-from build_system.monkey_patch import fix_annotations
+from orb.misc.monkey_patch import fix_annotations
 
 fix_annotations()
 

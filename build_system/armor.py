@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-18 09:34:00
+# @Last Modified time: 2022-08-26 15:35:57
 
 try:
     # not all actions install all requirements
@@ -19,7 +19,8 @@ try:
     from botocore.exceptions import ClientError
     import rsa
     import arrow
-except:
+except Exception as e:
+    print(e)
     pass
 
 name = "lnorb"
@@ -32,6 +33,7 @@ data = [
     ("orb/audio/send_settle.wav", "orb/audio/"),
     ("orb/images/shadow_inverted.png", "orb/images/"),
     ("orb/misc/settings.json", "orb/misc/"),
+    ("orb/cli/faborb.py", "orb/cli/"),
     ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
     ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
     ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),

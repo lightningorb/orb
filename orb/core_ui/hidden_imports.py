@@ -2,8 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-06-28 15:44:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-20 10:00:44
+# @Last Modified time: 2022-08-26 15:27:24
 
+from orb.cli import faborb
+from orb.dialogs.swap_dialogs.deezy_swap import DeezySwapDialog
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget
 from orb.dialogs.close_channel.close_channel import LNDCloseChannel

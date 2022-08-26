@@ -3,7 +3,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-11 11:53:05
+# @Last Modified time: 2022-08-26 15:25:13
 
 import os
 import sys
@@ -33,6 +33,6 @@ else:
             sys.argv[1] = "-l"
 
     sys.argv.insert(1, "-c")
-    sys.argv.insert(2, "faborb")
+    sys.argv.insert(2, "orb/cli/faborb")
 
     sys.exit(program.run())
