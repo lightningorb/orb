@@ -55,8 +55,7 @@ def release(c, minor=False, patch=False, hotfix=False):
         if minor:
             versioning.bump_minor(c)
     if hotfix:
-        print("here?")
-        c.run("git commit -am 'release hotfix'")
+        c.run("git commit -am 'release hotfix'", warn=True)
     else:
         c.run("git commit -am 'version bump'")
     c.run("git push --set-upstream origin main")
