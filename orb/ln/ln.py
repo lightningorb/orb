@@ -218,5 +218,5 @@ def factory(pk: str) -> Ln:
         mac_secure=lnd_conf.get("ln", "macaroon_admin"),
         cert_secure=lnd_conf.get("ln", "tls_certificate", fallback=None),
         rest_port=lnd_conf.get("ln", "rest_port"),
-        grpc_port=10009,
+        grpc_port=lnd_conf.get("ln", "grpc_port"),
     )
