@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 09:09:46
+# @Last Modified time: 2022-08-26 14:58:40
 
 import re
 import os
@@ -217,7 +217,57 @@ def create(
     help=dict(
         hostname="IP address or DNS-resovable name for this host",
         node_type="cln or lnd",
+        protocol="rest or grpc",
+        network="mainnet / testnet / signet / regtest",
+        rest_port="REST port (default: 8080)",
+        grpc_port="GRPC port (default: 10009)",
+        use_node="Set this node as the default (default: True).",
+    )
+)
+def create_from_cert_files(
+    c,
+    hostname: str,
+    mac_file_path: str,
+    node_type: str,
+    protocol: str,
+    network: str,
+    cert_file_path: str = None,
+    rest_port: int = 8080,
+    grpc_port: int = 10009,
+    use_node: bool = True,
+):
+    """
+    Create node and use certificate files.
+    """
+    print(chalk().cyan(f"Reading mac: {mac_file_path}"))
+    cert_plain, mac_hex = "", ""
+    with open(mac_file_path, "rb") as f:
+        mac_hex = codecs.encode(f.read(), "hex")
+    if cert_file_path:
+        print(chalk().cyan(f"Reading cert: {cert_file_path}"))
+        with open(cert_file_path, "r") as f:
+            cert_plain = f.read()
+
+    create(
+        c,
+        hostname=hostname,
+        mac_hex=mac_hex,
+        node_type=node_type,
+        protocol=protocol,
+        network=network,
+        cert_plain=cert_plain,
+        rest_port=rest_port,
+        grpc_port=grpc_port,
+        use_node=use_node,
+    )
+
+
+@task(
+    help=dict(
+        hostname="IP address or DNS-resovable name for this host",
+        node_type="cln or lnd",
         use_node="Set this node as the default (Default: True).",
+        network="mainnet / testnet / signet / regtest",
         protocol="Connect via rest or grpc. (Default: rest).",
         rest_port="REST port (default: 8080)",
         grpc_port="GRPC port (default: 10009)",
@@ -235,6 +285,7 @@ def ssh_wizard(
     ssh_password: str = "",
     ln_cert_path: str = "",
     ln_macaroon_path: str = "",
+    network: str = "mainnet",
     protocol: str = "rest",
     rest_port: int = 8080,
     grpc_port: int = 10009,
@@ -285,50 +336,20 @@ def ssh_wizard(
             print(chalk().cyan(f"Encrypting: {tmp_ln_macaroon_path}"))
 
             with tmp_ln_macaroon_path.open("rb") as f:
-                mac_hex_data = codecs.encode(f.read(), "hex")
-                mac_secure = MacaroonSecure.init_from_plain(
-                    mac_hex_data
-                ).macaroon_secure.decode()
+                mac_hex = codecs.encode(f.read(), "hex")
             with tmp_ln_cert_path.open("r") as f:
-                cert_secure = CertificateSecure.init_from_plain(
-                    f.read()
-                ).cert_secure.decode()
+                cert_plain = f.read()
             from orb.ln import Ln
 
-            ln = Ln(
-                node_type=node_type,
-                fallback_to_mock=False,
-                cache=False,
-                use_prefs=False,
+            create(
+                c,
                 hostname=hostname,
+                mac_hex=mac_hex,
+                node_type=node_type,
                 protocol=protocol,
-                mac_secure=mac_secure,
-                cert_secure=cert_secure,
+                network=network,
+                cert_plain=cert_plain,
                 rest_port=rest_port,
                 grpc_port=grpc_port,
+                use_node=use_node,
             )
-            print(ln.get_info())
-            pubkey = ln.get_info().identity_pubkey
-            print(chalk().green(f"Connected to: {pubkey}"))
-            conf_dir = Path(_get_user_data_dir_static()) / f"orb_{pubkey}"
-            if not conf_dir.is_dir():
-                conf_dir.mkdir()
-                print(chalk().green(f"{conf_dir} created"))
-            conf_path = conf_dir / f"orb_{pubkey}.ini"
-            conf = ConfigParser()
-            conf.filename = conf_path.as_posix()
-            conf.add_section("host")
-            conf.set("host", "hostname", hostname)
-            conf.set("host", "type", node_type)
-            conf.add_section("ln")
-            conf.set("ln", "macaroon_admin", mac_secure)
-            conf.set("ln", "tls_certificate", cert_secure)
-            conf.set("ln", "network", "mainnet")
-            conf.set("ln", "protocol", protocol)
-            conf.set("ln", "rest_port", str(rest_port))
-            conf.set("ln", "grpc_port", str(grpc_port))
-            conf.set("ln", "identity_pubkey", pubkey)
-            conf.write(conf_path.open("w"))
-            print(chalk().green(f"{conf_path} created"))
-            if use_node:
-                use(c, pubkey)

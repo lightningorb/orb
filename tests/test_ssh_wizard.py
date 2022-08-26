@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-21 12:39:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-25 09:59:28
+# @Last Modified time: 2022-08-26 14:59:38
 
 from unittest import TestCase
 import unittest
@@ -25,6 +25,7 @@ class TestSSHWizard(TestCase):
             hostname="regtest.cln.lnorb.com",
             node_type="cln",
             ssh_cert_path="lnorb_com.cer",
+            network="regtest",
             rest_port="3001",
             protocol="rest",
             ln_cert_path="/home/ubuntu/dev/regtest-workbench/certificate.pem",
@@ -45,6 +46,7 @@ class TestSSHWizard(TestCase):
             node_type="lnd",
             ssh_cert_path="lnorb_com.cer",
             rest_port="8080",
+            network="signet",
             protocol="rest",
             ln_cert_path="/home/ubuntu/dev/plebnet-playground-docker/volumes/lnd_datadir/tls.cert",
             ln_macaroon_path="/home/ubuntu/dev/plebnet-playground-docker/admin.macaroon",
@@ -65,6 +67,7 @@ class TestSSHWizard(TestCase):
             ssh_cert_path="lnorb_com.cer",
             rest_port="10009",
             protocol="grpc",
+            network="signet",
             ln_cert_path="/home/ubuntu/dev/plebnet-playground-docker/volumes/lnd_datadir/tls.cert",
             ln_macaroon_path="/home/ubuntu/dev/plebnet-playground-docker/admin.macaroon",
         )
