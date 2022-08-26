@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-20 10:07:52
+# @Last Modified time: 2022-08-27 04:45:35
 
 import shutil
 from pathlib import Path
@@ -26,6 +26,7 @@ from orb.misc.utils import get_available_nodes
 from orb.misc.macaroon_secure import MacaroonSecure
 from orb.dialogs.restart_dialog import RestartDialog
 from orb.connector.orb_connector import OrbConnector
+from orb.misc.certificate_secure import CertificateSecure
 from orb.misc.conf_defaults import set_ln_defaults, set_host_defaults
 
 
@@ -43,16 +44,20 @@ class OrbConnectorApp(AppCommon):
     node_settings = {}
 
     def add_public_testnet_node(self, *args):
-        self.node_settings["host.hostname"] = "orb-public.t.voltageapp.io"
+        self.node_settings["host.hostname"] = "signet.lnd.lnorb.com"
+        self.node_settings["host.type"] = "lnd"
         self.node_settings["ln.macaroon_admin"] = MacaroonSecure.init_from_plain(
-            "0201036C6E640278030A102F2F33256E0173F3226178B99CC38AD01201301A0F0A07616464726573731204726561641A0C0A04696E666F1204726561641A0F0A076D6573736167651204726561641A100A086F6666636861696E1204726561641A0F0A076F6E636861696E1204726561641A0D0A05706565727312047265616400000620299220FACE39C4B66A6E0CC0B5EA88389CB52AD2E5302D4D69C0DE95E4150C1D".encode()
+            "0201036c6e6402f801030a106fb784f1598e0ce2f89c050b98139c8e1201301a160a0761646472657373120472656164120577726974651a130a04696e666f120472656164120577726974651a170a08696e766f69636573120472656164120577726974651a210a086d616361726f6f6e120867656e6572617465120472656164120577726974651a160a076d657373616765120472656164120577726974651a170a086f6666636861696e120472656164120577726974651a160a076f6e636861696e120472656164120577726974651a140a057065657273120472656164120577726974651a180a067369676e6572120867656e6572617465120472656164000006205d186c6864b437cd5d723eef6d064eae85467e7913f876a8b49bfe962028a2e8".encode()
         ).macaroon_secure.decode()
-        self.node_settings["ln.network"] = "testnet"
+        self.node_settings["ln.tls_certificate"] = CertificateSecure.init_from_plain(
+            "-----BEGIN CERTIFICATE-----\nMIICOjCCAeCgAwIBAgIQE3My2g1g5yRsD35v2/4qfDAKBggqhkjOPQQDAjA4MR8w\nHQYDVQQKExZsbmQgYXV0b2dlbmVyYXRlZCBjZXJ0MRUwEwYDVQQDEww4NjBiYTVj\nNTQ3NzAwHhcNMjIwODIwMjE1MDQ1WhcNMjMxMDE1MjE1MDQ1WjA4MR8wHQYDVQQK\nExZsbmQgYXV0b2dlbmVyYXRlZCBjZXJ0MRUwEwYDVQQDEww4NjBiYTVjNTQ3NzAw\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARRnSKy3uNVVrQXWhxEHoTXzwqCu4YC\ndSRDVqQyrJwR313Op0SChZZanZxigjFBKlapmQvNRy1IhNUxdkN2eTQ4o4HLMIHI\nMA4GA1UdDwEB/wQEAwICpDATBgNVHSUEDDAKBggrBgEFBQcDATAPBgNVHRMBAf8E\nBTADAQH/MB0GA1UdDgQWBBTu4yTg9J01l3rojEzSiDSd3RFwzzBxBgNVHREEajBo\nggw4NjBiYTVjNTQ3NzCCCWxvY2FsaG9zdIIUc2lnbmV0LmxuZC5sbm9yYi5jb22C\nBHVuaXiCCnVuaXhwYWNrZXSCB2J1ZmNvbm6HBH8AAAGHEAAAAAAAAAAAAAAAAAAA\nAAGHBKwWAAQwCgYIKoZIzj0EAwIDSAAwRQIgcwRSvTNqJPrV6xd+SFKZVg8AjIQw\njYcQ6dNQ0P9wTyECIQD4Vj3ac+b+35tVedYRX5sOJ7KWAEdHemwvl5OQS4Eg3w==\n-----END CERTIFICATE-----\n"
+        ).cert_secure.decode()
+        self.node_settings["ln.network"] = "signet"
         self.node_settings["ln.protocol"] = "rest"
         self.node_settings["ln.rest_port"] = "8080"
         self.node_settings[
             "ln.identity_pubkey"
-        ] = "03373b5287484d081153491f674c023164c2343954e2f56e4ae4b23e686d8cf07d"
+        ] = "0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47"
         RestartDialog(
             title="After exit, please restart Orb to launch new settings."
         ).open()
@@ -60,7 +65,6 @@ class OrbConnectorApp(AppCommon):
     @guarded
     def update_node_buttons(self):
         grid = self.screen.ids.sm.get_screen("main").ids.grid
-        has_nodes = False
         for b in self.node_buttons:
             grid.remove_widget(b)
         self.node_buttons = []
@@ -78,7 +82,6 @@ class OrbConnectorApp(AppCommon):
                     shutil.rmtree(p.as_posix())
                 self.update_node_buttons()
 
-            has_nodes = True
             button = MDRaisedButton(
                 text=f"Open {pk[:5]}",
                 size_hint=[1, None],
@@ -94,15 +97,21 @@ class OrbConnectorApp(AppCommon):
             bl.add_widget(button)
             self.node_buttons.append(bl)
             grid.add_widget(bl)
-        if not has_nodes:
-            button = MDRaisedButton(
-                text=f"Open orb-public (testnet)",
-                size_hint=[1, None],
-                height=dp(40),
-                md_bg_color=[79 / 255.0, 51 / 255.0, 95 / 255.0, 1],
-                on_release=self.add_public_testnet_node,
-            )
-            grid.add_widget(button)
+        button = MDRaisedButton(
+            text=f"Open orb-public (signet)",
+            size_hint=[1, None],
+            height=dp(40),
+            md_bg_color=[79 / 255.0, 51 / 255.0, 95 / 255.0, 1],
+            on_release=self.add_public_testnet_node,
+        )
+        bl = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50))
+        self.node_buttons.append(bl)
+        ib = MDIconButton(
+            icon="delete-forever", on_release=partial(rm_node, pk=pk, bl=bl)
+        )
+        bl.add_widget(ib)
+        bl.add_widget(button)
+        grid.add_widget(bl)
         filler = Widget()
         self.node_buttons.append(filler)
         grid.add_widget(filler)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:03:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-20 12:07:22
+# @Last Modified time: 2022-08-27 04:42:01
 
 import sys
 
@@ -65,6 +65,7 @@ def main():
     do_monkey_patching()
     from kivy.config import ConfigParser
 
+    use_crash_wrapper = False
     config = ConfigParser()
     os.makedirs(OrbConnectorApp()._get_user_data_dir(), exist_ok=True)
     config_path = Path(OrbConnectorApp()._get_user_data_dir()) / "orbconnector.ini"
@@ -98,8 +99,9 @@ def main():
     except Exception as e:
         print(e)
         print(format_exc())
-        text = str(e)
-        text += "\n"
-        text += format_exc()
-        app_crash_wrapper = OrbCrashWrapper(text)
-        app_crash_wrapper.run()
+        if use_crash_wrapper:
+            text = str(e)
+            text += "\n"
+            text += format_exc()
+            app_crash_wrapper = OrbCrashWrapper(text)
+            app_crash_wrapper.run()
