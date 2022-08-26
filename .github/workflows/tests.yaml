@@ -1,7 +1,7 @@
 name: tests
 on:
   push:
-    branches: [ dev ]
+    branches: [ dev, main ]
 jobs:
   test_linux:
     runs-on: ubuntu-20.04
