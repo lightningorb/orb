@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 15:35:57
+# @Last Modified time: 2022-08-26 18:47:31
 
 try:
     # not all actions install all requirements
@@ -99,7 +99,7 @@ pip3.9 install python-dateutil==2.8.2;
 pip3.9 install kivy_garden.graph==0.4.0;
 pip3.9 install PyYaml==6.0;
 pip3.9 install simplejson==3.17.6;
-pip3.9 install Kivy==2.0.0;
+pip3.9 install Kivy==2.1.0;
 pip3.9 install google-api-python-client;
 pip3.9 install grpcio
 pip3.9 install python-dateutil==2.8.2;
@@ -107,6 +107,8 @@ pip3.9 install pyinstaller==4.9;
 pip3.9 install pyarmor==6.6.2;
 pip3.9 install fabric;
 pip3.9 install plyer;
+pip3.9 install simple_chalk;
+pip3.9 install bech32;
 pip3.9 install semver;
 pip3.9 install memoization;
 pip3.9 install --force-reinstall --no-binary :all: cffi
