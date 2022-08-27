@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-27 13:05:47
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 16:19:44
+# @Last Modified time: 2022-08-27 17:45:49
 
 from fabric import Connection
 from invoke import task
@@ -57,7 +57,7 @@ def generate_cli_docs(c, namespace):
     """
     c = Connection("localhost")
     commands = c.local("./main.py --list", hide=True).stdout
-    with open("docs/source/commands.rst", "w") as wf:
+    with open("docs/source/cli.rst", "w") as wf:
         detailed = "ORB CLI\n========\n\n"
         detailed += blurb
         for cmd in namespace.task_names:

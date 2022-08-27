@@ -17,7 +17,7 @@ Orb
    lightning
    script_editor
    extending
-   commands
+   cli
 
 
 Indices and tables
