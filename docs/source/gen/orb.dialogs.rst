@@ -13,10 +13,12 @@ Subpackages
    :maxdepth: 4
 
    orb.dialogs.app_store
-   orb.dialogs.connection_wizard
+   orb.dialogs.close_channel
+   orb.dialogs.generate_invoice
    orb.dialogs.help_dialog
    orb.dialogs.highlighter_dialog
    orb.dialogs.ingest_invoices
+   orb.dialogs.open_channel
    orb.dialogs.pay_dialogs
    orb.dialogs.swap_dialogs
    orb.dialogs.umbrel_node
@@ -33,3 +35,4 @@ Submodules
    orb.dialogs.fee_distribution
    orb.dialogs.forwarding_history
    orb.dialogs.mail_dialog
+   orb.dialogs.restart_dialog

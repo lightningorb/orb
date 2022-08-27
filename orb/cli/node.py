@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 14:58:40
+# @Last Modified time: 2022-08-27 15:19:08
 
 import re
 import os
@@ -43,6 +43,22 @@ def delete(c, pubkey: str = ""):
 def list(c, show_info=False):
     """
     Get a list of nodes known to Orb.
+
+
+    >>> orb node.list
+
+    0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
+    02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
+
+    >>> orb node.list --show-info
+
+    Showing info for: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47:
+    alias: signet.lnd.lnorb.com
+    ...
+
+    Showing info for: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764:
+    alias: regtest.cln.lnorb.com
+    ...
     """
     data_dir = Path(_get_user_data_dir_static())
     for x in data_dir.glob("orb_*"):
@@ -63,6 +79,13 @@ def list(c, show_info=False):
 def info(c, pubkey: str = ""):
     """
     Get node information.
+
+    >>> orb node.info
+
+    alias: signet.lnd.lnorb.com
+    identity_pubkey: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
+    ...
+
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -103,12 +126,25 @@ def use(c, pubkey: str):
     help=dict(
         protocol="rest or grpc",
         node_type="lnd or cln",
-        use_node="Set this node as the default.",
+        use_node="Set this node as the default. (Default: True)",
     )
 )
 def create_orb_public(c, protocol: str, node_type: str, use_node: bool = True):
     """
     Create public testnet node.
+
+    >>> orb node.create-orb-public rest lnd
+
+    Encrypting mac
+    Encrypting cert
+    Connecting to: signet.lnd.lnorb.com
+    Connected to: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
+    orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47 created
+    orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47/orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47.ini created
+    Setting 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47 as default
+
+    >>> orb node.create-orb-public grpc lnd # Also valid
+    >>> orb node.create-orb-public rest cln # Also valid
     """
     from orb.misc.macaroon_secure import MacaroonSecure
 
@@ -164,6 +200,23 @@ def create(
 ):
     """
     Create node.
+
+    >>> orb node.create \
+        --hostname regtest.cln.lnorb.com \
+        --node-type cln \
+        --protocol rest \
+        --network regtest \
+        --rest-port 3001 \
+        --mac-hex ... \
+        --cert-plain ...
+
+    Encrypting mac
+    Encrypting cert
+    Connecting to: regtest.cln.lnorb.com
+    Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
+    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 created
+    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
+    Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
     """
 
     print(chalk().cyan(f"Encrypting mac"))
@@ -238,6 +291,26 @@ def create_from_cert_files(
 ):
     """
     Create node and use certificate files.
+
+    Create node.
+
+    >>> orb node.create-from-cert-files \
+        --hostname regtest.cln.lnorb.com \
+        --node-type cln \
+        --protocol rest \
+        --network regtest \
+        --rest-port 3001 \
+        --mac-file-path ... \
+        --cert-file-path ...
+
+    Encrypting mac
+    Encrypting cert
+    Connecting to: regtest.cln.lnorb.com
+    Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
+    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 created
+    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
+    Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
+
     """
     print(chalk().cyan(f"Reading mac: {mac_file_path}"))
     cert_plain, mac_hex = "", ""
@@ -275,6 +348,8 @@ def create_from_cert_files(
         ssh_password="SSH session password (if not using a pem certificate)",
         ssh_port="SSH session port to use, if not already specified in .ssh/config. (Default: 22).",
         ssh_user="SSH session user, if not already specified in .ssh/config. (Default: 22).",
+        ln_cert_path="The path of the cert file on the target host",
+        ln_macaroon_path="The path of the macaroon file on the target host",
     )
 )
 def ssh_wizard(
@@ -295,6 +370,31 @@ def ssh_wizard(
 ):
     """
     SSH into the node, and figure things out.
+
+    >>> orb node.ssh-wizard \
+        --hostname regtest.cln.lnorb.com \
+        --node-type cln \
+        --ssh-cert-path ... \
+        --network regtest \
+        --rest-port 3001 \
+        --protocol rest \
+        --ln-cert-path /home/ubuntu/dev/regtest-workbench/certificate.pem \
+        --ln-macaroon-path=/home/ubuntu/dev/regtest-workbench/access.macaroon 
+
+    ssh session connected!
+    OS:       Linux
+    Hostname: ip-172-31-36-137
+    Securely copying: /home/ubuntu/dev/regtest-workbench/certificate.pem
+    Securely copying: /home/ubuntu/dev/regtest-workbench/access.macaroon
+    Encrypting: /var/folders/6j/hb2nbc0x1hgfvkpy_kp72jpc0000gt/T/tmpmcuc9hju/certificate.pem
+    Encrypting: /var/folders/6j/hb2nbc0x1hgfvkpy_kp72jpc0000gt/T/tmpmcuc9hju/access.macaroon
+    Encrypting mac
+    Encrypting cert
+    Connecting to: regtest.cln.lnorb.com
+    Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
+    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
+    Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
+
     """
     connect_kwargs = {}
     if ssh_cert_path:

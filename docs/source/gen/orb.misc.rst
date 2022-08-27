@@ -20,7 +20,6 @@ Submodules
    orb.misc.colors
    orb.misc.conf_defaults
    orb.misc.decorators
-   orb.misc.decrypt
    orb.misc.enums
    orb.misc.fab_factory
    orb.misc.forex
@@ -28,6 +27,7 @@ Submodules
    orb.misc.lndconnect_url
    orb.misc.macaroon
    orb.misc.macaroon_secure
+   orb.misc.memory_debugger
    orb.misc.mempool
    orb.misc.monkey_patch
    orb.misc.output
@@ -35,3 +35,4 @@ Submodules
    orb.misc.plugin
    orb.misc.prefs
    orb.misc.utils
+   orb.misc.utils_no_kivy

@@ -13,4 +13,3 @@ Subpackages
    :maxdepth: 4
 
    orb.dialogs.help_dialog.about
-   orb.dialogs.help_dialog.release_notes

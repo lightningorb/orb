@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-07-26 13:08:32
+# @Last Modified time: 2022-08-27 13:31:48
 
 import os
 import zipfile
@@ -74,6 +74,9 @@ def build(c, env=os.environ):
                     )
                 )
     env["PYTHONPATH"] = "."
+    parent_dir = Path(__file__).parent
+    for p in (parent_dir / Path("third_party")).glob("*"):
+        env["PYTHONPATH"] += f":{p.as_posix()}"
     flags = (
         "--ext-autodoc --module-first --follow-links --ext-coverage --separate --force"
     )
