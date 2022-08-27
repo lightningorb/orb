@@ -2,36 +2,30 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 07:05:16
+# @Last Modified time: 2022-08-27 09:39:13
 
 import re
-from nose.tools import *
-from parameterized import parameterized_class
-from .cli_test_case import CLITestCase, get_params
+from .cli_test_case import CLITestCase
 from orb.cli import node
 from orb.cli import chain
 from orb.cli import invoice
 from orb.cli import peer
 
 
-"""
-Running all tests in this file:
-$ nosetests tests.test_cli
-Running cli_balance for cln rest only:
-$ nosetests tests.test_cli:TestCLI_2_cln_rest.test_cli_balance
-$ nosetests tests.test_cli:TestCLI_1_lnd_grpc.test_cli_send --nocapture
-$ nosetests tests.test_cli:TestCLI_2_cln_rest.test_cli_send --nocapture
-$ nosetests tests.test_cli:TestCLI_2_cln_rest.test_cli_send --nocapture
-"""
+def pytest_generate_tests(metafunc):
+    if "c" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "c", [("rest", "cln"), ("rest", "lnd"), ("grpc", "lnd")], indirect=True
+        )
 
 
-@parameterized_class(*get_params())
 class TestCLI(CLITestCase):
-    def test_cli_balance(self):
+    def test_cli_balance(self, c, capsys):
         if self.impl == "cln":
-            self.skipTest("Not Implemented")
-        out = self.c.run("env ORB_CLI_NO_COLOR=1 ./main.py node.balance").stdout
-        assert_true(int(out) > 1)
+            print("Not Implemented")
+            return
+        node.balance(c)
+        assert int(capsys.readouterr().out) > 1
 
     # def test_cli_rebalance(self):
     #     if self.impl == "cln":
@@ -48,40 +42,31 @@ class TestCLI(CLITestCase):
     #         )
     #     )
 
-    def test_cli_info(self):
-        node.info(self.c)
-        assert_true("num_peers" in self.stdout)
+    def test_cli_info(self, c, capsys):
+        node.info(c)
+        assert "num_peers" in capsys.readouterr().out
 
-    def test_cli_chain_deposit(self):
-        chain.deposit(self.c)
-        assert_true("deposit_address" in self.stdout)
+    def test_cli_chain_deposit(self, c, capsys):
+        chain.deposit(c)
+        assert "deposit_address" in capsys.readouterr().out
 
-    def test_cli_send(self):
-        chain.deposit(self.c)
-        deposit = self.get_stdout(flush=True)
+    def test_cli_send(self, c, capsys):
+        chain.deposit(c)
+        deposit = capsys.readouterr().out
         address = re.search(r"deposit_address\s+(.*)", deposit).group(1).strip()
-        chain.send(self.c, address=address, amount=1000, sat_per_vbyte=1)
-        send = self.get_stdout(flush=True)
-        self.stop_capture()
-        assert_true(any(x in send for x in ["txid", "error", "insufficient"]))
+        chain.send(c, address=address, amount=1000, sat_per_vbyte=1)
+        send = capsys.readouterr().out
+        assert any(x in send for x in ["txid", "error", "insufficient"])
 
-    def test_cli_invoice_generate(self):
-        invoice.generate(self.c)
-        assert_true("deposit_qr" in self.stdout)
+    def test_cli_invoice_generate(self, c, capsys):
+        invoice.generate(c)
+        assert "deposit_qr" in capsys.readouterr().out
 
-    def test_peer_list(self):
-        # nosetests tests.test_cli:TestCLI_1_lnd_grpc.test_peer_list --nocapture
-        # nosetests tests.test_cli:TestCLI_0_lnd_rest.test_peer_list --nocapture
-        # nosetests tests.test_cli:TestCLI_2_cln_rest.test_peer_list --nocapture
-        peer.list(self.c)
-        self.stop_capture()
-        peers = self.stdout.strip().split("\n")
+    def test_peer_list(self, c, capsys):
+        peer.list(c)
+        peers = capsys.readouterr().out.split("\n")
         num = 0
         for p in peers:
             if len(p.strip()) == 66:
                 num += 1
-        assert_true(num >= 2)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert num >= 2

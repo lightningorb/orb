@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-10 10:59:25
+# @Last Modified time: 2022-08-27 09:58:53
 
 import requests
 
@@ -25,7 +25,7 @@ def get_fees(which=None, use_prefs=True, network="mainnet"):
     True
     """
     # TODO: Should use an enum style class rather than strings.
-    lut = dict(testnet="testnet/", signet="signet/", mainnet="")
+    lut = dict(testnet="testnet/", signet="signet/", regtest="regtest/", mainnet="")
     if use_prefs:
         from orb.misc.utils_no_kivy import pref
 

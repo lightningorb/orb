@@ -17,7 +17,7 @@ def fees(c):
     """
     from orb.misc.mempool import get_fees
 
-    fees = get_fees(use_prefs=True, network="mainnet")
+    fees = get_fees(use_prefs=False, network="mainnet")
     for k, v in fees.items():
         print(f"{chalk().green(k):<25}: {chalk().blueBright(v):<3} sat/vbyte")
 

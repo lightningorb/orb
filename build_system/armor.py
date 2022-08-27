@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 18:47:31
+# @Last Modified time: 2022-08-27 11:57:18
 
 try:
     # not all actions install all requirements
@@ -45,6 +45,7 @@ data = [
     ("orb/apps/auto_max_htlcs/update_max_htlc.py", "orb/apps/auto_max_htlcs/"),
     ("orb/apps/auto_max_htlcs/update_max_htlcs.png", "orb/apps/auto_max_htlcs/"),
     ("orb/apps/auto_max_htlcs/appinfo.yaml", "orb/apps/auto_max_htlcs/"),
+    ("tests", "tests"),
     ("VERSION", "."),
     ("images/ln.png", "images/"),
 ]
@@ -111,6 +112,7 @@ pip3.9 install simple_chalk;
 pip3.9 install bech32;
 pip3.9 install semver;
 pip3.9 install memoization;
+pip3.9 install pytest;
 pip3.9 install --force-reinstall --no-binary :all: cffi
 pip3.9 install --upgrade --force-reinstall pillow
     """
@@ -209,6 +211,8 @@ def build_windows(c, env=os.environ):
     #     print(p)
     #     print(p.open().read())
     # shutil.copyfile(p.as_posix(), "dist")
+    with c.cd("dist/lnorb"):
+        c.run("lnorb.exe test.run-all-tests")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")

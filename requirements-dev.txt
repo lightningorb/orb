@@ -9,10 +9,8 @@ karma-sphinx-theme
 boto3
 rsa
 gitpython
-nose
+pytest
 jaraco.text
-parameterized
-coverage
 
 # site
 

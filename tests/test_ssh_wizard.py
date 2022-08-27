@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-08-21 12:39:49
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 14:59:38
+# @Last Modified time: 2022-08-27 11:14:28
 
+import os
 from unittest import TestCase
-import unittest
 from fabric import Connection
 from invoke.context import Context
 
-from build_system.monkey_patch import fix_annotations
+from orb.misc.monkey_patch import fix_annotations
 from orb.ln import factory
 
 fix_annotations()
@@ -19,6 +19,9 @@ from orb.cli.utils import get_default_id
 
 class TestSSHWizard(TestCase):
     def test_cli_cln_ssh_wizard(self):
+        if not os.path.exists("lnorb_com.cer"):
+            print("SSH certificate missing - skipping test")
+            return
         self.c = Context(Connection("localhost").config)
         node.ssh_wizard(
             self.c,
@@ -39,6 +42,9 @@ class TestSSHWizard(TestCase):
         node.delete(self.c, pubkey=pk)
 
     def test_cli_lnd_rest_ssh_wizard(self):
+        if not os.path.exists("lnorb_com.cer"):
+            print("SSH certificate missing - skipping test")
+            return
         self.c = Context(Connection("localhost").config)
         node.ssh_wizard(
             self.c,
@@ -59,6 +65,9 @@ class TestSSHWizard(TestCase):
         node.delete(self.c, pubkey=pk)
 
     def test_cli_lnd_grpc_ssh_wizard(self):
+        if not os.path.exists("lnorb_com.cer"):
+            print("SSH certificate missing - skipping test")
+            return
         self.c = Context(Connection("localhost").config)
         node.ssh_wizard(
             self.c,
@@ -76,7 +85,3 @@ class TestSSHWizard(TestCase):
         info = ln.get_info()
         self.assertTrue(info.alias in ["signet.lnd.lnorb.conf", "signet.lnd.lnorb.com"])
         node.delete(self.c, pubkey=pk)
-
-
-if __name__ == "__main__":
-    unittest.main()

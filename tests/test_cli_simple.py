@@ -2,28 +2,26 @@
 # @Author: lnorb.com
 # @Date:   2022-08-12 08:20:45
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-22 11:45:41
+# @Last Modified time: 2022-08-27 10:06:52
 
-from nose.tools import *
-from parameterized import parameterized_class
-from .cli_test_case import names, CLITestCase
+from .cli_test_case import CLITestCase
 from orb.cli import invoice
 from orb.cli import chain
 
-"""
-These tests do not vary based on implementation or protocol.
 
-Running all tests in this file:
+def pytest_generate_tests(metafunc):
+    if "c" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "c", [("rest", "cln"), ("rest", "lnd"), ("grpc", "lnd")], indirect=True
+        )
 
-$ nosetests tests.test_cli_simple
-"""
 
-
-@parameterized_class(*[names, (("lnd_rest", "rest", "lnd"),)])
 class TestCLISimple(CLITestCase):
-    def test_cli_chain_fees(self):
-        chain.fees(self.c)
-        assert_true("fastestFee" in self.stdout)
+    def test_cli_chain_fees(self, c, capsys):
+        chain.fees(c)
+        out = capsys.readouterr().out
+        print(out)
+        assert "fastestFee" in out
 
     # def test_cli_lnurl_generate(self):
     #     invoice.lnurl_generate(
@@ -34,7 +32,3 @@ class TestCLISimple(CLITestCase):
     #         url="LNURL1DP68GURN8GHJ7AMPD3KX2AR0VEEKZAR0WD5XJTNRDAKJ7TNHV4KXCTTTDEHHWM30D3H82UNVWQHHVCTVD9J8QCTJV4H8GV3CMHGV0A",
     #         wait=False,
     #     )
-
-
-if __name__ == "__main__":
-    unittest.main()

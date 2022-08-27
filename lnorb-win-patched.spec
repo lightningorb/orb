@@ -25,6 +25,7 @@ a = Analysis(
         ("orb/audio/send_settle.wav", "orb/audio/"),
         ("orb/cli/faborb.py", "orb/cli/"),
         ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
+        ("tests", "tests"),
         ("orb/images/shadow_inverted.png", "orb/images/"),
         ("orb/misc/settings.json", "orb/misc/"),
         ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),

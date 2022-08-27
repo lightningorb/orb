@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 14:04:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 15:27:00
+# @Last Modified time: 2022-08-27 07:10:27
 
 import sys
 
@@ -16,11 +16,11 @@ fix_annotations()
 from orb.cli import chain
 from orb.cli import node
 from orb.cli import invoice
-from orb.cli import tests
 from orb.cli import pay
 from orb.cli import rebalance
 from orb.cli import channel
 from orb.cli import peer
+from orb.cli import test
 
 from invoke import Collection
 
@@ -29,4 +29,4 @@ for p in (parent_dir / Path("third_party")).glob("*"):
     sys.path.append(p.as_posix())
 
 
-namespace = Collection(chain, node, invoice, tests, pay, rebalance, channel, peer)
+namespace = Collection(chain, node, invoice, pay, rebalance, channel, peer, test)
