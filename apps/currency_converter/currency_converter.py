@@ -2,13 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-02-01 12:59:05
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-01 13:56:44
+# @Last Modified time: 2022-08-28 03:27:22
 
 from pathlib import Path
 from threading import Thread
 from traceback import format_exc
 
 from kivy.lang import Builder
+from kivy.clock import mainthread
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
@@ -26,31 +27,33 @@ b = BtcConverter()
 
 class Content(BoxLayout):
     def convert(self):
+        @mainthread
+        def update(val):
+            self.ids._result.text = val
+
         def func():
             try:
-                self.ids._result.text = "Getting rates..."
+                update("Getting rates...")
                 _from = self.ids._from.text
                 _to = self.ids._to.text
                 _amount = float(self.ids._amount.text)
                 if len(_from) == len(_to) == 3:
                     if _from == "BTC":
                         rate = float(b.get_latest_price(_to))
-                        self.ids._result.text = f"{round(rate * _amount, 2):_}"
+                        update(f"{round(rate * _amount, 2):_}")
                     elif _to == "BTC":
                         rate = float(b.get_latest_price(_from))
-                        self.ids._result.text = f"{round(_amount / rate, 8):_}"
+                        update(f"{round(_amount / rate, 8):_}")
                     elif _from == "SAT":
                         rate = float(b.get_latest_price(_to))
-                        self.ids._result.text = f"{round(rate * _amount / 1e8, 2):_}"
+                        update(f"{round(rate * _amount / 1e8, 2):_}")
                     elif _to == "SAT":
                         rate = float(b.get_latest_price(_from))
-                        self.ids._result.text = f"{int(_amount / rate * 1e8):_}"
+                        update(f"{int(_amount / rate * 1e8):_}")
                     else:
-                        self.ids._result.text = (
-                            f"{round(c.convert(_from, _to, _amount), 2):_}"
-                        )
+                        update(f"{round(c.convert(_from, _to, _amount), 2):_}")
             except:
-                self.ids._result.text = "..."
+                update("...")
                 print(format_exc())
 
         Thread(target=func).start()
