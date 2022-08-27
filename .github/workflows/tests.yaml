@@ -12,5 +12,4 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: pip install fabric nose
-      - run: source third_party/load_env.sh && nosetests --with-coverage --cover-inclusive --cover-html --cover-html-dir=coverage --cover-erase --cover-package orb --with-doctest tests/
+      - run: pytest tests/
