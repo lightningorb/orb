@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-22 06:35:53
+# @Last Modified time: 2022-08-28 03:09:17
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -404,12 +404,14 @@ class LndREST(LndBase):
 
     def close_channel(self, channel_point: str, force: bool, sat_per_vbyte: int):
         tx, output = channel_point.split(":")
+        sat_per_vbyte = int(sat_per_vbyte)
+        assert sat_per_vbyte >= 1
         url = f"{self.fqdn}/v1/channels/{tx}/{output}"
         query = ""
         if force:
             query = f"force={int(force)}"
         else:
-            query = f"sat_per_vbyte={int(force)}"
+            query = f"sat_per_vbyte={sat_per_vbyte}"
         url += f"?{query}"
         print(url)
         r = requests.delete(
