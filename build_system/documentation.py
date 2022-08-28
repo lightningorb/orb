@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 14:10:42
+# @Last Modified time: 2022-08-28 15:05:11
 
 import os
 import zipfile
@@ -32,8 +32,12 @@ def clean(c):
 @task
 def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer-cli", env=env)
-    out = c.run("PYTHONPATH=. typer main.py utils docs", env=env).stdout
+    out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
+    with open("docs/source/cli.rst.template") as f:
+        template = f.read()
     with open("docs/source/cli.md", "w") as f:
+        f.write(template)
+        f.write("\n")
         f.write(out)
     c.run(
         "which pandoc",
