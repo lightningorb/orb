@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 13:57:19
+# @Last Modified time: 2022-08-28 14:07:07
 
 import os
 import zipfile
@@ -36,7 +36,13 @@ def build_cli_docs(c, env=os.environ):
     with open("docs/source/cli.md", "w") as f:
         f.write(out)
     c.run(
-        "pandoc docs/source/cli.md --from markdown --to rst -s -o readme.rst docs/source/cli.rst"
+        "which pandoc",
+        env=env,
+    )
+    c.run("/usr/bin/pandoc --help", env=env)
+    c.run(
+        "/usr/bin/pandoc docs/source/cli.md --from markdown --to rst -s -o readme.rst docs/source/cli.rst",
+        env=env,
     )
     c.run("pip3 uninstall --yes typer-cli", env=env)
     c.run("pip3 uninstall --yes typer[all]", env=env)
