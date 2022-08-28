@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-27 06:44:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 07:20:24
+# @Last Modified time: 2022-08-28 12:22:33
 
 from invoke import task
 
@@ -20,4 +20,5 @@ def run_all_tests():
     import pytest
 
     os.environ["ORB_INTEGRATION_TESTS"] = "1"
-    pytest.main(["--doctest-modules", "orb/math", "orb/misc", "tests"])
+    # pytest.main(["--doctest-modules", "orb/math", "orb/misc", "tests"])
+    pytest.main(["tests"])
