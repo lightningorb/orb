@@ -3,6 +3,8 @@ Orb CLI
 
 You should familiarise yourself with the Orb CLI (command line interface) as it enables you to perform some operations a lot more quickly than via the GUI (graphical user interface).
 
+.. asciinema:: /_static/orb-cli-demo.cast
+
 Locating the executable in a terminal
 .....................................
 
@@ -35,7 +37,6 @@ Connecting to Orb's public nodes
 
 LND
 ~~~
-
 
 To connect to LND via REST:
 
@@ -104,7 +105,7 @@ Arguments come after a sub-command, and do not require to be preceded by two das
 CLI changes
 ...........
 
-Deciding on how to group commands and sub-commands, and what should be an argument vs. an option etc. are hard design decisions, thus expect argument / option names, order etc. to change quite a lot until for as long as Orb remains in v0.x.x.
+Deciding on how to group commands and sub-commands, and what should be an argument vs. an option etc. are hard design decisions, thus expect argument / option names, order etc. to change quite a lot for as long as Orb remains in v0.x.x.
 
 Once Orb reaches v1, the API and CLI will become stable, and if there are breaking changes then Orb's major version will be incremented (to v2, v3 etc.).
 
@@ -139,7 +140,7 @@ Getting help on sub-commands
 CLI reference
 -------------
 
-Now that are a bit more familiar with Orb's CLI, here's the full command reference.
+Now that are you are a bit more familiar with Orb's CLI, here's the full command reference.
 
 ``orb``
 =======
@@ -579,11 +580,7 @@ Pay Ingested Invoices
 
 .. code:: console
 
-    $ orb pay invoices [OPTIONS] C
-
-**Arguments**:
-
--  ``C``: [required]
+    $ orb pay invoices [OPTIONS]
 
 **Options**:
 
@@ -605,11 +602,10 @@ Generate bolt11 invoices from LNURL, and pay them.
 
 .. code:: console
 
-    $ orb pay lnurl [OPTIONS] C URL
+    $ orb pay lnurl [OPTIONS] URL
 
 **Arguments**:
 
--  ``C``: [required]
 -  ``URL``: [required]
 
 **Options**:

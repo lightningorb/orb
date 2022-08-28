@@ -396,12 +396,8 @@ Pay Ingested Invoices
 **Usage**:
 
 ```console
-$ orb pay invoices [OPTIONS] C
+$ orb pay invoices [OPTIONS]
 ```
-
-**Arguments**:
-
-* `C`: [required]
 
 **Options**:
 
@@ -420,12 +416,11 @@ Generate bolt11 invoices from LNURL, and pay them.
 **Usage**:
 
 ```console
-$ orb pay lnurl [OPTIONS] C URL
+$ orb pay lnurl [OPTIONS] URL
 ```
 
 **Arguments**:
 
-* `C`: [required]
 * `URL`: [required]
 
 **Options**:

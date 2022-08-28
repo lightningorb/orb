@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 14:13:29
+# @Last Modified time: 2022-08-28 18:18:00
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -49,7 +49,16 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.coverage",
+    "sphinxcontrib.asciinema",
 ]
+
+sphinxcontrib_asciinema_defaults = {
+    "theme": "asciinema",
+    "loop": 1,
+    "preload": 1,
+    "autoplay": 1,
+    "font-size": "15px",
+}
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -60,6 +69,7 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# html_extra_path = ["static"]
 
 # -- Options for HTML output -------------------------------------------------
 
