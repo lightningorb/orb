@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 04:32:48
+# @Last Modified time: 2022-08-28 15:22:25
 
 from invoke import task
 
@@ -15,10 +15,9 @@ import typer
 
 app = typer.Typer()
 
-# @task()
+
 @app.command()
 def invoices(
-    c,
     chan_id: str = None,
     max_paths: int = 10_000,
     fee_rate: int = 500,
@@ -57,7 +56,6 @@ def invoices(
 # )
 @app.command()
 def lnurl(
-    c,
     url: str,
     total_amount_sat: int = 100_000_000,
     chunks: int = 100,

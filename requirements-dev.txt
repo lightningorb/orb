@@ -6,6 +6,7 @@ requests
 gitpython
 sphinx
 karma-sphinx-theme
+sphinxcontrib.asciinema
 boto3
 rsa
 gitpython
