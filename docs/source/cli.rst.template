@@ -32,6 +32,19 @@ Linux:
 
     In a future release of Orb, expect the executable to be named `orb`. Until then, mentally substitute `orb` with the correct executable name. In Linux and OSX, create an `Alias <https://www.tecmint.com/create-alias-in-linux/>`_. In Windows add your install directory to the `PATH <https://stackoverflow.com/questions/44272416/how-to-add-a-folder-to-path-environment-variable-in-windows-10-with-screensho>`_.
 
+
+Running tests
+.............
+
+Orb comes with its pytest suite included, so that the build system can test the binary before making it available to the public, and so that users can test the build on their setup, too.
+
+The test are safe to run: if you have existing nodes setup, the tests will not touch them; they'll only use alter the public nodes.
+
+.. code:: bash
+
+   $ orb test run-all-tests
+
+
 Connecting to Orb's public nodes
 ................................
 
