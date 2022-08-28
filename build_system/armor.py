@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 09:17:22
+# @Last Modified time: 2022-08-28 09:53:11
 
 try:
     # not all actions install all requirements
@@ -175,7 +175,7 @@ def build_linux(c, do_upload=True, env=os.environ):
         for source, target in data:
             c.run(f"mkdir -p orb/{target}")
             c.run(f"cp -r ../{source} orb/{target}")
-        with c.cd("dist/lnorb"):
+        with c.cd("orb"):
             c.run("python main.py test run-all-tests")
 
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
@@ -198,7 +198,7 @@ def build_osx(c, do_upload=True, env=os.environ):
     build_common(c=c, env=env, sep=":")
     file_name = dmg(c=c, env=env)
     with c.cd("dist/lnorb"):
-        c.run("lnorb test run-all-tests")
+        c.run("./lnorb test run-all-tests")
     if do_upload:
         print(f"Uploading {file_name} to S3: customer_builds/{file_name}")
         upload_to_s3(
