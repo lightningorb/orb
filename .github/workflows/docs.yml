@@ -13,6 +13,8 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip'
+      - run: apt-get install pandoc -y
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: python ./build.py documentation.build-cli-docs
       - run: python ./build.py documentation.build
       - run: python ./build.py documentation.upload
