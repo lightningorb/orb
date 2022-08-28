@@ -23,7 +23,6 @@ a = Analysis(
         ("orb/audio/link_fail_event.wav", "orb/audio/"),
         ("orb/audio/forward_settle.wav", "orb/audio/"),
         ("orb/audio/send_settle.wav", "orb/audio/"),
-        ("orb/cli/faborb.py", "orb/cli/"),
         ("orb/lnd/grpc_generated", "orb/lnd/grpc_generated"),
         ("tests", "tests"),
         ("orb/images/shadow_inverted.png", "orb/images/"),

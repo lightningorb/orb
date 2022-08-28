@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 11:57:18
+# @Last Modified time: 2022-08-28 09:00:41
 
 try:
     # not all actions install all requirements
@@ -33,7 +33,6 @@ data = [
     ("orb/audio/send_settle.wav", "orb/audio/"),
     ("orb/images/shadow_inverted.png", "orb/images/"),
     ("orb/misc/settings.json", "orb/misc/"),
-    ("orb/cli/faborb.py", "orb/cli/"),
     ("orb/apps/auto_fees/autofees.py", "orb/apps/auto_fees/"),
     ("orb/apps/auto_fees/autofees.kv", "orb/apps/auto_fees/"),
     ("orb/apps/auto_fees/autofees.png", "orb/apps/auto_fees/"),
