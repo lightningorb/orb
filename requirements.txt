@@ -23,7 +23,7 @@ grpcio
 pyarmor==6.6.2
 fabric
 semver
-typer
+typer[all]
 
 
 
