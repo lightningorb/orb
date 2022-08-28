@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 08:03:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-14 11:34:57
+# @Last Modified time: 2022-08-28 04:32:46
 
 
 from .chalk import chalk
@@ -15,7 +15,12 @@ from orb.ln import factory
 from orb.app import App
 
 
-@task()
+import typer
+
+app = typer.Typer()
+
+
+@app.command()
 def rebalance(
     c,
     amount: int = 1_000,

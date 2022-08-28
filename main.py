@@ -3,7 +3,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-26 15:25:13
+# @Last Modified time: 2022-08-28 08:26:25
 
 import os
 import sys
@@ -26,13 +26,24 @@ if len(sys.argv) == 1:
     main()
 else:
 
-    from fabric.main import program
+    import typer
 
-    if len(sys.argv) == 2:
-        if sys.argv[1] in ["-h", "--help"]:
-            sys.argv[1] = "-l"
+    from orb.cli import node
+    from orb.cli import invoice
+    from orb.cli import rebalance
+    from orb.cli import peer
+    from orb.cli import pay
+    from orb.cli import channel
+    from orb.cli import test
 
-    sys.argv.insert(1, "-c")
-    sys.argv.insert(2, "orb/cli/faborb")
+    app = typer.Typer()
+    app.add_typer(node.app, name="node")
+    app.add_typer(invoice.app, name="invoice")
+    app.add_typer(rebalance.app, name="rebalance")
+    app.add_typer(pay.app, name="pay")
+    app.add_typer(channel.app, name="channel")
+    app.add_typer(test.app, name="test")
+    app.add_typer(peer.app, name="peer")
 
-    sys.exit(program.run())
+    if __name__ == "__main__":
+        app()

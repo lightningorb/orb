@@ -2,13 +2,17 @@
 # @Author: lnorb.com
 # @Date:   2022-08-27 06:44:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 12:37:41
+# @Last Modified time: 2022-08-28 07:20:24
 
 from invoke import task
 
+import typer
 
-@task
-def run_all_tests(c):
+app = typer.Typer()
+
+
+@app.command()
+def run_all_tests():
     """
     Run all tests.
     """

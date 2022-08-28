@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-12 08:20:45
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 10:06:52
+# @Last Modified time: 2022-08-28 06:20:11
 
 from .cli_test_case import CLITestCase
 from orb.cli import invoice
@@ -10,18 +10,20 @@ from orb.cli import chain
 
 
 def pytest_generate_tests(metafunc):
-    if "c" in metafunc.fixturenames:
+    if "pubkey" in metafunc.fixturenames:
         metafunc.parametrize(
-            "c", [("rest", "cln"), ("rest", "lnd"), ("grpc", "lnd")], indirect=True
+            "pubkey", [("cln", "rest"), ("lnd", "rest"), ("lnd", "grpc")], indirect=True
         )
 
 
 class TestCLISimple(CLITestCase):
-    def test_cli_chain_fees(self, c, capsys):
-        chain.fees(c)
+    def test_cli_chain_fees(self, pubkey, capsys):
+        chain.fees()
         out = capsys.readouterr().out
-        print(out)
         assert "fastestFee" in out
+
+    def test_cli_call_bin(self):
+        pass
 
     # def test_cli_lnurl_generate(self):
     #     invoice.lnurl_generate(

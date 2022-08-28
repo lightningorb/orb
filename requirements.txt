@@ -20,10 +20,10 @@ simple_chalk
 Kivy==2.1.0
 google-api-python-client
 grpcio
-#ffpyplayer==4.2.0
 pyarmor==6.6.2
 fabric
 semver
+typer
 
 
 

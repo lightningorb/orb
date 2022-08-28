@@ -2,19 +2,19 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:04:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 15:50:23
+# @Last Modified time: 2022-08-28 04:33:15
 
 from .chalk import chalk
-from invoke import task
 from orb.cli.utils import get_default_id
 from orb.ln import factory
-from orb.misc.monkey_patch import fix_annotations
 
-fix_annotations()
+import typer
+
+app = typer.Typer()
 
 
-@task
-def fees(c):
+@app.command()
+def fees():
     """
     Get mempool chain fees. Currently these are the fees from
     mempool.space
@@ -34,8 +34,8 @@ def fees(c):
         print(f"{chalk().green(k):<25}: {chalk().blueBright(v):<3} sat/vbyte")
 
 
-@task
-def deposit(c, pubkey: str = ""):
+@app.command()
+def deposit(pubkey: str = ""):
     """
     Get an on-chain address to deposit BTC.
 
@@ -65,16 +65,16 @@ def deposit(c, pubkey: str = ""):
     f.seek(0)
     print(f.read())
 
+    # help=dict(
+    #     address="The destination address",
+    #     pubkey="The node pubkey from which to send coins",
+    #     amount="The amount to send in satoshis (for CLN this can be 'all')",
+    #     sat_per_vbyte="Sats per vB (for CLN this can be slow, normal, urgent, or None)",
+    # )
 
-@task(
-    help=dict(
-        address="The destination address",
-        pubkey="The node pubkey from which to send coins",
-        amount="The amount to send in satoshis (for CLN this can be 'all')",
-        sat_per_vbyte="Sats per vB (for CLN this can be slow, normal, urgent, or None)",
-    )
-)
-def send(c, address: str, amount: int, sat_per_vbyte: int, pubkey: str = ""):
+
+@app.command()
+def send(address: str, amount: int, sat_per_vbyte: int, pubkey: str = ""):
     """
     Send coins on-chain.
 

@@ -5,7 +5,6 @@
 # @Last Modified time: 2022-08-27 11:07:00
 
 from orb.lnd import lnd_conf
-from orb.cli import faborb
 from orb.dialogs.swap_dialogs.deezy_swap import DeezySwapDialog
 from orb.attribute_editor.attribute_editor import AttributeEditor
 from orb.channels.channels_widget import ChannelsWidget

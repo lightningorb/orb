@@ -2,25 +2,28 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:36:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 08:25:40
+# @Last Modified time: 2022-08-28 04:33:14
 
 from invoke import task
 from .chalk import chalk
 from orb.ln import factory
 from orb.cli.utils import get_default_id
 from orb.app import App
+import typer
+
+app = typer.Typer()
 
 
-@task(
-    help=dict(
-        pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
-        peer_pubkey="The Pubkey of the peer you wish to open to",
-        amount_sats="The size of the channel in sats",
-        sat_per_vbyte="The fee to use in sats per vbytes",
-    )
-)
+# @task(
+#     help=dict(
+#         pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
+#         peer_pubkey="The Pubkey of the peer you wish to open to",
+#         amount_sats="The size of the channel in sats",
+#         sat_per_vbyte="The fee to use in sats per vbytes",
+#     )
+# )
+@app.command()
 def open(
-    c,
     peer_pubkey: str,
     amount_sats: int,
     sat_per_vbyte: int,

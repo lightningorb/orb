@@ -2,11 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 15:19:08
+# @Last Modified time: 2022-08-28 05:49:49
 
 import re
 import os
 import codecs
+from pathlib import Path
+from typing import Optional
 from tempfile import TemporaryDirectory
 from pathlib import Path
 from orb.misc.utils_no_kivy import _get_user_data_dir_static
@@ -18,17 +20,27 @@ from orb.ln import Ln
 
 from orb.ln import factory
 from configparser import ConfigParser
-from invoke import task
 from .chalk import chalk
 
+import typer
 
-@task()
-def delete(c, pubkey: str = ""):
+app = typer.Typer(help="Commands to perform operations on nodes.")
+
+
+@app.command()
+def delete(
+    pubkey: Optional[str] = typer.Argument(
+        None, help="The pubkey of the node. If not provided, use the default node."
+    )
+):
     """
     Delete node information.
     """
     if not pubkey:
         pubkey = get_default_id()
+    if not pubkey:
+        print("No node pubkey provided. Quitting.")
+        return
     conf_path = Path(_get_user_data_dir_static()) / f"orb_{pubkey}"
     if conf_path.exists():
         from shutil import rmtree
@@ -39,26 +51,14 @@ def delete(c, pubkey: str = ""):
         print(chalk().red(f"{conf_path} does not exist"))
 
 
-@task(help=dict(show_info="If True, then connect and return node information"))
-def list(c, show_info=False):
+@app.command()
+def list(
+    show_info: bool = typer.Option(
+        help="If True, then connect and print node information", default=False
+    )
+):
     """
     Get a list of nodes known to Orb.
-
-
-    >>> orb node.list
-
-    0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
-    02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-
-    >>> orb node.list --show-info
-
-    Showing info for: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47:
-    alias: signet.lnd.lnorb.com
-    ...
-
-    Showing info for: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764:
-    alias: regtest.cln.lnorb.com
-    ...
     """
     data_dir = Path(_get_user_data_dir_static())
     for x in data_dir.glob("orb_*"):
@@ -68,24 +68,21 @@ def list(c, show_info=False):
             if show_info:
                 print(f"Showing info for: {chalk().greenBright(pk)}:")
                 try:
-                    info(c, pk)
+                    info(pk)
                 except:
                     print(f"Failed to get info for: {chalk().red(pk)}:")
             else:
                 print(chalk().green(pk))
 
 
-@task(help=dict(pubkey="The Pubkey to use as the default pubkey for all Orb commands"))
-def info(c, pubkey: str = ""):
+@app.command()
+def info(
+    pubkey: Optional[str] = typer.Argument(
+        None, help="The pubkey of the node. If not provided, use the default node."
+    )
+):
     """
     Get node information.
-
-    >>> orb node.info
-
-    alias: signet.lnd.lnorb.com
-    identity_pubkey: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
-    ...
-
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -93,10 +90,16 @@ def info(c, pubkey: str = ""):
         print(f"{chalk().greenBright(k)}: {chalk().blueBright(v)}")
 
 
-@task
-def balance(c, pubkey: str = ""):
+@app.command()
+def balance(
+    pubkey: Optional[str] = typer.Argument(
+        None, help="The pubkey of the node. If not provided, use the default node."
+    )
+):
     """
     Get total balance, for both on-chain and balance in channels.
+
+    WIP: this is not yet implemented for CLN.
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -105,8 +108,8 @@ def balance(c, pubkey: str = ""):
     print(chalk().green(f"{bal(factory(pubkey)):_}"))
 
 
-@task(help=dict(pubkey="The Pubkey to use as the default pubkey for all Orb commands"))
-def use(c, pubkey: str):
+@app.command()
+def use(pubkey: str = typer.Argument(None, help="The pubkey of the node.")):
     """
     Use the given node as default.
     """
@@ -122,29 +125,14 @@ def use(c, pubkey: str):
     print(chalk().green(f"Setting {pubkey} as default"))
 
 
-@task(
-    help=dict(
-        protocol="rest or grpc",
-        node_type="lnd or cln",
-        use_node="Set this node as the default. (Default: True)",
-    )
-)
-def create_orb_public(c, protocol: str, node_type: str, use_node: bool = True):
+@app.command()
+def create_orb_public(
+    node_type: str = typer.Argument(..., help="lnd or cln."),
+    protocol: str = typer.Argument(..., help="rest or grpc."),
+    use_node: bool = typer.Option(help="Set this node as the default.", default=True),
+):
     """
     Create public testnet node.
-
-    >>> orb node.create-orb-public rest lnd
-
-    Encrypting mac
-    Encrypting cert
-    Connecting to: signet.lnd.lnorb.com
-    Connected to: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
-    orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47 created
-    orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47/orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47.ini created
-    Setting 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47 as default
-
-    >>> orb node.create-orb-public grpc lnd # Also valid
-    >>> orb node.create-orb-public rest cln # Also valid
     """
     from orb.misc.macaroon_secure import MacaroonSecure
 
@@ -161,7 +149,6 @@ def create_orb_public(c, protocol: str, node_type: str, use_node: bool = True):
     )[node_type]
     network = dict(cln="regtest", lnd="signet")[node_type]
     create(
-        c,
         hostname=hostname,
         mac_hex=mac,
         node_type=node_type,
@@ -174,49 +161,24 @@ def create_orb_public(c, protocol: str, node_type: str, use_node: bool = True):
     )
 
 
-@task(
-    help=dict(
-        hostname="IP address or DNS-resovable name for this host",
-        mac_hex="Macaroon in hex format",
-        node_type="cln or lnd",
-        protocol="rest or grpc",
-        network="mainnet / testnet / signet / regtest",
-        rest_port="REST port (default: 8080)",
-        grpc_port="GRPC port (default: 10009)",
-        use_node="Set this node as the default (default: True).",
-    )
-)
+@app.command()
 def create(
-    c,
-    hostname: str,
-    mac_hex: str,
-    node_type: str,
-    protocol: str,
-    network: str,
-    cert_plain: str = None,
-    rest_port: int = 8080,
-    grpc_port: int = 10009,
-    use_node: bool = True,
+    hostname: str = typer.Option(
+        ..., help="IP address or DNS-resolvable name for this host."
+    ),
+    mac_hex: str = typer.Option(..., help="The node macaroon in hex format."),
+    node_type: str = typer.Option(..., help="cln or lnd."),
+    protocol: str = typer.Option(..., help="rest or grpc."),
+    network: str = typer.Option(
+        ..., help="IP address or DNS-resovable name for this host."
+    ),
+    cert_plain: str = typer.Option(..., help="Plain node certificate."),
+    rest_port: int = typer.Option(8080, help="REST port."),
+    grpc_port: int = typer.Option(10009, help="GRPC port."),
+    use_node: bool = typer.Option(True, help="Whether to set as default."),
 ):
     """
     Create node.
-
-    >>> orb node.create \
-        --hostname regtest.cln.lnorb.com \
-        --node-type cln \
-        --protocol rest \
-        --network regtest \
-        --rest-port 3001 \
-        --mac-hex ... \
-        --cert-plain ...
-
-    Encrypting mac
-    Encrypting cert
-    Connecting to: regtest.cln.lnorb.com
-    Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 created
-    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
-    Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
     """
 
     print(chalk().cyan(f"Encrypting mac"))
@@ -263,54 +225,27 @@ def create(
     conf.write(conf_path.open("w"))
     print(chalk().green(f"{conf_path} created"))
     if use_node:
-        use(c, pubkey)
+        use(pubkey)
 
 
-@task(
-    help=dict(
-        hostname="IP address or DNS-resovable name for this host",
-        node_type="cln or lnd",
-        protocol="rest or grpc",
-        network="mainnet / testnet / signet / regtest",
-        rest_port="REST port (default: 8080)",
-        grpc_port="GRPC port (default: 10009)",
-        use_node="Set this node as the default (default: True).",
-    )
-)
+@app.command()
 def create_from_cert_files(
-    c,
-    hostname: str,
-    mac_file_path: str,
-    node_type: str,
-    protocol: str,
-    network: str,
-    cert_file_path: str = None,
-    rest_port: int = 8080,
-    grpc_port: int = 10009,
-    use_node: bool = True,
+    hostname: str = typer.Option(
+        ..., help="IP address or DNS-resolvable name for this host."
+    ),
+    mac_file_path: str = typer.Option(..., help="Path to the node macaroon."),
+    node_type: str = typer.Option(..., help="cln or lnd."),
+    protocol: str = typer.Option(..., help="rest or grpc."),
+    network: str = typer.Option(
+        ..., help="IP address or DNS-resovable name for this host."
+    ),
+    cert_file_path: str = typer.Option(..., help="Path to the node certificate."),
+    rest_port: int = typer.Option(8080, help="REST port."),
+    grpc_port: int = typer.Option(10009, help="GRPC port."),
+    use_node: bool = typer.Option(True, help="Whether to set as default."),
 ):
     """
     Create node and use certificate files.
-
-    Create node.
-
-    >>> orb node.create-from-cert-files \
-        --hostname regtest.cln.lnorb.com \
-        --node-type cln \
-        --protocol rest \
-        --network regtest \
-        --rest-port 3001 \
-        --mac-file-path ... \
-        --cert-file-path ...
-
-    Encrypting mac
-    Encrypting cert
-    Connecting to: regtest.cln.lnorb.com
-    Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 created
-    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
-    Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
-
     """
     print(chalk().cyan(f"Reading mac: {mac_file_path}"))
     cert_plain, mac_hex = "", ""
@@ -322,7 +257,6 @@ def create_from_cert_files(
             cert_plain = f.read()
 
     create(
-        c,
         hostname=hostname,
         mac_hex=mac_hex,
         node_type=node_type,
@@ -335,66 +269,34 @@ def create_from_cert_files(
     )
 
 
-@task(
-    help=dict(
-        hostname="IP address or DNS-resovable name for this host",
-        node_type="cln or lnd",
-        use_node="Set this node as the default (Default: True).",
-        network="mainnet / testnet / signet / regtest",
-        protocol="Connect via rest or grpc. (Default: rest).",
-        rest_port="REST port (default: 8080)",
-        grpc_port="GRPC port (default: 10009)",
-        ssh_cert_path="SSH session certificate, if not already specified in .ssh/config",
-        ssh_password="SSH session password (if not using a pem certificate)",
-        ssh_port="SSH session port to use, if not already specified in .ssh/config. (Default: 22).",
-        ssh_user="SSH session user, if not already specified in .ssh/config. (Default: 22).",
-        ln_cert_path="The path of the cert file on the target host",
-        ln_macaroon_path="The path of the macaroon file on the target host",
-    )
-)
+@app.command()
 def ssh_wizard(
-    c,
-    hostname: str,
-    node_type: str,
-    ssh_cert_path: str,
-    ssh_password: str = "",
-    ln_cert_path: str = "",
-    ln_macaroon_path: str = "",
-    network: str = "mainnet",
-    protocol: str = "rest",
-    rest_port: int = 8080,
-    grpc_port: int = 10009,
-    ssh_user: str = "ubuntu",
-    ssh_port: int = 22,
-    use_node: bool = True,
+    hostname: str = typer.Option(
+        ..., help="IP address or DNS-resolvable name for this host."
+    ),
+    node_type: str = typer.Option(..., help="cln or lnd."),
+    ssh_cert_path: Path = typer.Option(
+        None, help="Certificate to use for the SSH session."
+    ),
+    ssh_password: str = typer.Option(None, help="Password to use for the SSH session."),
+    ln_cert_path: Path = typer.Option(
+        None, help="Path of the node certificate on the target host."
+    ),
+    ln_macaroon_path: Path = typer.Option(
+        None, help="Path of the node macaroon on the target host."
+    ),
+    network: str = typer.Option(
+        ..., help="IP address or DNS-resovable name for this host."
+    ),
+    protocol: str = typer.Option(..., help="rest or grpc."),
+    rest_port: int = typer.Option(8080, help="REST port."),
+    grpc_port: int = typer.Option(10009, help="GRPC port."),
+    ssh_user: str = typer.Option("ubuntu", help="Username for SSH session."),
+    ssh_port: int = typer.Option(22, help="Port for SSH session."),
+    use_node: bool = typer.Option(True, help="Whether to set as default."),
 ):
     """
-    SSH into the node, and figure things out.
-
-    >>> orb node.ssh-wizard \
-        --hostname regtest.cln.lnorb.com \
-        --node-type cln \
-        --ssh-cert-path ... \
-        --network regtest \
-        --rest-port 3001 \
-        --protocol rest \
-        --ln-cert-path /home/ubuntu/dev/regtest-workbench/certificate.pem \
-        --ln-macaroon-path=/home/ubuntu/dev/regtest-workbench/access.macaroon 
-
-    ssh session connected!
-    OS:       Linux
-    Hostname: ip-172-31-36-137
-    Securely copying: /home/ubuntu/dev/regtest-workbench/certificate.pem
-    Securely copying: /home/ubuntu/dev/regtest-workbench/access.macaroon
-    Encrypting: /var/folders/6j/hb2nbc0x1hgfvkpy_kp72jpc0000gt/T/tmpmcuc9hju/certificate.pem
-    Encrypting: /var/folders/6j/hb2nbc0x1hgfvkpy_kp72jpc0000gt/T/tmpmcuc9hju/access.macaroon
-    Encrypting mac
-    Encrypting cert
-    Connecting to: regtest.cln.lnorb.com
-    Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-    /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
-    Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
-
+    SSH into the node, copy the cert and mac, and create the node.
     """
     connect_kwargs = {}
     if ssh_cert_path:
@@ -442,7 +344,6 @@ def ssh_wizard(
             from orb.ln import Ln
 
             create(
-                c,
                 hostname=hostname,
                 mac_hex=mac_hex,
                 node_type=node_type,

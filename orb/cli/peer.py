@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:48:14
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 06:35:12
+# @Last Modified time: 2022-08-28 06:24:00
 
 from invoke import task
 from .chalk import chalk
@@ -10,15 +10,18 @@ from orb.ln import factory
 from orb.cli.utils import get_default_id
 from orb.app import App
 
+import typer
 
-@task(
-    help=dict(
-        pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
-        peer_pubkey="The Pubkey of the peer you wish to open to",
-    )
-)
+app = typer.Typer()
+
+# @task(
+#     help=dict(
+#         pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
+#         peer_pubkey="The Pubkey of the peer you wish to open to",
+#     )
+# )
+@app.command()
 def connect(
-    c,
     peer_pubkey: str,
     pubkey: str = "",
 ):
@@ -37,13 +40,13 @@ def connect(
         print(res)
 
 
-@task(
-    help=dict(
-        pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
-    )
-)
+# @task(
+#     help=dict(
+#         pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
+#     )
+# )
+@app.command()
 def list(
-    c,
     pubkey: str = "",
 ):
     """

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 10:07:52
+# @Last Modified time: 2022-08-28 04:32:48
 
 from invoke import task
 
@@ -11,8 +11,12 @@ from orb.cli.utils import get_default_id
 from orb.ln import factory
 from orb.app import App
 
+import typer
 
-@task()
+app = typer.Typer()
+
+# @task()
+@app.command()
 def invoices(
     c,
     chan_id: str = None,
@@ -40,17 +44,18 @@ def invoices(
     pay_invoices.start()
 
 
-@task(
-    help=dict(
-        pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
-        total_amount_sat="The sum of the amount of all paid invoices should add up to total-amount-sat.",
-        url="The LNURL in the form LNURL....",
-        chunks="The number of chunks total-amount-sat is broken up into.",
-        num_threads="Make sure there are num-threads invoices available at any given time.",
-        rate_limit="Wait rate-limit seconds between each call to the LNURL generation endpoint.",
-        wait="Wait for payments to complete (setting this to False is only used for testing purposes).",
-    )
-)
+# @task(
+#     help=dict(
+#         pubkey="The Pubkey to use as the default pubkey for all Orb commands.",
+#         total_amount_sat="The sum of the amount of all paid invoices should add up to total-amount-sat.",
+#         url="The LNURL in the form LNURL....",
+#         chunks="The number of chunks total-amount-sat is broken up into.",
+#         num_threads="Make sure there are num-threads invoices available at any given time.",
+#         rate_limit="Wait rate-limit seconds between each call to the LNURL generation endpoint.",
+#         wait="Wait for payments to complete (setting this to False is only used for testing purposes).",
+#     )
+# )
+@app.command()
 def lnurl(
     c,
     url: str,

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 09:52:38
+# @Last Modified time: 2022-08-28 07:30:56
 
 from .cli_test_case import CLITestCase
 from orb.ln import factory
@@ -11,15 +11,15 @@ from random import shuffle
 
 
 def pytest_generate_tests(metafunc):
-    if "c" in metafunc.fixturenames:
+    if "pubkey" in metafunc.fixturenames:
         metafunc.parametrize(
-            "c", [("rest", "cln"), ("rest", "lnd"), ("grpc", "lnd")], indirect=True
+            "pubkey", [("cln", "rest"), ("lnd", "rest"), ("lnd", "grpc")], indirect=True
         )
 
 
 class TestAPI(CLITestCase):
-    def test_get_route(self, c):
-        ln = factory(get_default_id())
+    def test_get_route(self, pubkey):
+        ln = factory(pubkey)
         channels = ln.get_channels()
         shuffle(channels)
         res = ln.get_route(
