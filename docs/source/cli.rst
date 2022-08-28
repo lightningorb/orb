@@ -1,11 +1,154 @@
-CLI
-===
+Orb CLI
+=======
+
+You should familiarise yourself with the Orb CLI (command line interface) as it enables you to perform some operations a lot more quickly than via the GUI (graphical user interface).
+
+Locating the executable in a terminal
+.....................................
+
+If you have freshly installed Orb, you may want to open a terminal, and locate the executable.
+
+OSX:
+
+.. code:: bash
+
+     /Applications/lnorb.app/Contents/MacOS/lnorb
+
+Windows:
+
+.. code:: bash
+
+    C:\Users\Administrator\Downloads\orb-<version>-windows-<edition>-x86_64/lnorb/lnorb.exe
+
+Linux:
+
+.. code:: bash
+
+    ~/Downloads/orb/main.py
+
+.. note::
+
+    In a future release of Orb, expect the executable to be named `orb`. Until then, mentally substitute `orb` with the correct executable name. In Linux and OSX, create an `Alias <https://www.tecmint.com/create-alias-in-linux/>`_. In Windows add your install directory to the `PATH <https://stackoverflow.com/questions/44272416/how-to-add-a-folder-to-path-environment-variable-in-windows-10-with-screensho>`_.
+
+Connecting to Orb's public nodes
+................................
+
+LND
+~~~
+
+
+To connect to LND via REST:
+
+.. code:: bash
+
+   $ orb node create-orb-public lnd rest 
+
+Or to connect via GRPC:
+
+.. code:: bash
+
+   $ orb node create-orb-public lnd rest
+
+Core-Lightning
+--------------
+
+To connect to Orb public Core-Lightning node via REST:
+
+.. code:: bash
+
+   $ orb node create-orb-public cln rest 
+
+(please note, we are somewhat ignoring Core-Lighting's GRPC interface as it is still very new, and Orb can use all the existing RPC endpoints via REST).
+
+------------------------
+
+Showing node information
+........................
+
+The next thing you'll want to do is see what nodes are available to Orb:
+
+.. code:: bash
+
+   $ orb node list
+
+Or show more information:
+
+.. code:: bash
+
+    $ orb node list --show-info
+
+You may notice the information displayed is the same regardless of whether you are interacting with an LND or Core-Lightning node, and regardless of whether connecting over REST or GRPC.
+
+Orb abstracts the implementation type, enabling you to get on with your daily operations in an implementation-independent way.
+
+Commands and sub-commands
+.........................
+
+You may (or may not) be familiar with `git`. It uses commands, and subcommands, e.g:
+
+.. code:: bash
+
+    $ git origin add
+
+Orb CLI works in exactly the same way.
+
+.. code:: bash
+
+    $ orb <command> <sub-command>
+
+Arguments and Options
+.....................
+
+Arguments come after a sub-command, and do not require to be preceded by two dashes. Options on the other hand are preceded by two dashes, e.g `--use-node`.
+
+CLI changes
+...........
+
+Deciding on how to group commands and sub-commands, and what should be an argument vs. an option etc. are hard design decisions, thus expect argument / option names, order etc. to change quite a lot until for as long as Orb remains in v0.x.x.
+
+Once Orb reaches v1, the API and CLI will become stable, and if there are breaking changes then Orb's major version will be incremented (to v2, v3 etc.).
+
+This is a strict requirement, as a stable CLI / API enables you to use Orb in your own automation workflows without the fear of breaking changes when updating minor versions.
+
+Getting help
+............
+
+
+.. code:: bash
+
+    $ orb --help
+
+
+Getting help on commands
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+.. code:: bash
+
+    $ orb node --help
+
+
+Getting help on sub-commands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+.. code:: bash
+
+    $ orb node ssh-wizard --help
+
+CLI reference
+-------------
+
+Now that are a bit more familiar with Orb's CLI, here's the full command reference.
+
+``orb``
+=======
 
 **Usage**:
 
 .. code:: console
 
-    $ [OPTIONS] COMMAND [ARGS]...
+    $ orb [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -25,14 +168,14 @@ CLI
 -  ``rebalance``
 -  ``test``
 
-``chain``
----------
+``orb chain``
+-------------
 
 **Usage**:
 
 .. code:: console
 
-    $ chain [OPTIONS] COMMAND [ARGS]...
+    $ orb chain [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -44,64 +187,47 @@ CLI
 -  ``fees``: Get mempool chain fees.
 -  ``send``: Send coins on-chain.
 
-``chain deposit``
-~~~~~~~~~~~~~~~~~
+``orb chain deposit``
+~~~~~~~~~~~~~~~~~~~~~
 
 Get an on-chain address to deposit BTC.
-
-            orb chain.deposit
-
-deposit\_address tb1q0wfpxdeh8wyvfcaxdxfrxj7qp753s47vu683ax deposit\_qr:
-
-█▀▀▀▀▀█ ▄█▄ ▄▄█ ██ █▀▀▀▀▀█ ... ▀▀▀▀▀▀▀ ▀▀▀ ▀ ▀▀▀▀ ▀ ▀▀
 
 **Usage**:
 
 .. code:: console
 
-    $ chain deposit [OPTIONS]
+    $ orb chain deposit [OPTIONS]
 
 **Options**:
 
 -  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
-``chain fees``
-~~~~~~~~~~~~~~
+``orb chain fees``
+~~~~~~~~~~~~~~~~~~
 
 Get mempool chain fees. Currently these are the fees from mempool.space
-
-            orb chain.fees
-
-fastestFee : 7 sat/vbyte halfHourFee : 1 sat/vbyte hourFee : 1 sat/vbyte
-economyFee : 1 sat/vbyte minimumFee : 1 sat/vbyte
 
 **Usage**:
 
 .. code:: console
 
-    $ chain fees [OPTIONS]
+    $ orb chain fees [OPTIONS]
 
 **Options**:
 
 -  ``--help``: Show this message and exit.
 
-``chain send``
-~~~~~~~~~~~~~~
+``orb chain send``
+~~~~~~~~~~~~~~~~~~
 
 Send coins on-chain.
-
-            orb chain.send --amount 10\_000 --sat-per-vbyte 1 --address
-            tb1q0wfpxdeh8wyvfcaxdxfrxj7qp753s47vu683ax
-
-{ "txid":
-"41ffa0fa564db85e65515fb3c3e2fe95d6a403c0f3473575dcad2bbde962c052" }
 
 **Usage**:
 
 .. code:: console
 
-    $ chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
+    $ orb chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
 
 **Arguments**:
 
@@ -114,14 +240,14 @@ Send coins on-chain.
 -  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
-``channel``
------------
+``orb channel``
+---------------
 
 **Usage**:
 
 .. code:: console
 
-    $ channel [OPTIONS] COMMAND [ARGS]...
+    $ orb channel [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -131,8 +257,8 @@ Send coins on-chain.
 
 -  ``open``: Open a channel.
 
-``channel open``
-~~~~~~~~~~~~~~~~
+``orb channel open``
+~~~~~~~~~~~~~~~~~~~~
 
 Open a channel.
 
@@ -140,7 +266,7 @@ Open a channel.
 
 .. code:: console
 
-    $ channel open [OPTIONS] PEER_PUBKEY AMOUNT_SATS SAT_PER_VBYTE
+    $ orb channel open [OPTIONS] PEER_PUBKEY AMOUNT_SATS SAT_PER_VBYTE
 
 **Arguments**:
 
@@ -153,14 +279,14 @@ Open a channel.
 -  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
-``invoice``
------------
+``orb invoice``
+---------------
 
 **Usage**:
 
 .. code:: console
 
-    $ invoice [OPTIONS] COMMAND [ARGS]...
+    $ orb invoice [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -170,8 +296,8 @@ Open a channel.
 
 -  ``generate``: Generate a bolt11 invoice.
 
-``invoice generate``
-~~~~~~~~~~~~~~~~~~~~
+``orb invoice generate``
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Generate a bolt11 invoice.
 
@@ -179,7 +305,7 @@ Generate a bolt11 invoice.
 
 .. code:: console
 
-    $ invoice generate [OPTIONS] [SATOSHIS] [PUBKEY]
+    $ orb invoice generate [OPTIONS] [SATOSHIS] [PUBKEY]
 
 **Arguments**:
 
@@ -192,8 +318,8 @@ Generate a bolt11 invoice.
 
 -  ``--help``: Show this message and exit.
 
-``node``
---------
+``orb node``
+------------
 
 Commands to perform operations on nodes.
 
@@ -201,7 +327,7 @@ Commands to perform operations on nodes.
 
 .. code:: console
 
-    $ node [OPTIONS] COMMAND [ARGS]...
+    $ orb node [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -219,8 +345,8 @@ Commands to perform operations on nodes.
 -  ``ssh-wizard``: SSH into the node, copy the cert and mac, and...
 -  ``use``: Use the given node as default.
 
-``node balance``
-~~~~~~~~~~~~~~~~
+``orb node balance``
+~~~~~~~~~~~~~~~~~~~~
 
 Get total balance, for both on-chain and balance in channels.
 
@@ -230,7 +356,7 @@ WIP: this is not yet implemented for CLN.
 
 .. code:: console
 
-    $ node balance [OPTIONS] [PUBKEY]
+    $ orb node balance [OPTIONS] [PUBKEY]
 
 **Arguments**:
 
@@ -241,8 +367,8 @@ WIP: this is not yet implemented for CLN.
 
 -  ``--help``: Show this message and exit.
 
-``node create``
-~~~~~~~~~~~~~~~
+``orb node create``
+~~~~~~~~~~~~~~~~~~~
 
 Create node.
 
@@ -250,7 +376,7 @@ Create node.
 
 .. code:: console
 
-    $ node create [OPTIONS]
+    $ orb node create [OPTIONS]
 
 **Options**:
 
@@ -268,8 +394,8 @@ Create node.
    True]
 -  ``--help``: Show this message and exit.
 
-``node create-from-cert-files``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``orb node create-from-cert-files``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Create node and use certificate files.
 
@@ -277,7 +403,7 @@ Create node and use certificate files.
 
 .. code:: console
 
-    $ node create-from-cert-files [OPTIONS]
+    $ orb node create-from-cert-files [OPTIONS]
 
 **Options**:
 
@@ -295,8 +421,8 @@ Create node and use certificate files.
    True]
 -  ``--help``: Show this message and exit.
 
-``node create-orb-public``
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+``orb node create-orb-public``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Create public testnet node.
 
@@ -304,7 +430,7 @@ Create public testnet node.
 
 .. code:: console
 
-    $ node create-orb-public [OPTIONS] NODE_TYPE PROTOCOL
+    $ orb node create-orb-public [OPTIONS] NODE_TYPE PROTOCOL
 
 **Arguments**:
 
@@ -317,8 +443,8 @@ Create public testnet node.
    [default: True]
 -  ``--help``: Show this message and exit.
 
-``node delete``
-~~~~~~~~~~~~~~~
+``orb node delete``
+~~~~~~~~~~~~~~~~~~~
 
 Delete node information.
 
@@ -326,7 +452,7 @@ Delete node information.
 
 .. code:: console
 
-    $ node delete [OPTIONS] [PUBKEY]
+    $ orb node delete [OPTIONS] [PUBKEY]
 
 **Arguments**:
 
@@ -337,8 +463,8 @@ Delete node information.
 
 -  ``--help``: Show this message and exit.
 
-``node info``
-~~~~~~~~~~~~~
+``orb node info``
+~~~~~~~~~~~~~~~~~
 
 Get node information.
 
@@ -346,7 +472,7 @@ Get node information.
 
 .. code:: console
 
-    $ node info [OPTIONS] [PUBKEY]
+    $ orb node info [OPTIONS] [PUBKEY]
 
 **Arguments**:
 
@@ -357,8 +483,8 @@ Get node information.
 
 -  ``--help``: Show this message and exit.
 
-``node list``
-~~~~~~~~~~~~~
+``orb node list``
+~~~~~~~~~~~~~~~~~
 
 Get a list of nodes known to Orb.
 
@@ -366,7 +492,7 @@ Get a list of nodes known to Orb.
 
 .. code:: console
 
-    $ node list [OPTIONS]
+    $ orb node list [OPTIONS]
 
 **Options**:
 
@@ -374,8 +500,8 @@ Get a list of nodes known to Orb.
    node information [default: False]
 -  ``--help``: Show this message and exit.
 
-``node ssh-wizard``
-~~~~~~~~~~~~~~~~~~~
+``orb node ssh-wizard``
+~~~~~~~~~~~~~~~~~~~~~~~
 
 SSH into the node, copy the cert and mac, and create the node.
 
@@ -383,7 +509,7 @@ SSH into the node, copy the cert and mac, and create the node.
 
 .. code:: console
 
-    $ node ssh-wizard [OPTIONS]
+    $ orb node ssh-wizard [OPTIONS]
 
 **Options**:
 
@@ -407,8 +533,8 @@ SSH into the node, copy the cert and mac, and create the node.
    True]
 -  ``--help``: Show this message and exit.
 
-``node use``
-~~~~~~~~~~~~
+``orb node use``
+~~~~~~~~~~~~~~~~
 
 Use the given node as default.
 
@@ -416,7 +542,7 @@ Use the given node as default.
 
 .. code:: console
 
-    $ node use [OPTIONS] [PUBKEY]
+    $ orb node use [OPTIONS] [PUBKEY]
 
 **Arguments**:
 
@@ -426,14 +552,14 @@ Use the given node as default.
 
 -  ``--help``: Show this message and exit.
 
-``pay``
--------
+``orb pay``
+-----------
 
 **Usage**:
 
 .. code:: console
 
-    $ pay [OPTIONS] COMMAND [ARGS]...
+    $ orb pay [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -444,8 +570,8 @@ Use the given node as default.
 -  ``invoices``: Pay Ingested Invoices
 -  ``lnurl``: Generate bolt11 invoices from LNURL, and pay...
 
-``pay invoices``
-~~~~~~~~~~~~~~~~
+``orb pay invoices``
+~~~~~~~~~~~~~~~~~~~~
 
 Pay Ingested Invoices
 
@@ -453,7 +579,7 @@ Pay Ingested Invoices
 
 .. code:: console
 
-    $ pay invoices [OPTIONS] C
+    $ orb pay invoices [OPTIONS] C
 
 **Arguments**:
 
@@ -470,8 +596,8 @@ Pay Ingested Invoices
    02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
 -  ``--help``: Show this message and exit.
 
-``pay lnurl``
-~~~~~~~~~~~~~
+``orb pay lnurl``
+~~~~~~~~~~~~~~~~~
 
 Generate bolt11 invoices from LNURL, and pay them.
 
@@ -479,7 +605,7 @@ Generate bolt11 invoices from LNURL, and pay them.
 
 .. code:: console
 
-    $ pay lnurl [OPTIONS] C URL
+    $ orb pay lnurl [OPTIONS] C URL
 
 **Arguments**:
 
@@ -501,14 +627,14 @@ Generate bolt11 invoices from LNURL, and pay them.
 -  ``--time-pref FLOAT``: [default: 0]
 -  ``--help``: Show this message and exit.
 
-``peer``
---------
+``orb peer``
+------------
 
 **Usage**:
 
 .. code:: console
 
-    $ peer [OPTIONS] COMMAND [ARGS]...
+    $ orb peer [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -519,8 +645,8 @@ Generate bolt11 invoices from LNURL, and pay them.
 -  ``connect``: Connect to a peer.
 -  ``list``: List peers.
 
-``peer connect``
-~~~~~~~~~~~~~~~~
+``orb peer connect``
+~~~~~~~~~~~~~~~~~~~~
 
 Connect to a peer.
 
@@ -528,7 +654,7 @@ Connect to a peer.
 
 .. code:: console
 
-    $ peer connect [OPTIONS] PEER_PUBKEY
+    $ orb peer connect [OPTIONS] PEER_PUBKEY
 
 **Arguments**:
 
@@ -539,8 +665,8 @@ Connect to a peer.
 -  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
-``peer list``
-~~~~~~~~~~~~~
+``orb peer list``
+~~~~~~~~~~~~~~~~~
 
 List peers.
 
@@ -548,21 +674,21 @@ List peers.
 
 .. code:: console
 
-    $ peer list [OPTIONS]
+    $ orb peer list [OPTIONS]
 
 **Options**:
 
 -  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
-``rebalance``
--------------
+``orb rebalance``
+-----------------
 
 **Usage**:
 
 .. code:: console
 
-    $ rebalance [OPTIONS] COMMAND [ARGS]...
+    $ orb rebalance [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -572,8 +698,8 @@ List peers.
 
 -  ``rebalance``: Rebalance the node
 
-``rebalance rebalance``
-~~~~~~~~~~~~~~~~~~~~~~~
+``orb rebalance rebalance``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Rebalance the node
 
@@ -581,7 +707,7 @@ Rebalance the node
 
 .. code:: console
 
-    $ rebalance rebalance [OPTIONS] C
+    $ orb rebalance rebalance [OPTIONS] C
 
 **Arguments**:
 
@@ -599,14 +725,14 @@ Rebalance the node
    02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
 -  ``--help``: Show this message and exit.
 
-``test``
---------
+``orb test``
+------------
 
 **Usage**:
 
 .. code:: console
 
-    $ test [OPTIONS] COMMAND [ARGS]...
+    $ orb test [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
@@ -616,8 +742,8 @@ Rebalance the node
 
 -  ``run-all-tests``: Run all tests.
 
-``test run-all-tests``
-~~~~~~~~~~~~~~~~~~~~~~
+``orb test run-all-tests``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Run all tests.
 
@@ -625,7 +751,7 @@ Run all tests.
 
 .. code:: console
 
-    $ test run-all-tests [OPTIONS]
+    $ orb test run-all-tests [OPTIONS]
 
 **Options**:
 

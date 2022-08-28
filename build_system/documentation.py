@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 15:05:11
+# @Last Modified time: 2022-08-28 15:17:54
 
 import os
 import zipfile
@@ -33,11 +33,7 @@ def clean(c):
 def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer-cli", env=env)
     out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
-    with open("docs/source/cli.rst.template") as f:
-        template = f.read()
     with open("docs/source/cli.md", "w") as f:
-        f.write(template)
-        f.write("\n")
         f.write(out)
     c.run(
         "which pandoc",
@@ -45,9 +41,20 @@ def build_cli_docs(c, env=os.environ):
     )
     c.run("pandoc --help", env=env)
     c.run(
-        "pandoc docs/source/cli.md --from markdown --to rst -s -o docs/source/cli.rst",
+        "pandoc docs/source/cli.md --from markdown --to rst -s -o docs/source/cli.rst.tmp",
         env=env,
     )
+    with open("docs/source/cli.rst.tmp") as f:
+        tmp = f.read()
+    with open("docs/source/cli.rst.template") as f:
+        template = f.read()
+    with open("docs/source/cli.rst", "w") as f:
+        f.write(template)
+        f.write("\n")
+        f.write(tmp)
+
+    os.unlink("docs/source/cli.rst.tmp")
+
     c.run("pip3 uninstall --yes typer-cli", env=env)
     c.run("pip3 uninstall --yes typer[all]", env=env)
     c.run("pip3 install typer[all]", env=env)

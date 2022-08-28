@@ -1,9 +1,9 @@
-# CLI
+# `orb`
 
 **Usage**:
 
 ```console
-$ [OPTIONS] COMMAND [ARGS]...
+$ orb [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -23,12 +23,12 @@ $ [OPTIONS] COMMAND [ARGS]...
 * `rebalance`
 * `test`
 
-## `chain`
+## `orb chain`
 
 **Usage**:
 
 ```console
-$ chain [OPTIONS] COMMAND [ARGS]...
+$ orb chain [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -41,23 +41,14 @@ $ chain [OPTIONS] COMMAND [ARGS]...
 * `fees`: Get mempool chain fees.
 * `send`: Send coins on-chain.
 
-### `chain deposit`
+### `orb chain deposit`
 
 Get an on-chain address to deposit BTC.
-
->>> orb chain.deposit
-
-deposit_address tb1q0wfpxdeh8wyvfcaxdxfrxj7qp753s47vu683ax
-deposit_qr:
-
-█▀▀▀▀▀█ ▄█▄  ▄▄█  ██  █▀▀▀▀▀█
-...
-▀▀▀▀▀▀▀ ▀▀▀  ▀   ▀▀▀▀    ▀ ▀▀
 
 **Usage**:
 
 ```console
-$ chain deposit [OPTIONS]
+$ orb chain deposit [OPTIONS]
 ```
 
 **Options**:
@@ -65,43 +56,29 @@ $ chain deposit [OPTIONS]
 * `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
-### `chain fees`
+### `orb chain fees`
 
 Get mempool chain fees. Currently these are the fees from
 mempool.space
 
->>> orb chain.fees
-
-fastestFee      : 7 sat/vbyte
-halfHourFee     : 1 sat/vbyte
-hourFee         : 1 sat/vbyte
-economyFee      : 1 sat/vbyte
-minimumFee      : 1 sat/vbyte
-
 **Usage**:
 
 ```console
-$ chain fees [OPTIONS]
+$ orb chain fees [OPTIONS]
 ```
 
 **Options**:
 
 * `--help`: Show this message and exit.
 
-### `chain send`
+### `orb chain send`
 
 Send coins on-chain.
-
->>> orb chain.send --amount 10_000 --sat-per-vbyte 1 --address tb1q0wfpxdeh8wyvfcaxdxfrxj7qp753s47vu683ax
-
-{
-    "txid": "41ffa0fa564db85e65515fb3c3e2fe95d6a403c0f3473575dcad2bbde962c052"
-}
 
 **Usage**:
 
 ```console
-$ chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
+$ orb chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
 ```
 
 **Arguments**:
@@ -115,12 +92,12 @@ $ chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
 * `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
-## `channel`
+## `orb channel`
 
 **Usage**:
 
 ```console
-$ channel [OPTIONS] COMMAND [ARGS]...
+$ orb channel [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -131,14 +108,14 @@ $ channel [OPTIONS] COMMAND [ARGS]...
 
 * `open`: Open a channel.
 
-### `channel open`
+### `orb channel open`
 
 Open a channel.
 
 **Usage**:
 
 ```console
-$ channel open [OPTIONS] PEER_PUBKEY AMOUNT_SATS SAT_PER_VBYTE
+$ orb channel open [OPTIONS] PEER_PUBKEY AMOUNT_SATS SAT_PER_VBYTE
 ```
 
 **Arguments**:
@@ -152,12 +129,12 @@ $ channel open [OPTIONS] PEER_PUBKEY AMOUNT_SATS SAT_PER_VBYTE
 * `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
-## `invoice`
+## `orb invoice`
 
 **Usage**:
 
 ```console
-$ invoice [OPTIONS] COMMAND [ARGS]...
+$ orb invoice [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -168,14 +145,14 @@ $ invoice [OPTIONS] COMMAND [ARGS]...
 
 * `generate`: Generate a bolt11 invoice.
 
-### `invoice generate`
+### `orb invoice generate`
 
 Generate a bolt11 invoice.
 
 **Usage**:
 
 ```console
-$ invoice generate [OPTIONS] [SATOSHIS] [PUBKEY]
+$ orb invoice generate [OPTIONS] [SATOSHIS] [PUBKEY]
 ```
 
 **Arguments**:
@@ -187,14 +164,14 @@ $ invoice generate [OPTIONS] [SATOSHIS] [PUBKEY]
 
 * `--help`: Show this message and exit.
 
-## `node`
+## `orb node`
 
 Commands to perform operations on nodes.
 
 **Usage**:
 
 ```console
-$ node [OPTIONS] COMMAND [ARGS]...
+$ orb node [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -213,7 +190,7 @@ $ node [OPTIONS] COMMAND [ARGS]...
 * `ssh-wizard`: SSH into the node, copy the cert and mac, and...
 * `use`: Use the given node as default.
 
-### `node balance`
+### `orb node balance`
 
 Get total balance, for both on-chain and balance in channels.
 
@@ -222,7 +199,7 @@ WIP: this is not yet implemented for CLN.
 **Usage**:
 
 ```console
-$ node balance [OPTIONS] [PUBKEY]
+$ orb node balance [OPTIONS] [PUBKEY]
 ```
 
 **Arguments**:
@@ -233,14 +210,14 @@ $ node balance [OPTIONS] [PUBKEY]
 
 * `--help`: Show this message and exit.
 
-### `node create`
+### `orb node create`
 
 Create node.
 
 **Usage**:
 
 ```console
-$ node create [OPTIONS]
+$ orb node create [OPTIONS]
 ```
 
 **Options**:
@@ -256,14 +233,14 @@ $ node create [OPTIONS]
 * `--use-node / --no-use-node`: Whether to set as default.  [default: True]
 * `--help`: Show this message and exit.
 
-### `node create-from-cert-files`
+### `orb node create-from-cert-files`
 
 Create node and use certificate files.
 
 **Usage**:
 
 ```console
-$ node create-from-cert-files [OPTIONS]
+$ orb node create-from-cert-files [OPTIONS]
 ```
 
 **Options**:
@@ -279,14 +256,14 @@ $ node create-from-cert-files [OPTIONS]
 * `--use-node / --no-use-node`: Whether to set as default.  [default: True]
 * `--help`: Show this message and exit.
 
-### `node create-orb-public`
+### `orb node create-orb-public`
 
 Create public testnet node.
 
 **Usage**:
 
 ```console
-$ node create-orb-public [OPTIONS] NODE_TYPE PROTOCOL
+$ orb node create-orb-public [OPTIONS] NODE_TYPE PROTOCOL
 ```
 
 **Arguments**:
@@ -299,14 +276,14 @@ $ node create-orb-public [OPTIONS] NODE_TYPE PROTOCOL
 * `--use-node / --no-use-node`: Set this node as the default.  [default: True]
 * `--help`: Show this message and exit.
 
-### `node delete`
+### `orb node delete`
 
 Delete node information.
 
 **Usage**:
 
 ```console
-$ node delete [OPTIONS] [PUBKEY]
+$ orb node delete [OPTIONS] [PUBKEY]
 ```
 
 **Arguments**:
@@ -317,14 +294,14 @@ $ node delete [OPTIONS] [PUBKEY]
 
 * `--help`: Show this message and exit.
 
-### `node info`
+### `orb node info`
 
 Get node information.
 
 **Usage**:
 
 ```console
-$ node info [OPTIONS] [PUBKEY]
+$ orb node info [OPTIONS] [PUBKEY]
 ```
 
 **Arguments**:
@@ -335,14 +312,14 @@ $ node info [OPTIONS] [PUBKEY]
 
 * `--help`: Show this message and exit.
 
-### `node list`
+### `orb node list`
 
 Get a list of nodes known to Orb.
 
 **Usage**:
 
 ```console
-$ node list [OPTIONS]
+$ orb node list [OPTIONS]
 ```
 
 **Options**:
@@ -350,14 +327,14 @@ $ node list [OPTIONS]
 * `--show-info / --no-show-info`: If True, then connect and print node information  [default: False]
 * `--help`: Show this message and exit.
 
-### `node ssh-wizard`
+### `orb node ssh-wizard`
 
 SSH into the node, copy the cert and mac, and create the node.
 
 **Usage**:
 
 ```console
-$ node ssh-wizard [OPTIONS]
+$ orb node ssh-wizard [OPTIONS]
 ```
 
 **Options**:
@@ -377,14 +354,14 @@ $ node ssh-wizard [OPTIONS]
 * `--use-node / --no-use-node`: Whether to set as default.  [default: True]
 * `--help`: Show this message and exit.
 
-### `node use`
+### `orb node use`
 
 Use the given node as default.
 
 **Usage**:
 
 ```console
-$ node use [OPTIONS] [PUBKEY]
+$ orb node use [OPTIONS] [PUBKEY]
 ```
 
 **Arguments**:
@@ -395,12 +372,12 @@ $ node use [OPTIONS] [PUBKEY]
 
 * `--help`: Show this message and exit.
 
-## `pay`
+## `orb pay`
 
 **Usage**:
 
 ```console
-$ pay [OPTIONS] COMMAND [ARGS]...
+$ orb pay [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -412,14 +389,14 @@ $ pay [OPTIONS] COMMAND [ARGS]...
 * `invoices`: Pay Ingested Invoices
 * `lnurl`: Generate bolt11 invoices from LNURL, and pay...
 
-### `pay invoices`
+### `orb pay invoices`
 
 Pay Ingested Invoices
 
 **Usage**:
 
 ```console
-$ pay invoices [OPTIONS] C
+$ orb pay invoices [OPTIONS] C
 ```
 
 **Arguments**:
@@ -436,14 +413,14 @@ $ pay invoices [OPTIONS] C
 * `--node TEXT`: [default: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
 * `--help`: Show this message and exit.
 
-### `pay lnurl`
+### `orb pay lnurl`
 
 Generate bolt11 invoices from LNURL, and pay them.
 
 **Usage**:
 
 ```console
-$ pay lnurl [OPTIONS] C URL
+$ orb pay lnurl [OPTIONS] C URL
 ```
 
 **Arguments**:
@@ -465,12 +442,12 @@ $ pay lnurl [OPTIONS] C URL
 * `--time-pref FLOAT`: [default: 0]
 * `--help`: Show this message and exit.
 
-## `peer`
+## `orb peer`
 
 **Usage**:
 
 ```console
-$ peer [OPTIONS] COMMAND [ARGS]...
+$ orb peer [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -482,14 +459,14 @@ $ peer [OPTIONS] COMMAND [ARGS]...
 * `connect`: Connect to a peer.
 * `list`: List peers.
 
-### `peer connect`
+### `orb peer connect`
 
 Connect to a peer.
 
 **Usage**:
 
 ```console
-$ peer connect [OPTIONS] PEER_PUBKEY
+$ orb peer connect [OPTIONS] PEER_PUBKEY
 ```
 
 **Arguments**:
@@ -501,14 +478,14 @@ $ peer connect [OPTIONS] PEER_PUBKEY
 * `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
-### `peer list`
+### `orb peer list`
 
 List peers.
 
 **Usage**:
 
 ```console
-$ peer list [OPTIONS]
+$ orb peer list [OPTIONS]
 ```
 
 **Options**:
@@ -516,12 +493,12 @@ $ peer list [OPTIONS]
 * `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
-## `rebalance`
+## `orb rebalance`
 
 **Usage**:
 
 ```console
-$ rebalance [OPTIONS] COMMAND [ARGS]...
+$ orb rebalance [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -532,14 +509,14 @@ $ rebalance [OPTIONS] COMMAND [ARGS]...
 
 * `rebalance`: Rebalance the node
 
-### `rebalance rebalance`
+### `orb rebalance rebalance`
 
 Rebalance the node
 
 **Usage**:
 
 ```console
-$ rebalance rebalance [OPTIONS] C
+$ orb rebalance rebalance [OPTIONS] C
 ```
 
 **Arguments**:
@@ -557,12 +534,12 @@ $ rebalance rebalance [OPTIONS] C
 * `--node TEXT`: [default: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
 * `--help`: Show this message and exit.
 
-## `test`
+## `orb test`
 
 **Usage**:
 
 ```console
-$ test [OPTIONS] COMMAND [ARGS]...
+$ orb test [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -573,14 +550,14 @@ $ test [OPTIONS] COMMAND [ARGS]...
 
 * `run-all-tests`: Run all tests.
 
-### `test run-all-tests`
+### `orb test run-all-tests`
 
 Run all tests.
 
 **Usage**:
 
 ```console
-$ test run-all-tests [OPTIONS]
+$ orb test run-all-tests [OPTIONS]
 ```
 
 **Options**:
