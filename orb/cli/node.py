@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 05:49:49
+# @Last Modified time: 2022-08-28 11:12:26
 
 import re
 import os
@@ -21,10 +21,19 @@ from orb.ln import Ln
 from orb.ln import factory
 from configparser import ConfigParser
 from .chalk import chalk
+from orb.cli.utils import pprint as print
 
 import typer
 
 app = typer.Typer(help="Commands to perform operations on nodes.")
+
+data = {
+    "name": "Rick",
+    "age": 42,
+    "items": [{"name": "Portal Gun"}, {"name": "Plumbus"}],
+    "active": True,
+    "affiliation": None,
+}
 
 
 @app.command()
@@ -60,6 +69,7 @@ def list(
     """
     Get a list of nodes known to Orb.
     """
+
     data_dir = Path(_get_user_data_dir_static())
     for x in data_dir.glob("orb_*"):
         m = re.match(r"^orb_([a-zA-Z0-9]{66})$", x.name)

@@ -2,11 +2,13 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:08:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-21 06:51:42
+# @Last Modified time: 2022-08-28 11:11:36
+
+import os
+from pathlib import Path
+from configparser import ConfigParser
 
 from orb.misc.utils_no_kivy import _get_user_data_dir_static
-from configparser import ConfigParser
-from pathlib import Path
 
 
 def get_default_id():
@@ -19,3 +21,17 @@ def get_default_id():
         except:
             pass
     return ""
+
+
+def pprint(*args, end="\n"):
+    if os.environ.get("ORB_CLI_NO_COLOR"):
+        import sys
+
+        sys.stdout.write(" ".join(str(x) for x in args))
+    else:
+        from rich.pretty import pprint
+        from rich.text import Text
+        from rich.console import Console
+
+        Console().print(Text.from_ansi(args[0]))
+        # _print(json.dumps(args, indent=4))
