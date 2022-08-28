@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 09:00:41
+# @Last Modified time: 2022-08-28 09:09:15
 
 try:
     # not all actions install all requirements
@@ -211,7 +211,7 @@ def build_windows(c, env=os.environ):
     #     print(p.open().read())
     # shutil.copyfile(p.as_posix(), "dist")
     with c.cd("dist/lnorb"):
-        c.run("lnorb.exe test.run-all-tests")
+        c.run("lnorb.exe test run-all-tests")
     zipdir("dist", zipf)
     zipf.close()
     upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
