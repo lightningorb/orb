@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-29 07:43:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 12:53:33
+# @Last Modified time: 2022-08-29 14:01:34
 
 import uvicorn
 from fastapi import FastAPI
@@ -76,12 +76,18 @@ async def front():
     return RedirectResponse(url="front")
 
 
-def serve():
+def serve(
+    host: str = "0.0.0.0",
+    port: int = 8080,
+    reload: bool = True,
+    debug: bool = True,
+    workers: int = 3,
+):
     uvicorn.run(
         "orb.web.app:webapp",
-        host="0.0.0.0",
-        port=8585,
-        reload=True,
-        debug=True,
-        workers=3,
+        host=host,
+        port=port,
+        reload=reload,
+        debug=debug,
+        workers=workers,
     )
