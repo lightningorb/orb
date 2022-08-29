@@ -24,7 +24,7 @@ tmp
 __pycache__
 *.pyc
 orb.ini
-build
+/build
 tmp.py
 tutes
 .DS_Store
