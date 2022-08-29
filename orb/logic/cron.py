@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 16:00:25
+# @Last Modified time: 2022-08-29 13:49:20
 
 
 from orb.misc.utils_no_kivy import pref
@@ -15,6 +15,8 @@ class Cron:
     def __init__(self, *_, **__):
         from kivy.clock import Clock
         from kivy.clock import mainthread
+
+        # TODO: needs tying up
 
         if pref("host.type") == "cln":
 
@@ -60,30 +62,8 @@ class Cron:
                     10,
                 )
 
-            class DownloadFowardingHistory(StoppableThread):
-                def run(self):
-                    while not self.stopped():
-                        from orb.logic.forwarding_history import (
-                            download_forwarding_history,
-                        )
-
-                        download_forwarding_history()
-                        timer = 60
-                        while timer and not self.stopped():
-                            timer -= 1
-                            time.sleep(1)
+            from orb.logic.forwarding_history import DownloadFowardingHistory
+            from orb.logic.payment_history import DownloadPaymentHistory
 
             DownloadFowardingHistory().start()
-
-            class DownloadFowardingHistory(StoppableThread):
-                def run(self):
-                    while not self.stopped():
-                        from orb.logic.payment_history import download_payment_history
-
-                        download_payment_history()
-                        timer = 60
-                        while timer and not self.stopped():
-                            timer -= 1
-                            time.sleep(1)
-
-            DownloadFowardingHistory().start()
+            DownloadPaymentHistory().start()

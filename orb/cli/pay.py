@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 04:32:48
+# @Last Modified time: 2022-08-29 08:12:05
 
 from invoke import task
 
@@ -15,20 +15,22 @@ import typer
 
 app = typer.Typer()
 
-# @task()
+
 @app.command()
 def invoices(
-    c,
     chan_id: str = None,
     max_paths: int = 10_000,
     fee_rate: int = 500,
     time_pref: float = 0,
     num_threads: int = 5,
-    node: str = get_default_id(),
+    pubkey: str = "",
 ):
     """
     Pay Ingested Invoices
     """
+    if not pubkey:
+        pubkey = get_default_id()
+
     App().run(pubkey=node)
     ln = factory(node)
     App().build(ln)
@@ -57,13 +59,12 @@ def invoices(
 # )
 @app.command()
 def lnurl(
-    c,
     url: str,
     total_amount_sat: int = 100_000_000,
     chunks: int = 100,
     num_threads: int = 5,
     rate_limit: int = 5,
-    pubkey: str = get_default_id(),
+    pubkey: str = "",
     wait: bool = True,
     chan_id: str = None,
     max_paths: int = 10_000,
@@ -73,6 +74,8 @@ def lnurl(
     """
     Generate bolt11 invoices from LNURL, and pay them.
     """
+    if not pubkey:
+        pubkey = get_default_id()
     App().run(pubkey=pubkey)
     ln = factory(pubkey)
     App().build(ln)

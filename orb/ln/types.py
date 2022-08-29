@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 05:58:07
+# @Last Modified time: 2022-08-29 10:50:52
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -17,6 +17,9 @@ class PrintableType:
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+    def todict(self):
+        return self.__dict__
 
 
 class Info(PrintableType):
@@ -35,12 +38,12 @@ class Info(PrintableType):
         if impl == "lnd":
             self.identity_pubkey = kwargs["identity_pubkey"]
             self.color = kwargs["color"].replace("#", "")
-            self.bock_height = kwargs["block_height"]
+            self.block_height = kwargs["block_height"]
             self.network = ("mainnet", "testnet")[kwargs["testnet"]]
         elif impl == "cln":
             self.identity_pubkey = kwargs["id"]
             self.color = str(kwargs["color"]).replace("#", "")
-            self.bock_height = kwargs["blockheight"]
+            self.block_height = kwargs["blockheight"]
             self.network = kwargs["network"]
         common = [
             "version",
@@ -286,12 +289,12 @@ class HTLC(PrintableType):
             self.incoming_channel_id = None
             self.outgoing_channel_id = None
             if e_name == "sendpay_failure":
-                self.event_outcome = 'settle_event'
+                self.event_outcome = "settle_event"
                 self.outgoing_channel_id = e.data.erring_channel
                 self.incoming_htlc_id = e.data.payment_hash[:5]
                 self.outgoing_htlc_id = e.data.payment_hash[:5]
-                if e.data.failcodename == 'WIRE_TEMPORARY_CHANNEL_FAILURE':
-                    self.set_fail_event(name=e_name, wire='TEMPORARY_CHANNEL_FAILURE')
+                if e.data.failcodename == "WIRE_TEMPORARY_CHANNEL_FAILURE":
+                    self.set_fail_event(name=e_name, wire="TEMPORARY_CHANNEL_FAILURE")
                 return
             if hasattr(e, "in_channel"):
                 self.incoming_channel_id = e.in_channel
@@ -317,7 +320,7 @@ class HTLC(PrintableType):
                 self.event_outcome = "link_fail_event"
                 self.set_event_outcome_info(e)
 
-    def set_fail_event(self, name, wire='unknown', string='unknown', detail='unknown'):
+    def set_fail_event(self, name, wire="unknown", string="unknown", detail="unknown"):
         obj = dict(
             wire_failure=wire,
             failure_string=string,

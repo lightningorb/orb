@@ -173,13 +173,20 @@ class LndGRPC(LndBase):
 
     def get_channels(self, active_only=False):
         from orb.misc.channel import Channel
+        j = json.loads(
+            MessageToJson(
+                self.stub.ListChannels(ln.ListChannelsRequest(active_only=active_only)),
+                including_default_value_fields=True,
+                preserving_proto_field_name=True,
+                sort_keys=True,
+            )
+        )
+        chans = dict2obj(j)
+        channels = []
+        for c in chans.channels:
+            channels.append(Channel(c))
+        return channels
 
-        return [
-            Channel(c)
-            for c in self.stub.ListChannels(
-                ln.ListChannelsRequest(active_only=active_only)
-            ).channels
-        ]
 
     def get_route(
         self,

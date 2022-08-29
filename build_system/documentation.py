@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 13:31:48
+# @Last Modified time: 2022-08-28 15:17:54
 
 import os
 import zipfile
@@ -27,6 +27,37 @@ def clean(c):
     Delete the built docs. Useful when renaming modules etc.
     """
     c.run("rm -rf docs/docsbuild")
+
+
+@task
+def build_cli_docs(c, env=os.environ):
+    c.run("pip3 install typer-cli", env=env)
+    out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
+    with open("docs/source/cli.md", "w") as f:
+        f.write(out)
+    c.run(
+        "which pandoc",
+        env=env,
+    )
+    c.run("pandoc --help", env=env)
+    c.run(
+        "pandoc docs/source/cli.md --from markdown --to rst -s -o docs/source/cli.rst.tmp",
+        env=env,
+    )
+    with open("docs/source/cli.rst.tmp") as f:
+        tmp = f.read()
+    with open("docs/source/cli.rst.template") as f:
+        template = f.read()
+    with open("docs/source/cli.rst", "w") as f:
+        f.write(template)
+        f.write("\n")
+        f.write(tmp)
+
+    os.unlink("docs/source/cli.rst.tmp")
+
+    c.run("pip3 uninstall --yes typer-cli", env=env)
+    c.run("pip3 uninstall --yes typer[all]", env=env)
+    c.run("pip3 install typer[all]", env=env)
 
 
 @task

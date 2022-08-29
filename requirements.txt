@@ -25,7 +25,7 @@ fabric
 semver
 typer[all]
 rich
-
+fastapi
 
 
 # requirements are slowly being copied to the third_party directory

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-22 07:48:10
+# @Last Modified time: 2022-08-29 11:49:17
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -11,7 +11,7 @@ from kivy.properties import BooleanProperty
 from kivy.event import EventDispatcher
 from kivy.clock import mainthread
 
-from orb.ln import Ln
+from orb.app import App
 from orb.store.db_meta import channel_stats_db_name
 from orb.misc.decorators import db_connect
 
@@ -86,7 +86,7 @@ class Channel(EventDispatcher):
         a fee policy is changed in Orb, it immediately gets updated
         in LND.
         """
-        policy_to = Ln().get_policy_to(self)
+        policy_to = App.get_running_app().ln.get_policy_to(self)
 
         @mainthread
         def do_update(policy_to):
@@ -129,7 +129,7 @@ class Channel(EventDispatcher):
         Update LND with the channel policies specified
         in tbis object.
         """
-        result = Ln().update_channel_policy(
+        result = App.get_running_app().ln.update_channel_policy(
             channel=self,
             fee_rate=max(self.fee_rate_milli_msat / 1e6, 1e-06),
             base_fee_msat=self.fee_base_msat,
@@ -161,7 +161,7 @@ class Channel(EventDispatcher):
 
     @property
     def alias(self):
-        return Ln().get_node_alias(self.remote_pubkey)
+        return App.get_running_app().ln.get_node_alias(self.remote_pubkey)
 
     @property
     def local_balance_include_pending(self):

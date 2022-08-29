@@ -3,7 +3,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 08:26:25
+# @Last Modified time: 2022-08-29 07:37:21
 
 import os
 import sys
@@ -35,6 +35,8 @@ else:
     from orb.cli import pay
     from orb.cli import channel
     from orb.cli import test
+    from orb.cli import chain
+    from orb.cli import web
 
     app = typer.Typer()
     app.add_typer(node.app, name="node")
@@ -44,6 +46,8 @@ else:
     app.add_typer(channel.app, name="channel")
     app.add_typer(test.app, name="test")
     app.add_typer(peer.app, name="peer")
+    app.add_typer(chain.app, name="chain")
+    app.add_typer(web.app, name="web")
 
     if __name__ == "__main__":
         app()

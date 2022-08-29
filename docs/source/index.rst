@@ -18,6 +18,7 @@ Orb
    script_editor
    extending
    cli
+   api
 
 
 Indices and tables

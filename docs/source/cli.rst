@@ -1,573 +1,767 @@
-ORB CLI
-========
+Orb CLI
+=======
 
+You should familiarise yourself with the Orb CLI (command line interface) as it enables you to perform some operations a lot more quickly than via the GUI (graphical user interface).
 
+.. asciinema:: /_static/orb-cli-demo.cast
 
-The ORB CLI executes similarly regardless of the node
-implementation. Currently only LND and CLN are supported.
+Locating the executable in a terminal
+.....................................
 
-Setting an alias
-----------------
+If you have freshly installed Orb, you may want to open a terminal, and locate the executable.
 
-You may want to consider creating an alias, to run Orb
-from any path on your system. On Linux you'd want to
-add this to your .bashrc:
-
-alias orb='/opt/orb/main.py ${*}'
-
-Listing Commands
-----------------
-
-Appending `-l` lists all the available commands.
-
-orb -l
-
-
-Listing Collection Commands
----------------------------
-
-Appending `-l` followed by the name of the collection
-lists all commands available in the given collection.
-
-orb -l node
-
-
-Getting help on individual commands
------------------------------------
-
-To get help on individual commands, prepend the command
-with `--help`.
-
-orb --help node.use
-
-
-``orb chain.fees``
------------
+OSX:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] chain.fees [other tasks here ...]
-    
-    Docstring:
-      Get mempool chain fees. Currently these are the fees from
-      mempool.space
-    
-      >>> orb chain.fees
-    
-      fastestFee      : 7 sat/vbyte
-      halfHourFee     : 1 sat/vbyte
-      hourFee         : 1 sat/vbyte
-      economyFee      : 1 sat/vbyte
-      minimumFee      : 1 sat/vbyte
-    
-    Options:
-      none
-    
-    
+     /Applications/lnorb.app/Contents/MacOS/lnorb
 
-``orb chain.deposit``
------------
+Windows:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] chain.deposit [--options] [other tasks here ...]
-    
-    Docstring:
-      Get an on-chain address to deposit BTC.
-    
-      >>> orb chain.deposit
-    
-      deposit_address tb1q0wfpxdeh8wyvfcaxdxfrxj7qp753s47vu683ax
-      deposit_qr:
-    
-      █▀▀▀▀▀█ ▄█▄  ▄▄█  ██  █▀▀▀▀▀█
-      ...
-      ▀▀▀▀▀▀▀ ▀▀▀  ▀   ▀▀▀▀    ▀ ▀▀
-    
-    Options:
-      -p STRING, --pubkey=STRING
-    
-    
+    C:\Users\Administrator\Downloads\orb-<version>-windows-<edition>-x86_64/lnorb/lnorb.exe
 
-``orb chain.send``
------------
+Linux:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] chain.send [--options] [other tasks here ...]
-    
-    Docstring:
-      Send coins on-chain.
-    
-      >>> orb chain.send --amount 10_000 --sat-per-vbyte 1 --address tb1q0wfpxdeh8wyvfcaxdxfrxj7qp753s47vu683ax
-    
-      {
-          "txid": "41ffa0fa564db85e65515fb3c3e2fe95d6a403c0f3473575dcad2bbde962c052"
-      }
-    
-    Options:
-      -a STRING, --address=STRING         The destination address
-      -m STRING, --amount=STRING          The amount to send in satoshis (for CLN
-                                          this can be 'all')
-      -p STRING, --pubkey=STRING          The node pubkey from which to send coins
-      -s STRING, --sat-per-vbyte=STRING   Sats per vB (for CLN this can be slow,
-                                          normal, urgent, or None)
-    
-    
+    ~/Downloads/orb/main.py
 
-``orb node.delete``
------------
+.. note::
+
+    In a future release of Orb, expect the executable to be named `orb`. Until then, mentally substitute `orb` with the correct executable name. In Linux and OSX, create an `Alias <https://www.tecmint.com/create-alias-in-linux/>`_. In Windows add your install directory to the `PATH <https://stackoverflow.com/questions/44272416/how-to-add-a-folder-to-path-environment-variable-in-windows-10-with-screensho>`_.
+
+
+Running tests
+.............
+
+Orb comes with its pytest suite included, so that the build system can test the binary before making it available to the public, and so that users can test the build on their setup, too.
+
+The test are safe to run: if you have existing nodes setup, the tests will not touch them; they'll only use alter the public nodes.
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.delete [--options] [other tasks here ...]
-    
-    Docstring:
-      Delete node information.
-    
-    Options:
-      -p STRING, --pubkey=STRING
-    
-    
+   $ orb test run-all-tests
 
-``orb node.list``
------------
+
+Connecting to Orb's public nodes
+................................
+
+LND
+~~~
+
+To connect to LND via REST:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.list [--options] [other tasks here ...]
-    
-    Docstring:
-      Get a list of nodes known to Orb.
-    
-    
-      >>> orb node.list
-    
-      0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
-      02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-    
-      >>> orb node.list --show-info
-    
-      Showing info for: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47:
-      alias: signet.lnd.lnorb.com
-      ...
-    
-      Showing info for: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764:
-      alias: regtest.cln.lnorb.com
-      ...
-    
-    Options:
-      -s, --show-info   If True, then connect and return node information
-    
-    
+   $ orb node create-orb-public lnd rest 
 
-``orb node.info``
------------
+Or to connect via GRPC:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.info [--options] [other tasks here ...]
-    
-    Docstring:
-      Get node information.
-    
-      >>> orb node.info
-    
-      alias: signet.lnd.lnorb.com
-      identity_pubkey: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
-      ...
-    
-    Options:
-      -p STRING, --pubkey=STRING   The Pubkey to use as the default pubkey for all
-                                   Orb commands
-    
-    
+   $ orb node create-orb-public lnd rest
 
-``orb node.balance``
------------
+Core-Lightning
+--------------
+
+To connect to Orb public Core-Lightning node via REST:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.balance [--options] [other tasks here ...]
-    
-    Docstring:
-      Get total balance, for both on-chain and balance in channels.
-    
-    Options:
-      -p STRING, --pubkey=STRING
-    
-    
+   $ orb node create-orb-public cln rest 
 
-``orb node.use``
------------
+(please note, we are somewhat ignoring Core-Lighting's GRPC interface as it is still very new, and Orb can use all the existing RPC endpoints via REST).
+
+------------------------
+
+Showing node information
+........................
+
+The next thing you'll want to do is see what nodes are available to Orb:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.use [--options] [other tasks here ...]
-    
-    Docstring:
-      Use the given node as default.
-    
-    Options:
-      -p STRING, --pubkey=STRING   The Pubkey to use as the default pubkey for all
-                                   Orb commands
-    
-    
+   $ orb node list
 
-``orb node.create-orb-public``
------------
+Or show more information:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.create-orb-public [--options] [other tasks here ...]
-    
-    Docstring:
-      Create public testnet node.
-    
-      >>> orb node.create-orb-public rest lnd
-    
-      Encrypting mac
-      Encrypting cert
-      Connecting to: signet.lnd.lnorb.com
-      Connected to: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47
-      orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47 created
-      orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47/orb_0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47.ini created
-      Setting 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47 as default
-    
-      >>> orb node.create-orb-public grpc lnd # Also valid
-      >>> orb node.create-orb-public rest cln # Also valid
-    
-    Options:
-      -n STRING, --node-type=STRING   lnd or cln
-      -p STRING, --protocol=STRING    rest or grpc
-      -u, --[no-]use-node             Set this node as the default. (Default: True)
-    
-    
+    $ orb node list --show-info
 
-``orb node.create``
------------
+You may notice the information displayed is the same regardless of whether you are interacting with an LND or Core-Lightning node, and regardless of whether connecting over REST or GRPC.
+
+Orb abstracts the implementation type, enabling you to get on with your daily operations in an implementation-independent way.
+
+Commands and sub-commands
+.........................
+
+You may (or may not) be familiar with `git`. It uses commands, and subcommands, e.g:
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.create [--options] [other tasks here ...]
-    
-    Docstring:
-      Create node.
-    
-      >>> orb node.create         --hostname regtest.cln.lnorb.com         --node-type cln         --protocol rest         --network regtest         --rest-port 3001         --mac-hex ...         --cert-plain ...
-    
-      Encrypting mac
-      Encrypting cert
-      Connecting to: regtest.cln.lnorb.com
-      Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-      /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 created
-      /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
-      Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
-    
-    Options:
-      -c STRING, --cert-plain=STRING
-      -e STRING, --network=STRING      mainnet / testnet / signet / regtest
-      -g INT, --grpc-port=INT          GRPC port (default: 10009)
-      -h STRING, --hostname=STRING     IP address or DNS-resovable name for this
-                                       host
-      -m STRING, --mac-hex=STRING      Macaroon in hex format
-      -n STRING, --node-type=STRING    cln or lnd
-      -p STRING, --protocol=STRING     rest or grpc
-      -r INT, --rest-port=INT          REST port (default: 8080)
-      -u, --[no-]use-node              Set this node as the default (default:
-                                       True).
-    
-    
+    $ git origin add
 
-``orb node.create-from-cert-files``
------------
+Orb CLI works in exactly the same way.
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.create-from-cert-files [--options] [other tasks here ...]
-    
-    Docstring:
-      Create node and use certificate files.
-    
-      Create node.
-    
-      >>> orb node.create-from-cert-files         --hostname regtest.cln.lnorb.com         --node-type cln         --protocol rest         --network regtest         --rest-port 3001         --mac-file-path ...         --cert-file-path ...
-    
-      Encrypting mac
-      Encrypting cert
-      Connecting to: regtest.cln.lnorb.com
-      Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-      /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 created
-      /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
-      Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
-    
-    Options:
-      -c STRING, --cert-file-path=STRING
-      -e STRING, --network=STRING          mainnet / testnet / signet / regtest
-      -g INT, --grpc-port=INT              GRPC port (default: 10009)
-      -h STRING, --hostname=STRING         IP address or DNS-resovable name for
-                                           this host
-      -m STRING, --mac-file-path=STRING
-      -n STRING, --node-type=STRING        cln or lnd
-      -p STRING, --protocol=STRING         rest or grpc
-      -r INT, --rest-port=INT              REST port (default: 8080)
-      -u, --[no-]use-node                  Set this node as the default (default:
-                                           True).
-    
-    
+    $ orb <command> <sub-command>
 
-``orb node.ssh-wizard``
------------
+Arguments and Options
+.....................
+
+Arguments come after a sub-command, and do not require to be preceded by two dashes. Options on the other hand are preceded by two dashes, e.g `--use-node`.
+
+CLI changes
+...........
+
+Deciding on how to group commands and sub-commands, and what should be an argument vs. an option etc. are hard design decisions, thus expect argument / option names, order etc. to change quite a lot for as long as Orb remains in v0.x.x.
+
+Once Orb reaches v1, the API and CLI will become stable, and if there are breaking changes then Orb's major version will be incremented (to v2, v3 etc.).
+
+This is a strict requirement, as a stable CLI / API enables you to use Orb in your own automation workflows without the fear of breaking changes when updating minor versions.
+
+Getting help
+............
+
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] node.ssh-wizard [--options] [other tasks here ...]
-    
-    Docstring:
-      SSH into the node, and figure things out.
-    
-      >>> orb node.ssh-wizard         --hostname regtest.cln.lnorb.com         --node-type cln         --ssh-cert-path ...         --network regtest         --rest-port 3001         --protocol rest         --ln-cert-path /home/ubuntu/dev/regtest-workbench/certificate.pem         --ln-macaroon-path=/home/ubuntu/dev/regtest-workbench/access.macaroon 
-    
-      ssh session connected!
-      OS:       Linux
-      Hostname: ip-172-31-36-137
-      Securely copying: /home/ubuntu/dev/regtest-workbench/certificate.pem
-      Securely copying: /home/ubuntu/dev/regtest-workbench/access.macaroon
-      Encrypting: /var/folders/6j/hb2nbc0x1hgfvkpy_kp72jpc0000gt/T/tmpmcuc9hju/certificate.pem
-      Encrypting: /var/folders/6j/hb2nbc0x1hgfvkpy_kp72jpc0000gt/T/tmpmcuc9hju/access.macaroon
-      Encrypting mac
-      Encrypting cert
-      Connecting to: regtest.cln.lnorb.com
-      Connected to: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764
-      /Users/w/Library/Application Support/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764/orb_02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764.ini created
-      Setting 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764 as default
-    
-    Options:
-      --=STRING, --ssh-password=STRING       SSH session password (if not using a
-                                             pem certificate)
-      -d, --[no-]use-node                    Set this node as the default (Default:
-                                             True).
-      -e STRING, --network=STRING            mainnet / testnet / signet / regtest
-      -g INT, --grpc-port=INT                GRPC port (default: 10009)
-      -h STRING, --hostname=STRING           IP address or DNS-resovable name for
-                                             this host
-      -l STRING, --ln-cert-path=STRING       The path of the cert file on the
-                                             target host
-      -m STRING, --ln-macaroon-path=STRING   The path of the macaroon file on the
-                                             target host
-      -n STRING, --node-type=STRING          cln or lnd
-      -o INT, --ssh-port=INT                 SSH session port to use, if not
-                                             already specified in .ssh/config.
-                                             (Default: 22).
-      -p STRING, --protocol=STRING           Connect via rest or grpc. (Default:
-                                             rest).
-      -r INT, --rest-port=INT                REST port (default: 8080)
-      -s STRING, --ssh-cert-path=STRING      SSH session certificate, if not
-                                             already specified in .ssh/config
-      -u STRING, --ssh-user=STRING           SSH session user, if not already
-                                             specified in .ssh/config. (Default:
-                                             22).
-    
-    
+    $ orb --help
 
-``orb invoice.lnurl-generate``
------------
+
+Getting help on commands
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] invoice.lnurl-generate [--options] [other tasks here ...]
-    
-    Docstring:
-      Generate bolt11 invoices from LNURL.
-    
-    Options:
-      -c INT, --chunks=INT             The number of chunks total-amount-sat is
-                                       broken up into.
-      -n INT, --num-threads=INT        Make sure there are num-threads invoices
-                                       available at any given time.
-      -p STRING, --pubkey=STRING       The Pubkey to use as the default pubkey for
-                                       all Orb commands.
-      -r INT, --rate-limit=INT         Wait rate-limit seconds between each call to
-                                       the LNURL generation endpoint.
-      -t INT, --total-amount-sat=INT   The sum of the amount of all paid invoices
-                                       should add up to total-amount-sat.
-      -u STRING, --url=STRING          The LNURL in the form LNURL....
-      -w, --[no-]wait                  Wait for payments to complete (setting this
-                                       to False is only used for testing purposes).
-    
-    
+    $ orb node --help
 
-``orb invoice.generate``
------------
+
+Getting help on sub-commands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 .. code:: bash
 
-    Usage: main.py [--core-opts] invoice.generate [--options] [other tasks here ...]
-    
-    Docstring:
-      Generate bolt11 invoices.
-    
-    Options:
-      -p STRING, --pubkey=STRING   The Pubkey to use as the default pubkey for all
-                                   Orb commands
-      -s INT, --satoshis=INT
-    
-    
+    $ orb node ssh-wizard --help
 
-``orb invoice.ingest``
+CLI reference
+-------------
+
+Now that are you are a bit more familiar with Orb's CLI, here's the full command reference.
+
+``orb``
+=======
+
+**Usage**:
+
+.. code:: console
+
+    $ orb [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--install-completion``: Install completion for the current shell.
+-  ``--show-completion``: Show completion for the current shell, to copy
+   it or customize the installation.
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``chain``
+-  ``channel``
+-  ``invoice``
+-  ``node``: Commands to perform operations on nodes.
+-  ``pay``
+-  ``peer``
+-  ``rebalance``
+-  ``test``
+
+``orb chain``
+-------------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb chain [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``deposit``: Get an on-chain address to deposit BTC.
+-  ``fees``: Get mempool chain fees.
+-  ``send``: Send coins on-chain.
+
+``orb chain deposit``
+~~~~~~~~~~~~~~~~~~~~~
+
+Get an on-chain address to deposit BTC.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb chain deposit [OPTIONS]
+
+**Options**:
+
+-  ``--pubkey TEXT``: [default: ]
+-  ``--help``: Show this message and exit.
+
+``orb chain fees``
+~~~~~~~~~~~~~~~~~~
+
+Get mempool chain fees. Currently these are the fees from mempool.space
+
+**Usage**:
+
+.. code:: console
+
+    $ orb chain fees [OPTIONS]
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+``orb chain send``
+~~~~~~~~~~~~~~~~~~
+
+Send coins on-chain.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
+
+**Arguments**:
+
+-  ``ADDRESS``: [required]
+-  ``AMOUNT``: [required]
+-  ``SAT_PER_VBYTE``: [required]
+
+**Options**:
+
+-  ``--pubkey TEXT``: [default: ]
+-  ``--help``: Show this message and exit.
+
+``orb channel``
+---------------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb channel [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``open``: Open a channel.
+
+``orb channel open``
+~~~~~~~~~~~~~~~~~~~~
+
+Open a channel.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb channel open [OPTIONS] PEER_PUBKEY AMOUNT_SATS SAT_PER_VBYTE
+
+**Arguments**:
+
+-  ``PEER_PUBKEY``: [required]
+-  ``AMOUNT_SATS``: [required]
+-  ``SAT_PER_VBYTE``: [required]
+
+**Options**:
+
+-  ``--pubkey TEXT``: [default: ]
+-  ``--help``: Show this message and exit.
+
+``orb invoice``
+---------------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb invoice [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``generate``: Generate a bolt11 invoice.
+
+``orb invoice generate``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Generate a bolt11 invoice.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb invoice generate [OPTIONS] [SATOSHIS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[SATOSHIS]``: The amount of Satoshis for this invoice. [default:
+   1000]
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+``orb node``
+------------
+
+Commands to perform operations on nodes.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``balance``: Get total balance, for both on-chain and...
+-  ``create``: Create node.
+-  ``create-from-cert-files``: Create node and use certificate files.
+-  ``create-orb-public``: Create public testnet node.
+-  ``delete``: Delete node information.
+-  ``info``: Get node information.
+-  ``list``: Get a list of nodes known to Orb.
+-  ``ssh-wizard``: SSH into the node, copy the cert and mac, and...
+-  ``use``: Use the given node as default.
+
+``orb node balance``
+~~~~~~~~~~~~~~~~~~~~
+
+Get total balance, for both on-chain and balance in channels.
+
+WIP: this is not yet implemented for CLN.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node balance [OPTIONS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+``orb node create``
+~~~~~~~~~~~~~~~~~~~
+
+Create node.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node create [OPTIONS]
+
+**Options**:
+
+-  ``--hostname TEXT``: IP address or DNS-resolvable name for this host.
+   [required]
+-  ``--mac-hex TEXT``: The node macaroon in hex format. [required]
+-  ``--node-type TEXT``: cln or lnd. [required]
+-  ``--protocol TEXT``: rest or grpc. [required]
+-  ``--network TEXT``: IP address or DNS-resovable name for this host.
+   [required]
+-  ``--cert-plain TEXT``: Plain node certificate. [required]
+-  ``--rest-port INTEGER``: REST port. [default: 8080]
+-  ``--grpc-port INTEGER``: GRPC port. [default: 10009]
+-  ``--use-node / --no-use-node``: Whether to set as default. [default:
+   True]
+-  ``--help``: Show this message and exit.
+
+``orb node create-from-cert-files``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create node and use certificate files.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node create-from-cert-files [OPTIONS]
+
+**Options**:
+
+-  ``--hostname TEXT``: IP address or DNS-resolvable name for this host.
+   [required]
+-  ``--mac-file-path TEXT``: Path to the node macaroon. [required]
+-  ``--node-type TEXT``: cln or lnd. [required]
+-  ``--protocol TEXT``: rest or grpc. [required]
+-  ``--network TEXT``: IP address or DNS-resovable name for this host.
+   [required]
+-  ``--cert-file-path TEXT``: Path to the node certificate. [required]
+-  ``--rest-port INTEGER``: REST port. [default: 8080]
+-  ``--grpc-port INTEGER``: GRPC port. [default: 10009]
+-  ``--use-node / --no-use-node``: Whether to set as default. [default:
+   True]
+-  ``--help``: Show this message and exit.
+
+``orb node create-orb-public``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create public testnet node.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node create-orb-public [OPTIONS] NODE_TYPE PROTOCOL
+
+**Arguments**:
+
+-  ``NODE_TYPE``: lnd or cln. [required]
+-  ``PROTOCOL``: rest or grpc. [required]
+
+**Options**:
+
+-  ``--use-node / --no-use-node``: Set this node as the default.
+   [default: True]
+-  ``--help``: Show this message and exit.
+
+``orb node delete``
+~~~~~~~~~~~~~~~~~~~
+
+Delete node information.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node delete [OPTIONS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+``orb node info``
+~~~~~~~~~~~~~~~~~
+
+Get node information.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node info [OPTIONS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+``orb node list``
+~~~~~~~~~~~~~~~~~
+
+Get a list of nodes known to Orb.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node list [OPTIONS]
+
+**Options**:
+
+-  ``--show-info / --no-show-info``: If True, then connect and print
+   node information [default: False]
+-  ``--help``: Show this message and exit.
+
+``orb node ssh-wizard``
+~~~~~~~~~~~~~~~~~~~~~~~
+
+SSH into the node, copy the cert and mac, and create the node.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node ssh-wizard [OPTIONS]
+
+**Options**:
+
+-  ``--hostname TEXT``: IP address or DNS-resolvable name for this host.
+   [required]
+-  ``--node-type TEXT``: cln or lnd. [required]
+-  ``--ssh-cert-path PATH``: Certificate to use for the SSH session.
+-  ``--ssh-password TEXT``: Password to use for the SSH session.
+-  ``--ln-cert-path PATH``: Path of the node certificate on the target
+   host.
+-  ``--ln-macaroon-path PATH``: Path of the node macaroon on the target
+   host.
+-  ``--network TEXT``: IP address or DNS-resovable name for this host.
+   [required]
+-  ``--protocol TEXT``: rest or grpc. [required]
+-  ``--rest-port INTEGER``: REST port. [default: 8080]
+-  ``--grpc-port INTEGER``: GRPC port. [default: 10009]
+-  ``--ssh-user TEXT``: Username for SSH session. [default: ubuntu]
+-  ``--ssh-port INTEGER``: Port for SSH session. [default: 22]
+-  ``--use-node / --no-use-node``: Whether to set as default. [default:
+   True]
+-  ``--help``: Show this message and exit.
+
+``orb node use``
+~~~~~~~~~~~~~~~~
+
+Use the given node as default.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb node use [OPTIONS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[PUBKEY]``: The pubkey of the node.
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+``orb pay``
 -----------
 
-.. code:: bash
+**Usage**:
 
-    Usage: main.py [--core-opts] invoice.ingest [--options] [other tasks here ...]
-    
-    Docstring:
-      Ingest invoice into invoices DB.
-    
-    Options:
-      -b STRING, --bolt11-invoice=STRING
-      -p STRING, --pubkey=STRING           The Pubkey to use as the default pubkey
-                                           for all Orb commands
-    
-    
+.. code:: console
 
-``orb pay.invoices``
------------
+    $ orb pay [OPTIONS] COMMAND [ARGS]...
 
-.. code:: bash
+**Options**:
 
-    Usage: main.py [--core-opts] pay.invoices [--options] [other tasks here ...]
-    
-    Docstring:
-      Pay Ingested Invoices
-    
-    Options:
-      -c STRING, --chan-id=STRING
-      -f INT, --fee-rate=INT
-      -m INT, --max-paths=INT
-      -n INT, --num-threads=INT
-      -o STRING, --node=STRING
-      -t INT, --time-pref=INT
-    
-    
+-  ``--help``: Show this message and exit.
 
-``orb pay.lnurl``
------------
+**Commands**:
 
-.. code:: bash
+-  ``invoices``: Pay Ingested Invoices
+-  ``lnurl``: Generate bolt11 invoices from LNURL, and pay...
 
-    Usage: main.py [--core-opts] pay.lnurl [--options] [other tasks here ...]
-    
-    Docstring:
-      Generate bolt11 invoices from LNURL, and pay them.
-    
-    Options:
-      -c INT, --chunks=INT             The number of chunks total-amount-sat is
-                                       broken up into.
-      -f INT, --fee-rate=INT
-      -h STRING, --chan-id=STRING
-      -i INT, --time-pref=INT
-      -m INT, --max-paths=INT
-      -n INT, --num-threads=INT        Make sure there are num-threads invoices
-                                       available at any given time.
-      -p STRING, --pubkey=STRING       The Pubkey to use as the default pubkey for
-                                       all Orb commands.
-      -r INT, --rate-limit=INT         Wait rate-limit seconds between each call to
-                                       the LNURL generation endpoint.
-      -t INT, --total-amount-sat=INT   The sum of the amount of all paid invoices
-                                       should add up to total-amount-sat.
-      -u STRING, --url=STRING          The LNURL in the form LNURL....
-      -w, --[no-]wait                  Wait for payments to complete (setting this
-                                       to False is only used for testing purposes).
-    
-    
+``orb pay invoices``
+~~~~~~~~~~~~~~~~~~~~
 
-``orb rebalance.rebalance``
------------
+Pay Ingested Invoices
 
-.. code:: bash
+**Usage**:
 
-    Usage: main.py [--core-opts] rebalance.rebalance [--options] [other tasks here ...]
-    
-    Docstring:
-      Rebalance the node
-    
-    Options:
-      -a INT, --amount=INT
-      -c STRING, --chan-id=STRING
-      -f INT, --fee-rate=INT
-      -l STRING, --last-hop-pubkey=STRING
-      -m INT, --max-paths=INT
-      -n STRING, --node=STRING
-      -t INT, --time-pref=INT
-    
-    
+.. code:: console
 
-``orb channel.open``
------------
+    $ orb pay invoices [OPTIONS]
 
-.. code:: bash
+**Options**:
 
-    Usage: main.py [--core-opts] channel.open [--options] [other tasks here ...]
-    
-    Docstring:
-      Open a channel.
-    
-    Options:
-      -a STRING, --amount-sats=STRING     The size of the channel in sats
-      -p STRING, --peer-pubkey=STRING     The Pubkey of the peer you wish to open
-                                          to
-      -s STRING, --sat-per-vbyte=STRING   The fee to use in sats per vbytes
-      -u STRING, --pubkey=STRING          The Pubkey to use as the default pubkey
-                                          for all Orb commands.
-    
-    
+-  ``--chan-id TEXT``
+-  ``--max-paths INTEGER``: [default: 10000]
+-  ``--fee-rate INTEGER``: [default: 500]
+-  ``--time-pref FLOAT``: [default: 0]
+-  ``--num-threads INTEGER``: [default: 5]
+-  ``--node TEXT``: [default:
+   02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+-  ``--help``: Show this message and exit.
 
-``orb peer.connect``
------------
+``orb pay lnurl``
+~~~~~~~~~~~~~~~~~
 
-.. code:: bash
+Generate bolt11 invoices from LNURL, and pay them.
 
-    Usage: main.py [--core-opts] peer.connect [--options] [other tasks here ...]
-    
-    Docstring:
-      Connect to a peer.
-    
-    Options:
-      -p STRING, --peer-pubkey=STRING   The Pubkey of the peer you wish to open to
-      -u STRING, --pubkey=STRING        The Pubkey to use as the default pubkey for
-                                        all Orb commands.
-    
-    
+**Usage**:
 
-``orb peer.list``
------------
+.. code:: console
 
-.. code:: bash
+    $ orb pay lnurl [OPTIONS] URL
 
-    Usage: main.py [--core-opts] peer.list [--options] [other tasks here ...]
-    
-    Docstring:
-      List peers.
-    
-    Options:
-      -p STRING, --pubkey=STRING   The Pubkey to use as the default pubkey for all
-                                   Orb commands.
-    
-    
+**Arguments**:
 
-``orb test.run-all-tests``
------------
+-  ``URL``: [required]
 
-.. code:: bash
+**Options**:
 
-    Usage: main.py [--core-opts] test.run-all-tests [other tasks here ...]
-    
-    Docstring:
-      Run all tests.
-    
-    Options:
-      none
-    
-    
+-  ``--total-amount-sat INTEGER``: [default: 100000000]
+-  ``--chunks INTEGER``: [default: 100]
+-  ``--num-threads INTEGER``: [default: 5]
+-  ``--rate-limit INTEGER``: [default: 5]
+-  ``--pubkey TEXT``: [default:
+   02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+-  ``--wait / --no-wait``: [default: True]
+-  ``--chan-id TEXT``
+-  ``--max-paths INTEGER``: [default: 10000]
+-  ``--fee-rate INTEGER``: [default: 500]
+-  ``--time-pref FLOAT``: [default: 0]
+-  ``--help``: Show this message and exit.
 
+``orb peer``
+------------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb peer [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``connect``: Connect to a peer.
+-  ``list``: List peers.
+
+``orb peer connect``
+~~~~~~~~~~~~~~~~~~~~
+
+Connect to a peer.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb peer connect [OPTIONS] PEER_PUBKEY
+
+**Arguments**:
+
+-  ``PEER_PUBKEY``: [required]
+
+**Options**:
+
+-  ``--pubkey TEXT``: [default: ]
+-  ``--help``: Show this message and exit.
+
+``orb peer list``
+~~~~~~~~~~~~~~~~~
+
+List peers.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb peer list [OPTIONS]
+
+**Options**:
+
+-  ``--pubkey TEXT``: [default: ]
+-  ``--help``: Show this message and exit.
+
+``orb rebalance``
+-----------------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb rebalance [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``rebalance``: Rebalance the node
+
+``orb rebalance rebalance``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Rebalance the node
+
+**Usage**:
+
+.. code:: console
+
+    $ orb rebalance rebalance [OPTIONS] C
+
+**Arguments**:
+
+-  ``C``: [required]
+
+**Options**:
+
+-  ``--amount INTEGER``: [default: 1000]
+-  ``--chan-id TEXT``
+-  ``--last-hop-pubkey TEXT``
+-  ``--max-paths INTEGER``: [default: 10000]
+-  ``--fee-rate INTEGER``: [default: 500]
+-  ``--time-pref FLOAT``: [default: 0]
+-  ``--node TEXT``: [default:
+   02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+-  ``--help``: Show this message and exit.
+
+``orb test``
+------------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb test [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``run-all-tests``: Run all tests.
+
+``orb test run-all-tests``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run all tests.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb test run-all-tests [OPTIONS]
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
