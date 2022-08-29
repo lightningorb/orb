@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 15:05:46
+# @Last Modified time: 2022-08-29 16:09:33
 
 try:
     # not all actions install all requirements
@@ -132,6 +132,7 @@ pip3.9 install pyarmor==6.6.2;
 pip3.9 install fabric;
 pip3.9 install plyer;
 pip3.9 install fastapi;
+pip3.9 install uvicorn;
 pip3.9 install rich;
 pip3.9 install typer;
 pip3.9 install simple_chalk;
