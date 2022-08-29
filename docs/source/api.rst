@@ -4,16 +4,11 @@ Orb API
 Why Python
 ----------
 
-It's about simplicity, and making lightning accessible to everyone.
+Python is a simple and elegantly designed language that has stood the test of time. it is the `most searched language on the web <https://pypl.github.io/PYPL.html>`_, is broadly used in every field / industry / sector worldwide.
 
-- `Python is the most searched language <https://pypl.github.io/PYPL.html>`_.
-- Python is broadly used in every field / industry / sector.
-- Python's ancestor was used for teaching purposes for 12 years before before Python's inception.
-    - lindy effect.
-    - lindy effect.
-    - lindy effect.
+So in short, lindy effect, simplicity, and a great language if we want more lightning adoption.
 
-sending coins from LND to CLN in one line of code
+Sending coins from LND to CLN in one line of code
 -------------------------------------------------
 
 Orb's API is the same whether we're interacting with an LND or Core-Lightning node. In this tutorial we'll learn how to send coins from LND to CLN in 1 line of code.

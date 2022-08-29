@@ -22,7 +22,7 @@ class ResultType:
 class Ln:
     def __init__(self, node_type=None, **kwargs):
         if not node_type:
-            from orb.misc.utils import pref
+            from orb.misc.utils_no_kivy import pref
 
             node_type = pref("host.type")
         self.node_type = node_type

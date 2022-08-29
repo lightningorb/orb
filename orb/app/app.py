@@ -2,11 +2,12 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 20:31:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-20 12:07:45
+# @Last Modified time: 2022-08-29 13:46:58
 
 import os
 import shutil
 from orb.logic.cron import Cron
+from orb.logic import cli_thread_manager
 from orb.misc.utils_no_kivy import platform
 from orb.store.db_meta import *
 from orb.misc.conf_defaults import set_conf_defaults
@@ -60,6 +61,9 @@ class App:
         App.store = JsonStore(
             Path(App()._get_user_data_dir()) / pref("path.json") / "orb.json"
         )
+
+    def stop(self):
+        cli_thread_manager.cli_thread_manager.stop_threads()
 
     def build(self, ln):
         from orb.misc.channels import Channels

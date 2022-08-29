@@ -1,0 +1,3 @@
+from node
+
+workdir /src/

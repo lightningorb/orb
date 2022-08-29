@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:27:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 09:29:46
+# @Last Modified time: 2022-08-29 13:33:18
 
 from threading import Thread, Event
 
@@ -15,12 +15,18 @@ class StoppableThread(Thread):
         self.visible = visible
         from orb.app import App, AppMode
 
-        if App.get_running_app().mode == AppMode.ui:
+        app = App.get_running_app()
+        if app.mode == AppMode.ui:
             from orb.logic.thread_manager import thread_manager
 
             thread_manager.add_thread(self)
+        elif app.mode == AppMode.cli:
+            from orb.logic.cli_thread_manager import cli_thread_manager
+
+            cli_thread_manager.add_thread(self)
 
     def run(self, *args):
+
         super(StoppableThread, self).run(*args)
 
     def stop(self):
