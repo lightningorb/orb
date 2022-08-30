@@ -10,14 +10,14 @@ Dockerfile
 
     RUN curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.21.5-ubuntu-20.04-x86_64.tar.gz > orb-0.21.5-ubuntu-20.04-x86_64.tar.gz 
 
-    RUN tar xvf orb-0.21.4-ubuntu-20.04-x86_64.tar.gz
+    RUN tar xvf orb-0.21.5-ubuntu-20.04-x86_64.tar.gz
 
     WORKDIR orb
 
     RUN apt-get update;
     ENV ORB_NO_DEVICE_ID_WARNING=1
     ARG DEBIAN_FRONTEND=noninteractive
-    RUN bash bootstrap_ubuntu_20_04.sh
+    RUN bash bootstrap_ubuntu_20_05.sh
 
 Then some commands to get you started:
 
