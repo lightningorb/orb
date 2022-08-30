@@ -17,7 +17,7 @@ Dockerfile
     RUN apt-get update;
     ENV ORB_NO_DEVICE_ID_WARNING=1
     ARG DEBIAN_FRONTEND=noninteractive
-    RUN bash bootstrap_ubuntu_20_05.sh
+    RUN bash bootstrap_ubuntu_20_04.sh
 
 Then some commands to get you started:
 
