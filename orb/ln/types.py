@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 10:50:52
+# @Last Modified time: 2022-08-30 08:59:53
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -54,6 +54,57 @@ class Info(PrintableType):
         ]
         for c in common:
             setattr(self, c, kwargs[c])
+
+
+class ForwardingEvents(PrintableType):
+    def __init__(self, impl, fwd):
+        self.forwarding_events = []
+        self.last_offset_index: int = 0
+        if impl == "lnd":
+            self.last_offset_index = fwd.last_offset_index
+
+        name = dict(lnd="forwarding_events", cln="listForwards")
+
+        for e in getattr(fwd, name[impl]):
+            self.forwarding_events.append(ForwardingEvent(impl=impl, e=e))
+
+
+class ForwardingEvent(PrintableType):
+    def __init__(self, impl, e):
+        self.amt_in: int = 0
+        self.amt_in_msat: int = 0
+        self.amt_out: int = 0
+        self.amt_out_msat: int = 0
+        self.chan_id_in: int = 0
+        self.chan_id_out: int = 0
+        self.fee: int = 0
+        self.fee_msat: int = 0
+        self.timestamp: int = 0
+        self.timestamp_ns: int = 0
+
+        if impl == "lnd":
+            self.amt_in = e.amt_in
+            self.amt_in_msat = e.amt_in_msat
+            self.amt_out = e.amt_out
+            self.amt_out_msat = e.amt_out_msat
+            self.chan_id_in = e.chan_id_in
+            self.chan_id_out = e.chan_id_out
+            self.fee = e.fee
+            self.fee_msat = e.fee_msat
+            self.timestamp = e.timestamp
+            self.timestamp_ns = e.timestamp_ns
+
+        elif impl == "cln":
+            self.amt_in = e.in_msatoshi // 1000
+            self.amt_in_msat = e.in_msatoshi
+            self.amt_out = e.out_msatoshi // 1000
+            self.amt_out_msat = e.out_msatoshi
+            self.chan_id_in = e.in_channel
+            self.chan_id_out = e.out_channel
+            self.fee = e.fee // 1000
+            self.fee_msat = e.fee
+            self.timestamp = int(e.resolved_time)
+            self.timestamp_ns = e.resolved_time * 1000
 
 
 class Balance(PrintableType):

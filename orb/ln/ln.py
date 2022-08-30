@@ -2,11 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 16:26:28
+# @Last Modified time: 2022-08-30 11:01:57
 
 from configparser import ConfigParser
 
-from time import sleep
 from pathlib import Path
 from orb.lnd.lnd import Lnd
 from orb.cln.cln import Cln
@@ -147,54 +146,21 @@ class Ln:
         res = self.concrete.send_payment(payment_request, route)
         return SendPaymentResponse(self.node_type, res)
 
+    def get_forwarding_history(
+        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
+    ):
+        res = self.concrete.get_forwarding_history(
+            start_time=start_time,
+            end_time=end_time,
+            index_offset=index_offset,
+            num_max_events=num_max_events,
+        )
+
+        return ForwardingEvents(impl=self.node_type, fwd=res)
+
     def get_htlc_events(self, sim=False):
-
-        f1 = dict2obj(
-            {
-                "forward_event": {
-                    "payment_hash": "10afbb3b440068bfa3e2b0c5f3bdd42f2b913c736789e21d979328b2367110c7",
-                    "in_channel": "749662x1463x3",
-                    "out_channel": "749669x2018x8",
-                    "in_msatoshi": 689554963,
-                    "in_msat": "689554963msat",
-                    "out_msatoshi": 689547068,
-                    "out_msat": "689547068msat",
-                    "fee": 7895,
-                    "fee_msat": "7895msat",
-                    "status": "offered",
-                    "style": "tlv",
-                    "received_time": 1661218921.231,
-                }
-            }
-        )
-        f2 = dict2obj(
-            {
-                "forward_event": {
-                    "payment_hash": "10afbb3b440068bfa3e2b0c5f3bdd42f2b913c736789e21d979328b2367110c7",
-                    "in_channel": "749662x1463x3",
-                    "out_channel": "749669x2018x8",
-                    "in_msatoshi": 689554963,
-                    "in_msat": "689554963msat",
-                    "out_msatoshi": 689547068,
-                    "out_msat": "689547068msat",
-                    "fee": 7895,
-                    "fee_msat": "7895msat",
-                    "status": "failed",
-                    "style": "tlv",
-                    "received_time": 1661218921.231,
-                    "resolved_time": 1661218924.423,
-                }
-            }
-        )
-
-        if sim:
-            while True:
-                for f in [f1, f2]:
-                    yield HTLC(self.node_type, f)
-                    sleep(5)
-        else:
-            for e in self.concrete.get_htlc_events():
-                yield HTLC(self.node_type, e)
+        for e in self.concrete.get_htlc_events():
+            yield HTLC(self.node_type, e)
 
     def __getattr__(self, name):
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)

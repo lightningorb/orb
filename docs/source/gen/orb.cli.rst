@@ -16,10 +16,10 @@ Submodules
    orb.cli.chalk
    orb.cli.channel
    orb.cli.invoice
-   orb.cli.misc
    orb.cli.node
    orb.cli.pay
    orb.cli.peer
    orb.cli.rebalance
    orb.cli.test
    orb.cli.utils
+   orb.cli.web

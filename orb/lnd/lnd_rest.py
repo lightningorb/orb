@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 03:09:17
+# @Last Modified time: 2022-08-30 04:00:38
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -318,6 +318,10 @@ class LndREST(LndBase):
         the internal wallet will consult its fee model to
         determine a fee for the default confirmation target.
         """
+        assert type(addr) is str
+        assert type(amount) is int
+        assert type(sat_per_vbyte) is int
+        assert sat_per_vbyte >= 1
         url = f"/v1/transactions"
         data = {
             "addr": addr,  # The address to send coins to

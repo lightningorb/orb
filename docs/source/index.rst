@@ -19,6 +19,7 @@ Orb
    extending
    cli
    api
+   dockerfile
 
 
 Indices and tables

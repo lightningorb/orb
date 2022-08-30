@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 13:24:07
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-06 19:58:23
+# @Last Modified time: 2022-08-30 11:47:56
 
 import arrow
 
@@ -145,7 +145,7 @@ class ForwardEvent(Model):
     fee_msat = IntegerField()
     amt_in_msat = IntegerField()
     amt_out_msat = IntegerField()
-    timestamp_ns = IntegerField(index=True, unique=True)
+    timestamp_ns = IntegerField(index=True, unique=False)
 
     @hybrid_method
     def this_week(self):

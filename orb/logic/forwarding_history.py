@@ -2,11 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 13:44:29
+# @Last Modified time: 2022-08-30 11:49:45
 
 import arrow
 from time import sleep
-from threading import Thread, Lock
+from threading import Lock
 
 from orb.app import App
 from orb.misc.decorators import guarded
@@ -25,27 +25,27 @@ class DownloadFowardingHistory(StoppableThread):
             out_stats = (
                 model.ChannelStats()
                 .select()
-                .where(model.ChannelStats.chan_id == int(f.chan_id_out))
+                .where(model.ChannelStats.chan_id == f.chan_id_out)
             )
             if out_stats:
                 out_stats = out_stats.first()
                 out_stats.earned_msat += ev.fee_msat
             else:
                 out_stats = model.ChannelStats(
-                    chan_id=int(f.chan_id_out), earned_msat=int(f.fee_msat)
+                    chan_id=f.chan_id_out, earned_msat=int(f.fee_msat)
                 )
             out_stats.save()
             in_stats = (
                 model.ChannelStats()
                 .select()
-                .where(model.ChannelStats.chan_id == int(f.chan_id_in))
+                .where(model.ChannelStats.chan_id == f.chan_id_in)
             )
             if in_stats:
                 in_stats = in_stats.first()
                 in_stats.helped_earn_msat += ev.fee_msat
             else:
                 in_stats = model.ChannelStats(
-                    chan_id=int(f.chan_id_in), helped_earn_msat=int(f.fee_msat)
+                    chan_id=f.chan_id_in, helped_earn_msat=int(f.fee_msat)
                 )
             in_stats.save()
 
@@ -76,15 +76,15 @@ class DownloadFowardingHistory(StoppableThread):
                     clear_stats()
                 app = App.get_running_app()
                 while not self.stopped():
-                    print(".")
                     fwd = app.ln.get_forwarding_history(
                         index_offset=start_offset, num_max_events=chunk_size
                     )
+                    ev = None
                     for f in fwd.forwarding_events:
                         ev = model.ForwardEvent(
                             timestamp=int(f.timestamp),
-                            chan_id_in=int(f.chan_id_in),
-                            chan_id_out=int(f.chan_id_out),
+                            chan_id_in=f.chan_id_in,
+                            chan_id_out=f.chan_id_out,
                             amt_in=int(f.amt_in),
                             amt_out=int(f.amt_out),
                             fee=int(f.fee),
@@ -98,7 +98,9 @@ class DownloadFowardingHistory(StoppableThread):
                             f"Saving switch event ({arrow.get(ev.timestamp).format('YYYY-MM-DD HH:mm:SS')})"
                         )
                         update_stats(f, ev)
-                    start_offset = fwd.last_offset_index
+                    if ev:
+                        start_offset = ev.id  # fwd.last_offset_index
+                    print("start_offset", start_offset)
                     if not fwd.forwarding_events:
                         break
 

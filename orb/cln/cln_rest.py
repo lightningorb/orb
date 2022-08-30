@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 08:56:56
+# @Last Modified time: 2022-08-30 13:07:10
 
 from typing import Union
 
@@ -278,17 +278,17 @@ class ClnREST(ClnBase):
     def get_forwarding_history(
         self, start_time=None, end_time=None, index_offset=0, num_max_events=100
     ):
-        data = dict(
-            start_time=start_time,
-            end_time=end_time,
-            index_offset=index_offset,
-            num_max_events=num_max_events,
+        r = self.__get(
+            f"/v1/channel/listForwardsPaginated?status=settled&offset={index_offset}&maxLen={num_max_events}"
         )
-        url = f"{self.fqdn}/v1/switch"
-        r = requests.post(
-            url, headers=self.headers, verify=self.cert_path, data=json.dumps(data)
-        )
-        return dict2obj(r.json())
+        if index_offset >= r.totalForwards:
+            return dict2obj(
+                dict(listForwards=[], maxLen=0, offset=0, status=0, totalForwards=0)
+            )
+        for i in range(1, len(r.listForwards)):
+            if not r.listForwards[i - 1].resolved_time <= r.listForwards[i].resolved_time:
+                raise Exception('Events need to be sorted - please use the latest version of c-lightning-REST')
+        return r
 
     def get_pending_channels(self):
         url = f"{self.fqdn}/v1/channels/pending"
@@ -500,6 +500,11 @@ class ClnREST(ClnBase):
         return self.multifundchannel(
             destinations=chans, feerate="urgent", minchannels=10
         )
+
+    # def get_forwarding_history(
+    #     self, start_time=None, end_time=None, index_offset=0, num_max_events=100
+    # ):
+    #     return self.listforwards(status="settled")
 
     def __get(self, url):
         """

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 05:07:25
+# @Last Modified time: 2022-08-30 04:00:49
 import sys
 import os
 import json
@@ -173,6 +173,7 @@ class LndGRPC(LndBase):
 
     def get_channels(self, active_only=False):
         from orb.misc.channel import Channel
+
         j = json.loads(
             MessageToJson(
                 self.stub.ListChannels(ln.ListChannelsRequest(active_only=active_only)),
@@ -186,7 +187,6 @@ class LndGRPC(LndBase):
         for c in chans.channels:
             channels.append(Channel(c))
         return channels
-
 
     def get_route(
         self,
@@ -323,6 +323,10 @@ class LndGRPC(LndBase):
         return dict2obj(json_obj)
 
     def send_coins(self, addr: str, amount: int, sat_per_vbyte: int):
+        assert type(addr) is str
+        assert type(amount) is int
+        assert type(sat_per_vbyte) is int
+        assert sat_per_vbyte >= 1
         return self.stub.SendCoins(
             ln.SendCoinsRequest(
                 addr=addr, amount=int(amount), sat_per_vbyte=int(sat_per_vbyte)

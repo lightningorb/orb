@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 13:49:20
+# @Last Modified time: 2022-08-30 09:46:33
 
 
 from orb.misc.utils_no_kivy import pref
@@ -15,6 +15,10 @@ class Cron:
     def __init__(self, *_, **__):
         from kivy.clock import Clock
         from kivy.clock import mainthread
+
+        from orb.logic.forwarding_history import DownloadFowardingHistory
+
+        DownloadFowardingHistory().start()
 
         # TODO: needs tying up
 
@@ -62,8 +66,6 @@ class Cron:
                     10,
                 )
 
-            from orb.logic.forwarding_history import DownloadFowardingHistory
             from orb.logic.payment_history import DownloadPaymentHistory
 
-            DownloadFowardingHistory().start()
             DownloadPaymentHistory().start()

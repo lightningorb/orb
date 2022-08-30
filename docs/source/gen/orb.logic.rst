@@ -18,6 +18,7 @@ Submodules
    orb.logic.balance
    orb.logic.balanced_ratio
    orb.logic.channel_selector
+   orb.logic.cli_thread_manager
    orb.logic.cron
    orb.logic.forwarding_history
    orb.logic.gestures_delegate
