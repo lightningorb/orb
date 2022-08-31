@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:08:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 11:11:36
+# @Last Modified time: 2022-08-31 09:05:28
 
 import os
 from pathlib import Path
@@ -23,7 +23,7 @@ def get_default_id():
     return ""
 
 
-def pprint(*args, end="\n"):
+def pprint_from_ansi(*args, end="\n"):
     if os.environ.get("ORB_CLI_NO_COLOR"):
         import sys
 
@@ -34,4 +34,14 @@ def pprint(*args, end="\n"):
         from rich.console import Console
 
         Console().print(Text.from_ansi(args[0]))
-        # _print(json.dumps(args, indent=4))
+
+
+def pprint(*args, end="\n"):
+    if os.environ.get("ORB_CLI_NO_COLOR"):
+        import sys
+
+        sys.stdout.write(" ".join(str(x) for x in args))
+    else:
+        from rich.pretty import pprint
+
+        pprint(args[0], expand_all=True)

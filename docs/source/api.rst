@@ -48,7 +48,7 @@ Again, super easy: 5 lines of code thus far. Now let's send.
 
     res = lnd.send_coins(
         addr=cln_address.address,
-        amount=100_000,
+        satoshi=100_000,
         sat_per_vbyte=1,
     )
 
@@ -67,7 +67,7 @@ And that's it. We are done. Let's condense our code a little bit.
 
     print(lnd.send_coins(
         addr=cln.new_address().address,
-        amount=100_000,
+        satoshi=100_000,
         sat_per_vbyte=1,
     ))
 

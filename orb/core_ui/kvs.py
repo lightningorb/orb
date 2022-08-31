@@ -449,7 +449,7 @@ Builder.load_string('''
         MDRaisedButton:
             id: send_button
             text: "Send"
-            on_release: root.send_coins(addr=address.text, amount=amount.text, sat_per_vbyte=sats_per_vbyte.text)
+            on_release: root.send_coins(addr=address.text, satoshi=amount.text, sat_per_vbyte=sats_per_vbyte.text)
 
 ''')
 Builder.load_string('''

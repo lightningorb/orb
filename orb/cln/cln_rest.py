@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 13:07:10
+# @Last Modified time: 2022-08-31 09:50:30
 
 from typing import Union
 
@@ -286,8 +286,13 @@ class ClnREST(ClnBase):
                 dict(listForwards=[], maxLen=0, offset=0, status=0, totalForwards=0)
             )
         for i in range(1, len(r.listForwards)):
-            if not r.listForwards[i - 1].resolved_time <= r.listForwards[i].resolved_time:
-                raise Exception('Events need to be sorted - please use the latest version of c-lightning-REST')
+            if (
+                not r.listForwards[i - 1].resolved_time
+                <= r.listForwards[i].resolved_time
+            ):
+                raise Exception(
+                    "Events need to be sorted - please use the latest version of c-lightning-REST"
+                )
         return r
 
     def get_pending_channels(self):
@@ -354,38 +359,28 @@ class ClnREST(ClnBase):
         )
 
     def send_coins(
-        self,
-        addr: str,
-        amount: Union[int, str],
-        sat_per_vbyte: Union[int, None, str] = None,
+        self, addr: str, satoshi: int, sat_per_vbyte: int, send_all: bool = False
     ):
-        """
-        param amount: either 'all' or an integer value in sats
-        Conversion done.
-        TODO: CLN GRPC call
-        """
+        assert type(addr) is str
+        assert type(satoshi) is int
+        assert type(sat_per_vbyte) is int
+        assert type(send_all) is bool
         if type(sat_per_vbyte) is int:
             feerate = f"{sat_per_vbyte*1000}perkb"
-        elif type(sat_per_vbyte) is str:
-            assert sat_per_vbyte in ["normal", "urgent", "slow"]
-            feerate = sat_per_vbyte
-        else:
-            feerate = None
-        if amount == "all":
+        if send_all:
             kwargs = dict(destination=addr, satoshi="all")
-            if feerate:
-                kwargs["feerate"] = feerate
+            kwargs["feerate"] = "normal"
+            # kwargs["feerate"] = feerate
             return self.withdraw(**kwargs)
         else:
             # if this throws an exception, then good
-            amount = int(amount)
-            outputs, change = self.select_outputs_for_amount(amount)
+            outputs, change = self.select_outputs_for_amount(satoshi)
             if not outputs:
                 raise Exception("insufficient funds available to construct transaction")
             utxos = [f"{o.tx_hash}:{o.tx_index}" for o in outputs]
-            kwargs = dict(destination=addr, satoshi=amount, utxos=utxos)
-            if feerate:
-                kwargs["feerate"] = feerate
+            kwargs = dict(destination=addr, satoshi=satoshi, utxos=utxos)
+            # kwargs["feerate"] = feerate
+            kwargs["feerate"] = "normal"
             return self.withdraw(**kwargs)
 
     def sign_message(self, msg):

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 04:00:38
+# @Last Modified time: 2022-08-31 09:42:52
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -309,7 +309,9 @@ class LndREST(LndBase):
         )
         return self.__post(url=url, data=data)
 
-    def send_coins(self, addr, amount, sat_per_vbyte):
+    def send_coins(
+        self, addr: str, satoshi: int, sat_per_vbyte: int, send_all: bool = False
+    ):
         """
         lncli: sendcoins SendCoins executes a request to send coins
         to a particular address. Unlike SendMany, this RPC call
@@ -319,14 +321,15 @@ class LndREST(LndBase):
         determine a fee for the default confirmation target.
         """
         assert type(addr) is str
-        assert type(amount) is int
+        assert type(satoshi) is int
         assert type(sat_per_vbyte) is int
         assert sat_per_vbyte >= 1
         url = f"/v1/transactions"
         data = {
             "addr": addr,  # The address to send coins to
-            "amount": amount,  # The amount in satoshis to send
+            "amount": satoshi,  # The amount in satoshis to send
             "sat_per_vbyte": sat_per_vbyte,  # A manual fee rate set in sat/vbyte that should be used when crafting the transaction.
+            "send_all": send_all,
         }
         return self.__post(url, data=data)
 

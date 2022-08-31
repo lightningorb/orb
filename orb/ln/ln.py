@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 11:01:57
+# @Last Modified time: 2022-08-31 10:10:42
 
 from configparser import ConfigParser
 
@@ -141,6 +141,14 @@ class Ln:
             )
         else:
             return res
+
+    def send_coins(
+        self, addr: str, satoshi: int, sat_per_vbyte: int, send_all: bool = False
+    ):
+        res = self.concrete.send_coins(
+            addr=addr, satoshi=satoshi, sat_per_vbyte=sat_per_vbyte, send_all=send_all
+        )
+        return ChainTransaction(impl=self.node_type, tx=res)
 
     def send_payment(self, payment_request, route):
         res = self.concrete.send_payment(payment_request, route)

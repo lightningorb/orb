@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 11:12:26
+# @Last Modified time: 2022-08-31 08:57:41
 
 import re
 import os
@@ -21,19 +21,11 @@ from orb.ln import Ln
 from orb.ln import factory
 from configparser import ConfigParser
 from .chalk import chalk
-from orb.cli.utils import pprint as print
+from orb.cli.utils import pprint_from_ansi
 
 import typer
 
 app = typer.Typer(help="Commands to perform operations on nodes.")
-
-data = {
-    "name": "Rick",
-    "age": 42,
-    "items": [{"name": "Portal Gun"}, {"name": "Plumbus"}],
-    "active": True,
-    "affiliation": None,
-}
 
 
 @app.command()
@@ -48,16 +40,16 @@ def delete(
     if not pubkey:
         pubkey = get_default_id()
     if not pubkey:
-        print("No node pubkey provided. Quitting.")
+        pprint_from_ansi("No node pubkey provided. Quitting.")
         return
     conf_path = Path(_get_user_data_dir_static()) / f"orb_{pubkey}"
     if conf_path.exists():
         from shutil import rmtree
 
         rmtree(conf_path.as_posix())
-        print(chalk().green(f"{conf_path} deleted"))
+        pprint_from_ansi(chalk().green(f"{conf_path} deleted"))
     else:
-        print(chalk().red(f"{conf_path} does not exist"))
+        pprint_from_ansi(chalk().red(f"{conf_path} does not exist"))
 
 
 @app.command()
@@ -76,13 +68,13 @@ def list(
         if m and x.is_dir():
             pk = m.group(1)
             if show_info:
-                print(f"Showing info for: {chalk().greenBright(pk)}:")
+                pprint_from_ansi(f"Showing info for: {chalk().greenBright(pk)}:")
                 try:
                     info(pk)
                 except:
-                    print(f"Failed to get info for: {chalk().red(pk)}:")
+                    pprint_from_ansi(f"Failed to get info for: {chalk().red(pk)}:")
             else:
-                print(chalk().green(pk))
+                pprint_from_ansi(chalk().green(pk))
 
 
 @app.command()
@@ -97,7 +89,7 @@ def info(
     if not pubkey:
         pubkey = get_default_id()
     for k, v in factory(pubkey).get_info().__dict__.items():
-        print(f"{chalk().greenBright(k)}: {chalk().blueBright(v)}")
+        pprint_from_ansi(f"{chalk().greenBright(k)}: {chalk().blueBright(v)}")
 
 
 @app.command()
@@ -115,7 +107,7 @@ def balance(
         pubkey = get_default_id()
     from orb.logic.balance import balance as bal
 
-    print(chalk().green(f"{bal(factory(pubkey)):_}"))
+    pprint_from_ansi(chalk().green(f"{bal(factory(pubkey)):_}"))
 
 
 @app.command()
@@ -191,11 +183,11 @@ def create(
     Create node.
     """
 
-    print(chalk().cyan(f"Encrypting mac"))
+    pprint_from_ansi(chalk().cyan(f"Encrypting mac"))
     mac_secure = MacaroonSecure.init_from_plain(mac_hex).macaroon_secure.decode()
-    print(chalk().cyan(f"Encrypting cert"))
+    pprint_from_ansi(chalk().cyan(f"Encrypting cert"))
     cert_secure = CertificateSecure.init_from_plain(cert_plain).cert_secure.decode()
-    print(chalk().cyan(f"Connecting to: {hostname}"))
+    pprint_from_ansi(chalk().cyan(f"Connecting to: {hostname}"))
     ln = Ln(
         node_type=node_type,
         fallback_to_mock=False,
@@ -210,14 +202,14 @@ def create(
     )
     try:
         pubkey = ln.get_info().identity_pubkey
-        print(chalk().greenBright(f"Connected to: {pubkey}"))
+        pprint_from_ansi(chalk().greenBright(f"Connected to: {pubkey}"))
     except Exception as e:
-        print(chalk().red(f"Failed to connect: {e}"))
+        pprint_from_ansi(chalk().red(f"Failed to connect: {e}"))
         return
     conf_dir = Path(_get_user_data_dir_static()) / f"orb_{pubkey}"
     if not conf_dir.is_dir():
         conf_dir.mkdir()
-        print(chalk().green(f"{conf_dir} created"))
+        pprint_from_ansi(chalk().green(f"{conf_dir} created"))
     conf_path = conf_dir / f"orb_{pubkey}.ini"
     conf = ConfigParser()
     conf.filename = conf_path.as_posix()
@@ -233,7 +225,7 @@ def create(
     conf.set("ln", "grpc_port", str(grpc_port))
     conf.set("ln", "identity_pubkey", pubkey)
     conf.write(conf_path.open("w"))
-    print(chalk().green(f"{conf_path} created"))
+    pprint_from_ansi(chalk().green(f"{conf_path} created"))
     if use_node:
         use(pubkey)
 
@@ -257,12 +249,12 @@ def create_from_cert_files(
     """
     Create node and use certificate files.
     """
-    print(chalk().cyan(f"Reading mac: {mac_file_path}"))
+    pprint_from_ansi(chalk().cyan(f"Reading mac: {mac_file_path}"))
     cert_plain, mac_hex = "", ""
     with open(mac_file_path, "rb") as f:
         mac_hex = codecs.encode(f.read(), "hex")
     if cert_file_path:
-        print(chalk().cyan(f"Reading cert: {cert_file_path}"))
+        pprint_from_ansi(chalk().cyan(f"Reading cert: {cert_file_path}"))
         with open(cert_file_path, "r") as f:
             cert_plain = f.read()
 
@@ -316,12 +308,12 @@ def ssh_wizard(
     with Connection(
         hostname, connect_kwargs=connect_kwargs, user=ssh_user, port=ssh_port
     ) as con:
-        print(chalk().magenta("ssh session connected!"))
+        pprint_from_ansi(chalk().magenta("ssh session connected!"))
         try:
-            print(
+            pprint_from_ansi(
                 chalk().green(f'OS:       {con.run("uname", hide=True).stdout.strip()}')
             )
-            print(
+            pprint_from_ansi(
                 chalk().green(
                     f'Hostname: {con.run("hostname", hide=True).stdout.strip()}'
                 )
@@ -333,19 +325,19 @@ def ssh_wizard(
             d = Path(d)
             tmp_ln_cert_path = d / Path(ln_cert_path).name
             tmp_ln_macaroon_path = d / Path(ln_macaroon_path).name
-            print(chalk().cyan(f"Securely copying: {ln_cert_path}"))
+            pprint_from_ansi(chalk().cyan(f"Securely copying: {ln_cert_path}"))
             con.get(
                 f"{ln_cert_path}",
                 tmp_ln_cert_path.as_posix(),
             )
-            print(chalk().cyan(f"Securely copying: {ln_macaroon_path}"))
+            pprint_from_ansi(chalk().cyan(f"Securely copying: {ln_macaroon_path}"))
             con.get(
                 f"{ln_macaroon_path}",
                 tmp_ln_macaroon_path.as_posix(),
             )
 
-            print(chalk().cyan(f"Encrypting: {tmp_ln_cert_path}"))
-            print(chalk().cyan(f"Encrypting: {tmp_ln_macaroon_path}"))
+            pprint_from_ansi(chalk().cyan(f"Encrypting: {tmp_ln_cert_path}"))
+            pprint_from_ansi(chalk().cyan(f"Encrypting: {tmp_ln_macaroon_path}"))
 
             with tmp_ln_macaroon_path.open("rb") as f:
                 mac_hex = codecs.encode(f.read(), "hex")

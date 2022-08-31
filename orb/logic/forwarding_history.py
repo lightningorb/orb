@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 11:49:45
+# @Last Modified time: 2022-08-31 08:05:09
 
 import arrow
 from time import sleep
@@ -100,7 +100,6 @@ class DownloadFowardingHistory(StoppableThread):
                         update_stats(f, ev)
                     if ev:
                         start_offset = ev.id  # fwd.last_offset_index
-                    print("start_offset", start_offset)
                     if not fwd.forwarding_events:
                         break
 

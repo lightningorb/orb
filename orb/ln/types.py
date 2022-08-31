@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 08:59:53
+# @Last Modified time: 2022-08-31 10:06:28
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -20,6 +20,11 @@ class PrintableType:
 
     def todict(self):
         return self.__dict__
+
+
+class ChainTransaction(PrintableType):
+    def __init__(self, impl, tx):
+        self.txid = tx.txid
 
 
 class Info(PrintableType):

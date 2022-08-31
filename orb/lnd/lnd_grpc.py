@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 04:00:49
+# @Last Modified time: 2022-08-31 09:44:07
 import sys
 import os
 import json
@@ -322,14 +322,19 @@ class LndGRPC(LndBase):
         )
         return dict2obj(json_obj)
 
-    def send_coins(self, addr: str, amount: int, sat_per_vbyte: int):
+    def send_coins(
+        self, addr: str, satoshi: int, sat_per_vbyte: int, send_all: bool = False
+    ):
         assert type(addr) is str
-        assert type(amount) is int
+        assert type(satoshi) is int
         assert type(sat_per_vbyte) is int
         assert sat_per_vbyte >= 1
         return self.stub.SendCoins(
             ln.SendCoinsRequest(
-                addr=addr, amount=int(amount), sat_per_vbyte=int(sat_per_vbyte)
+                addr=addr,
+                amount=int(satoshi),
+                sat_per_vbyte=int(sat_per_vbyte),
+                send_all=send_all,
             )
         )
         return response

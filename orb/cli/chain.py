@@ -2,11 +2,15 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:04:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 14:14:47
+# @Last Modified time: 2022-08-31 10:11:45
 
+from typing import Optional, Union
 from .chalk import chalk
 from orb.cli.utils import get_default_id
 from orb.ln import factory
+
+from orb.cli.utils import pprint
+from orb.cli.utils import pprint_from_ansi
 
 import typer
 
@@ -57,29 +61,58 @@ def deposit(pubkey: str = ""):
 
 
 @app.command()
-def send(address: str, amount: int, sat_per_vbyte: int, pubkey: str = ""):
+def send(
+    address: str,
+    satoshi: str = typer.Argument(
+        ..., help="Amount to send, expressed in satoshis, or 'all'."
+    ),
+    sat_per_vbyte: int = typer.Argument(
+        ..., help="Sat per vbyte to use for the transaction."
+    ),
+    pubkey: Optional[str] = typer.Argument(
+        None, help="The pubkey of the node. If not provided, use the default node."
+    ),
+):
     """
     Send coins on-chain.
     """
-
     if not pubkey:
         pubkey = get_default_id()
 
-    try:
-        sat_per_vbyte = int(sat_per_vbyte)
-    except:
-        pass
-    try:
-        amount = int(amount)
-    except:
-        pass
+    send_all = False
+    if satoshi == "all":
+        send_all = True
+        satoshi = 0
+    else:
+        satoshi = int(satoshi)
     node = factory(pubkey)
     try:
         ret = node.send_coins(
             addr=address,
-            amount=amount,
+            satoshi=satoshi,
             sat_per_vbyte=sat_per_vbyte,
+            send_all=send_all,
         )
-        print(ret)
+        for k, v in ret.__dict__.items():
+            pprint_from_ansi(f"{chalk().greenBright(k)}: {chalk().blueBright(v)}")
+
     except Exception as e:
         print(f"exception occured: {e}")
+
+
+@app.command()
+def balance(
+    pubkey: Optional[str] = typer.Argument(
+        None, help="The pubkey of the node. If not provided, use the default node."
+    ),
+):
+    """
+    Get on-chain balance.
+    """
+
+    if not pubkey:
+        pubkey = get_default_id()
+    node = factory(pubkey)
+    for k, v in factory(pubkey).get_balance().__dict__.items():
+        val = f"{v:_}"
+        pprint_from_ansi(f"{chalk().greenBright(k)}: {chalk().blueBright(val)}")
