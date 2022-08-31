@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 09:42:52
+# @Last Modified time: 2022-08-31 15:47:10
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -240,8 +240,6 @@ class LndREST(LndBase):
         self, start_time=None, end_time=None, index_offset=0, num_max_events=100
     ):
         data = dict(
-            start_time=start_time,
-            end_time=end_time,
             index_offset=index_offset,
             num_max_events=num_max_events,
         )

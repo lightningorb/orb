@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 09:44:07
+# @Last Modified time: 2022-08-31 15:46:30
 import sys
 import os
 import json
@@ -363,14 +363,9 @@ class LndGRPC(LndBase):
             obj = dict2obj(json_obj)
             yield obj
 
-    def get_forwarding_history(
-        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
-    ):
+    def get_forwarding_history(self, index_offset=0, num_max_events=100):
         request = ln.ForwardingHistoryRequest(
-            start_time=start_time,
-            end_time=end_time,
-            index_offset=index_offset,
-            num_max_events=num_max_events,
+            index_offset=index_offset, num_max_events=num_max_events
         )
         return self.stub.ForwardingHistory(request)
 

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:36:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 13:28:12
+# @Last Modified time: 2022-08-31 15:45:18
 
 from invoke import task
 from .chalk import chalk
@@ -77,8 +77,6 @@ def list_forwards(
 
     ln = factory(pubkey)
     for e in ln.get_forwarding_history(
-        start_time=None,
-        end_time=None,
         index_offset=index_offset,
         num_max_events=num_max_events,
     ).forwarding_events:

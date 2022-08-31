@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 09:13:26
+# @Last Modified time: 2022-08-31 19:44:05
 
 import re
 from .cli_test_case import CLITestCase
@@ -32,6 +32,6 @@ class TestCLI(CLITestCase):
         chain.deposit(pubkey=pubkey)
         deposit = capsys.readouterr().out
         address = re.search(r"deposit_address\s+(.*)", deposit).group(1).strip()
-        chain.send(pubkey=pubkey, address=address, amount=1000, sat_per_vbyte=1)
+        chain.send(pubkey=pubkey, address=address, satoshi=1000, sat_per_vbyte=1)
         send = capsys.readouterr().out
         assert any(x in send for x in ["txid", "error", "insufficient"])

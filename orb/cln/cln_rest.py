@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 09:50:30
+# @Last Modified time: 2022-08-31 15:46:00
 
 from typing import Union
 
@@ -275,9 +275,7 @@ class ClnREST(ClnBase):
             if hasattr(j, "result"):
                 yield j.result
 
-    def get_forwarding_history(
-        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
-    ):
+    def get_forwarding_history(self, index_offset=0, num_max_events=100):
         r = self.__get(
             f"/v1/channel/listForwardsPaginated?status=settled&offset={index_offset}&maxLen={num_max_events}"
         )
@@ -495,11 +493,6 @@ class ClnREST(ClnBase):
         return self.multifundchannel(
             destinations=chans, feerate="urgent", minchannels=10
         )
-
-    # def get_forwarding_history(
-    #     self, start_time=None, end_time=None, index_offset=0, num_max_events=100
-    # ):
-    #     return self.listforwards(status="settled")
 
     def __get(self, url):
         """

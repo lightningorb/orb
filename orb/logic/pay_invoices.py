@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-05 07:48:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-12 09:28:39
+# @Last Modified time: 2022-08-31 12:28:22
 
 import threading
 from time import sleep
@@ -18,7 +18,7 @@ from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.core.stoppable_thread import StoppableThread
 from orb.store.db_meta import invoices_db_name
 from orb.misc.decorators import db_connect
-from orb.ln import Ln, ResultType
+from orb.ln import Ln
 
 
 chan_ignore = set([])

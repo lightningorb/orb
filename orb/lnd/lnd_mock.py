@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:49:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-02-26 08:35:13
+# @Last Modified time: 2022-08-31 15:46:50
 
 from collections import namedtuple
 from dataclasses import dataclass
@@ -186,9 +186,7 @@ class LndMock(object):
             )
             sleep(1)
 
-    def get_forwarding_history(
-        self, start_time=None, end_time=None, index_offset=0, num_max_events=100
-    ):
+    def get_forwarding_history(self, index_offset=0, num_max_events=100):
         class ForwardHistory:
             forwarding_events = []
             last_offset_index = 0

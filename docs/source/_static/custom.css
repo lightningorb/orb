@@ -1,8 +1,8 @@
 /*
 * @Author: lnorb.com
 * @Date:   2022-01-31 09:11:58
-* @Last Modified by:   lnorb.com
-* @Last Modified time: 2022-02-18 08:06:23
+* @Last Modified by:   w
+* @Last Modified time: 2022-08-31 13:14:42
 */
 
 /*@import "https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:700&amp;subset=latin-ext";
@@ -57,10 +57,21 @@ header{
     /*background-image: url("https://s3-us-east-2.amazonaws.com/lnorb/docs/bg.jpeg_2022-01-31_07-09-16.png");*/
     /*background-size: cover;*/
 }
+dl.py.class {
+  background-color: #eeeef6;
+}
+
+dt.sig.sig-object.py {
+  color: #4e342e;
+}
+
+span.sig-paren {
+  color: #1565c0;
+}
+
+dl dd p {
+  color: #bf360c;
+  background-color: #f5f5f5;
+}
 
 @import https://fonts.googleapis.com/css?family=Open+Sans|Work+Sans:300
-
-
-
-
-

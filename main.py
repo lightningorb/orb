@@ -3,7 +3,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 07:37:21
+# @Last Modified time: 2022-08-31 19:32:09
 
 import os
 import sys
@@ -24,6 +24,11 @@ if len(sys.argv) == 1:
     from orb.core_ui.hidden_imports import *
 
     main()
+elif len(sys.argv) == 2 and sys.argv[-1].endswith(".py"):
+    from importlib import __import__
+
+    __import__(sys.argv[-1].split(".")[0])
+
 else:
 
     import typer

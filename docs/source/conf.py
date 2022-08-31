@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 18:18:00
+# @Last Modified time: 2022-08-31 12:48:06
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -79,9 +79,12 @@ exclude_patterns = []
 # html_theme = "alabaster"
 # html_theme = "karma_sphinx_theme"
 # html_theme = "sphinxawesome_theme"
-html_theme = "karma_sphinx_theme"
-html_permalinks_icon = "<span>#</span>"
+# html_theme = "karma_sphinx_theme"
 # html_permalinks_icon = "<span>#</span>"
+# html_permalinks_icon = "<span>#</span>"
+
+html_theme = "python_docs_theme"
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
