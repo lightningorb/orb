@@ -1,4 +1,4 @@
-# `orb`
+
 
 **Usage**:
 
@@ -22,6 +22,7 @@ $ orb [OPTIONS] COMMAND [ARGS]...
 * `peer`
 * `rebalance`
 * `test`
+* `web`
 
 ## `orb chain`
 
@@ -37,9 +38,28 @@ $ orb chain [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
+* `balance`: Get on-chain balance.
 * `deposit`: Get an on-chain address to deposit BTC.
 * `fees`: Get mempool chain fees.
 * `send`: Send coins on-chain.
+
+### `orb chain balance`
+
+Get on-chain balance.
+
+**Usage**:
+
+```console
+$ orb chain balance [OPTIONS] [PUBKEY]
+```
+
+**Arguments**:
+
+* `[PUBKEY]`: The pubkey of the node. If not provided, use the default node.
+
+**Options**:
+
+* `--help`: Show this message and exit.
 
 ### `orb chain deposit`
 
@@ -78,18 +98,18 @@ Send coins on-chain.
 **Usage**:
 
 ```console
-$ orb chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
+$ orb chain send [OPTIONS] ADDRESS SATOSHI SAT_PER_VBYTE [PUBKEY]
 ```
 
 **Arguments**:
 
 * `ADDRESS`: [required]
-* `AMOUNT`: [required]
-* `SAT_PER_VBYTE`: [required]
+* `SATOSHI`: Amount to send, expressed in satoshis, or 'all'.  [required]
+* `SAT_PER_VBYTE`: Sat per vbyte to use for the transaction.  [required]
+* `[PUBKEY]`: The pubkey of the node. If not provided, use the default node.
 
 **Options**:
 
-* `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
 ## `orb channel`
@@ -106,7 +126,28 @@ $ orb channel [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
+* `list-forwards`: List forwards for the node.
 * `open`: Open a channel.
+
+### `orb channel list-forwards`
+
+List forwards for the node.
+
+**Usage**:
+
+```console
+$ orb channel list-forwards [OPTIONS] [PUBKEY]
+```
+
+**Arguments**:
+
+* `[PUBKEY]`: The pubkey of the node. If not provided, use the default node.
+
+**Options**:
+
+* `--index-offset INTEGER`: Start index.  [default: 0]
+* `--num-max-events INTEGER`: Max number of events to return.  [default: 100]
+* `--help`: Show this message and exit.
 
 ### `orb channel open`
 
@@ -406,7 +447,7 @@ $ orb pay invoices [OPTIONS]
 * `--fee-rate INTEGER`: [default: 500]
 * `--time-pref FLOAT`: [default: 0]
 * `--num-threads INTEGER`: [default: 5]
-* `--node TEXT`: [default: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+* `--pubkey TEXT`: [default: ]
 * `--help`: Show this message and exit.
 
 ### `orb pay lnurl`
@@ -429,7 +470,7 @@ $ orb pay lnurl [OPTIONS] URL
 * `--chunks INTEGER`: [default: 100]
 * `--num-threads INTEGER`: [default: 5]
 * `--rate-limit INTEGER`: [default: 5]
-* `--pubkey TEXT`: [default: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+* `--pubkey TEXT`: [default: ]
 * `--wait / --no-wait`: [default: True]
 * `--chan-id TEXT`
 * `--max-paths INTEGER`: [default: 10000]
@@ -511,12 +552,8 @@ Rebalance the node
 **Usage**:
 
 ```console
-$ orb rebalance rebalance [OPTIONS] C
+$ orb rebalance rebalance [OPTIONS]
 ```
-
-**Arguments**:
-
-* `C`: [required]
 
 **Options**:
 
@@ -526,7 +563,7 @@ $ orb rebalance rebalance [OPTIONS] C
 * `--max-paths INTEGER`: [default: 10000]
 * `--fee-rate INTEGER`: [default: 500]
 * `--time-pref FLOAT`: [default: 0]
-* `--node TEXT`: [default: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+* `--node TEXT`: [default: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764]
 * `--help`: Show this message and exit.
 
 ## `orb test`
@@ -557,5 +594,40 @@ $ orb test run-all-tests [OPTIONS]
 
 **Options**:
 
+* `--help`: Show this message and exit.
+
+## `orb web`
+
+**Usage**:
+
+```console
+$ orb web [OPTIONS] COMMAND [ARGS]...
+```
+
+**Options**:
+
+* `--help`: Show this message and exit.
+
+**Commands**:
+
+* `serve`: Serve the Orb web app.
+
+### `orb web serve`
+
+Serve the Orb web app.
+
+**Usage**:
+
+```console
+$ orb web serve [OPTIONS]
+```
+
+**Options**:
+
+* `--host TEXT`: The allowed host.  [default: 0.0.0.0]
+* `--port INTEGER`: The port to serve.  [default: 8080]
+* `--reload / --no-reload`: Live reloading (dev).  [default: False]
+* `--debug / --no-debug`: Show debug info (dev).  [default: False]
+* `--workers INTEGER`: Number of web workers.  [default: 1]
 * `--help`: Show this message and exit.
 

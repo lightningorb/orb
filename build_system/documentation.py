@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 15:17:54
+# @Last Modified time: 2022-09-01 12:30:58
 
 import os
 import zipfile
@@ -33,6 +33,7 @@ def clean(c):
 def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer-cli", env=env)
     out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
+    out = out.replace("# `orb`", "")
     with open("docs/source/cli.md", "w") as f:
         f.write(out)
     c.run(

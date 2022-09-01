@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 15:47:10
+# @Last Modified time: 2022-09-01 12:18:25
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -37,10 +37,10 @@ class LndREST(LndBase):
         return f"https://{self.hostname}:{self.rest_port}"
 
     def get_balance(self):
-        return self.__get("/v1/balance/blockchain")
+        return self._get("/v1/balance/blockchain")
 
     def channel_balance(self):
-        return self.__get("/v1/balance/channels")
+        return self._get("/v1/balance/channels")
 
     def get_channels(self, active_only=False):
         from orb.misc.channel import Channel
@@ -55,7 +55,7 @@ class LndREST(LndBase):
         return [Channel(dict2obj(c)) for c in r.json()["channels"]]
 
     def get_info(self):
-        obj = self.__get("/v1/getinfo")
+        obj = self._get("/v1/getinfo")
         return obj
 
     @cached(ttl=5)
@@ -109,7 +109,7 @@ class LndREST(LndBase):
 
     @lru_cache(maxsize=None)
     def get_node_info(self, pub_key):
-        return self.__get(f"/v1/graph/node/{pub_key}")
+        return self._get(f"/v1/graph/node/{pub_key}")
 
     def fee_report(self):
         url = f"{self.fqdn}/v1/fees"
@@ -117,7 +117,7 @@ class LndREST(LndBase):
         return dict2obj(r.json())
 
     def decode_payment_request(self, payment_request):
-        return self.__get(f"/v1/payreq/{payment_request}")
+        return self._get(f"/v1/payreq/{payment_request}")
 
     def get_route(
         self,
@@ -259,7 +259,7 @@ class LndREST(LndBase):
         kwargs.update(dict(chan_point=dict(funding_txid_str=tx, output_index=output)))
         if kwargs.get("base_fee_msat") is not None:
             kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
-        return self.__post(url=f"/v1/chanpolicy", data=kwargs)
+        return self._post(url=f"/v1/chanpolicy", data=kwargs)
 
     def list_invoices(self):
         url = f"{self.fqdn}/v1/invoices"
@@ -287,7 +287,7 @@ class LndREST(LndBase):
         lncli: newaddress NewAddress creates a new address
         under control of the local wallet.
         """
-        return self.__get("/v1/newaddress")
+        return self._get("/v1/newaddress")
 
     def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
         """
@@ -305,7 +305,7 @@ class LndREST(LndBase):
             private=False,
             spend_unconfirmed=False,
         )
-        return self.__post(url=url, data=data)
+        return self._post(url=url, data=data)
 
     def send_coins(
         self, addr: str, satoshi: int, sat_per_vbyte: int, send_all: bool = False
@@ -329,7 +329,7 @@ class LndREST(LndBase):
             "sat_per_vbyte": sat_per_vbyte,  # A manual fee rate set in sat/vbyte that should be used when crafting the transaction.
             "send_all": send_all,
         }
-        return self.__post(url, data=data)
+        return self._post(url, data=data)
 
     def sign_message(self, msg):
         """
@@ -341,7 +341,7 @@ class LndREST(LndBase):
         that a specific key is used to sign the message instead
         of the node identity private key.
         """
-        return self.__post(
+        return self._post(
             f"/v1/signmessage", data=dict(msg=base64.b64encode(msg.encode()).decode())
         ).signature
 
@@ -389,7 +389,7 @@ class LndREST(LndBase):
         """
         Return list of peers
         """
-        return self.__get("/v1/peers")
+        return self._get("/v1/peers")
 
     def connect(self, addr):
         """
@@ -402,7 +402,7 @@ class LndREST(LndBase):
         it connects successfully, and the error can be ignored.
         """
         pk, host = addr.split("@")
-        return self.__post(
+        return self._post(
             "/v1/peers",
             data={"addr": dict(pubkey=pk, host=host), "perm": True, "timeout": "30"},
         )
@@ -428,7 +428,7 @@ class LndREST(LndBase):
         self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
     ):
         url = f"/v1/payments?include_incomplete={'true' if include_incomplete else 'false'}&index_offset={index_offset}&max_payments={max_payments}"
-        return self.__get(url)
+        return self._get(url)
 
     def batch_open(self, pubkeys, amounts, sat_per_vbyte):
         """
@@ -454,9 +454,9 @@ class LndREST(LndBase):
             "sat_per_vbyte": str(sat_per_vbyte),
             "spend_unconfirmed": False,
         }
-        return self.__post(url="/v1/channels/batch", data=data)
+        return self._post(url="/v1/channels/batch", data=data)
 
-    def __get(self, url):
+    def _get(self, url):
         """
         Simplify get requests.
 
@@ -473,7 +473,7 @@ class LndREST(LndBase):
             raise Exception(r.text)
         return dict2obj(r.json())
 
-    def __post(self, url, data):
+    def _post(self, url, data):
         """
         Simplify posts requests.
 

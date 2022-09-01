@@ -3,9 +3,9 @@ FROM ubuntu:20.04
 RUN apt-get update
 RUN apt-get install curl -y
 
-RUN curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.21.6-ubuntu-20.04-x86_64.tar.gz > orb-0.21.6-ubuntu-20.04-x86_64.tar.gz 
+RUN curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.21.7-ubuntu-20.04-x86_64.tar.gz > orb-0.21.7-ubuntu-20.04-x86_64.tar.gz 
 
-RUN tar xvf orb-0.21.6-ubuntu-20.04-x86_64.tar.gz
+RUN tar xvf orb-0.21.7-ubuntu-20.04-x86_64.tar.gz
 
 WORKDIR orb
 

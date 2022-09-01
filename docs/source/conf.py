@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 12:48:06
+# @Last Modified time: 2022-09-01 10:54:54
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -36,7 +36,7 @@ copyright = "2022, lnorb.com"
 author = "lnorb.com"
 
 # The full version, including alpha/beta/rc tags
-release = "0.1"
+release = open("../../VERSION").read().strip()
 
 
 # -- General configuration ---------------------------------------------------
@@ -50,6 +50,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.coverage",
     "sphinxcontrib.asciinema",
+    "sphinxcontrib.mermaid",
 ]
 
 sphinxcontrib_asciinema_defaults = {

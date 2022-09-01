@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 15:46:00
+# @Last Modified time: 2022-09-01 18:14:10
 
 from typing import Union
 
@@ -42,13 +42,13 @@ class ClnREST(ClnBase):
         """
         Conversion done.
         """
-        return self.__get("/v1/getBalance")
+        return self._get("/v1/getBalance")
 
     def local_remote_bal(self):
         """
         Conversion done.
         """
-        return self.__get("/v1/channel/localRemoteBal")
+        return self._get("/v1/channel/localRemoteBal")
 
     def get_node_info(self, pubkey: str):
         """
@@ -113,13 +113,13 @@ class ClnREST(ClnBase):
         """
         Conversion done
         """
-        return self.__get(f"/v1/getinfo")
+        return self._get(f"/v1/getinfo")
 
     def rpc(self, method: str, **kwargs):
         for k, v in list(kwargs.items()):
             if v is None:
                 del kwargs[k]
-        return self.__post("/v1/rpc", {"method": method, "params": kwargs})
+        return self._post("/v1/rpc", {"method": method, "params": kwargs})
 
     @cached(ttl=5)
     def get_policy_to(self, channel_id):
@@ -166,7 +166,7 @@ class ClnREST(ClnBase):
         """
         Conversion Done.
         """
-        return self.__get(f"/v1/pay/decodePay/{payment_request}")
+        return self._get(f"/v1/pay/decodePay/{payment_request}")
 
     def send_payment(self, payment_request, route):
         sp = self.sendpay(
@@ -276,7 +276,7 @@ class ClnREST(ClnBase):
                 yield j.result
 
     def get_forwarding_history(self, index_offset=0, num_max_events=100):
-        r = self.__get(
+        r = self._get(
             f"/v1/channel/listForwardsPaginated?status=settled&offset={index_offset}&maxLen={num_max_events}"
         )
         if index_offset >= r.totalForwards:
@@ -302,7 +302,7 @@ class ClnREST(ClnBase):
         """
         Conversion done.
         """
-        return self.__post(
+        return self._post(
             url=f"/v1/channel/setChannelFee",
             data=dict(
                 id=channel.chan_id,
@@ -328,7 +328,7 @@ class ClnREST(ClnBase):
 
             label = str(uuid4())
         data = dict(label=label, description=memo, amount=amount * 1000, expiry=3600)
-        r = self.__post("/v1/invoice/genInvoice", data=data)
+        r = self._post("/v1/invoice/genInvoice", data=data)
         if hasattr(r, "warning_deadends"):
             print(r.warning_deadends)
 
@@ -338,7 +338,7 @@ class ClnREST(ClnBase):
         """
         Conversion done.
         """
-        return self.__get("/v1/newaddr")
+        return self._get("/v1/newaddr")
 
     def open_channel(
         self, node_pubkey_string: str, amount_sat: int, sat_per_vbyte: float
@@ -391,7 +391,7 @@ class ClnREST(ClnBase):
         that a specific key is used to sign the message instead
         of the node identity private key.
         """
-        return self.__post(
+        return self._post(
             f"/v1/signmessage", data=dict(msg=base64.b64encode(msg.encode()).decode())
         ).signature
 
@@ -448,7 +448,7 @@ class ClnREST(ClnBase):
         used for communication between nodes. This is distinct from
         establishing a channel with a peer.
         """
-        return self.__post("/v1/peer/connect", data=dict(id=id))
+        return self._post("/v1/peer/connect", data=dict(id=id))
 
     def close_channel(
         self,
@@ -474,7 +474,7 @@ class ClnREST(ClnBase):
         self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
     ):
         url = f"/v1/payments?include_incomplete={'true' if include_incomplete else 'false'}&index_offset={index_offset}&max_payments={max_payments}"
-        return self.__get(url)
+        return self._get(url)
 
     def batch_open(self, pubkeys, amounts, sat_per_vbyte):
         """
@@ -494,7 +494,7 @@ class ClnREST(ClnBase):
             destinations=chans, feerate="urgent", minchannels=10
         )
 
-    def __get(self, url):
+    def _get(self, url):
         """
         Simplify get requests.
 
@@ -511,7 +511,7 @@ class ClnREST(ClnBase):
         o = dict2obj(j)
         return o
 
-    def __post(self, url, data):
+    def _post(self, url, data):
         """
         Simplify posts requests.
 

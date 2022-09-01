@@ -1,5 +1,3 @@
-.. _CLI:
-
 Orb CLI
 =======
 
@@ -153,12 +151,9 @@ Getting help on sub-commands
     $ orb node ssh-wizard --help
 
 CLI reference
--------------
+~~~~~~~~~~~~~
 
 Now that are you are a bit more familiar with Orb's CLI, here's the full command reference.
-
-``orb``
-=======
 
 **Usage**:
 
@@ -183,6 +178,7 @@ Now that are you are a bit more familiar with Orb's CLI, here's the full command
 -  ``peer``
 -  ``rebalance``
 -  ``test``
+-  ``web``
 
 ``orb chain``
 -------------
@@ -199,9 +195,30 @@ Now that are you are a bit more familiar with Orb's CLI, here's the full command
 
 **Commands**:
 
+-  ``balance``: Get on-chain balance.
 -  ``deposit``: Get an on-chain address to deposit BTC.
 -  ``fees``: Get mempool chain fees.
 -  ``send``: Send coins on-chain.
+
+``orb chain balance``
+~~~~~~~~~~~~~~~~~~~~~
+
+Get on-chain balance.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb chain balance [OPTIONS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
 
 ``orb chain deposit``
 ~~~~~~~~~~~~~~~~~~~~~
@@ -243,17 +260,20 @@ Send coins on-chain.
 
 .. code:: console
 
-    $ orb chain send [OPTIONS] ADDRESS AMOUNT SAT_PER_VBYTE
+    $ orb chain send [OPTIONS] ADDRESS SATOSHI SAT_PER_VBYTE [PUBKEY]
 
 **Arguments**:
 
 -  ``ADDRESS``: [required]
--  ``AMOUNT``: [required]
--  ``SAT_PER_VBYTE``: [required]
+-  ``SATOSHI``: Amount to send, expressed in satoshis, or 'all'.
+   [required]
+-  ``SAT_PER_VBYTE``: Sat per vbyte to use for the transaction.
+   [required]
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
 
 **Options**:
 
--  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
 ``orb channel``
@@ -271,7 +291,31 @@ Send coins on-chain.
 
 **Commands**:
 
+-  ``list-forwards``: List forwards for the node.
 -  ``open``: Open a channel.
+
+``orb channel list-forwards``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+List forwards for the node.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb channel list-forwards [OPTIONS] [PUBKEY]
+
+**Arguments**:
+
+-  ``[PUBKEY]``: The pubkey of the node. If not provided, use the
+   default node.
+
+**Options**:
+
+-  ``--index-offset INTEGER``: Start index. [default: 0]
+-  ``--num-max-events INTEGER``: Max number of events to return.
+   [default: 100]
+-  ``--help``: Show this message and exit.
 
 ``orb channel open``
 ~~~~~~~~~~~~~~~~~~~~
@@ -604,8 +648,7 @@ Pay Ingested Invoices
 -  ``--fee-rate INTEGER``: [default: 500]
 -  ``--time-pref FLOAT``: [default: 0]
 -  ``--num-threads INTEGER``: [default: 5]
--  ``--node TEXT``: [default:
-   02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+-  ``--pubkey TEXT``: [default: ]
 -  ``--help``: Show this message and exit.
 
 ``orb pay lnurl``
@@ -629,8 +672,7 @@ Generate bolt11 invoices from LNURL, and pay them.
 -  ``--chunks INTEGER``: [default: 100]
 -  ``--num-threads INTEGER``: [default: 5]
 -  ``--rate-limit INTEGER``: [default: 5]
--  ``--pubkey TEXT``: [default:
-   02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+-  ``--pubkey TEXT``: [default: ]
 -  ``--wait / --no-wait``: [default: True]
 -  ``--chan-id TEXT``
 -  ``--max-paths INTEGER``: [default: 10000]
@@ -718,11 +760,7 @@ Rebalance the node
 
 .. code:: console
 
-    $ orb rebalance rebalance [OPTIONS] C
-
-**Arguments**:
-
--  ``C``: [required]
+    $ orb rebalance rebalance [OPTIONS]
 
 **Options**:
 
@@ -733,7 +771,7 @@ Rebalance the node
 -  ``--fee-rate INTEGER``: [default: 500]
 -  ``--time-pref FLOAT``: [default: 0]
 -  ``--node TEXT``: [default:
-   02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a]
+   02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764]
 -  ``--help``: Show this message and exit.
 
 ``orb test``
@@ -766,4 +804,41 @@ Run all tests.
 
 **Options**:
 
+-  ``--help``: Show this message and exit.
+
+``orb web``
+-----------
+
+**Usage**:
+
+.. code:: console
+
+    $ orb web [OPTIONS] COMMAND [ARGS]...
+
+**Options**:
+
+-  ``--help``: Show this message and exit.
+
+**Commands**:
+
+-  ``serve``: Serve the Orb web app.
+
+``orb web serve``
+~~~~~~~~~~~~~~~~~
+
+Serve the Orb web app.
+
+**Usage**:
+
+.. code:: console
+
+    $ orb web serve [OPTIONS]
+
+**Options**:
+
+-  ``--host TEXT``: The allowed host. [default: 0.0.0.0]
+-  ``--port INTEGER``: The port to serve. [default: 8080]
+-  ``--reload / --no-reload``: Live reloading (dev). [default: False]
+-  ``--debug / --no-debug``: Show debug info (dev). [default: False]
+-  ``--workers INTEGER``: Number of web workers. [default: 1]
 -  ``--help``: Show this message and exit.

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 09:13:18
+# @Last Modified time: 2022-09-01 18:01:28
 
 import re
 from .cli_test_case import CLITestCase
@@ -19,13 +19,6 @@ def pytest_generate_tests(metafunc):
 
 
 class TestCLI(CLITestCase):
-    def test_cli_balance(self, pubkey, capsys):
-        if self.impl == "cln":
-            print("Not Implemented")
-            return
-        node.balance(pubkey=pubkey)
-        assert int(capsys.readouterr().out) > 1
-
     # def test_cli_rebalance(self):
     #     if self.impl == "cln":
     #         self.skipTest("Not Implemented")

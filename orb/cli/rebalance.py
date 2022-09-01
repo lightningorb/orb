@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 08:03:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 04:32:46
+# @Last Modified time: 2022-09-01 12:06:23
 
 
 from .chalk import chalk
@@ -22,7 +22,6 @@ app = typer.Typer()
 
 @app.command()
 def rebalance(
-    c,
     amount: int = 1_000,
     chan_id: str = None,
     last_hop_pubkey: str = None,

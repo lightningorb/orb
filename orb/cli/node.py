@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 08:57:41
+# @Last Modified time: 2022-09-01 18:01:13
 
 import re
 import os
@@ -90,24 +90,6 @@ def info(
         pubkey = get_default_id()
     for k, v in factory(pubkey).get_info().__dict__.items():
         pprint_from_ansi(f"{chalk().greenBright(k)}: {chalk().blueBright(v)}")
-
-
-@app.command()
-def balance(
-    pubkey: Optional[str] = typer.Argument(
-        None, help="The pubkey of the node. If not provided, use the default node."
-    )
-):
-    """
-    Get total balance, for both on-chain and balance in channels.
-
-    WIP: this is not yet implemented for CLN.
-    """
-    if not pubkey:
-        pubkey = get_default_id()
-    from orb.logic.balance import balance as bal
-
-    pprint_from_ansi(chalk().green(f"{bal(factory(pubkey)):_}"))
 
 
 @app.command()

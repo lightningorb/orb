@@ -6,13 +6,15 @@ Node Factory
 
 The first step to connecting to a node via the Python API is registering its connection details via :ref:`CLI`.
 
-Once you have registered some nodes (e.g one of Orb's public nodes) you can create instances of :class:`orb.ln.ln.Ln` using the **factory** function:
+Once you have registered some nodes (e.g one of Orb's public nodes) you can create instances of :class:`orb.ln.ln.Ln` using the **factory** method:
 
 .. code:: python
 
     from orb.ln import factory
 
     ln = factory("02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a")
+
+    print(cln.get_info())
 
 
 Executing Orb API scripts
@@ -29,7 +31,7 @@ Implementation heterogeneity
 
 LN features a homogenous protocol with heterogenous implementations and programming languages; in other words, the protocol is the same, but different entities create their own implementations using different programming languages.
 
-Famously, LND from `Lightning Labs <https://lightning.engineering>`_ is written in GoLang, and Core-Lightning from `Blockstream <https://blockstream.com>`_ is written in C. The miracle is that different entities have the freedom to do things their own way while speaking the same protocol. The disadvantage is that users need to choose their implementation.
+Famously, LND from `Lightning Labs <https://lightning.engineering>`_ is written in GoLang, and Core-Lightning from `Blockstream <https://blockstream.com>`_ is written in C. The miracle is that different entities have the freedom to do things their own way while speaking the same protocol; technological heterogeneity that adheres to the same protocol also (likely) leads to a more robust network and ecosystem (in the same way polycrops are likely more robust than monocrops). The disadvantage is that migrating from one node-type to another is currently impossible, and userbases may not communicate enough across implementations as they ought to.
 
 Orb's API and CLI make picking your lightning implementation less important since Orb's :class:`orb.ln.ln.Ln` class provides a homogenous interface that hides whether you are interacting with an LND or CLN node.
 
@@ -95,7 +97,11 @@ The API calls and data returned are "massaged" in the :class:`orb.ln.ln.Ln` clas
 Accessing concrete implementations
 ----------------------------------
 
-For this reason, you can decide to work directly with the implementation of your node with the `concrete` attibute.
+For this reason, you can decide to directly access the implementation with the `concrete` attibute.
+
+.. note::
+
+    Please note the attribute name `concrete` may not be technically the correct one, since we're using composition, as opposed to an Abstract & Concrete relationship model.
 
 .. code:: python
 
@@ -145,6 +151,132 @@ For this reason, you can decide to work directly with the implementation of your
     }
 
 This returns the data the way you expect it for the given impementation.
+
+Class Hierarchy
+---------------
+
+The class hierarchy is very shallow, with only :class:`orb.lnd.lnd_base.LndBase` and :class:`orb.cln.cln_base.ClnBase` base classes. The :class:`orb.ln.ln.Ln` class abstracts away all the implementation details, and its methods ultimately return an object from the :mod:`orb.ln.types` module.
+
+.. mermaid::
+
+    classDiagram
+        LndBase <|-- LndGRPC
+        LndBase <|-- LndREST
+        ClnBase <|-- ClnGRPC
+        ClnBase <|-- ClnREST
+
+    Lnd --|> LndGRPC : Factory Method
+    Lnd --|> LndREST : Factory Method
+    Cln --|> ClnGRPC : Factory Method
+    Cln --|> ClnREST : Factory Method
+
+    Ln --|> LndGRPC : Execute
+    Ln --|> LndREST : Execute
+    Ln --|> ClnGRPC : Execute
+    Ln --|> ClnREST : Execute
+
+    Ln --|> Lnd : Factory Method
+    Ln --|> Cln : Factory Method
+    
+    Ln --|> Types : Returns
+
+The :meth:`orb.lnd.lnd.Lnd` and :meth:`orb.cln.cln.Cln` are `factory methods <https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)>`_ that construct the correct type of object.
+
+The :class:`orb.ln.ln.Ln` class wrangles method calls to the correct (LndGRPC, LndREST, ClnGRPC or ClnREST) class to make the implementations look alike.
+
+A note for CLN REST developers
+------------------------------
+
+Orb's CLN REST API assumes `c-lightning-REST <https://github.com/Ride-The-Lightning/c-lightning-REST>`_, and methods that are not implemented in the class fallback to the `/v1/rpc <https://github.com/Ride-The-Lightning/c-lightning-REST#rpc>`_ endpoint.
+
+As such, every rpc can be executed as `documented <https://lightning.readthedocs.io/>`_ using native Python syntax (so truely an RPC).
+
+
+.. code:: python
+
+    from orb.ln import factory
+
+    cln = factory("02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764").concrete
+
+    print(cln.feerates(style='perkb'))
+
+Output:
+
+.. code:: json
+
+    {
+        "api_version": "0.8.0",
+        "onchain_fee_estimates": {
+            "htlc_success_satoshis": 178,
+            "htlc_timeout_satoshis": 168,
+            "mutual_close_satoshis": 170,
+            "opening_channel_satoshis": 177,
+            "unilateral_close_satoshis": 151
+        },
+        "perkb": {
+            "delayed_to_us": 1012,
+            "htlc_resolution": 1012,
+            "max_acceptable": 4294967295,
+            "min_acceptable": 1012,
+            "mutual_close": 1012,
+            "opening": 1012,
+            "penalty": 1012,
+            "unilateral_close": 1012
+        }
+    }
+
+
+.. code:: python
+
+    from orb.ln import factory
+
+    cln = factory(
+        "02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764"
+    ).concrete
+
+    print(
+        cln.getroute(
+            id="0287c3e11b3fd5d879c8d1ee6e696048dab713be2f541ef0d2c4fff093120f216f",
+            msatoshi=100_000,
+            riskfactor=0,
+        )
+    )
+
+
+Output:
+
+.. code:: json
+
+    {
+        "api_version": "0.8.0",
+        "route": [
+            {
+                "amount_msat": "100000msat",
+                "channel": "163x1x1",
+                "delay": 9,
+                "direction": 0,
+                "id": "0287c3e11b3fd5d879c8d1ee6e696048dab713be2f541ef0d2c4fff093120f216f",
+                "msatoshi": 100000,
+                "style": "tlv"
+            }
+        ]
+    }
+
+
+Once again, thanks to Python's `__getattr__` and the way RPCs are handled in Core Lightning (and its unofficial REST API) CLN REST developers can call every RPC method as documented on the core lightning read the docs site.
+
+A note for REST developers
+--------------------------
+
+Both the ClnREST and LndREST class expose `_get` and `_post` methods, to call API endpoints directly. the `_post` method takes a `data` keyword argument, that takes a dict.
+
+.. code:: python
+
+    from orb.ln import factory
+
+    cln = factory("02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764")
+
+    print(cln._get("/v1/getBalance"))
 
 
 Sending coins from LND to CLN in one line of code
