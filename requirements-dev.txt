@@ -8,6 +8,7 @@ sphinx
 python_docs_theme
 #karma-sphinx-theme
 sphinxcontrib.asciinema
+sphinxcontrib.mermaid
 boto3
 rsa
 gitpython
