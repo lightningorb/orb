@@ -89,7 +89,7 @@ class ChannelsWidget(ScatterLayout):
                 except:
                     pass
 
-        self.gestures_delegate.init_gdb(self)
+#        self.gestures_delegate.init_gdb(self)
 
     def add_channel(self, channel, caps=None, update=True):
         if not caps:
@@ -117,11 +117,13 @@ class ChannelsWidget(ScatterLayout):
             self.channels.sort_channels()
             do_update = False
             for i, chan_id in enumerate(self.channels.sorted_chan_ids):
-                if chan_id in self.cn:
+                keys = [*self.cn.keys()]
+                if chan_id in keys:
                     self.cn[chan_id].update(i, len(self.cn))
                 else:
+                    print(chan_id, 'not in', keys)
                     print(f"Channel {chan_id} not found in channels_widget")
-                    self.add_channel(self.channels[chan_id], update=False)
+                    self.add_channel(self.channels.channels[chan_id], update=False)
             if do_update:
                 self.update()
 

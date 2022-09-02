@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 15:46:30
+# @Last Modified time: 2022-09-02 17:02:51
 import sys
 import os
 import json
@@ -172,8 +172,6 @@ class LndGRPC(LndBase):
         )
 
     def get_channels(self, active_only=False):
-        from orb.misc.channel import Channel
-
         j = json.loads(
             MessageToJson(
                 self.stub.ListChannels(ln.ListChannelsRequest(active_only=active_only)),
@@ -183,10 +181,7 @@ class LndGRPC(LndBase):
             )
         )
         chans = dict2obj(j)
-        channels = []
-        for c in chans.channels:
-            channels.append(Channel(c))
-        return channels
+        return chans.channels
 
     def get_route(
         self,

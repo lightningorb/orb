@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-29 07:43:15
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 14:01:34
+# @Last Modified time: 2022-09-02 15:58:34
 
 import uvicorn
 from fastapi import FastAPI
@@ -56,11 +56,11 @@ def app_dependency():
 def channels(orbapp=Depends(app_dependency)):
     return [
         dict(
-            capacity=x.channel.capacity,
-            profit=x.channel.profit,
-            alias=x.channel.alias,
-            local_balance=x.channel.local_balance,
-            remote_balance=x.channel.remote_balance,
+            capacity=x.capacity,
+            profit=x.profit,
+            alias=x.alias,
+            local_balance=x.local_balance,
+            remote_balance=x.remote_balance,
         )
         for x in orbapp.channels
     ]

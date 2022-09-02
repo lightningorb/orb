@@ -98,7 +98,7 @@ class AttributeEditor(BoxLayout):
                     self.populate_helped_earn()
                     self.populate_profit()
                     self.populate_fees()
-                    self.populate_rest(c=self.channel.channel.__dict__)
+                    self.populate_rest(c=self.channel.__dict__)
 
             Clock.schedule_once(update, 0.25)
         else:

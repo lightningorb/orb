@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 07:30:56
+# @Last Modified time: 2022-09-03 00:48:09
 
 from .cli_test_case import CLITestCase
 from orb.ln import factory
@@ -33,6 +33,15 @@ class TestAPI(CLITestCase):
         )
         assert res.total_amt == 1
         assert len(res.hops) > 0
+
+    def get_get_channels(self, pubkey):
+        ln = factory(pubkey)
+        channels = ln.get_channels()
+        assert len(channels) > 0
+        for c in channels:
+            assert type(c.chan_id) is str
+            assert type(c.active) is bool
+            assert type(c.local_balance) is int
 
     # def test_get_rebalance_route(self, c):
     #     pk = get_default_id()

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-01 12:18:25
+# @Last Modified time: 2022-09-02 17:02:05
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -43,16 +43,7 @@ class LndREST(LndBase):
         return self._get("/v1/balance/channels")
 
     def get_channels(self, active_only=False):
-        from orb.misc.channel import Channel
-
-        url = f"{self.fqdn}/v1/channels"
-        r = requests.get(
-            url,
-            headers=self.headers,
-            verify=self.cert_path,
-            data={"active_only": active_only},
-        )
-        return [Channel(dict2obj(c)) for c in r.json()["channels"]]
+        return self._get("/v1/channels")["channels"]
 
     def get_info(self):
         obj = self._get("/v1/getinfo")

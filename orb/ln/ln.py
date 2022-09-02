@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 15:51:46
+# @Last Modified time: 2022-09-02 11:36:31
 
 from configparser import ConfigParser
 
@@ -246,6 +246,13 @@ class Ln:
     def get_htlc_events(self) -> HTLC:
         for e in self.concrete.get_htlc_events():
             yield HTLC(self.node_type, e)
+
+    def get_channels(self):
+        channels = self.concrete.get_channels()
+        res = []
+        for c in channels:
+            res.append(Channel(impl=self.node_type, c=c))
+        return res
 
     def __getattr__(self, name):
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)

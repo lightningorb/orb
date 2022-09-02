@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-30 09:46:33
+# @Last Modified time: 2022-09-02 13:04:10
 
 
 from orb.misc.utils_no_kivy import pref
@@ -19,6 +19,24 @@ class Cron:
         from orb.logic.forwarding_history import DownloadFowardingHistory
 
         DownloadFowardingHistory().start()
+
+        if Clock:
+
+            def udpate_channels(*_):
+                from orb.app import App
+
+                app = App.get_running_app()
+                if app:
+                    cs = app.main_layout.ids.sm.get_screen("channels")
+                    if cs:
+                        cw = cs.channels_widget
+                        if cw:
+                            cw.update()
+
+            Clock.schedule_interval(
+                udpate_channels,
+                10,
+            )
 
         # TODO: needs tying up
 
@@ -48,23 +66,6 @@ class Cron:
 
             return
         if pref("host.type") == "lnd":
-            if Clock:
-
-                def udpate_channels(*_):
-                    from orb.app import App
-
-                    app = App.get_running_app()
-                    if app:
-                        cs = app.main_layout.ids.sm.get_screen("channels")
-                        if cs:
-                            cw = cs.channels_widget
-                            if cw:
-                                cw.update()
-
-                Clock.schedule_interval(
-                    udpate_channels,
-                    10,
-                )
 
             from orb.logic.payment_history import DownloadPaymentHistory
 

@@ -2773,6 +2773,13 @@ Builder.load_string('''
     markup: True
     size: [self.texture_size[0]+40, self.texture_size[1]+30]
 
+<HUDLNURLPay>:
+    id: lnurl_pay
+    text: root.hud
+    size_hint: [None, None]
+    markup: True
+    size: [self.texture_size[0]+40, self.texture_size[1]+30]
+
 <HUDSystem>:
     id: hud_label
     text: root.hud
@@ -2981,6 +2988,7 @@ Builder.load_string('''
     BoxLayout:
         size_hint: [1, 1]
         orientation: 'vertical'
+        HUDLNURLPay
         HUDUIMode
         HUDProtocol
         HUDThreadManager

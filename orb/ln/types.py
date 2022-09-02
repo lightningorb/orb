@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 10:06:28
+# @Last Modified time: 2022-09-02 16:51:20
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -281,7 +281,7 @@ class SendPaymentResponse(PrintableType):
     def __init__(self, impl, response):
         self.original: list = []
         self.failure = dict2obj(dict(code=0, failure_source_index=-1))
-        self.code_map = {4103: 15}
+        self.code_map = {4103: 15, 16394: 18, 16399: 1}
         if impl == "lnd":
             self.original = response
             if hasattr(response, "failure") and response.failure:
@@ -348,7 +348,7 @@ class HTLC(PrintableType):
                 self.event_outcome = "settle_event"
                 # TODO:
                 # sadly we need this information: which what route did this HTLC take?
-                self.outgoing_channel_id = None #e.data.erring_channel
+                self.outgoing_channel_id = None  # e.data.erring_channel
                 self.incoming_htlc_id = e.data.payment_hash[:5]
                 self.outgoing_htlc_id = e.data.payment_hash[:5]
                 if e.data.failcodename == "WIRE_TEMPORARY_CHANNEL_FAILURE":
@@ -394,3 +394,52 @@ class HTLC(PrintableType):
             "outgoing_amt_msat": e.out_msatoshi,
             "outgoing_timelock": 0,
         }
+
+
+class ChannelHTLC(PrintableType):
+    def __init__(self, impl, h):
+        if impl == "cln":
+            self.incoming = h.direction == "in"
+            self.amount = int(h.msatoshi / 1000)
+            self.htlc_index = h.payment_hash[:5]
+            self.id = h.id
+        elif impl == "lnd":
+            self.incoming = h.incoming
+            self.amount = h.amount
+            self.htlc_index = h.htlc_index
+
+
+class Channel(PrintableType):
+    def __init__(self, impl, c):
+        if impl == "cln":
+            self.remote_pubkey = c.remote_pubkey
+            self.capacity = int(c.msatoshi_total / 1000)
+            self.pending_htlcs = [ChannelHTLC(impl=impl, h=x) for x in c.htlcs]
+            total_pending_out = sum(
+                x.amount for x in self.pending_htlcs if not x.incoming
+            )
+            total_pending_in = sum(x.amount for x in self.pending_htlcs if x.incoming)
+            self.local_balance = int(c.msatoshi_to_us / 1000) - total_pending_out
+            self.remote_balance = int((c.msatoshi_total - c.msatoshi_to_us) / 1000)
+            self.channel_point = c.funding_txid
+            self.total_satoshis_sent = 0
+            self.total_satoshis_received = 0
+            self.initiator = c.opener == "local"
+            self.commit_fee = 0
+            self.unsettled_balance = 0
+            self.active = True
+            self.chan_id = c.short_channel_id
+        elif impl == "lnd":
+            self.remote_pubkey = c.remote_pubkey
+            self.capacity = c.capacity
+            self.pending_htlcs = [ChannelHTLC(impl=impl, h=x) for x in c.pending_htlcs]
+            self.local_balance = c.local_balance
+            self.remote_balance = c.remote_balance
+            self.channel_point = c.channel_point
+            self.total_satoshis_sent = c.total_satoshis_sent
+            self.total_satoshis_received = c.total_satoshis_received
+            self.initiator = c.initiator
+            self.commit_fee = c.commit_fee
+            self.unsettled_balance = c.unsettled_balance
+            self.active = c.active
+            self.chan_id = str(c.chan_id)

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 10:41:29
+# @Last Modified time: 2022-09-02 11:34:51
 
 from typing import Union
 
@@ -76,8 +76,6 @@ class ClnREST(ClnBase):
         """
         Conversion Done
         """
-        from orb.misc.channel import Channel
-
         peers = self.listpeers()
 
         ret = []
@@ -85,39 +83,8 @@ class ClnREST(ClnBase):
             for c in p.channels:
                 if c.state != "CHANNELD_NORMAL":
                     continue
-                if c.htlcs:
-                    print(c.htlcs)
-                    pass
-                chan = Channel(
-                    channel=dict2obj(
-                        dict(
-                            remote_pubkey=p.id,
-                            capacity=int(c.msatoshi_total / 1000),
-                            local_balance=int(c.msatoshi_to_us / 1000),
-                            remote_balance=int(
-                                (c.msatoshi_total - c.msatoshi_to_us) / 1000
-                            ),
-                            channel_point=c.funding_txid,
-                            pending_htlcs=[
-                                dict(
-                                    incoming=x.direction == "in",
-                                    amount=int(x.msatoshi / 1000),
-                                    htlc_index=x.payment_hash[:5],
-                                    id=x.id,
-                                )
-                                for x in c.htlcs
-                            ],
-                            total_satoshis_sent=0,
-                            total_satoshis_received=0,
-                            initiator=c.opener == "local",
-                            commit_fee=0,
-                            unsettled_balance=0,
-                            active=True,
-                            chan_id=c.short_channel_id,
-                        )
-                    )
-                )
-                ret.append(chan)
+                c.remote_pubkey = p.id
+                ret.append(c)
         return ret
 
     def get_info(self):

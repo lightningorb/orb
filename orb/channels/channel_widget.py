@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 14:56:11
+# @Last Modified time: 2022-09-02 12:48:30
 
 from time import time
 from threading import Thread
@@ -16,6 +16,7 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivy.clock import mainthread
 
 from orb.math.Vector import Vector
 from orb.audio.audio_manager import audio_manager
@@ -72,6 +73,7 @@ class ChannelWidget(Widget):
         self.a, self.b, self.c = [0, 0], [0, 0], [0, 0]
 
         self.bind(points=self.update)
+        self.channel.bind(pending_htlcs=self.update)
 
         app = App.get_running_app()
         app.bind(selection=self.set_selected)
@@ -144,6 +146,7 @@ class ChannelWidget(Widget):
         (Animation(rgba=self.local_col, duration=0.2)).start(self.line_local.color)
         (Animation(rgba=self.pending_col, duration=0.2)).start(self.line_pending.color)
 
+    @mainthread
     def update(self, *args):
         chan, line, trim = self.channel, self.points, 0.1
         ratio = int(chan.local_balance) / int(chan.capacity)

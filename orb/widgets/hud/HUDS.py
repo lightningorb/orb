@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 09:30:23
+# @Last Modified time: 2022-09-02 14:15:05
 
 import os
 import time
@@ -354,6 +354,41 @@ class HUDMempool(BorderedLabel):
 Medium priority: {fees["halfHourFee"]} sat/vB
 High priority: {fees["fastestFee"]} sat/vB"""
             update_gui(text)
+
+        threading.Thread(target=func).start()
+
+
+class HUDLNURLPay(BorderedLabel):
+    hud = ObjectProperty("")
+
+    def __init__(self, *args, **kwargs):
+        BorderedLabel.__init__(self, *args, **kwargs)
+        Clock.schedule_interval(self.update, 10)
+        Clock.schedule_once(self.update, 1)
+
+    def update(self, *args):
+        @mainthread
+        def update_gui(text):
+            self.hud = text
+            self.show()
+
+        from orb.store.db_meta import invoices_db_name
+        from orb.misc.decorators import db_connect
+
+        @db_connect(invoices_db_name)
+        def func():
+            from orb.logic.lnurl_invoice_generator import LNUrlInvoiceGenerator
+            from textwrap import dedent
+
+            for t in thread_manager.threads:
+                if type(t) is LNUrlInvoiceGenerator:
+                    text = dedent(
+                        f"""\
+                        Total paid: {t.total_amount_paid():_}
+                        Total due: {t.total_amount_sat:_}
+                        Paid: {t.total_amount_paid() >= t.total_amount_sat}"""
+                    )
+                    update_gui(text)
 
         threading.Thread(target=func).start()
 

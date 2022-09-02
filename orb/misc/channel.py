@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 11:49:17
+# @Last Modified time: 2022-09-02 12:44:04
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -76,6 +76,7 @@ class Channel(EventDispatcher):
         """
         super(Channel, self).__init__(*args, **kwargs)
         self.update(channel)
+        print("CHANNEL CONSTRUCTED")
 
         self._policies_are_bound = False
 
@@ -157,7 +158,6 @@ class Channel(EventDispatcher):
         self.unsettled_balance = channel.unsettled_balance
         self.channel_point = channel.channel_point
         self.active = channel.active
-        self.channel = channel
 
     @property
     def alias(self):
