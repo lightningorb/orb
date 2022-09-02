@@ -176,7 +176,7 @@ class PayInvoices(StoppableThread):
                             with lock:
                                 chan_ignore.remove(chan_id)
                         if status == PaymentStatus.inflight:
-                            pass
+                            print("Payment status is inflight")
                         elif status in [
                             PaymentStatus.success,
                             PaymentStatus.already_paid,

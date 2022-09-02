@@ -35,7 +35,7 @@ class HTLCsThread(StoppableThreadHidden):
                 self.inst.cn[cid].l.anim_htlc(htlc)
                 self.inst.ids.relative_layout.do_layout()
             except:
-                pass
+                print(format_exc())
 
         @mainthread
         def mainthread_update():
@@ -47,8 +47,8 @@ class HTLCsThread(StoppableThreadHidden):
             try:
                 for htlc in Ln().get_htlc_events():
                     self.count += 1
-                    if self.count % 20 == 0:
-                        app.channels.get()
+                    # if self.count % 20 == 0:
+                    app.channels.get()
                     if self.stopped():
                         return
 

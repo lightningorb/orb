@@ -142,20 +142,26 @@ def pay_thread(
             except Exception as e:
                 print(e)
                 print(format_exc())
-                code = e.args[0].code.name
-                details = e.args[0].details
-                # 'attempted value exceeds paymentamount'
-                if (
-                    code == "UNKNOWN"
-                    and details == "attempted value exceeds paymentamount"
-                ):
-                    print(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
-                    return PaymentStatus.inflight
-                if code == "ALREADY_EXISTS" and details == "invoice is already paid":
-                    print(f"T{thread_n}: INVOICE IS ALREADY PAID")
-                    return PaymentStatus.already_paid
-                print(f"T{thread_n}: exception.. not sure what's up")
-                return PaymentStatus.exception
+                if ln.node_type == 'lnd':
+                    code = e.args[0].code.name
+                    details = e.args[0].details
+                    # 'attempted value exceeds paymentamount'
+                    if (
+                        code == "UNKNOWN"
+                        and details == "attempted value exceeds paymentamount"
+                    ):
+                        print(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
+                        return PaymentStatus.inflight
+                    if code == "ALREADY_EXISTS" and details == "invoice is already paid":
+                        print(f"T{thread_n}: INVOICE IS ALREADY PAID")
+                        return PaymentStatus.already_paid
+                    print(f"T{thread_n}: exception.. not sure what's up")
+                    return PaymentStatus.exception
+                elif ln.node_type == 'cln':
+                    code = e.args[0].args[0]
+                    print(code)
+                    print(f"T{thread_n}: exception.. not sure what's up")
+                    return PaymentStatus.exception
 
             if ln.concrete.protocol == "rest":
                 if hasattr(response, "code"):

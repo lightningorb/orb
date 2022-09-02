@@ -346,7 +346,9 @@ class HTLC(PrintableType):
             self.outgoing_channel_id = None
             if e_name == "sendpay_failure":
                 self.event_outcome = "settle_event"
-                self.outgoing_channel_id = e.data.erring_channel
+                # TODO:
+                # sadly we need this information: which what route did this HTLC take?
+                self.outgoing_channel_id = None #e.data.erring_channel
                 self.incoming_htlc_id = e.data.payment_hash[:5]
                 self.outgoing_htlc_id = e.data.payment_hash[:5]
                 if e.data.failcodename == "WIRE_TEMPORARY_CHANNEL_FAILURE":

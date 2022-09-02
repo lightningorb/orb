@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-01 18:14:10
+# @Last Modified time: 2022-09-02 10:41:29
 
 from typing import Union
 
@@ -78,35 +78,46 @@ class ClnREST(ClnBase):
         """
         from orb.misc.channel import Channel
 
-        url = f"{self.fqdn}/v1/channel/listChannels"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        j = r.json()
+        peers = self.listpeers()
 
         ret = []
-        for c in j:
-            c = dict2obj(c)
-            if c.state != "CHANNELD_NORMAL":
-                continue
-            chan = Channel(
-                channel=dict2obj(
-                    dict(
-                        remote_pubkey=c.id,
-                        capacity=int(c.msatoshi_total / 1000),
-                        local_balance=int(c.msatoshi_to_us / 1000),
-                        remote_balance=int(c.msatoshi_to_them / 1000),
-                        channel_point=c.funding_txid,
-                        pending_htlcs=[],
-                        total_satoshis_sent=0,
-                        total_satoshis_received=0,
-                        initiator=False,
-                        commit_fee=0,
-                        unsettled_balance=0,
-                        active=True,
-                        chan_id=c.short_channel_id,
+        for p in peers.peers:
+            for c in p.channels:
+                if c.state != "CHANNELD_NORMAL":
+                    continue
+                if c.htlcs:
+                    print(c.htlcs)
+                    pass
+                chan = Channel(
+                    channel=dict2obj(
+                        dict(
+                            remote_pubkey=p.id,
+                            capacity=int(c.msatoshi_total / 1000),
+                            local_balance=int(c.msatoshi_to_us / 1000),
+                            remote_balance=int(
+                                (c.msatoshi_total - c.msatoshi_to_us) / 1000
+                            ),
+                            channel_point=c.funding_txid,
+                            pending_htlcs=[
+                                dict(
+                                    incoming=x.direction == "in",
+                                    amount=int(x.msatoshi / 1000),
+                                    htlc_index=x.payment_hash[:5],
+                                    id=x.id,
+                                )
+                                for x in c.htlcs
+                            ],
+                            total_satoshis_sent=0,
+                            total_satoshis_received=0,
+                            initiator=c.opener == "local",
+                            commit_fee=0,
+                            unsettled_balance=0,
+                            active=True,
+                            chan_id=c.short_channel_id,
+                        )
                     )
                 )
-            )
-            ret.append(chan)
+                ret.append(chan)
         return ret
 
     def get_info(self):
@@ -277,7 +288,7 @@ class ClnREST(ClnBase):
 
     def get_forwarding_history(self, index_offset=0, num_max_events=100):
         r = self._get(
-            f"/v1/channel/listForwardsPaginated?status=settled&offset={index_offset}&maxLen={num_max_events}"
+            f"/v1/channel/listForwardsPaginated?status=settled&offset={index_offset}&maxLen={num_max_events}&sort_by=resolved_time"
         )
         if index_offset >= r.totalForwards:
             return dict2obj(
