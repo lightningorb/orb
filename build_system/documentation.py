@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 16:14:21
+# @Last Modified time: 2022-09-03 18:29:36
 
 import os
+import re
 import zipfile
 from pathlib import Path
 from fabric import Connection
@@ -34,27 +35,41 @@ def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer-cli", env=env)
     out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
     out = out.replace("# `orb`", "")
+    print("TYPER DOCS:")
+    print(out)
     with open("docs/source/cli.md", "w") as f:
         f.write(out)
-    c.run(
-        "which pandoc",
-        env=env,
-    )
-    c.run("pandoc --help", env=env)
     c.run(
         "pandoc docs/source/cli.md --from markdown --to rst -s -o docs/source/cli.rst.tmp",
         env=env,
     )
     with open("docs/source/cli.rst.tmp") as f:
-        tmp = f.read()
+        # with open("tmp.txt") as f:
+        print("PANDOC OUTPUT")
+        content = f.read()
+        print(content)
+        tmp = ""
+        lines = content.split("\n")
+
+        def replace_with(f, t):
+            for i, line in enumerate(lines):
+                if re.match(f"^{f}+$", line):
+                    lines[i] = t * len(line)
+
+        replace_with("-", "^")
+        replace_with("=", "-")
+        for line in lines:
+            tmp += line + "\n"
+
+        print("PANDOC OUTPUT AFTER")
+        print(tmp)
+
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
     with open("docs/source/cli.rst", "w") as f:
         f.write(template)
         f.write("\n")
         f.write(tmp)
-
-    os.unlink("docs/source/cli.rst.tmp")
 
     c.run("pip3 uninstall --yes typer-cli", env=env)
     c.run("pip3 uninstall --yes typer[all]", env=env)

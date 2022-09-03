@@ -6,7 +6,7 @@ You should familiarise yourself with the Orb CLI (command line interface) as it 
 .. asciinema:: /_static/orb-cli-demo.cast
 
 Locating the executable in a terminal
-.....................................
+-------------------------------------
 
 If you have freshly installed Orb, you may want to open a terminal, and locate the executable.
 
@@ -34,7 +34,7 @@ Linux:
 
 
 Running tests
-.............
+-------------
 
 Orb comes with its pytest suite included, so that the build system can test the binary before making it available to the public, and so that users can test the build on their setup, too.
 
@@ -46,10 +46,10 @@ The test are safe to run: if you have existing nodes setup, the tests will not t
 
 
 Connecting to Orb's public nodes
-................................
+--------------------------------
 
 LND
-~~~
+^^^
 
 To connect to LND via REST:
 
@@ -64,7 +64,7 @@ Or to connect via GRPC:
    $ orb node create-orb-public lnd rest
 
 Core-Lightning
---------------
+^^^^^^^^^^^^^^
 
 To connect to Orb public Core-Lightning node via REST:
 
@@ -77,7 +77,7 @@ To connect to Orb public Core-Lightning node via REST:
 ------------------------
 
 Showing node information
-........................
+------------------------
 
 The next thing you'll want to do is see what nodes are available to Orb:
 
@@ -96,7 +96,7 @@ You may notice the information displayed is the same regardless of whether you a
 Orb abstracts the implementation type, enabling you to get on with your daily operations in an implementation-independent way.
 
 Commands and sub-commands
-.........................
+-------------------------
 
 You may (or may not) be familiar with `git`. It uses commands, and subcommands, e.g:
 
@@ -111,12 +111,12 @@ Orb CLI works in exactly the same way.
     $ orb <command> <sub-command>
 
 Arguments and Options
-.....................
+---------------------
 
 Arguments come after a sub-command, and do not require to be preceded by two dashes. Options on the other hand are preceded by two dashes, e.g `--use-node`.
 
 CLI changes
-...........
+-----------
 
 Deciding on how to group commands and sub-commands, and what should be an argument vs. an option etc. are hard design decisions, thus expect argument / option names, order etc. to change quite a lot for as long as Orb remains in v0.x.x.
 
@@ -125,7 +125,7 @@ Once Orb reaches v1, the API and CLI will become stable, and if there are breaki
 This is a strict requirement, as a stable CLI / API enables you to use Orb in your own automation workflows without the fear of breaking changes when updating minor versions.
 
 Getting help
-............
+------------
 
 
 .. code:: bash
@@ -134,7 +134,7 @@ Getting help
 
 
 Getting help on commands
-~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 .. code:: bash
@@ -143,7 +143,7 @@ Getting help on commands
 
 
 Getting help on sub-commands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 .. code:: bash
@@ -151,7 +151,7 @@ Getting help on sub-commands
     $ orb node ssh-wizard --help
 
 CLI reference
-~~~~~~~~~~~~~
+=============
 
 Now that are you are a bit more familiar with Orb's CLI, here's the full command reference.
 
@@ -201,7 +201,7 @@ Now that are you are a bit more familiar with Orb's CLI, here's the full command
 -  ``send``: Send coins on-chain.
 
 ``orb chain balance``
-~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^
 
 Get on-chain balance.
 
@@ -221,7 +221,7 @@ Get on-chain balance.
 -  ``--help``: Show this message and exit.
 
 ``orb chain deposit``
-~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^
 
 Get an on-chain address to deposit BTC.
 
@@ -237,7 +237,7 @@ Get an on-chain address to deposit BTC.
 -  ``--help``: Show this message and exit.
 
 ``orb chain fees``
-~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^
 
 Get mempool chain fees. Currently these are the fees from mempool.space
 
@@ -252,7 +252,7 @@ Get mempool chain fees. Currently these are the fees from mempool.space
 -  ``--help``: Show this message and exit.
 
 ``orb chain send``
-~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^
 
 Send coins on-chain.
 
@@ -295,7 +295,7 @@ Send coins on-chain.
 -  ``open``: Open a channel.
 
 ``orb channel list-forwards``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 List forwards for the node.
 
@@ -318,7 +318,7 @@ List forwards for the node.
 -  ``--help``: Show this message and exit.
 
 ``orb channel open``
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 Open a channel.
 
@@ -357,7 +357,7 @@ Open a channel.
 -  ``generate``: Generate a bolt11 invoice.
 
 ``orb invoice generate``
-~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Generate a bolt11 invoice.
 
@@ -405,7 +405,7 @@ Commands to perform operations on nodes.
 -  ``use``: Use the given node as default.
 
 ``orb node create``
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 Create node.
 
@@ -432,7 +432,7 @@ Create node.
 -  ``--help``: Show this message and exit.
 
 ``orb node create-from-cert-files``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create node and use certificate files.
 
@@ -459,7 +459,7 @@ Create node and use certificate files.
 -  ``--help``: Show this message and exit.
 
 ``orb node create-orb-public``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create public testnet node.
 
@@ -481,7 +481,7 @@ Create public testnet node.
 -  ``--help``: Show this message and exit.
 
 ``orb node delete``
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 Delete node information.
 
@@ -501,7 +501,7 @@ Delete node information.
 -  ``--help``: Show this message and exit.
 
 ``orb node info``
-~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^
 
 Get node information.
 
@@ -521,7 +521,7 @@ Get node information.
 -  ``--help``: Show this message and exit.
 
 ``orb node list``
-~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^
 
 Get a list of nodes known to Orb.
 
@@ -538,7 +538,7 @@ Get a list of nodes known to Orb.
 -  ``--help``: Show this message and exit.
 
 ``orb node ssh-wizard``
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 SSH into the node, copy the cert and mac, and create the node.
 
@@ -571,7 +571,7 @@ SSH into the node, copy the cert and mac, and create the node.
 -  ``--help``: Show this message and exit.
 
 ``orb node use``
-~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^
 
 Use the given node as default.
 
@@ -608,7 +608,7 @@ Use the given node as default.
 -  ``lnurl``: Generate bolt11 invoices from LNURL, and pay...
 
 ``orb pay invoices``
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 Pay Ingested Invoices
 
@@ -629,7 +629,7 @@ Pay Ingested Invoices
 -  ``--help``: Show this message and exit.
 
 ``orb pay lnurl``
-~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^
 
 Generate bolt11 invoices from LNURL, and pay them.
 
@@ -676,7 +676,7 @@ Generate bolt11 invoices from LNURL, and pay them.
 -  ``list``: List peers.
 
 ``orb peer connect``
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 Connect to a peer.
 
@@ -696,7 +696,7 @@ Connect to a peer.
 -  ``--help``: Show this message and exit.
 
 ``orb peer list``
-~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^
 
 List peers.
 
@@ -729,7 +729,7 @@ List peers.
 -  ``rebalance``: Rebalance the node
 
 ``orb rebalance rebalance``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Rebalance the node
 
@@ -769,7 +769,7 @@ Rebalance the node
 -  ``run-all-tests``: Run all tests.
 
 ``orb test run-all-tests``
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Run all tests.
 
@@ -801,7 +801,7 @@ Run all tests.
 -  ``serve``: Serve the Orb web app.
 
 ``orb web serve``
-~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^
 
 Serve the Orb web app.
 
@@ -819,3 +819,4 @@ Serve the Orb web app.
 -  ``--debug / --no-debug``: Show debug info (dev). [default: False]
 -  ``--workers INTEGER``: Number of web workers. [default: 1]
 -  ``--help``: Show this message and exit.
+
