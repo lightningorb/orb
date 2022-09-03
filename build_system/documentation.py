@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 17:56:24
+# @Last Modified time: 2022-09-03 18:10:11
 
 import os
 import re
@@ -46,12 +46,14 @@ def build_cli_docs(c, env=os.environ):
     with open("docs/source/cli.rst.tmp") as f:
         tmp = ""
         lines = f.read().split("\n")
-        for line in lines:
-            if re.match(r"=+", line):
-                line = "-" * len(line)
-            if re.match(r"~+", line):
-                line = "^" * len(line)
-            tmp += line + "\n"
+
+        def replace_with(f, t):
+            for i, line in enumerate(lines):
+                if re.match(f + "+", line):
+                    lines[i] = t * len(line)
+
+        replace_with("-", "^")
+        replace_with("=", "-")
     print("PANDOC OUTPUT")
     print(tmp)
     with open("docs/source/cli.rst.template") as f:
