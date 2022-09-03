@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 16:14:21
+# @Last Modified time: 2022-09-03 16:51:49
 
 import os
 import zipfile
@@ -34,19 +34,18 @@ def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer-cli", env=env)
     out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
     out = out.replace("# `orb`", "")
+    print("TYPER DOCS:")
+    prin(out)
     with open("docs/source/cli.md", "w") as f:
         f.write(out)
-    c.run(
-        "which pandoc",
-        env=env,
-    )
-    c.run("pandoc --help", env=env)
     c.run(
         "pandoc docs/source/cli.md --from markdown --to rst -s -o docs/source/cli.rst.tmp",
         env=env,
     )
     with open("docs/source/cli.rst.tmp") as f:
         tmp = f.read()
+    print("PANDOC OUTPUT")
+    print(tmp)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
     with open("docs/source/cli.rst", "w") as f:
