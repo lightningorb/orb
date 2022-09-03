@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 16:54:11
+# @Last Modified time: 2022-09-03 17:24:39
 
 import os
+import re
 import zipfile
 from pathlib import Path
 from fabric import Connection
@@ -43,7 +44,12 @@ def build_cli_docs(c, env=os.environ):
         env=env,
     )
     with open("docs/source/cli.rst.tmp") as f:
-        tmp = f.read()
+        tmp = ""
+        lines = f.read().split("\n")
+        for line in lines:
+            if re.match(r"=+", line):
+                line = "l" * len(line)
+            tmp += line + "\n"
     print("PANDOC OUTPUT")
     print(tmp)
     with open("docs/source/cli.rst.template") as f:
@@ -52,8 +58,6 @@ def build_cli_docs(c, env=os.environ):
         f.write(template)
         f.write("\n")
         f.write(tmp)
-
-    os.unlink("docs/source/cli.rst.tmp")
 
     c.run("pip3 uninstall --yes typer-cli", env=env)
     c.run("pip3 uninstall --yes typer[all]", env=env)
