@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-01 12:30:58
+# @Last Modified time: 2022-09-03 16:14:21
 
 import os
 import zipfile
@@ -145,3 +145,53 @@ def view(c):
     """
     with c.cd("docs/docsbuild"):
         c.run("python3 -m http.server")
+
+
+d = """\
+Dockerfile
+==========
+
+.. code::
+
+    FROM ubuntu:20.04
+
+    RUN apt-get update
+    RUN apt-get install curl -y
+
+    RUN curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-<VERSION>-ubuntu-20.04-x86_64.tar.gz > orb-<VERSION>-ubuntu-20.04-x86_64.tar.gz 
+
+    RUN tar xvf orb-<VERSION>-ubuntu-20.04-x86_64.tar.gz
+
+    WORKDIR orb
+
+    RUN apt-get update;
+    ENV ORB_NO_DEVICE_ID_WARNING=1
+    ARG DEBIAN_FRONTEND=noninteractive
+    RUN bash bootstrap_ubuntu_20_04.sh
+
+Then some commands to get you started:
+
+.. code::
+
+    docker build -t orb .
+    alias orb='docker run --rm -v `pwd`/orb_data:/root/.config -p 8080:8080 -it orb python3.9 main.py ${*}'
+    orb --help
+    orb test run-all-tests
+    orb node create-orb-public cln rest
+    orb node info
+    orb node create-orb-public lnd rest
+    orb web serve
+"""
+
+
+@task
+def dockerfile(c):
+    """
+    Write the Dockerfile docs.
+    """
+    global d
+    with open("VERSION") as f:
+        version = f.read().strip()
+        d = d.replace("<VERSION>", version)
+        with open("docs/source/dockerfile.rst", "w") as w:
+            w.write(d)
