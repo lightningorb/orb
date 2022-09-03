@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 18:15:23
+# @Last Modified time: 2022-09-03 18:17:52
 
 import os
 import re
@@ -44,6 +44,8 @@ def build_cli_docs(c, env=os.environ):
         env=env,
     )
     with open("docs/source/cli.rst.tmp") as f:
+        print("PANDOC OUTPUT")
+        print(f.read())
         tmp = ""
         lines = f.read().split("\n")
 
@@ -57,8 +59,6 @@ def build_cli_docs(c, env=os.environ):
         for line in lines:
             tmp += line + "\n"
 
-    print("PANDOC OUTPUT")
-    print(tmp)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
     with open("docs/source/cli.rst", "w") as f:
