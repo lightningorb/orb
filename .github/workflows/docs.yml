@@ -15,6 +15,7 @@ jobs:
           cache: 'pip'
       - run: sudo apt-get install pandoc -y
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: python ./build.py documentation.dockerfile
       - run: python ./build.py documentation.build-cli-docs
       - run: python ./build.py documentation.build
       - run: python ./build.py documentation.upload

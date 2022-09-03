@@ -221,7 +221,6 @@ $ orb node [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `balance`: Get total balance, for both on-chain and...
 * `create`: Create node.
 * `create-from-cert-files`: Create node and use certificate files.
 * `create-orb-public`: Create public testnet node.
@@ -230,26 +229,6 @@ $ orb node [OPTIONS] COMMAND [ARGS]...
 * `list`: Get a list of nodes known to Orb.
 * `ssh-wizard`: SSH into the node, copy the cert and mac, and...
 * `use`: Use the given node as default.
-
-### `orb node balance`
-
-Get total balance, for both on-chain and balance in channels.
-
-WIP: this is not yet implemented for CLN.
-
-**Usage**:
-
-```console
-$ orb node balance [OPTIONS] [PUBKEY]
-```
-
-**Arguments**:
-
-* `[PUBKEY]`: The pubkey of the node. If not provided, use the default node.
-
-**Options**:
-
-* `--help`: Show this message and exit.
 
 ### `orb node create`
 
@@ -563,7 +542,7 @@ $ orb rebalance rebalance [OPTIONS]
 * `--max-paths INTEGER`: [default: 10000]
 * `--fee-rate INTEGER`: [default: 500]
 * `--time-pref FLOAT`: [default: 0]
-* `--node TEXT`: [default: 02613d48576b651b45587802f86e414c662f31d9e24a9c18158724aa2d7851e764]
+* `--node TEXT`: [default: 0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47]
 * `--help`: Show this message and exit.
 
 ## `orb test`
