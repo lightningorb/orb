@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-05 07:48:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 12:28:22
+# @Last Modified time: 2022-09-03 05:12:33
 
 import threading
 from time import sleep
@@ -164,7 +164,6 @@ class PayInvoices(StoppableThread):
                                 outgoing_chan_id=chan_id,
                                 last_hop_pubkey=None,
                                 max_paths=self.inst.max_paths,
-                                payment_request_raw=invoice.raw,
                                 ln=self.inst.ln,
                             )
                         except:

@@ -9,6 +9,7 @@ kivy_garden.graph==0.4.0
 PyYaml==6.0
 simplejson==3.17.6
 plyer
+uvicorn
 rsa
 memoization
 bech32

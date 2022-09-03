@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 11:36:31
+# @Last Modified time: 2022-09-03 08:09:59
 
 from configparser import ConfigParser
 
@@ -213,6 +213,7 @@ class Ln:
         res = self.concrete.decode_payment_request(bolt11)
         return PaymentRequest(
             impl=self.node_type,
+            bolt11=bolt11,
             **res.__dict__,
         )
 
@@ -227,6 +228,19 @@ class Ln:
     def send_payment(self, payment_request, route) -> SendPaymentResponse:
         res = self.concrete.send_payment(payment_request, route)
         return SendPaymentResponse(self.node_type, res)
+
+    def list_payments(self, index_offset: int = 0, max_payments: int = 100):
+        """Get the completed payments for the current node.
+
+        :param index_offset: starting index.
+        :param max_payments: number of paginated payments to fetch.
+        """
+        res = self.concrete.list_payments(
+            index_offset=index_offset,
+            max_payments=max_payments,
+        )
+
+        return PaymentEvents(impl=self.node_type, index_offset=index_offset, max_payments=max_payments, fwd=res)
 
     def get_forwarding_history(
         self, index_offset=0, num_max_events=100
@@ -253,6 +267,10 @@ class Ln:
         for c in channels:
             res.append(Channel(impl=self.node_type, c=c))
         return res
+
+    def generate_invoice(self, amount: int, memo: str):
+        pr = self.concrete.generate_invoice(amount=amount, memo=memo)
+        return PaymentRequest(impl=self.node_type, bolt11=pr[0], **pr[1].__dict__)
 
     def __getattr__(self, name):
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)

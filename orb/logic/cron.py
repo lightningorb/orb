@@ -14,11 +14,12 @@ import time
 class Cron:
     def __init__(self, *_, **__):
         from kivy.clock import Clock
-        from kivy.clock import mainthread
 
         from orb.logic.forwarding_history import DownloadFowardingHistory
-
         DownloadFowardingHistory().start()
+
+        from orb.logic.payment_history import DownloadPaymentHistory
+        DownloadPaymentHistory().start()
 
         if Clock:
 
@@ -65,8 +66,3 @@ class Cron:
             UpdateChannels().start()
 
             return
-        if pref("host.type") == "lnd":
-
-            from orb.logic.payment_history import DownloadPaymentHistory
-
-            DownloadPaymentHistory().start()

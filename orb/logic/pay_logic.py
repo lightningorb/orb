@@ -89,7 +89,6 @@ def pay_thread(
     outgoing_chan_id,
     last_hop_pubkey,
     max_paths,
-    payment_request_raw,
     ln,
 ):
     from orb.store import model

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 11:34:51
+# @Last Modified time: 2022-09-03 06:36:28
 
 from typing import Union
 
@@ -448,11 +448,13 @@ class ClnREST(ClnBase):
         print(r)
         return dict2obj(r.json())
 
-    def list_payments(
-        self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
-    ):
-        url = f"/v1/payments?include_incomplete={'true' if include_incomplete else 'false'}&index_offset={index_offset}&max_payments={max_payments}"
-        return self._get(url)
+    @cached(ttl=60)
+    def listsendpays_cached(self):
+        return self.listsendpays(status="complete")
+
+    def list_payments(self, index_offset=0, max_payments=100):
+        pay = self.listsendpays_cached()
+        return pay.payments[index_offset : index_offset + max_payments]
 
     def batch_open(self, pubkeys, amounts, sat_per_vbyte):
         """

@@ -12,7 +12,6 @@ from orb.logic.channel_selector import get_low_inbound_channel
 from orb.logic.channel_selector import get_low_outbound_channel
 from orb.logic.pay_logic import pay_thread, PaymentStatus
 from orb.core.stoppable_thread import StoppableThread
-from orb.ln import Ln
 
 
 class RebalanceThread(StoppableThread):
@@ -26,7 +25,7 @@ class RebalanceThread(StoppableThread):
         time_pref,
         name,
         thread_n,
-        ln,
+        ln=None,
         *args,
         **kwargs,
     ):
@@ -39,6 +38,9 @@ class RebalanceThread(StoppableThread):
         self.time_pref = time_pref
         self.name = name
         self.thread_n = thread_n
+        app = App.get_running_app()
+        if not ln:
+            ln = app.ln
         self.ln = ln
 
     def run(self):
@@ -70,7 +72,7 @@ class RebalanceThread(StoppableThread):
 
         print(f"Rebalancing {self.amount} from {from_alias} to {to_alias}")
 
-        raw, payment_request = self.ln.generate_invoice(
+        payment_request = self.ln.generate_invoice(
             memo="rebalance", amount=self.amount
         )
         status = pay_thread(
@@ -80,7 +82,6 @@ class RebalanceThread(StoppableThread):
             fee_rate=self.fee_rate,
             time_pref=self.time_pref,
             payment_request=payment_request,
-            payment_request_raw=raw,
             outgoing_chan_id=self.chan_id,
             last_hop_pubkey=self.last_hop_pubkey,
             max_paths=self.max_paths,

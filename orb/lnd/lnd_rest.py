@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 17:02:05
+# @Last Modified time: 2022-09-03 04:13:39
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -415,11 +415,10 @@ class LndREST(LndBase):
         )
         return r.iter_lines()
 
-    def list_payments(
-        self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
-    ):
-        url = f"/v1/payments?include_incomplete={'true' if include_incomplete else 'false'}&index_offset={index_offset}&max_payments={max_payments}"
-        return self._get(url)
+    def list_payments(self, index_offset=0, max_payments=100):
+        return self._get(
+            f"/v1/payments?include_incomplete=false&index_offset={index_offset}&max_payments={max_payments}"
+        )
 
     def batch_open(self, pubkeys, amounts, sat_per_vbyte):
         """

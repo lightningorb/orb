@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 16:51:20
+# @Last Modified time: 2022-09-03 10:53:55
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -72,6 +72,69 @@ class ForwardingEvents(PrintableType):
 
         for e in getattr(fwd, name[impl]):
             self.forwarding_events.append(ForwardingEvent(impl=impl, e=e))
+
+
+class PaymentEvent(PrintableType):
+    def __init__(self, impl, e):
+        self.creation_date: int = 0
+        self.creation_time_ns: int = 0
+        self.failure_reason: str = ""
+        self.fee: int = 0
+        self.fee_msat: int = 0
+        self.fee_sat: int = 0
+        self.htlcs = None
+        self.payment_hash: str = ""
+        self.payment_index: int = 0
+        self.payment_preimage: str = ""
+        self.payment_request: str = ""
+        self.status: str = ""
+        self.value: int = 0
+        self.value_msat: int = 0
+        self.value_sat: int = 0
+        self.total_fees_msat: int = 0
+
+        if impl == "lnd":
+            self.creation_date = e.creation_date
+            self.creation_time_ns = e.creation_time_ns
+            self.failure_reason = e.failure_reason
+            self.fee = e.fee
+            self.fee_msat = e.fee_msat
+            self.fee_sat = e.fee_sat
+            self.htlcs = e.htlcs
+            self.payment_hash = e.payment_hash
+            self.payment_index = e.payment_index
+            self.payment_preimage = e.payment_preimage
+            self.payment_request = e.payment_request
+            self.status = e.status
+            self.value = e.value
+            self.value_msat = e.value_msat
+            self.value_sat = e.value_sat
+            self.total_fees_msat = e.fee_msat
+        elif impl == "cln":
+            self.creation_date = e.created_at
+            self.creation_time_ns = e.created_at * 1000
+            self.payment_request = ""
+            self.status = "SUCCEEDED"
+            self.value_msat = e.msatoshi
+            self.value_sat = e.msatoshi // 1000
+            self.fee = (e.msatoshi_sent - e.msatoshi) // 1000
+            self.fee_sat = (e.msatoshi_sent - e.msatoshi) // 1000
+            self.fee_msat = e.msatoshi_sent - e.msatoshi
+            self.payment_hash = e.payment_hash
+            self.payment_preimage = e.payment_preimage
+            self.total_fees_msat = e.msatoshi_sent - e.msatoshi
+
+
+class PaymentEvents(PrintableType):
+    def __init__(self, impl, index_offset, max_payments, fwd):
+        self.payments = []
+        self.last_index_offset: int = 0
+        if impl == "lnd":
+            self.last_index_offset = fwd.last_index_offset
+        elif impl == "cln":
+            self.last_index_offset = index_offset + 1 + len(fwd)
+        for f in fwd:
+            self.payments.append(PaymentEvent(impl=impl, e=f))
 
 
 class ForwardingEvent(PrintableType):
@@ -170,18 +233,19 @@ class Policy(PrintableType):
 
 
 class PaymentRequest(PrintableType):
-    destination: str
-    num_satoshis: int
-    num_msat: int
-    cltv_expiry: int
-    timestamp: int
-    expiry: int
-    description: str = ""
-    payment_addr: str = ""
-    payment_hash: str = ""
-    payment_request: str = ""
+    def __init__(self, bolt11: str, impl: str, **kwargs):
+        self.bolt11: str = bolt11
+        self.destination: str = ""
+        self.num_satoshis: int = 0
+        self.num_msat: int = 0
+        self.cltv_expiry: int = 0
+        self.timestamp: int = 0
+        self.expiry: int = 0
+        self.description: str = ""
+        self.payment_addr: str = ""
+        self.payment_hash: str = ""
+        self.payment_request: str = ""
 
-    def __init__(self, impl, **kwargs):
         if impl == "lnd":
             self.destination = kwargs["destination"]
             self.num_satoshis = int(kwargs["num_satoshis"])
@@ -443,3 +507,11 @@ class Channel(PrintableType):
             self.unsettled_balance = c.unsettled_balance
             self.active = c.active
             self.chan_id = str(c.chan_id)
+
+
+class Invoice(PrintableType):
+    def __init__(self, impl, i):
+        if impl == "cln":
+            self.remote_pubkey = i.remote_pubkey
+        elif impl == "lnd":
+            self.remote_pubkey = i.remote_pubkey

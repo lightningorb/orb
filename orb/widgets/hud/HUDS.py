@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 14:15:05
+# @Last Modified time: 2022-09-03 02:12:49
 
 import os
 import time
@@ -28,6 +28,7 @@ from orb.widgets.hud.hud_common import Hideable, BorderedLabel
 from orb.logic.thread_manager import thread_manager
 from orb.misc.decorators import silent, guarded
 from orb.store.db_meta import payments_db_name
+from orb.store.db_meta import forwarding_events_db_name
 from orb.misc.decorators import db_connect
 from orb.misc.utils import desktop, pref
 from orb.misc.forex import forex
@@ -38,29 +39,57 @@ from orb.ln import Ln
 
 class HUDFeeSummary(BorderedLabel):
     """
-    Fee Summary HUD
+    Earned Fee Summary HUD
     """
 
     hud = ObjectProperty("")
 
     def __init__(self, *args, **kwargs):
         BorderedLabel.__init__(self, *args, **kwargs)
-        Clock.schedule_interval(self.get_lnd_data, 60)
-        Clock.schedule_once(self.get_lnd_data, 1)
+        Clock.schedule_interval(self.get_spent_data, 60)
+        Clock.schedule_once(self.get_spent_data, 1)
 
-    def get_lnd_data(self, *args):
+    def get_spent_data(self, *args):
         @mainthread
         def update_gui(text):
             self.hud = text
             self.show()
 
+        @db_connect(forwarding_events_db_name)
         @silent
         def func():
-            fr = Ln().fee_report()
+            from orb.store.model import ForwardEvent
+
+            today = (
+                sum(
+                    p.fee_msat
+                    for p in ForwardEvent().select().where(ForwardEvent.today() == True)
+                )
+                / 1000
+            )
+            this_week = (
+                sum(
+                    p.fee_msat
+                    for p in ForwardEvent()
+                    .select()
+                    .where(ForwardEvent.this_week() == True)
+                )
+                / 1000
+            )
+            this_month = (
+                sum(
+                    p.fee_msat
+                    for p in ForwardEvent()
+                    .select()
+                    .where(ForwardEvent.this_month() == True)
+                )
+                / 1000
+            )
+
             update_gui(
-                f"Earned:\nDay: {forex(fr.day_fee_sum)}\nWeek"
-                f" {forex(fr.week_fee_sum)}\nMonth:"
-                f" {forex(fr.month_fee_sum)}"
+                f"Earned:\nDay: {forex(today)}\nWeek"
+                f" {forex(this_week)}\nMonth:"
+                f" {forex(this_month)}"
             )
 
         threading.Thread(target=func).start()
@@ -113,7 +142,6 @@ class HUDSpentFeeSummary(BorderedLabel):
                 / 1000
             )
 
-            fr = Ln().fee_report()
             update_gui(
                 f"Spent:\nDay: {forex(today)}\nWeek"
                 f" {forex(this_week)}\nMonth:"

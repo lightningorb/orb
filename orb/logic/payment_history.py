@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 13:44:42
+# @Last Modified time: 2022-09-03 15:41:55
 
 import arrow
-from threading import Thread, Lock
+from threading import Lock
 
 from kivy.app import App
 
@@ -42,10 +42,13 @@ class DownloadPaymentHistory(StoppableThread):
                 last_hop_chanid=0,
                 first_hop_pubkey="",
                 first_hop_chanid=0,
-                total_fees_msat=0,
+                total_fees_msat=p.total_fees_msat,
             )
             pay.save()
             last_route = None
+
+            if not p.htlcs:
+                return
 
             for h in p.htlcs:
                 attempt = model.LNDPaymentAttempt(
@@ -147,15 +150,13 @@ class DownloadPaymentHistory(StoppableThread):
             with lock:
                 chunk_size = 100
                 last = get_last_payment()
-                start_offset = last.payment_index if last else 0
+                # start_offset = last.payment_index if last else 0
+                start_offset = last.id if last else 0
                 if start_offset == 0:
                     clear_stats()
                 while not self.stopped():
                     res = Ln().list_payments(
-                        include_incomplete=False,
-                        index_offset=start_offset,
-                        max_payments=chunk_size,
-                        reversed=False,
+                        index_offset=start_offset, max_payments=chunk_size
                     )
                     for p in res.payments:
                         if payment_exists(p):

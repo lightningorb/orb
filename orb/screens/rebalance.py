@@ -41,7 +41,7 @@ class Rebalance(PopupDropShadow):
         delayed(chans_pk, self.alias_to_pk)
 
     def first_hop_spinner_click(self, chan):
-        self.chan_id = int(chan.split(":")[0])
+        self.chan_id = chan.split(":")[0]
         print(f"Setting chan_id to: {self.chan_id}")
 
     def last_hop_spinner_click(self, alias):

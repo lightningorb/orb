@@ -7,21 +7,17 @@
 import os
 from copy import copy
 from time import sleep
-from pathlib import Path
 from random import shuffle
-from functools import cmp_to_key
 from threading import Lock, Thread
 
 import yaml
 
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import DictProperty
 from kivy.properties import ObjectProperty
-from kivy.properties import StringProperty
 from kivy.properties import NumericProperty
 
 from orb.core.stoppable_thread import StoppableThread

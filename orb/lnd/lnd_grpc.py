@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 17:02:51
+# @Last Modified time: 2022-09-03 02:46:16
 import sys
 import os
 import json
@@ -364,14 +364,12 @@ class LndGRPC(LndBase):
         )
         return self.stub.ForwardingHistory(request)
 
-    def list_payments(
-        self, include_incomplete=True, index_offset=0, max_payments=100, reversed=False
-    ):
+    def list_payments(self, index_offset=0, max_payments=100):
         request = ln.ListPaymentsRequest(
-            include_incomplete=include_incomplete,
+            include_incomplete=False,
             index_offset=index_offset,
             max_payments=max_payments,
-            reversed=reversed,
+            reversed=False,
         )
         response = self.stub.ListPayments(request)
         json_obj = json.loads(
