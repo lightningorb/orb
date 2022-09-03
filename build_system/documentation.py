@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 17:24:39
+# @Last Modified time: 2022-09-03 17:30:11
 
 import os
 import re
@@ -48,7 +48,7 @@ def build_cli_docs(c, env=os.environ):
         lines = f.read().split("\n")
         for line in lines:
             if re.match(r"=+", line):
-                line = "l" * len(line)
+                line = "-" * len(line)
             tmp += line + "\n"
     print("PANDOC OUTPUT")
     print(tmp)
