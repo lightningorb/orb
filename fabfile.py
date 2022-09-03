@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 16:29:39
+# @Last Modified time: 2022-09-03 16:31:20
 
 import re
 import os
@@ -44,7 +44,7 @@ def release(c, minor=False, patch=False, hotfix=False):
     # if not hotfix or not "working tree clean" in c.run("git status").stdout:
     #     print("Working directory not clean")
     #     return
-    rebase(push=False)
+    rebase(c, push=False)
     if not hotfix:
         if minor and patch:
             exit(-1)
@@ -63,7 +63,7 @@ def release(c, minor=False, patch=False, hotfix=False):
     if not hotfix:
         tags.tag(c)
         tags.push(c)
-    rebase(push=True)
+    rebase(c, push=True)
 
 
 @task
