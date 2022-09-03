@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 18:23:51
+# @Last Modified time: 2022-09-03 18:29:36
 
 import os
 import re
@@ -44,10 +44,12 @@ def build_cli_docs(c, env=os.environ):
         env=env,
     )
     with open("docs/source/cli.rst.tmp") as f:
+        # with open("tmp.txt") as f:
         print("PANDOC OUTPUT")
-        print(f.read())
+        content = f.read()
+        print(content)
         tmp = ""
-        lines = f.read().split("\n")
+        lines = content.split("\n")
 
         def replace_with(f, t):
             for i, line in enumerate(lines):
