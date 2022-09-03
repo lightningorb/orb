@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 18:10:11
+# @Last Modified time: 2022-09-03 18:15:23
 
 import os
 import re
@@ -54,6 +54,9 @@ def build_cli_docs(c, env=os.environ):
 
         replace_with("-", "^")
         replace_with("=", "-")
+        for line in lines:
+            tmp += line + "\n"
+
     print("PANDOC OUTPUT")
     print(tmp)
     with open("docs/source/cli.rst.template") as f:
