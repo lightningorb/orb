@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 16:51:49
+# @Last Modified time: 2022-09-03 16:54:11
 
 import os
 import zipfile
@@ -35,7 +35,7 @@ def build_cli_docs(c, env=os.environ):
     out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
     out = out.replace("# `orb`", "")
     print("TYPER DOCS:")
-    prin(out)
+    print(out)
     with open("docs/source/cli.md", "w") as f:
         f.write(out)
     c.run(
