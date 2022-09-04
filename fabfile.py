@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 15:16:39
+# @Last Modified time: 2022-09-04 15:31:45
 
 import re
 import os
@@ -45,7 +45,7 @@ def release(c, minor=False, patch=False, hotfix=False):
     # if not hotfix or not "working tree clean" in c.run("git status").stdout:
     #     print("Working directory not clean")
     #     return
-    rebase(c, push=False)
+    merge(c, push=False)
     if not hotfix:
         if minor and patch:
             exit(-1)
@@ -64,7 +64,7 @@ def release(c, minor=False, patch=False, hotfix=False):
     if not hotfix:
         tags.tag(c)
         tags.push(c)
-    rebase(c, push=True)
+    merge(c, push=True)
 
 
 @task
@@ -85,10 +85,10 @@ def update_install_script(c):
 
 
 @task
-def rebase(c, push=False):
+def merge(c, push=False):
     for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
         c.run(f"git checkout {branch}")
-        c.run("git rebase main")
+        c.run("git merge main -m 'merging changes from main'")
         if push:
             c.run(f"git push --set-upstream origin {branch}")
     c.run("git checkout main")
@@ -116,6 +116,6 @@ namespace = Collection(
     alembic,
     android,
     cln_regtest,
-    rebase,
+    merge,
     update_install_script,
 )
