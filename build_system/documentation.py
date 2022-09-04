@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 18:29:36
+# @Last Modified time: 2022-09-04 21:14:24
 
 import os
 import re
@@ -32,52 +32,19 @@ def clean(c):
 
 @task
 def build_cli_docs(c, env=os.environ):
-    c.run("pip3 install typer-cli", env=env)
-    out = c.run("PYTHONPATH=. typer main.py utils docs --name orb", env=env).stdout
-    out = out.replace("# `orb`", "")
-    print("TYPER DOCS:")
-    print(out)
-    with open("docs/source/cli.md", "w") as f:
-        f.write(out)
-    c.run(
-        "pandoc docs/source/cli.md --from markdown --to rst -s -o docs/source/cli.rst.tmp",
-        env=env,
-    )
-    with open("docs/source/cli.rst.tmp") as f:
-        # with open("tmp.txt") as f:
-        print("PANDOC OUTPUT")
-        content = f.read()
-        print(content)
-        tmp = ""
-        lines = content.split("\n")
-
-        def replace_with(f, t):
-            for i, line in enumerate(lines):
-                if re.match(f"^{f}+$", line):
-                    lines[i] = t * len(line)
-
-        replace_with("-", "^")
-        replace_with("=", "-")
-        for line in lines:
-            tmp += line + "\n"
-
-        print("PANDOC OUTPUT AFTER")
-        print(tmp)
-
+    c.run("PYTHONPATH=. ./build_system/typer main.py utils docs --name orb", env=env)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
+    with open("docs/source/cli/cli_toc.rst") as f:
+        ref = f.read()
     with open("docs/source/cli.rst", "w") as f:
         f.write(template)
         f.write("\n")
-        f.write(tmp)
-
-    c.run("pip3 uninstall --yes typer-cli", env=env)
-    c.run("pip3 uninstall --yes typer[all]", env=env)
-    c.run("pip3 install typer[all]", env=env)
+        f.write(ref)
 
 
 @task
-def build(c, env=os.environ):
+def build(c, api_doc: bool = True, env=os.environ):
     """
     Build the docs. Requires sphinx.
     """
@@ -124,13 +91,12 @@ def build(c, env=os.environ):
     parent_dir = Path(__file__).parent
     for p in (parent_dir / Path("third_party")).glob("*"):
         env["PYTHONPATH"] += f":{p.as_posix()}"
-    flags = (
-        "--ext-autodoc --module-first --follow-links --ext-coverage --separate --force"
-    )
-    c.run(
-        f"sphinx-apidoc {flags} -o docs/source/gen/ orb orb/logic/licensing.py orb/misc/device_id.py orb/misc/sec_rsa.py",
-        env=env,
-    )
+    if api_doc:
+        flags = "--ext-autodoc --module-first --follow-links --ext-coverage --separate --force"
+        c.run(
+            f"sphinx-apidoc {flags} -o docs/source/gen/ orb orb/logic/licensing.py orb/misc/device_id.py orb/misc/sec_rsa.py",
+            env=env,
+        )
     c.run("sphinx-build -b html docs/source docs/docsbuild", env=env)
 
 

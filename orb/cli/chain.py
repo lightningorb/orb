@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:04:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 10:11:45
+# @Last Modified time: 2022-09-04 17:02:01
 
 from typing import Optional, Union
 from .chalk import chalk
@@ -14,7 +14,7 @@ from orb.cli.utils import pprint_from_ansi
 
 import typer
 
-app = typer.Typer()
+app = typer.Typer(help="Commands relating to on-chain activities")
 
 
 @app.command()
