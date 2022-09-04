@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 14:50:11
+# @Last Modified time: 2022-09-04 15:50:42
 
 from typing import Optional
 from invoke import task
@@ -47,7 +47,7 @@ def get_route(
     ),
 ):
     """
-    Pay Ingested Invoices
+    Get a route.
     """
     if not pubkey:
         pubkey = get_default_id()
