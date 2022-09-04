@@ -2,7 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-02 12:44:04
+# @Last Modified time: 2022-09-04 14:26:58
+
+import inspect
 
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
@@ -76,7 +78,6 @@ class Channel(EventDispatcher):
         """
         super(Channel, self).__init__(*args, **kwargs)
         self.update(channel)
-        print("CHANNEL CONSTRUCTED")
 
         self._policies_are_bound = False
 
@@ -152,7 +153,6 @@ class Channel(EventDispatcher):
         self.pending_htlcs = channel.pending_htlcs[:]
         self.total_satoshis_sent = channel.total_satoshis_sent
         self.total_satoshis_received = channel.total_satoshis_received
-        self.ListFields = channel.ListFields if hasattr(channel, "ListFields") else None
         self.initiator = channel.initiator
         self.commit_fee = channel.commit_fee
         self.unsettled_balance = channel.unsettled_balance
@@ -269,3 +269,12 @@ class Channel(EventDispatcher):
     @property
     def pending_out_htlc_ids(self):
         return [p.htlc_index for p in self.pending_htlcs if not p.incoming]
+
+    def as_dict(self):
+        ret = {}
+        for i in inspect.getmembers(self):
+            if not i[0].startswith("_"):
+                if not inspect.ismethod(i[1]):
+                    if type(i[1]) in [str, int, float, bool]:
+                        ret[i[0]] = i[1]
+        return ret

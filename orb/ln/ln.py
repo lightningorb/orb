@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 08:09:59
+# @Last Modified time: 2022-09-04 14:54:23
 
 from configparser import ConfigParser
 
@@ -123,7 +123,7 @@ class Ln:
     ) -> Route:
         """Get a route to the given pubkey.
 
-        :param fee_limit_msat: the fee limit in millisatoshis. This is ignored by CLN.
+        :param fee_limit_msat: the fee limit in millisatoshis. If the route fee goes over, hops will be empty.
         :param pub_key: the pub_key of the node to which to find a route.
         :param source_pub_key: the pub_key of the node from which to find a route.
         :param outgoing_chan_id: the channel id the first hop o the route.
@@ -138,10 +138,16 @@ class Ln:
             exclude = ignored_nodes[:]
             if outgoing_chan_id:
                 app = App.get_running_app()
-                for c in app.channels.channels.values():
+                if app:
+                    pubkey = app.pubkey
+                    channels = app.channels.channels.values()
+                else:
+                    pubkey = self.get_info().identity_pubkey
+                    channels = self.get_channels()
+                for c in channels:
                     if c.chan_id == outgoing_chan_id:
                         continue
-                    direction = int(app.pubkey > c.remote_pubkey)
+                    direction = int(pubkey > c.remote_pubkey)
                     chan_id = f"{c.chan_id}/{direction}"
                     exclude.append(chan_id)
 
@@ -240,7 +246,12 @@ class Ln:
             max_payments=max_payments,
         )
 
-        return PaymentEvents(impl=self.node_type, index_offset=index_offset, max_payments=max_payments, fwd=res)
+        return PaymentEvents(
+            impl=self.node_type,
+            index_offset=index_offset,
+            max_payments=max_payments,
+            fwd=res,
+        )
 
     def get_forwarding_history(
         self, index_offset=0, num_max_events=100
