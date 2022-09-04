@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-01 18:01:13
+# @Last Modified time: 2022-09-04 21:00:38
 
 import re
 import os
@@ -36,6 +36,15 @@ def delete(
 ):
     """
     Delete node information.
+
+    Node data is saved in various places depending on your OS:
+
+    - Linux: ~/.config/orb_<pubkey>/orb_<pubkey>.ini
+    - OSX: ~/Library/Application Support/orb_<pubkey>/orb_<pubkey>.ini
+    - Windows: ${APPDATA}/orb_<pubkey>/orb_<pubkey>.ini
+
+    This command recursively deletes the node's folder. This is a destructive command. Use with care.
+
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -60,6 +69,16 @@ def list(
 ):
     """
     Get a list of nodes known to Orb.
+
+    Node data is saved in various places depending on your OS:
+
+    - Linux: ~/.config/orb_<pubkey>/orb_<pubkey>.ini
+    - OSX: ~/Library/Application Support/orb_<pubkey>/orb_<pubkey>.ini
+    - Windows: ${APPDATA}/orb_<pubkey>/orb_<pubkey>.ini
+
+    This command simply scans those folders for a matching pattern.
+
+    If the `--show-info` is provided, then Orb attempts to connect to the node, and to invoke the :ref:`orb-node-info` command on the available nodes.
     """
 
     data_dir = Path(_get_user_data_dir_static())
@@ -85,6 +104,8 @@ def info(
 ):
     """
     Get node information.
+
+    This command connects to the lightning node, gets basic information and prints it out in the console.
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -95,7 +116,15 @@ def info(
 @app.command()
 def use(pubkey: str = typer.Argument(None, help="The pubkey of the node.")):
     """
-    Use the given node as default.
+    Make all subsequent commands use this node.
+
+    This command inserts the pubkey in the config files of the orbconnector app.
+
+    - Linux: ~/.config/orbconnector/orbconnector.ini
+    - OSX: ~/Library/Application Support/orbconnector/orbconnector.ini
+    - Windows: ${APPDATA}/orbconnector/orbconnector.ini
+
+    All subsequent orb invocations will use this node by default, unless otherwise specified.
     """
     conf_dir = Path(_get_user_data_dir_static()) / "orbconnector"
     if not conf_dir.is_dir():
@@ -117,6 +146,18 @@ def create_orb_public(
 ):
     """
     Create public testnet node.
+
+    This command enables users to quickly create node connection information for orb's public nodes. The typical invocates are:
+
+    .. code:: bash
+
+        orb node create-orb-public cln rest
+        orb node create-orb-public lnd rest
+        orb node create-orb-public lnd grpc
+
+    Since Core-Lightning's GRPC interface is still new and not used a lot, it is currently unsupported by Orb, which is why the `cln grpc` node flavor isn't available.
+
+    After the public node has been created, if `--use-node` was specified then subsequent orb commands will use it by default. These nodes have admin macaroons, and are used by the integration tests, so please keep the in a sane state so they don't need to be re-created.
     """
     from orb.misc.macaroon_secure import MacaroonSecure
 
@@ -162,7 +203,25 @@ def create(
     use_node: bool = typer.Option(True, help="Whether to set as default."),
 ):
     """
-    Create node.
+    Create a node.
+
+    This command encrypts the mac / certs, and attempts to connect to the node. If the connection is successful, then it saves the node information for later access.
+
+    If `use-node` is `True` then all subsequent commands will use this node as the default node.
+
+    A **node** is essentially the bare-minimum data Orb requires to connect to a lightning node.
+
+    Node data is saved in various places depending on your OS:
+
+    - Linux: ~/.config/orb_<pubkey>/orb_<pubkey>.ini
+    - OSX: ~/Library/Application Support/orb_<pubkey>/orb_<pubkey>.ini
+    - Windows: ${APPDATA}/orb_<pubkey>/orb_<pubkey>.ini
+
+    This command is used by other commands, e.g:
+
+    * :ref:`orb-node-create-orb-public`
+    * :ref:`orb-node-create-from-cert-files`
+    * :ref:`orb-node-ssh-wizard`
     """
 
     pprint_from_ansi(chalk().cyan(f"Encrypting mac"))
@@ -230,6 +289,13 @@ def create_from_cert_files(
 ):
     """
     Create node and use certificate files.
+
+    This command is very similar to :ref:`orb-node-create`, the difference being that instead of taking certificate and macaroon data, it takes in paths to those files, with:
+
+    `--mac-file-path=...`
+    `--cert-file-path=...`
+
+    This is practical for creating nodes after certificates and macaroons have been copied locally.
     """
     pprint_from_ansi(chalk().cyan(f"Reading mac: {mac_file_path}"))
     cert_plain, mac_hex = "", ""
@@ -281,6 +347,10 @@ def ssh_wizard(
 ):
     """
     SSH into the node, copy the cert and mac, and create the node.
+
+    The command sshes into a host, and copies the certificate and macaroon from the paths specified with `--ln-cert-path=...` and `--ln-macaroon-path=...` flags.
+
+    The remainder of the operations is invoking the :ref:`orb_node_create` command.
     """
     connect_kwargs = {}
     if ssh_cert_path:

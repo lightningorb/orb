@@ -1,3 +1,4 @@
+docs/source/cli/*.rst
 .coverage
 coverage
 *.macaroon
