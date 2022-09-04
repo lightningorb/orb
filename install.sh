@@ -1,7 +1,7 @@
 # @Author: w
 # @Date:   2022-09-03 21:24:13
 # @Last Modified by:   w
-# @Last Modified time: 2022-09-03 23:45:03
+# @Last Modified time: 2022-09-04 15:06:46
 # Determine OS platform
 
 cd
@@ -20,7 +20,7 @@ unset UNAME
 if [[ $DISTRO == 'Ubuntu' ]]; then
     RELEASE=$(cat /etc/lsb-release | grep DISTRIB_RELEASE | cut -d = -f 2)
     if [[ $RELEASE == '20.04' ]]; then
-        curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-0.21.7-ubuntu-20.04-x86_64.tar.gz | tar xvz;
+        curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-<VERSION>-ubuntu-20.04-x86_64.tar.gz | tar xvz;
         sudo apt-get install curl tar python3.8-venv;
         cd orb;
         python3 -m venv venv;
@@ -42,7 +42,7 @@ fi
 if [[ $DISTRO == 'darwin' ]]; then
     cd /tmp/
     OSX_MAJOR_VERSION=$(sw_vers | grep ProductVersion | cut -d : -f 2 | xargs | cut -d . -f 1)
-    DMG="orb-0.21.7-macos-${OSX_MAJOR_VERSION}-x86_64.dmg"
+    DMG="orb-<VERSION>-macos-${OSX_MAJOR_VERSION}-x86_64.dmg"
     curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/${DMG} -o ${DMG}
     sudo hdiutil attach ${DMG}
     sudo rm -rf /Applications/lnorb.app
