@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-23 04:51:02
+# @Last Modified time: 2022-09-04 14:31:00
 
 from threading import Thread
 
@@ -98,7 +98,7 @@ class AttributeEditor(BoxLayout):
                     self.populate_helped_earn()
                     self.populate_profit()
                     self.populate_fees()
-                    self.populate_rest(c=self.channel.__dict__)
+                    self.populate_rest(c=self.channel.as_dict())
 
             Clock.schedule_once(update, 0.25)
         else:
@@ -193,6 +193,15 @@ class AttributeEditor(BoxLayout):
         Populate fields when using the REST API.
         """
         for field in c:
+            if field in [
+                "profit",
+                "debt",
+                "earned",
+                "helped_earn",
+                "fee_rate_milli_msat",
+                "fee_base_msat",
+            ]:
+                continue
             if type(c[field]) is bool:
                 widget = BoxLayout(orientation="horizontal", size_hint_y=None)
                 widget.add_widget(Label(text=field))

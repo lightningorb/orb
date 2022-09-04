@@ -2,10 +2,11 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 16:31:20
+# @Last Modified time: 2022-09-04 15:16:39
 
 import re
 import os
+from pathlib import Path
 from invoke import task, Context, Collection
 from build_system.monkey_patch import fix_annotations
 
@@ -67,6 +68,23 @@ def release(c, minor=False, patch=False, hotfix=False):
 
 
 @task
+def update_install_script(c):
+    from fabric import Connection
+
+    with open("VERSION") as f:
+        VERSION = f.read()
+    with open("install.sh") as f:
+        installsh = f.read().replace("<VERSION>", VERSION)
+        with open("/tmp/install.sh", "w") as w:
+            w.write(installsh)
+    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    with Connection(
+        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
+    ) as con:
+        con.put("/tmp/install.sh", "/home/ubuntu/install_orb/index.html")
+
+
+@task
 def rebase(c, push=False):
     for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
         c.run(f"git checkout {branch}")
@@ -99,4 +117,5 @@ namespace = Collection(
     android,
     cln_regtest,
     rebase,
+    update_install_script,
 )

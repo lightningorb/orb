@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 10:53:55
+# @Last Modified time: 2022-09-04 14:02:13
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -345,7 +345,7 @@ class SendPaymentResponse(PrintableType):
     def __init__(self, impl, response):
         self.original: list = []
         self.failure = dict2obj(dict(code=0, failure_source_index=-1))
-        self.code_map = {4103: 15, 16394: 18, 16399: 1}
+        self.code_map = {4103: 15, 16394: 18, 16399: 1, 24579: 16}
         if impl == "lnd":
             self.original = response
             if hasattr(response, "failure") and response.failure:

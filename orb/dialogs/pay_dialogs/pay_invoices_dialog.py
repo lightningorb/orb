@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-01 10:03:46
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-10 18:40:01
+# @Last Modified time: 2022-09-04 13:33:54
 
 import threading
 
@@ -35,7 +35,7 @@ class PayInvoicesDialog(PopupDropShadow):
         threading.Thread(target=func).start()
 
     def first_hop_spinner_click(self, chan):
-        self.chan_id = int(chan.split(":")[0])
+        self.chan_id = chan.split(":")[0]
 
     def pay(self):
         self.pay_invoices = PayInvoices(
@@ -44,6 +44,6 @@ class PayInvoicesDialog(PopupDropShadow):
             fee_rate=int(self.ids.fee_rate.text),
             time_pref=float(self.ids.time_pref.value),
             num_threads=int(self.ids.num_threads.text),
-            ln=Ln()
+            ln=Ln(),
         )
         self.pay_invoices.start()
