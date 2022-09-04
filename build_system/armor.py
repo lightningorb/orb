@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 16:09:33
+# @Last Modified time: 2022-09-03 19:29:32
 
 try:
     # not all actions install all requirements
@@ -106,42 +106,39 @@ def register(c, env=os.environ):
     c.run("pyarmor register pyarmor-regcode-2364.txt", env=env)
 
 
-def ubuntu_boostrap_3_9():
+def ubuntu_boostrap_3_8():
     return """\
 #!/bin/bash
 
-apt-get update;
-apt-get -y install python3-pip python3.9-dev xsel libffi-dev;
-DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-apt install software-properties-common -y;
-add-apt-repository ppa:deadsnakes/ppa -y;
-apt install python3.9 curl -y;
-curl https://bootstrap.pypa.io/get-pip.py | python3.9;
-pip3.9 install kivymd==0.104.2;
-pip3.9 install peewee==3.14.8;
-pip3.9 install python-dateutil==2.8.2;
-pip3.9 install kivy_garden.graph==0.4.0;
-pip3.9 install PyYaml==6.0;
-pip3.9 install simplejson==3.17.6;
-pip3.9 install Kivy==2.1.0;
-pip3.9 install google-api-python-client;
-pip3.9 install grpcio
-pip3.9 install python-dateutil==2.8.2;
-pip3.9 install pyinstaller==4.9;
-pip3.9 install pyarmor==6.6.2;
-pip3.9 install fabric;
-pip3.9 install plyer;
-pip3.9 install fastapi;
-pip3.9 install uvicorn;
-pip3.9 install rich;
-pip3.9 install typer;
-pip3.9 install simple_chalk;
-pip3.9 install bech32;
-pip3.9 install semver;
-pip3.9 install memoization;
-pip3.9 install pytest;
-pip3.9 install --force-reinstall --no-binary :all: cffi
-pip3.9 install --upgrade --force-reinstall pillow
+sudo apt-get update;
+sudo apt-get -y install python3-pip xsel libffi-dev software-properties-common;
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+pip install kivymd==0.104.2;
+pip install peewee==3.14.8;
+pip install python-dateutil==2.8.2;
+pip install kivy_garden.graph==0.4.0;
+pip install PyYaml==6.0;
+pip install simplejson==3.17.6;
+pip install Kivy==2.1.0;
+pip install google-api-python-client;
+pip install grpcio
+pip install python-dateutil==2.8.2;
+pip install pyinstaller==4.9;
+pip install pyarmor==6.6.2;
+pip install fabric;
+pip install plyer;
+pip install fastapi;
+pip install uvicorn;
+pip install rich;
+pip install typer;
+pip install uvicorn;
+pip install simple_chalk;
+pip install bech32;
+pip install semver;
+pip install memoization;
+pip install pytest;
+pip install --force-reinstall --no-binary :all: cffi
+pip install --upgrade --force-reinstall pillow
     """
 
 
@@ -207,7 +204,7 @@ def build_linux(c, do_upload=True, env=os.environ):
             c.run("python main.py test run-all-tests")
 
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
-            f.write(ubuntu_boostrap_3_9())
+            f.write(ubuntu_boostrap_3_8())
         build_name = (
             f"orb-{VERSION}-{os.environ.get('os-name', 'undefined')}-x86_64.tar.gz"
         )

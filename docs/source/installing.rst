@@ -19,76 +19,11 @@ Installing
 
 
 
-MacOSX
-------
+.. toctree::
+   :maxdepth: 2
+   :glob:
+   :caption: Contents:
 
-Security on OSX can be a little overzealous. Please follow these steps carefully, in order.
-
-- open the DMG
-- drag & drop `lnorb` into the `Applications` folder
-- In Spotlight (CMD Space), type lnorb
-- Once lnorb appears in Spotlight, try running it
-- You may be presented with the following two dialogs:
-
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Monosnap_2022-03-02_02-52-22.png
-    :width: 500px
-    :align: center
-
-.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Monosnap_2022-03-02_02-53-03.png
-    :width: 500px
-    :align: center
-
-- in spotlight, type: Security and Privacy
-- in the Security and Privacy screen, click "Open anyway", and "Open"
-- run the lnorb application
-- Orb should open
-
-If Orb does not open:
-
-- in stoplight type 'terminal'
-- in the terminal paste
-    - cd /Applications/lnorb.app/Contents/MacOS
-    - ./lnorb
-    - report back your issues in our tech-support group (link at top of this page)
-
-Windows
--------
-
-On Windows, after downloading Orb:
-
-- unzip the downloaded zip file
-- open the `lnorb` folder
-- you are then free to save the `lnorb` folder wherever
-    - e.g in your `program files` directory, and create appropriate launch shortcuts
-- run lnorb.exe
-
-Ubuntu 20.04
-------------
-
-On Ubuntu 20.04, after downloading Orb's tar file
-
-- untar Orb
-- cd into the `orb` directory
-- the linux version is currently deployed as the obfuscated sourcecode, so you'll need to inspect the contents of bootstrap_ubuntu_20_04.sh:
-
-.. code:: bash
-
-    cat bootstrap_ubuntu_20_04.sh
-
-If you are comfortable with the modifications it makes to your system's packages, then:
-
-.. code:: bash
-
-    sudo bash bootstrap_ubuntu_20_04.sh
-
-
-You should now be able to start orb:
-
-.. code:: bash
-
-    python3.9 main.py
-
-
-.. note::
-
-    If you are using another Linux distribution, and require a bootstrap script, please request it in Orb's technical support group.
+   installing_ubuntu_20_04
+   installing_windows
+   installing_macosx

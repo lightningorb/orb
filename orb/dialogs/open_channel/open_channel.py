@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-08 09:55:01
+# @Last Modified time: 2022-09-04 10:18:26
 
 from kivy.uix.textinput import TextInput
 from kivy.metrics import dp
@@ -25,9 +25,9 @@ class CLNOpenChannel(PopupDropShadow):
     @guarded
     def open_channel(self, chan_id: str, satoshis: str, fee_rate: str):
         out = Ln().open_channel(
-            id=chan_id,
-            fee_rate=fee_rate,
-            satoshis=int(satoshis),
+            node_pubkey_string=chan_id,
+            sat_per_vbyte=fee_rate,
+            amount_sat=int(satoshis),
         )
         popup = PopupDropShadow(
             title="Open Channel Result", size_hint=(None, None), size=(dp(200), dp(200))
