@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 21:28:05
+# @Last Modified time: 2022-09-04 21:33:06
 
 import os
 import re
@@ -32,7 +32,7 @@ def clean(c):
 
 @task
 def build_cli_docs(c, env=os.environ):
-    c.run("pip3 install click==7.0.0")
+    c.run("pip3 install click==7.1.1")
     c.run("PYTHONPATH=. ./build_system/typer main.py utils docs --name orb", env=env)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
