@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-05 07:48:23
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 05:12:33
+# @Last Modified time: 2022-09-06 06:47:51
 
 import threading
 from time import sleep
@@ -128,8 +128,14 @@ class PayInvoices(StoppableThread):
                             invoice.raw
                         )
                     else:
-                        if not all_invoices:
+                        counter = 0
+                        while not all_invoices:
                             self.sprint("no more usable invoices")
+                            sleep(10)
+                            counter += 10
+                            if counter == 60:
+                                break
+                        if not all_invoices:
                             self.sprint(f"THREAD {self.thread_n} EXITING")
                             return
                         elif not usable_invoices:
@@ -203,9 +209,6 @@ class PayInvoices(StoppableThread):
                         else:
                             with invoices_lock:
                                 self.inst.inflight.remove(invoice)
-
-                    if not auto:
-                        break
 
                     sleep(5)
 
