@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 21:14:24
+# @Last Modified time: 2022-09-04 21:55:01
 
 import os
 import re
@@ -32,6 +32,9 @@ def clean(c):
 
 @task
 def build_cli_docs(c, env=os.environ):
+    c.run("pip3 install typer[all]", env=env)
+    c.run("pip3 install typer-cli")
+    # c.run("pip3 install click==7.1.2")
     c.run("PYTHONPATH=. ./build_system/typer main.py utils docs --name orb", env=env)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
@@ -41,6 +44,9 @@ def build_cli_docs(c, env=os.environ):
         f.write(template)
         f.write("\n")
         f.write(ref)
+    c.run("pip3 uninstall --yes typer-cli", env=env)
+    c.run("pip3 uninstall --yes typer[all]", env=env)
+    c.run("pip3 install typer[all]", env=env)
 
 
 @task

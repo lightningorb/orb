@@ -2,10 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 14:54:23
+# @Last Modified time: 2022-09-05 15:42:39
 
 from configparser import ConfigParser
-
+from copy import copy
 from pathlib import Path
 from orb.lnd.lnd import Lnd
 from orb.cln.cln import Cln
@@ -136,30 +136,76 @@ class Ln:
         """
         if self.node_type == "cln":
             exclude = ignored_nodes[:]
-            if outgoing_chan_id:
-                app = App.get_running_app()
-                if app:
-                    pubkey = app.pubkey
-                    channels = app.channels.channels.values()
-                else:
-                    pubkey = self.get_info().identity_pubkey
-                    channels = self.get_channels()
-                for c in channels:
-                    if c.chan_id == outgoing_chan_id:
-                        continue
-                    direction = int(pubkey > c.remote_pubkey)
-                    chan_id = f"{c.chan_id}/{direction}"
-                    exclude.append(chan_id)
 
-            route = self.concrete.getroute(
-                fromid=source_pub_key,
-                id=pub_key,
-                exclude=exclude,
-                msatoshi=amount_sat * 1000,
-                riskfactor=0,
-                cltv=cltv,
-                **kwargs,
-            )
+            def exclude_all_but(chan_id, our_pubkey, channels):
+                ret = []
+                for c in channels:
+                    if c.chan_id == chan_id:
+                        continue
+                    direction = int(our_pubkey > c.remote_pubkey)
+                    ret.append(f"{c.chan_id}/{direction}")
+                return ret
+
+            app = App.get_running_app()
+            dest_pubkey = pub_key
+            if app:
+                our_pubkey = app.pubkey
+                channels = app.channels.channels.values()
+            else:
+                our_pubkey = self.get_info().identity_pubkey
+                channels = self.get_channels()
+            is_circular = our_pubkey == dest_pubkey
+            if is_circular:
+                dest_pubkey = last_hop_pubkey
+                if outgoing_chan_id:
+                    exclude.extend(
+                        exclude_all_but(
+                            chan_id=outgoing_chan_id,
+                            our_pubkey=our_pubkey,
+                            channels=channels,
+                        )
+                    )
+                route = self.concrete.getroute(
+                    fromid=source_pub_key,
+                    id=dest_pubkey,
+                    exclude=exclude,
+                    msatoshi=amount_sat * 1000,
+                    riskfactor=0,
+                    cltv=cltv,
+                    **kwargs,
+                )
+                if hasattr(route, "route") and route.route:
+                    r = route.route
+                    r.append(copy(r[-1]))
+                    r[-1].id = our_pubkey
+                    r[-1].channel = next(
+                        iter(
+                            x.chan_id
+                            for x in channels
+                            if x.remote_pubkey == last_hop_pubkey
+                        )
+                    )
+                    r[-1].direction = int(last_hop_pubkey > our_pubkey)
+                    for h in r[:-1]:
+                        h.delay += 40
+            else:
+                if outgoing_chan_id:
+                    exclude.extend(
+                        exclude_all_but(
+                            chan_id=outgoing_chan_id,
+                            our_pubkey=our_pubkey,
+                            channels=channels,
+                        )
+                    )
+                route = self.concrete.getroute(
+                    fromid=source_pub_key,
+                    id=dest_pubkey,
+                    exclude=exclude,
+                    msatoshi=amount_sat * 1000,
+                    riskfactor=0,
+                    cltv=cltv,
+                    **kwargs,
+                )
         elif self.node_type == "lnd":
             route = next(
                 iter(

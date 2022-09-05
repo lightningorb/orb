@@ -3,7 +3,7 @@
 # @Author: lnorb.com
 # @Date:   2022-07-14 18:22:27
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 13:53:53
+# @Last Modified time: 2022-09-05 14:15:01
 
 import os
 import sys
@@ -35,7 +35,6 @@ else:
 
     from orb.cli import node
     from orb.cli import invoice
-    from orb.cli import rebalance
     from orb.cli import peer
     from orb.cli import pay
     from orb.cli import channel
@@ -47,7 +46,6 @@ else:
     app = typer.Typer()
     app.add_typer(node.app, name="node")
     app.add_typer(invoice.app, name="invoice")
-    app.add_typer(rebalance.app, name="rebalance")
     app.add_typer(pay.app, name="pay")
     app.add_typer(channel.app, name="channel")
     app.add_typer(test.app, name="test")

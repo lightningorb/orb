@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 17:59:42
+# @Last Modified time: 2022-09-05 16:00:55
 
 from typing import Optional
 from invoke import task
@@ -19,9 +19,10 @@ app = typer.Typer()
 @app.command()
 def get_route(
     destination: str = typer.Argument(
-        ..., help="the pub_key of the node to which to find a route."
+        ...,
+        help="the pub_key of the node to which to find a route (in CLN please do not use).",
     ),
-    fee_limit_msat: str = typer.Option(500, help="the fee limit in millisatoshis."),
+    fee_limit_msat: int = typer.Option(500, help="the fee limit in millisatoshis."),
     source_pub_key: str = typer.Option(
         None, help="the pub_key of the node from which to find a route."
     ),
@@ -47,104 +48,6 @@ def get_route(
     """
 
     This is a hard command to get right so that it looks and behaves similarly in CLN and LND, and messing up a route could be a bad idea, for this reason the returned object contains the *original*, as it was returned by lnd / cln.
-
-    Sample result for LND
-    ---------------------
-
-    .. code:: json
-
-        {
-            "hops": [
-                {
-                    "amp_record": null,
-                    "amt_to_forward": 1000,
-                    "amt_to_forward_msat": 1000000,
-                    "chan_capacity": 100000000,
-                    "chan_id": 68345642782621696,
-                    "custom_records": {},
-                    "expiry": 63990,
-                    "fee": 0,
-                    "fee_msat": 0,
-                    "metadata": "",
-                    "mpp_record": null,
-                    "pub_key": "031ce6d59ad4fe4158949dcd87ea49158dc6923f4457ec69bae9b0b04c13973213",
-                    "tlv_payload": true
-                }
-            ],
-            "original": {
-                "hops": [
-                    {
-                        "amp_record": null,
-                        "amt_to_forward": 1000,
-                        "amt_to_forward_msat": 1000000,
-                        "chan_capacity": 100000000,
-                        "chan_id": 68345642782621696,
-                        "custom_records": {},
-                        "expiry": 63990,
-                        "fee": 0,
-                        "fee_msat": 0,
-                        "metadata": "",
-                        "mpp_record": null,
-                        "pub_key": "031ce6d59ad4fe4158949dcd87ea49158dc6923f4457ec69bae9b0b04c13973213",
-                        "tlv_payload": true
-                    }
-                ],
-                "total_amt": 1000,
-                "total_amt_msat": 1000000,
-                "total_fees": 0,
-                "total_fees_msat": 0,
-                "total_time_lock": 63990
-            },
-            "total_amt": 1000,
-            "total_amt_msat": 1000000,
-            "total_fees": 0,
-            "total_fees_msat": 0
-        }
-
-
-    Sample result for CLN
-    ---------------------
-
-    .. code:: json
-
-        {
-            "hops": [
-                {
-                    "amp_record": null,
-                    "amt_to_forward": 1000,
-                    "amt_to_forward_msat": 1000000,
-                    "chan_capacity": 0,
-                    "chan_id": "162x1x1",
-                    "custom_records": {},
-                    "direction": 0,
-                    "expiry": 0,
-                    "fee": 0.0,
-                    "fee_msat": 0,
-                    "metadata": "",
-                    "mpp_record": null,
-                    "pub_key": "0280dc76984a81124699b2a8b96b3167443b9dfad03c3c98c85bb2d020e6924283",
-                    "tlv_payload": true
-                }
-            ],
-            "original": {
-                "api_version": "0.8.0",
-                "route": [
-                    {
-                        "amount_msat": "1000000msat",
-                        "channel": "162x1x1",
-                        "delay": 0,
-                        "direction": 0,
-                        "id": "0280dc76984a81124699b2a8b96b3167443b9dfad03c3c98c85bb2d020e6924283",
-                        "msatoshi": 1000000,
-                        "style": "tlv"
-                    }
-                ]
-            },
-            "total_amt": 1000,
-            "total_amt_msat": 1000000,
-            "total_fees": 0,
-            "total_fees_msat": 0
-        }
 
     --cltv
     ~~~~~~

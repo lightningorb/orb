@@ -2,14 +2,14 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 15:41:55
+# @Last Modified time: 2022-09-05 14:22:04
 
 import arrow
+from time import sleep
 from threading import Lock
 
-from kivy.app import App
+from orb.app import App
 
-from orb.ln import Ln
 from orb.store.db_meta import channel_stats_db_name, payments_db_name
 from orb.core.stoppable_thread import StoppableThread
 from orb.misc.decorators import db_connect
@@ -155,7 +155,8 @@ class DownloadPaymentHistory(StoppableThread):
                 if start_offset == 0:
                     clear_stats()
                 while not self.stopped():
-                    res = Ln().list_payments(
+                    app = App.get_running_app()
+                    res = app.ln.list_payments(
                         index_offset=start_offset, max_payments=chunk_size
                     )
                     for p in res.payments:

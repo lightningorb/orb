@@ -2,8 +2,9 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 00:48:09
+# @Last Modified time: 2022-09-05 12:33:48
 
+import logging
 from .cli_test_case import CLITestCase
 from orb.ln import factory
 from orb.cli.utils import get_default_id
@@ -22,19 +23,38 @@ class TestAPI(CLITestCase):
         ln = factory(pubkey)
         channels = ln.get_channels()
         shuffle(channels)
+        dest_pubkey = channels[-1].remote_pubkey
         res = ln.get_route(
-            pub_key=channels[-1].remote_pubkey,
+            pub_key=dest_pubkey,
             amount_sat=1,
-            source_pub_key=channels[0].remote_pubkey,
+            source_pub_key=None,
             ignored_pairs=[],
             last_hop_pubkey="",
             outgoing_chan_id=None,
             fee_limit_msat=10_000_000,
         )
-        assert res.total_amt == 1
-        assert len(res.hops) > 0
+        assert res.hops[-1].pub_key == dest_pubkey
 
-    def get_get_channels(self, pubkey):
+    def test_get_circular_route(self, pubkey):
+        ln = factory(pubkey)
+        channels = ln.get_channels()
+        shuffle(channels)
+        our_pubkey = ln.get_info().identity_pubkey
+        res = ln.get_route(
+            pub_key=our_pubkey,
+            amount_sat=1,
+            source_pub_key=None,
+            ignored_pairs=[],
+            last_hop_pubkey=channels[0].remote_pubkey,
+            outgoing_chan_id=channels[1].chan_id,
+            fee_limit_msat=10_000_000,
+        )
+        if res.hops:
+            assert res.hops[-1].pub_key == our_pubkey
+        else:
+            logging.warn("No circular route found")
+
+    def get_channels(self, pubkey):
         ln = factory(pubkey)
         channels = ln.get_channels()
         assert len(channels) > 0
