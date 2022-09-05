@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-30 14:26:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-08 12:26:25
+# @Last Modified time: 2022-09-05 16:23:13
 
 from kivymd.uix.screen import MDScreen
 
@@ -25,7 +25,7 @@ class ImportConnectionSettings(MDScreen):
 
     connected = False
 
-    lnd_settings_to_copy = [
+    ln_settings_to_copy = [
         "rest_port",
         "tls_certificate",
         "network",
@@ -44,13 +44,13 @@ class ImportConnectionSettings(MDScreen):
         config = ConfigParser()
         config.read(p.as_posix())
         target_config = ConfigParser()
-        pk = config["lnd"]["identity_pubkey"]
+        pk = config["ln"]["identity_pubkey"]
         app = App.get_running_app()
         app.node_settings["host.hostname"] = config["host"]["hostname"]
-        for s in self.lnd_settings_to_copy:
-            app.node_settings[f"lnd.{s}"] = config["lnd"][s]
+        for s in self.ln_settings_to_copy:
+            app.node_settings[f"ln.{s}"] = config["ln"][s]
         if mobile:
-            app.node_settings["lnd.protocol"] = "rest"
+            app.node_settings["ln.protocol"] = "rest"
 
     @guarded
     def connect(self):
@@ -70,10 +70,11 @@ class ImportConnectionSettings(MDScreen):
                 cache=False,
                 use_prefs=False,
                 hostname=app.node_settings["host.hostname"],
-                protocol=app.node_settings["lnd.protocol"],
-                mac_secure=app.node_settings["lnd.macaroon_admin"],
-                cert_secure=app.node_settings["lnd.tls_certificate"],
-                rest_port=8080,
+                node_type="cln",
+                protocol=app.node_settings["ln.protocol"],
+                mac_secure=app.node_settings["ln.macaroon_admin"],
+                cert_secure=app.node_settings["ln.tls_certificate"],
+                rest_port=app.node_settings["ln.rest_port"],
                 grpc_port=10009,
             )
 
@@ -84,7 +85,7 @@ class ImportConnectionSettings(MDScreen):
             self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)
         except Exception as e:
             print(e)
-            error = "Error connecting to LND"
+            error = "Error connecting to ln"
 
         if error:
             self.ids.connect.text = f"Error: {error}"
