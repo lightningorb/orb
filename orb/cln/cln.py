@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-31 04:51:50
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 09:20:17
+# @Last Modified time: 2022-09-05 09:58:59
 
 from orb.misc.certificate_secure import CertificateSecure
 from orb.misc.macaroon_secure import MacaroonSecure
@@ -52,8 +52,8 @@ def Cln(
         protocol = pref("ln.protocol")
         mac_secure = pref("ln.macaroon_admin")
         cert_secure = pref("ln.tls_certificate")
-        rest_port = pref("ln.rest_port")
-        grpc_port = pref("ln.grpc_port")
+        rest_port = int(pref("ln.rest_port"))
+        grpc_port = int(pref("ln.grpc_port"))
         version = pref("ln.version")
 
     if cln.get(protocol) is None or not cache:

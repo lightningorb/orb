@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:04:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 08:39:59
+# @Last Modified time: 2022-09-05 11:50:30
 
 from typing import Optional, Union
 from .chalk import chalk
@@ -23,7 +23,7 @@ def fees():
     Get mempool chain fees. Currently these are the fees from
     mempool.space
 
-    .. asciinema:: /_static/orb-chain-deposit.cast
+    .. asciinema:: /_static/orb-chain-fees.cast
     """
     from orb.misc.mempool import get_fees
 
