@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-29 07:33:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 16:27:57
+# @Last Modified time: 2022-09-05 09:03:20
 
 from orb.web.app import serve as web_serve
 from typing import Optional
@@ -21,5 +21,7 @@ def serve(
 ):
     """
     Serve the Orb web app.
+
+    .. asciinema:: /_static/orb-web-serve.cast
     """
     web_serve(host=host, port=port, reload=reload, debug=debug, workers=workers)

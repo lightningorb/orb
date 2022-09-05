@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:04:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 08:21:47
+# @Last Modified time: 2022-09-05 08:39:59
 
 from typing import Optional, Union
 from .chalk import chalk
@@ -22,6 +22,8 @@ def fees():
     """
     Get mempool chain fees. Currently these are the fees from
     mempool.space
+
+    .. asciinema:: /_static/orb-chain-deposit.cast
     """
     from orb.misc.mempool import get_fees
 
@@ -62,7 +64,7 @@ def deposit(
 
 @app.command()
 def send(
-    address: str,
+    address: str = typer.Argument(..., help="Destination address."),
     satoshi: str = typer.Argument(
         ..., help="Amount to send, expressed in satoshis, or 'all'."
     ),
@@ -75,6 +77,8 @@ def send(
 ):
     """
     Send coins on-chain.
+
+    .. asciinema:: /_static/orb-chain-send.cast
     """
     if not pubkey:
         pubkey = get_default_id()
