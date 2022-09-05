@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 16:00:55
+# @Last Modified time: 2022-09-05 16:59:17
 
 from typing import Optional
 from invoke import task
@@ -47,7 +47,13 @@ def get_route(
 ):
     """
 
-    This is a hard command to get right so that it looks and behaves similarly in CLN and LND, and messing up a route could be a bad idea, for this reason the returned object contains the *original*, as it was returned by lnd / cln.
+    Currently the result of get-route contains both the common format, and the original (implementation flavored) route. A future version of Orb switch to using the common route format.
+
+    .. note::
+
+        This common supports circular routes for both LND and CLN.
+
+    .. asciinema:: /_static/orb-network-get-route.cast
 
     --cltv
     ~~~~~~
