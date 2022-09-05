@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-30 14:26:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-06-30 19:33:40
+# @Last Modified time: 2022-09-05 16:34:04
 
 import os
 
@@ -23,7 +23,8 @@ class ExportConnectionSettings(MDScreen):
 
     pk = None
 
-    lnd_settings_to_copy = [
+    ln_settings_to_copy = [
+        "grpc_port",
         "rest_port",
         "tls_certificate",
         "network",
@@ -58,26 +59,26 @@ class ExportConnectionSettings(MDScreen):
         source_config.filename = "/tmp/blah.ini"
         source_config.write()
         config.adddefaultsection("host")
-        config.adddefaultsection("lnd")
-        config.setdefaults("host", {k: source_config["host"][k] for k in ["hostname"]})
+        config.adddefaultsection("ln")
         config.setdefaults(
-            "lnd",
-            {k: source_config["lnd"].get(k, "") for k in self.lnd_settings_to_copy},
+            "host", {k: source_config["host"][k] for k in ["hostname", "type"]}
+        )
+        config.setdefaults(
+            "ln",
+            {k: source_config["ln"].get(k, "") for k in self.ln_settings_to_copy},
         )
 
         uid = self.ids.device_id.text.encode()
 
-        cert_secure = CertificateSecure(
-            source_config["lnd"]["tls_certificate"].encode()
-        )
+        cert_secure = CertificateSecure(source_config["ln"]["tls_certificate"].encode())
         plain_cert = cert_secure.as_plain_certificate().cert
         cert_new_uid = CertificateSecure.init_from_plain(plain_cert, uid=uid)
-        config["lnd"]["tls_certificate"] = cert_new_uid.cert_secure.decode()
+        config["ln"]["tls_certificate"] = cert_new_uid.cert_secure.decode()
 
-        mac_secure = MacaroonSecure(source_config["lnd"]["macaroon_admin"].encode())
+        mac_secure = MacaroonSecure(source_config["ln"]["macaroon_admin"].encode())
         plain_mac = mac_secure.as_plain_macaroon().macaroon
         mac_new_uid = MacaroonSecure.init_from_plain(plain_mac, uid=uid)
-        config["lnd"]["macaroon_admin"] = mac_new_uid.macaroon_secure.decode()
+        config["ln"]["macaroon_admin"] = mac_new_uid.macaroon_secure.decode()
 
         d = mkdtemp()
         p = Path(d) / "orb.ini"
