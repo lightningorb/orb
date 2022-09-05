@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-11 07:13:20
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-01 10:54:54
+# @Last Modified time: 2022-09-05 07:58:41
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -54,8 +54,10 @@ extensions = [
 ]
 
 sphinxcontrib_asciinema_defaults = {
-    "theme": "asciinema",
-    "loop": 1,
+    "theme": "python",
+    "cols": 120,
+    "idle_time_limit": 0.6,
+    "rows": 20,
     "preload": 1,
     "autoplay": 1,
     "font-size": "15px",

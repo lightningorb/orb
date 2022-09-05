@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:04:21
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 17:02:01
+# @Last Modified time: 2022-09-05 08:21:47
 
 from typing import Optional, Union
 from .chalk import chalk
@@ -31,9 +31,16 @@ def fees():
 
 
 @app.command()
-def deposit(pubkey: str = ""):
+def deposit(
+    pubkey: Optional[str] = typer.Argument(
+        None, help="The pubkey of the node. If not provided, use the default node."
+    ),
+):
     """
     Get an on-chain address to deposit BTC.
+
+    .. asciinema:: /_static/orb-chain-deposit.cast
+
     """
 
     import io
@@ -51,13 +58,6 @@ def deposit(pubkey: str = ""):
     qr.print_ascii(out=f)
     f.seek(0)
     print(f.read())
-
-    # help=dict(
-    #     address="The destination address",
-    #     pubkey="The node pubkey from which to send coins",
-    #     amount="The amount to send in satoshis (for CLN this can be 'all')",
-    #     sat_per_vbyte="Sats per vB (for CLN this can be slow, normal, urgent, or None)",
-    # )
 
 
 @app.command()
@@ -108,6 +108,9 @@ def balance(
 ):
     """
     Get on-chain balance.
+
+    .. asciinema:: /_static/orb-chain-balance.cast
+
     """
 
     if not pubkey:
