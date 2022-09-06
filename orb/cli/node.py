@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 17:14:15
+# @Last Modified time: 2022-09-07 07:46:25
 
 import re
 import os
@@ -44,6 +44,8 @@ def delete(
     - Windows: ${APPDATA}/orb_<pubkey>/orb_<pubkey>.ini
 
     This command recursively deletes the node's folder. This is a destructive command. Use with care.
+
+    .. asciinema:: /_static/orb_node_delete.cast
 
     """
     if not pubkey:
