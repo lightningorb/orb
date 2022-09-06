@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 21:00:38
+# @Last Modified time: 2022-09-06 11:44:42
 
 import re
 import os
@@ -158,6 +158,8 @@ def create_orb_public(
     Since Core-Lightning's GRPC interface is still new and not used a lot, it is currently unsupported by Orb, which is why the `cln grpc` node flavor isn't available.
 
     After the public node has been created, if `--use-node` was specified then subsequent orb commands will use it by default. These nodes have admin macaroons, and are used by the integration tests, so please keep the in a sane state so they don't need to be re-created.
+
+    .. asciinema:: /_static/_static/orb-node-create-orb-public.cast
     """
     from orb.misc.macaroon_secure import MacaroonSecure
 
