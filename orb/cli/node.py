@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 11:44:42
+# @Last Modified time: 2022-09-06 11:59:27
 
 import re
 import os
@@ -159,7 +159,7 @@ def create_orb_public(
 
     After the public node has been created, if `--use-node` was specified then subsequent orb commands will use it by default. These nodes have admin macaroons, and are used by the integration tests, so please keep the in a sane state so they don't need to be re-created.
 
-    .. asciinema:: /_static/_static/orb-node-create-orb-public.cast
+    .. asciinema:: /_static/orb-node-create-orb-public.cast
     """
     from orb.misc.macaroon_secure import MacaroonSecure
 
