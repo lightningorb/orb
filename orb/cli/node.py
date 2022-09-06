@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 13:01:08
+# @Last Modified time: 2022-09-06 13:28:20
 
 import re
 import os
@@ -224,6 +224,8 @@ def create(
     * :ref:`orb-node-create-orb-public`
     * :ref:`orb-node-create-from-cert-files`
     * :ref:`orb-node-ssh-wizard`
+
+    .. asciinema:: /_static/orb-node-create.cast
     """
 
     pprint_from_ansi(chalk().cyan(f"Encrypting mac"))
