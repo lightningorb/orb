@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-07 07:46:25
+# @Last Modified time: 2022-09-07 07:49:41
 
 import re
 import os
@@ -45,7 +45,7 @@ def delete(
 
     This command recursively deletes the node's folder. This is a destructive command. Use with care.
 
-    .. asciinema:: /_static/orb_node_delete.cast
+    .. asciinema:: /_static/orb-node-delete.cast
 
     """
     if not pubkey:
