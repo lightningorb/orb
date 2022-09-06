@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 14:02:13
+# @Last Modified time: 2022-09-06 16:42:05
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -24,7 +24,11 @@ class PrintableType:
 
 class ChainTransaction(PrintableType):
     def __init__(self, impl, tx):
-        self.txid = tx.txid
+        self.txid = None
+        if hasattr(tx, "txid"):
+            self.txid = tx.txid
+        else:
+            self.error = "no txid. Are there sufficient funds?"
 
 
 class Info(PrintableType):

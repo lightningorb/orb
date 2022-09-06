@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 21:55:01
+# @Last Modified time: 2022-09-06 16:56:45
 
 import os
 import re
@@ -182,3 +182,26 @@ def dockerfile(c):
         d = d.replace("<VERSION>", version)
         with open("docs/source/dockerfile.rst", "w") as w:
             w.write(d)
+
+
+@task
+def asciinema(c, script: str = None):
+    casts = [Path(script)] if script else Path("build_system/casts").glob("*.sh")
+    for cast in casts:
+        print(cast)
+        out = Path("docs/source/_static/") / cast.with_suffix(".cast").name
+        c.run(
+            f"orb node create-orb-public lnd rest",
+            env=os.environ,
+        )
+        cast = cast.resolve()
+        out = out.resolve()
+        home = os.path.expanduser("~")
+        os.chdir(home)
+
+        with c.cd(home):
+            c.run(
+                f"asciinema-automation -aa '-i 0.5 --overwrite' -dt 1 {cast} {out}",
+                env=os.environ,
+            )
+            print(out)

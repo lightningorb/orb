@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 13:28:20
+# @Last Modified time: 2022-09-06 17:14:15
 
 import re
 import os
@@ -79,6 +79,8 @@ def list(
     This command simply scans those folders for a matching pattern.
 
     If the `--show-info` is provided, then Orb attempts to connect to the node, and to invoke the :ref:`orb-node-info` command on the available nodes.
+
+    .. asciinema:: /_static/orb-node-list.cast
     """
 
     data_dir = Path(_get_user_data_dir_static())
@@ -125,6 +127,8 @@ def use(pubkey: str = typer.Argument(None, help="The pubkey of the node.")):
     - Windows: ${APPDATA}/orbconnector/orbconnector.ini
 
     All subsequent orb invocations will use this node by default, unless otherwise specified.
+
+    .. asciinema:: /_static/orb-node-use.cast
     """
     conf_dir = Path(_get_user_data_dir_static()) / "orbconnector"
     if not conf_dir.is_dir():
@@ -412,3 +416,51 @@ def ssh_wizard(
                 grpc_port=grpc_port,
                 use_node=use_node,
             )
+
+
+@app.command()
+def ssh_fetch_certs(
+    hostname: str = typer.Option(
+        ..., help="IP address or DNS-resolvable name for this host."
+    ),
+    ssh_cert_path: Path = typer.Option(
+        None, help="Certificate to use for the SSH session."
+    ),
+    ssh_password: str = typer.Option(None, help="Password to use for the SSH session."),
+    ln_cert_path: Path = typer.Option(
+        None, help="Path of the node certificate on the target host."
+    ),
+    ln_macaroon_path: Path = typer.Option(
+        None, help="Path of the node macaroon on the target host."
+    ),
+    ssh_user: str = typer.Option("ubuntu", help="Username for SSH session."),
+    ssh_port: int = typer.Option(22, help="Port for SSH session."),
+):
+    """
+    SSH into the node, copy the cert and mac into the current folder.
+    """
+    connect_kwargs = {}
+    if ssh_cert_path:
+        connect_kwargs["key_filename"] = ssh_cert_path.as_posix()
+    elif ssh_password:
+        connect_kwargs["password"] = ssh_password
+    with Connection(
+        hostname, connect_kwargs=connect_kwargs, user=ssh_user, port=ssh_port
+    ) as con:
+        pprint_from_ansi(chalk().magenta("ssh session connected!"))
+        try:
+            pprint_from_ansi(
+                chalk().green(f'OS:       {con.run("uname", hide=True).stdout.strip()}')
+            )
+            pprint_from_ansi(
+                chalk().green(
+                    f'Hostname: {con.run("hostname", hide=True).stdout.strip()}'
+                )
+            )
+        except:
+            pass
+
+        pprint_from_ansi(chalk().cyan(f"Copying: {ln_cert_path}"))
+        con.get(f"{ln_cert_path.as_posix()}", ln_cert_path.name)
+        pprint_from_ansi(chalk().cyan(f"Copying: {ln_macaroon_path}"))
+        con.get(f"{ln_macaroon_path.as_posix()}", ln_macaroon_path.name)

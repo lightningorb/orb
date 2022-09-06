@@ -1,0 +1,7 @@
+{"version": 2, "width": 80, "height": 24, "timestamp": 1662451420, "idle_time_limit": 0.5, "env": {"SHELL": "/bin/bash", "TERM": "xterm-color", "USER": "orb", "PATH": "/Users/orb/.cargo/bin:/Library/Frameworks/Python.framework/Versions/3.9/bin:/Applications/MATLAB/MATLAB_Runtime/v96/runtime/maci64:/Applications/MATLAB/MATLAB_Runtime/v96/sys/os/maci64:/Applications/MATLAB/MATLAB_Runtime/v96/bin/maci64:/Applications/MATLAB/MATLAB_Runtime/v96/extern/bin/maci64:/Users/orb/bin:/Users/orb/Library/Python/3.9/bin:/usr/local/bin:/Users/orb/bin/:/usr/bin:/bin:/usr/sbin:/sbin"}}
+[0.148878, "o", "p"]
+[0.240416, "o", "\u001b[32m~/dev/orb \u001b[91m(docs)\u001b[00m $ p"]
+[0.2637, "o", "k"]
+[0.343201, "o", "="]
+[0.485089, "o", "$"]
+[0.592563, "o", "("]

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:36:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 14:14:35
+# @Last Modified time: 2022-09-06 17:12:41
 
 from datetime import datetime
 from typing import Optional
@@ -36,6 +36,8 @@ def open(
 ):
     """
     Open a channel.
+
+    .. asciinema:: /_static/orb-channel-open.cast
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -57,21 +59,13 @@ def list_forwards(
     pubkey: Optional[str] = typer.Argument(
         None, help="The pubkey of the node. If not provided, use the default node."
     ),
-    # start_time: Optional[datetime] = typer.Argument(
-    #     None,
-    #     formats=["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"],
-    #     help="Starting from this time",
-    # ),
-    # end_time: Optional[datetime] = typer.Argument(
-    #     None,
-    #     formats=["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"],
-    #     help="Ending at this time",
-    # ),
     index_offset: int = typer.Option(0, help="Start index."),
     num_max_events: int = typer.Option(100, help="Max number of events to return."),
 ):
     """
     List forwards for the node.
+
+    .. asciinema:: /_static/orb-channel-list-forwards.cast
     """
     if not pubkey:
         pubkey = get_default_id()
