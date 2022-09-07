@@ -1,20 +1,16 @@
 # @Author: lnorb.com
 # @Date:   2022-09-06 15:08:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 17:18:02
+# @Last Modified time: 2022-09-07 12:23:07
 
-orb web serve &> /dev/null
+#$ wait 2000
 
-#$ sendcontrol z
+orb web serve &> /dev/null & disown
 
-bg
+pid=$!
 
-#$ wait 1000
+curl localhost:8080/info 2>/dev/null | jq
 
-curl localhost:8080/info | jq
+#$ expect channels
 
-#$ wait 1000
-
-fg
-
-#$ sendcontrol c
+kill $pid
