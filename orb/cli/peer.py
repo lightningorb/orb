@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:48:14
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 17:14:43
+# @Last Modified time: 2022-09-07 12:46:50
 
 from invoke import task
 from .chalk import chalk
@@ -27,6 +27,8 @@ def connect(
 ):
     """
     Connect to a peer.
+
+    .. asciinema:: /_static/orb-peer-connect.cast
     """
     if not pubkey:
         pubkey = get_default_id()
