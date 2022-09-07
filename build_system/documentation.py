@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-07 06:25:44
+# @Last Modified time: 2022-09-07 08:01:05
 
 import os
 import re
@@ -199,7 +199,9 @@ def asciinema(c, script: str = None):
         home = os.path.expanduser("~")
         os.chdir(home)
 
+        addr = "tb1q8xf4zl65qtvlqrk6d8p4f46al3yzyqj7ypg5n7"
         pubkey = "031ce6d59ad4fe4158949dcd87ea49158dc6923f4457ec69bae9b0b04c13973213"
+        os.environ["addr"] = addr
         os.environ["pubkey"] = pubkey
         os.environ[
             "MAC_HEX"
