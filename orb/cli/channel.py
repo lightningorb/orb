@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:36:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-08 17:13:01
+# @Last Modified time: 2022-09-08 17:21:40
 
 from datetime import datetime
 from typing import Optional
@@ -91,7 +91,13 @@ def rebalance(
     pubkey: str = get_default_id(),
 ):
     """
-    Rebalance the node
+    Rebalance the node.
+
+    If no outgoing and incoming channel are specified, then channels with high and low
+    outbound are automatically selected.
+
+    .. asciinema:: /_static/orb-channel-rebalance.cast
+
     """
     App().run(pubkey=pubkey)
     ln = factory(pubkey)
