@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-22 12:17:53
+# @Last Modified time: 2022-09-08 16:29:43
 
 import base64
 
@@ -95,7 +95,8 @@ class Routes:
         for hop in route.hops:
             if ignore_next:
                 if self.ln.node_type == "cln":
-                    self.ignored_nodes.append(f"{hop.chan_id}/{hop.direction}")
+                    self.ignored_nodes.append(f"{hop.chan_id}/0")
+                    self.ignored_nodes.append(f"{hop.chan_id}/1")
                 elif self.ln.node_type == "lnd":
                     self.ignore_edge_from_to(
                         hop.chan_id, failure_source_pubkey, hop.pub_key

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-30 17:01:24
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 08:05:09
+# @Last Modified time: 2022-09-08 12:02:34
 
 import arrow
 from time import sleep
@@ -105,4 +105,9 @@ class DownloadFowardingHistory(StoppableThread):
 
         while not self.stopped():
             func()
-            sleep(30)
+            i = 0
+            while not self.stopped():
+                sleep(1)
+                i += 1
+                if i > 30:
+                    break

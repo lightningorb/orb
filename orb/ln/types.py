@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 16:42:05
+# @Last Modified time: 2022-09-08 17:13:30
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -231,7 +231,7 @@ class Policy(PrintableType):
         elif impl == "cln":
             self.fee_rate_milli_msat = kwargs["fee_per_millionth"]
             self.fee_base_msat = kwargs["base_fee_millisatoshi"]
-            self.time_lock_delta = 0
+            self.time_lock_delta = kwargs["delay"]
             self.max_htlc_msat = int(kwargs["htlc_maximum_msat"][:-4])
             self.min_htlc = int(kwargs["htlc_minimum_msat"][:-4])
 
@@ -314,11 +314,7 @@ class Route(PrintableType):
             self.original = route.todict()
             self.total_amt = total_amt
             self.total_amt_msat = total_amt * 1000
-            self.total_fees_msat = (
-                sum(r.msatoshi - self.total_amt_msat for r in route.route)
-                if hasattr(route, "route")
-                else 0
-            )
+            self.total_fees_msat = route.route[0].msatoshi - route.route[-1].msatoshi
             self.total_fees = self.total_fees_msat // 1000
             self.hops = []
             if hasattr(route, "route"):
@@ -349,7 +345,7 @@ class SendPaymentResponse(PrintableType):
     def __init__(self, impl, response):
         self.original: list = []
         self.failure = dict2obj(dict(code=0, failure_source_index=-1))
-        self.code_map = {4103: 15, 16394: 18, 16399: 1, 24579: 16}
+        self.code_map = {4103: 15, 16394: 18, 16399: 1, 24579: 16, 4108: 12, 4109: 13}
         if impl == "lnd":
             self.original = response
             if hasattr(response, "failure") and response.failure:
@@ -360,6 +356,8 @@ class SendPaymentResponse(PrintableType):
         elif impl == "cln":
             self.original = response
             if hasattr(response, "error") and response.error:
+                if not hasattr(response.error, "data"):
+                    pass
                 if response.error.data.failcode not in self.code_map:
                     print(
                         f"code {response.error.data.failcode} ({response.error.data.failcodename}) not in map"

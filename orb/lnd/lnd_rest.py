@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 04:13:39
+# @Last Modified time: 2022-09-08 11:41:02
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -131,7 +131,6 @@ class LndREST(LndBase):
         if time_pref and self.get_version() >= "0.15.0":
             url += f"&time_pref={time_pref}"
         if last_hop_pubkey:
-            print(last_hop_pubkey)
             last_hop_pubkey = encode_pk(last_hop_pubkey)
             url += f"&last_hop_pubkey={last_hop_pubkey}"
         # if ignored_pairs:
@@ -142,7 +141,6 @@ class LndREST(LndBase):
             url += f"&ignored_nodes={ignored}"
         if source_pub_key:
             url += f"&source_pub_key={source_pub_key}"
-        print(url)
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json()).get("routes", [])
 

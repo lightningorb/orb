@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 15:42:39
+# @Last Modified time: 2022-09-08 16:33:19
 
 from configparser import ConfigParser
 from copy import copy
@@ -178,16 +178,25 @@ class Ln:
                     r = route.route
                     r.append(copy(r[-1]))
                     r[-1].id = our_pubkey
-                    r[-1].channel = next(
-                        iter(
-                            x.chan_id
-                            for x in channels
-                            if x.remote_pubkey == last_hop_pubkey
-                        )
+                    last_hop_channel = next(
+                        iter(x for x in channels if x.remote_pubkey == last_hop_pubkey)
                     )
+                    r[-1].channel = last_hop_channel.chan_id
                     r[-1].direction = int(last_hop_pubkey > our_pubkey)
-                    for h in r[:-1]:
-                        h.delay += 40
+                    msatoshi = amount_sat * 1000
+                    delay = cltv
+                    for h in r[::-1]:
+                        h.msatoshi = msatoshi
+                        h.amount_msat = f"{msatoshi}msat"
+                        h.delay = delay
+                        policy = self.get_policy_from(h.channel)
+                        fee = policy.fee_base_msat
+                        fee += (
+                            policy.fee_rate_milli_msat * (msatoshi) + 10**6 - 1
+                        ) // 10**6
+                        msatoshi += fee
+                        delay += policy.time_lock_delta
+
             else:
                 if outgoing_chan_id:
                     exclude.extend(
@@ -232,15 +241,21 @@ class Ln:
 
         return route
 
-    def get_policy_to(self, channel) -> Policy:
-        """Get policy for the given channel.
+    def get_policy_to(self, chan_id) -> Policy:
+        """Get policy to for the given channel.
 
-        :param channel: the channel for which to get policy.
-        :type channel: :class:`orb.misc.Channel`
+        :param chan_id: the channel id for which to get policy.
+        :type chan_id: str
         """
-        return Policy(
-            self.node_type, **self.concrete.get_policy_to(channel.chan_id).__dict__
-        )
+        return Policy(self.node_type, **self.concrete.get_policy_to(chan_id).__dict__)
+
+    def get_policy_from(self, chan_id) -> Policy:
+        """Get policy from for the given channel.
+
+        :param chan_id: the channel id for which to get policy.
+        :type chan_id: str
+        """
+        return Policy(self.node_type, **self.concrete.get_policy_from(chan_id).__dict__)
 
     def update_channel_policy(self, channel, *args, **kwargs):
         if self.node_type == "cln":
