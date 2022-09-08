@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 06:36:28
+# @Last Modified time: 2022-09-08 14:02:58
 
 from typing import Union
 
@@ -112,17 +112,14 @@ class ClnREST(ClnBase):
 
     @cached(ttl=5)
     def get_policy_from(self, channel_id):
-        edge = self.get_edge(channel_id)
-        if edge.get("code", 0) == 3:
-            print(edge.message)
-            return None
-        if edge.get("error"):
-            print(edge.error)
-            return None
+        """
+        Conversion done
+        """
+        edge = self.list_channel(channel_id)
         # node1_policy contains the fee base and rate for payments from node1 to node2
-        if edge.node1_pub == self.get_own_pubkey():
-            return edge.node2_policy
-        return edge.node1_policy
+        if edge["0"].source == self.get_own_pubkey():
+            return edge["1"]
+        return edge["0"]
 
     def get_own_pubkey(self):
         return self.get_info().id

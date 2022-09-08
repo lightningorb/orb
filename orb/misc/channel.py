@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 14:26:58
+# @Last Modified time: 2022-09-08 15:33:33
 
 import inspect
 
@@ -88,7 +88,7 @@ class Channel(EventDispatcher):
         a fee policy is changed in Orb, it immediately gets updated
         in LND.
         """
-        policy_to = App.get_running_app().ln.get_policy_to(self)
+        policy_to = App.get_running_app().ln.get_policy_to(self.chan_id)
 
         @mainthread
         def do_update(policy_to):

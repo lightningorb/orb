@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-23 04:36:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 14:14:35
+# @Last Modified time: 2022-09-08 15:44:50
 
 from datetime import datetime
 from typing import Optional
@@ -115,3 +115,5 @@ def rebalance(
         ln=ln,
     )
     rt.start()
+    rt.join()
+    App.get_running_app().stop()

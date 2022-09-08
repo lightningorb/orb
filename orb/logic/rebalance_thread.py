@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-28 08:26:04
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-10 10:21:22
+# @Last Modified time: 2022-09-08 12:18:27
 
 from traceback import format_exc
 
@@ -54,7 +54,7 @@ class RebalanceThread(StoppableThread):
     def __run(self):
         if not self.chan_id:
             self.chan_id = get_low_inbound_channel(
-                pk_ignore=[],
+                pk_ignore=[self.last_hop_pubkey] if self.last_hop_pubkey else [],
                 chan_ignore=[],
                 num_sats=self.amount,
             )
@@ -62,7 +62,7 @@ class RebalanceThread(StoppableThread):
         if not self.last_hop_pubkey:
             _, self.last_hop_pubkey = get_low_outbound_channel(
                 pk_ignore=[],
-                chan_ignore=[],
+                chan_ignore=[self.chan_id],
                 num_sats=self.amount,
             )
         app = App.get_running_app()
@@ -72,9 +72,7 @@ class RebalanceThread(StoppableThread):
 
         print(f"Rebalancing {self.amount} from {from_alias} to {to_alias}")
 
-        payment_request = self.ln.generate_invoice(
-            memo="rebalance", amount=self.amount
-        )
+        payment_request = self.ln.generate_invoice(memo="rebalance", amount=self.amount)
         status = pay_thread(
             ln=self.ln,
             stopped=self.stopped,

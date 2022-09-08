@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-24 14:37:21
+# @Last Modified time: 2022-09-08 17:08:48
 
 import arrow
 from traceback import format_exc
@@ -56,6 +56,7 @@ def handle_error(response, route, routes, pk=None):
             return "Unknown next peer"
     elif code == 12:
         print("Fee insufficient")
+        # routes.ignore_edge_on_route(failure_source_pubkey, route)
         if pk == failure_source_pubkey:
             return "Fee insufficient"
     elif code == 14:
@@ -119,7 +120,9 @@ def pay_thread(
         timestamp=int(arrow.now().timestamp()),
     )
     payment.save()
-    while routes.has_next() and not stopped():
+    s = stopped()
+    alias = ln.get_info().alias
+    while routes.has_next() and not s:
         if count > max_paths:
             return PaymentStatus.max_paths_exceeded
         count += 1
@@ -130,18 +133,22 @@ def pay_thread(
                 payment=payment, weakest_link_pk="", code=0, succeeded=False
             )
             attempt.save()
+
+            prev_alias = None
             for j, hop in enumerate(route.hops):
                 node_alias = ln.get_node_alias(hop.pub_key)
-                text = f"{j:<5}:        {node_alias}"
+                from_alias = (alias, prev_alias)[bool(prev_alias)]
+                text = f"{j:<5}:        {from_alias:<20}  ---({hop.chan_id:<14})-->        {node_alias}"
                 print(f"T{thread_n}: {text}")
                 p = model.Hop(pk=hop.pub_key, succeeded=False, attempt=attempt)
                 p.save()
+                prev_alias = node_alias
             try:
                 response = ln.send_payment(payment_request, route.original)
             except Exception as e:
                 print(e)
                 print(format_exc())
-                if ln.node_type == 'lnd':
+                if ln.node_type == "lnd":
                     code = e.args[0].code.name
                     details = e.args[0].details
                     # 'attempted value exceeds paymentamount'
@@ -151,12 +158,15 @@ def pay_thread(
                     ):
                         print(f"T{thread_n}: INVOICE CURRENTLY INFLIGHT")
                         return PaymentStatus.inflight
-                    if code == "ALREADY_EXISTS" and details == "invoice is already paid":
+                    if (
+                        code == "ALREADY_EXISTS"
+                        and details == "invoice is already paid"
+                    ):
                         print(f"T{thread_n}: INVOICE IS ALREADY PAID")
                         return PaymentStatus.already_paid
                     print(f"T{thread_n}: exception.. not sure what's up")
                     return PaymentStatus.exception
-                elif ln.node_type == 'cln':
+                elif ln.node_type == "cln":
                     code = e.args[0].args[0]
                     print(code)
                     print(f"T{thread_n}: exception.. not sure what's up")
