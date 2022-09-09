@@ -135,10 +135,12 @@ class PaymentEvents(PrintableType):
         self.last_index_offset: int = 0
         if impl == "lnd":
             self.last_index_offset = fwd.last_index_offset
+            for f in fwd.payments:
+                self.payments.append(PaymentEvent(impl=impl, e=f))
         elif impl == "cln":
             self.last_index_offset = index_offset + 1 + len(fwd)
-        for f in fwd:
-            self.payments.append(PaymentEvent(impl=impl, e=f))
+            for f in fwd:
+                self.payments.append(PaymentEvent(impl=impl, e=f))
 
 
 class ForwardingEvent(PrintableType):
