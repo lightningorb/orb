@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-09 08:59:37
+# @Last Modified time: 2022-09-09 14:12:57
 
 import re
 import os
@@ -440,6 +440,8 @@ def ssh_fetch_certs(
 ):
     """
     SSH into the node, copy the cert and mac into the current folder.
+
+    .. asciinema:: /_static/orb-node-ssh-fetch-certs.cast
     """
     connect_kwargs = {}
     if ssh_cert_path:
