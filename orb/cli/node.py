@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-09 15:33:45
+# @Last Modified time: 2022-09-09 15:39:50
 
 import re
 import os
@@ -111,7 +111,7 @@ def info(
 
     This command connects to the lightning node, gets basic information and prints it out in the console.
 
-    .. asciinema:: /_static/casts/orb-node-info.cast
+    .. asciinema:: /_static/orb-node-info.cast
     """
     if not pubkey:
         pubkey = get_default_id()
