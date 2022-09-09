@@ -2,25 +2,25 @@
 # @Author: lnorb.com
 # @Date:   2022-09-06 14:55:53
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-06 15:13:09
+# @Last Modified time: 2022-09-09 15:45:16
 
 orb node create-orb-public cln rest
-#$ wait 1000
+#$ expect as default
 orb node info
-#$ wait 1000
+#$ expect num_inactive_channels
 orb node delete
-#$ wait 1000
+#$ expect deleted
 
 orb node create-orb-public lnd rest
-#$ wait 1000
+#$ expect as default
 orb node info
-#$ wait 1000
+#$ expect num_inactive_channels
 orb node delete
-#$ wait 1000
+#$ expect deleted
 
 orb node create-orb-public lnd grpc
-#$ wait 1000
+#$ expect as default
 orb node info
-#$ wait 1000
+#$ expect num_inactive_channels
 orb node delete
-#$ wait 1000
+#$ expect deleted
