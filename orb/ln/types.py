@@ -314,6 +314,8 @@ class Route(PrintableType):
             self.original = route.todict()
             self.total_amt = total_amt
             self.total_amt_msat = total_amt * 1000
+            if hasattr(route, 'error'):
+                return
             self.total_fees_msat = route.route[0].msatoshi - route.route[-1].msatoshi
             self.total_fees = self.total_fees_msat // 1000
             self.hops = []
