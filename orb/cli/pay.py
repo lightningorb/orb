@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 08:12:05
+# @Last Modified time: 2022-09-09 11:55:25
 
 from invoke import task
 
@@ -73,6 +73,8 @@ def lnurl(
 ):
     """
     Generate bolt11 invoices from LNURL, and pay them.
+
+    .. asciinema:: /_static/orb-pay-lnurl.cast
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -104,3 +106,6 @@ def lnurl(
         ln=ln,
     )
     pay_invoices.start()
+    iv.join()
+    pay_invoices.join()
+    App.get_running_app().stop()
