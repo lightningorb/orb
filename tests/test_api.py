@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 07:01:18
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 12:33:48
+# @Last Modified time: 2022-09-09 08:53:16
 
 import logging
 from .cli_test_case import CLITestCase
@@ -33,7 +33,8 @@ class TestAPI(CLITestCase):
             outgoing_chan_id=None,
             fee_limit_msat=10_000_000,
         )
-        assert res.hops[-1].pub_key == dest_pubkey
+        if res.hops:
+            assert res.hops[-1].pub_key == dest_pubkey
 
     def test_get_circular_route(self, pubkey):
         ln = factory(pubkey)

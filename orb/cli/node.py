@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-07 07:49:41
+# @Last Modified time: 2022-09-09 08:59:37
 
 import re
 import os
@@ -403,7 +403,7 @@ def ssh_wizard(
 
             with tmp_ln_macaroon_path.open("rb") as f:
                 mac_hex = codecs.encode(f.read(), "hex")
-            with tmp_ln_cert_path.open("r") as f:
+            with tmp_ln_cert_path.open("rb") as f:
                 cert_hex = codecs.encode(f.read(), "hex")
             from orb.ln import Ln
 
