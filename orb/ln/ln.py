@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-08 16:33:19
+# @Last Modified time: 2022-09-10 08:01:01
 
 from configparser import ConfigParser
 from copy import copy
@@ -257,12 +257,32 @@ class Ln:
         """
         return Policy(self.node_type, **self.concrete.get_policy_from(chan_id).__dict__)
 
-    def update_channel_policy(self, channel, *args, **kwargs):
+    def update_channel_policy(
+        self,
+        channel,
+        fee_rate=None,
+        base_fee_msat=None,
+        time_lock_delta=None,
+        max_htlc_msat=None,
+        min_htlc_msat=None,
+    ):
         if self.node_type == "cln":
-            return self.concrete.set_channel_fee(channel, channel, *args, **kwargs)
+            return self.concrete.setchannel(
+                id=channel.chan_id,
+                feeppm=int(fee_rate * 1e6) if fee_rate else None,
+                feebase=base_fee_msat,
+                enforcedelay=time_lock_delta,
+                htlcmax=max_htlc_msat,
+                htlcmin=min_htlc_msat,
+            )
         elif self.node_type == "lnd":
             return self.concrete.update_channel_policy(
-                channel, channel, *args, **kwargs
+                channel=channel,
+                fee_rate=fee_rate,
+                base_fee_msat=base_fee_msat,
+                time_lock_delta=time_lock_delta,
+                max_htlc_msat=max_htlc_msat,
+                min_htlc_msat=min_htlc_msat,
             )
 
     def decode_payment_request(self, bolt11: str) -> PaymentRequest:

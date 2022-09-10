@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 02:46:16
+# @Last Modified time: 2022-09-10 07:55:31
 import sys
 import os
 import json
@@ -334,9 +334,10 @@ class LndGRPC(LndBase):
         )
         return response
 
-    def update_channel_policy(self, channel, *args, **kwargs):
+    def update_channel_policy(self, channel, **kwargs):
         tx, output = channel.channel_point.split(":")
         cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
         request = ln.PolicyUpdateRequest(*args, **kwargs, chan_point=cp)
         return self.stub.UpdateChannelPolicy(request)
 

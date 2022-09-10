@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-08 11:41:02
+# @Last Modified time: 2022-09-10 07:55:09
 
 from functools import lru_cache
 import base64, json, requests, codecs
@@ -243,9 +243,10 @@ class LndREST(LndBase):
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
 
-    def update_channel_policy(self, channel, *args, **kwargs):
+    def update_channel_policy(self, channel, **kwargs):
         tx, output = channel.channel_point.split(":")
         kwargs.update(dict(chan_point=dict(funding_txid_str=tx, output_index=output)))
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
         if kwargs.get("base_fee_msat") is not None:
             kwargs["base_fee_msat"] = str(kwargs["base_fee_msat"])
         return self._post(url=f"/v1/chanpolicy", data=kwargs)
