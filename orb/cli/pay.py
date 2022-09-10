@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-29 08:12:05
+# @Last Modified time: 2022-09-10 10:31:20
 
 from invoke import task
 
@@ -14,37 +14,6 @@ from orb.app import App
 import typer
 
 app = typer.Typer()
-
-
-@app.command()
-def invoices(
-    chan_id: str = None,
-    max_paths: int = 10_000,
-    fee_rate: int = 500,
-    time_pref: float = 0,
-    num_threads: int = 5,
-    pubkey: str = "",
-):
-    """
-    Pay Ingested Invoices
-    """
-    if not pubkey:
-        pubkey = get_default_id()
-
-    App().run(pubkey=node)
-    ln = factory(node)
-    App().build(ln)
-
-    pay_invoices = PayInvoices(
-        chan_id=chan_id,
-        max_paths=max_paths,
-        fee_rate=fee_rate,
-        time_pref=time_pref,
-        num_threads=num_threads,
-        ln=ln,
-    )
-    pay_invoices.start()
-
 
 # @task(
 #     help=dict(
@@ -73,6 +42,8 @@ def lnurl(
 ):
     """
     Generate bolt11 invoices from LNURL, and pay them.
+
+    .. asciinema:: /_static/orb-pay-lnurl.cast
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -104,3 +75,6 @@ def lnurl(
         ln=ln,
     )
     pay_invoices.start()
+    iv.join()
+    pay_invoices.join()
+    App.get_running_app().stop()

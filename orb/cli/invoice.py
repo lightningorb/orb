@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:17:43
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-28 06:26:48
+# @Last Modified time: 2022-09-06 17:13:33
 
 from .chalk import chalk
 from orb.ln import factory
@@ -26,6 +26,8 @@ def generate(
 ):
     """
     Generate a bolt11 invoice.
+
+    .. asciinema:: /_static/orb-invoice-generate.cast
     """
     import io
     import qrcode

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-08 16:25:19
+# @Last Modified time: 2022-09-08 17:13:30
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -24,7 +24,11 @@ class PrintableType:
 
 class ChainTransaction(PrintableType):
     def __init__(self, impl, tx):
-        self.txid = tx.txid
+        self.txid = None
+        if hasattr(tx, "txid"):
+            self.txid = tx.txid
+        else:
+            self.error = "no txid. Are there sufficient funds?"
 
 
 class Info(PrintableType):
@@ -131,10 +135,12 @@ class PaymentEvents(PrintableType):
         self.last_index_offset: int = 0
         if impl == "lnd":
             self.last_index_offset = fwd.last_index_offset
+            for f in fwd.payments:
+                self.payments.append(PaymentEvent(impl=impl, e=f))
         elif impl == "cln":
             self.last_index_offset = index_offset + 1 + len(fwd)
-        for f in fwd:
-            self.payments.append(PaymentEvent(impl=impl, e=f))
+            for f in fwd:
+                self.payments.append(PaymentEvent(impl=impl, e=f))
 
 
 class ForwardingEvent(PrintableType):
@@ -354,7 +360,7 @@ class SendPaymentResponse(PrintableType):
         elif impl == "cln":
             self.original = response
             if hasattr(response, "error") and response.error:
-                if not hasattr(response.error, 'data'):
+                if not hasattr(response.error, "data"):
                     pass
                 if response.error.data.failcode not in self.code_map:
                     print(

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:08:11
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-31 09:05:28
+# @Last Modified time: 2022-09-07 06:00:01
 
 import os
 from pathlib import Path
@@ -28,6 +28,8 @@ def pprint_from_ansi(*args, end="\n"):
         import sys
 
         sys.stdout.write(" ".join(str(x) for x in args))
+        sys.stdout.write("\n")
+        sys.stdout.flush()
     else:
         from rich.pretty import pprint
         from rich.text import Text

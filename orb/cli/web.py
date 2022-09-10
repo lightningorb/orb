@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-29 07:33:02
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 09:03:20
+# @Last Modified time: 2022-09-07 12:35:40
 
 from orb.web.app import serve as web_serve
 from typing import Optional
@@ -20,7 +20,11 @@ def serve(
     workers: int = typer.Option(1, help="Number of web workers."),
 ):
     """
-    Serve the Orb web app.
+    Creates a web application with `FastAPi <https://fastapi.tiangolo.com/>`_
+    in the backend and `Svelte <https://svelte.dev>`_ in the frontend.
+
+    Refer to :ref:`web` to find out about building your own
+    CLN / LND web-app using Orb in the backend.
 
     .. asciinema:: /_static/orb-web-serve.cast
     """

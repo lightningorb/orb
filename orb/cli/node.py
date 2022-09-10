@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 21:00:38
+# @Last Modified time: 2022-09-10 10:14:41
 
 import re
 import os
@@ -45,6 +45,8 @@ def delete(
 
     This command recursively deletes the node's folder. This is a destructive command. Use with care.
 
+    .. asciinema:: /_static/orb-node-delete.cast
+
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -79,6 +81,8 @@ def list(
     This command simply scans those folders for a matching pattern.
 
     If the `--show-info` is provided, then Orb attempts to connect to the node, and to invoke the :ref:`orb-node-info` command on the available nodes.
+
+    .. asciinema:: /_static/orb-node-list.cast
     """
 
     data_dir = Path(_get_user_data_dir_static())
@@ -106,6 +110,8 @@ def info(
     Get node information.
 
     This command connects to the lightning node, gets basic information and prints it out in the console.
+
+    .. asciinema:: /_static/orb-node-info.cast
     """
     if not pubkey:
         pubkey = get_default_id()
@@ -125,6 +131,8 @@ def use(pubkey: str = typer.Argument(None, help="The pubkey of the node.")):
     - Windows: ${APPDATA}/orbconnector/orbconnector.ini
 
     All subsequent orb invocations will use this node by default, unless otherwise specified.
+
+    .. asciinema:: /_static/orb-node-use.cast
     """
     conf_dir = Path(_get_user_data_dir_static()) / "orbconnector"
     if not conf_dir.is_dir():
@@ -158,6 +166,8 @@ def create_orb_public(
     Since Core-Lightning's GRPC interface is still new and not used a lot, it is currently unsupported by Orb, which is why the `cln grpc` node flavor isn't available.
 
     After the public node has been created, if `--use-node` was specified then subsequent orb commands will use it by default. These nodes have admin macaroons, and are used by the integration tests, so please keep the in a sane state so they don't need to be re-created.
+
+    .. asciinema:: /_static/orb-node-create-orb-public.cast
     """
     from orb.misc.macaroon_secure import MacaroonSecure
 
@@ -165,8 +175,8 @@ def create_orb_public(
     rest_port = dict(cln="3001", lnd="8080")[node_type]
     grpc_port = dict(cln="10010", lnd="10009")[node_type]
     cert = dict(
-        cln="-----BEGIN CERTIFICATE-----\nMIIDpzCCAo+gAwIBAgIUAObOYMfHkbsVkiIJUs3/gkqdNAEwDQYJKoZIhvcNAQEL\nBQAwUjELMAkGA1UEBhMCVVMxDDAKBgNVBAgMA0ZvbzEMMAoGA1UEBwwDQmFyMQww\nCgYDVQQKDANCYXoxGTAXBgNVBAMMEGMtbGlnaHRuaW5nLXJlc3QwHhcNMjIwODIz\nMDEwODIzWhcNMjMwODIzMDEwODIzWjBSMQswCQYDVQQGEwJVUzEMMAoGA1UECAwD\nRm9vMQwwCgYDVQQHDANCYXIxDDAKBgNVBAoMA0JhejEZMBcGA1UEAwwQYy1saWdo\ndG5pbmctcmVzdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANLya1KP\nzljILwk65lYb9qUisO6mEubfs88IXt0M6U1nrVEkeWOkXvoqwjrRDWx416sIF8eX\n1v1Ymxd2NPc7/TQDndCIXJNg98WcvZY1nux02MwfDjNJuNGMbmLqTAZ7mNZRj6uN\nLFh9f3l6j4VJrHjNNtTF03XdJxvjJhGwR4suyttUl0/3PTU3DOTjeexFnbCjRNMV\ny3zG/0rmrDMNBpF6J9b6jg6BuvyKN4ux+mdVsLhAcQf0EWBa/iSjco7DowmJH2XS\nxzity1wHWiUIYYoijBWna9ziGOCLeVirW/ml2mMGiKhxBOh4Hc3o6KfMx+EaxycO\nczmkZ3sYBiTj6N8CAwEAAaN1MHMwHQYDVR0OBBYEFFEnhV78bRE0mhfSr1AWb/ep\nlxbQMB8GA1UdIwQYMBaAFFEnhV78bRE0mhfSr1AWb/eplxbQMA8GA1UdEwEB/wQF\nMAMBAf8wIAYDVR0RBBkwF4IVcmVndGVzdC5jbG4ubG5vcmIuY29tMA0GCSqGSIb3\nDQEBCwUAA4IBAQB+Vf0LoNVrinPW54fgYHH0v+mn71JH5Ungc1Kfi+GMlVFBMIs8\nK4dQ8+X/wlctexLkMr7vrr4hNPMC1sV8MFlknFELZj5z53jExI3sh4IfT2p5Jph7\n4/95dlcbjG0uxjQOFj0NwLxdWQ6WLPhGLE6qh7JwWl0n2nwe++xkObuBfDX9MBi3\nbwzr2Z6Xa184z/kKGYVTlTLGlIMaQ6rUQjIEJUbFEucOTI3ufQt+nicnfsshIAd5\nWkPV9G7D+ctRoLMxYZ15CC5zRGhkwAnYf524EBhbwZaEB0GXKIepMFMswZf7z0lp\nRWAHbwRXCGxHBCwSDDi9KfUEKt9NTw9hhmc1\n-----END CERTIFICATE-----\n",
-        lnd="-----BEGIN CERTIFICATE-----\nMIICOjCCAeCgAwIBAgIQE3My2g1g5yRsD35v2/4qfDAKBggqhkjOPQQDAjA4MR8w\nHQYDVQQKExZsbmQgYXV0b2dlbmVyYXRlZCBjZXJ0MRUwEwYDVQQDEww4NjBiYTVj\nNTQ3NzAwHhcNMjIwODIwMjE1MDQ1WhcNMjMxMDE1MjE1MDQ1WjA4MR8wHQYDVQQK\nExZsbmQgYXV0b2dlbmVyYXRlZCBjZXJ0MRUwEwYDVQQDEww4NjBiYTVjNTQ3NzAw\nWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARRnSKy3uNVVrQXWhxEHoTXzwqCu4YC\ndSRDVqQyrJwR313Op0SChZZanZxigjFBKlapmQvNRy1IhNUxdkN2eTQ4o4HLMIHI\nMA4GA1UdDwEB/wQEAwICpDATBgNVHSUEDDAKBggrBgEFBQcDATAPBgNVHRMBAf8E\nBTADAQH/MB0GA1UdDgQWBBTu4yTg9J01l3rojEzSiDSd3RFwzzBxBgNVHREEajBo\nggw4NjBiYTVjNTQ3NzCCCWxvY2FsaG9zdIIUc2lnbmV0LmxuZC5sbm9yYi5jb22C\nBHVuaXiCCnVuaXhwYWNrZXSCB2J1ZmNvbm6HBH8AAAGHEAAAAAAAAAAAAAAAAAAA\nAAGHBKwWAAQwCgYIKoZIzj0EAwIDSAAwRQIgcwRSvTNqJPrV6xd+SFKZVg8AjIQw\njYcQ6dNQ0P9wTyECIQD4Vj3ac+b+35tVedYRX5sOJ7KWAEdHemwvl5OQS4Eg3w==\n-----END CERTIFICATE-----\n",
+        cln="2d2d2d2d2d424547494e2043455254494649434154452d2d2d2d2d0a4d494944707a4343416f2b674177494241674955414f624f594d66486b6273566b69494a5573332f676b71644e4145774451594a4b6f5a496876634e4151454c0a42514177556a454c4d416b474131554542684d4356564d784444414b42674e564241674d41305a76627a454d4d416f474131554542777744516d46794d5177770a436759445651514b44414e4359586f784754415842674e5642414d4d45474d7462476c6e614852756157356e4c584a6c633351774868634e4d6a49774f44497a0a4d4445774f44497a5768634e4d6a4d774f44497a4d4445774f44497a576a42534d517377435159445651514745774a56557a454d4d416f4741315545434177440a526d39764d517777436759445651514844414e43595849784444414b42674e5642416f4d41304a68656a455a4d4263474131554541777751597931736157646f0a64473570626d6374636d567a64444343415349774451594a4b6f5a496876634e4151454242514144676745504144434341516f4367674542414e4c7961314b500a7a6c6a494c776b36356c596239715569734f366d45756266733838495874304d3655316e7256456b65574f6b58766f71776a72524457783431367349463865580a317631596d7864324e5063372f5451446e644349584a4e6739385763765a59316e757830324d7766446a4e4a754e474d626d4c7154415a376d4e5a526a36754e0a4c46683966336c366a34564a72486a4e4e745446303358644a78766a4a68477752347375797474556c302f3350545533444f546a656578466e62436a524e4d560a79337a472f30726d72444d4e427046364a3962366a6736427576794b4e3475782b6d6456734c684163516630455742612f69536a636f37446f776d4a483258530a787a6974793177485769554959596f696a42576e61397a69474f434c65566972572f6d6c326d4d47694b6878424f68344863336f364b664d782b45617879634f0a637a6d6b5a3373594269546a364e38434177454141614e314d484d77485159445652304f424259454646456e68563738625245306d68665372314157622f65700a6c7862514d42384741315564497751594d4261414646456e68563738625245306d68665372314157622f65706c7862514d41384741315564457745422f7751460a4d414d4241663877494159445652305242426b7746344956636d566e6447567a6443356a6247347562473576636d4975593239744d41304743537147534962330a4451454243775541413449424151422b5666304c6f4e5672696e50573534666759484830762b6d6e37314a4835556e6763314b66692b474d6c5646424d4973380a4b346451382b582f776c637465784c6b4d723776727234684e504d43317356384d466c6b6e46454c5a6a357a35336a457849337368344966543270354a7068370a342f3935646c63626a473075786a514f466a304e774c7864575136574c5068474c45367168374a77576c306e326e77652b2b786b4f627542664458394d4269330a62777a72325a3658613138347a2f6b4b475956546c544c476c494d6151367255516a49454a5562464575634f544933756651742b6e69636e66737368494164350a576b5056394737442b6374526f4c4d78595a31354343357a5247686b77416e596635323445426862775a6145423047584b4965704d464d73775a66377a306c700a52574148627752584347784842437753444469394b6655454b74394e54773968686d63310a2d2d2d2d2d454e442043455254494649434154452d2d2d2d2d0a",
+        lnd="2d2d2d2d2d424547494e2043455254494649434154452d2d2d2d2d0a4d4949434f6a434341654367417749424167495145334d79326731673579527344333576322f34716644414b42676771686b6a4f50515144416a41344d5238770a485159445651514b45785a73626d5167595856306232646c626d56795958526c5a43426a5a584a304d5255774577594456515144457777344e6a42695954566a0a4e5451334e7a41774868634e4d6a49774f4449774d6a45314d4451315768634e4d6a4d784d4445314d6a45314d445131576a41344d523877485159445651514b0a45785a73626d5167595856306232646c626d56795958526c5a43426a5a584a304d5255774577594456515144457777344e6a42695954566a4e5451334e7a41770a5754415442676371686b6a4f5051494242676771686b6a4f50514d4242774e43414152526e534b7933754e565672515857687845486f54587a777143753459430a6453524456715179724a77523331334f70305343685a5a616e5a7869676a46424b6c61706d51764e52793149684e5578646b4e32655451346f34484c4d4948490a4d41344741315564447745422f775145417749437044415442674e56485355454444414b4267677242674546425163444154415042674e5648524d42416638450a425441444151482f4d42304741315564446751574242547534795467394a30316c33726f6a457a5369445364335246777a7a427842674e5648524545616a426f0a676777344e6a42695954566a4e5451334e7a434343577876593246736147397a6449495563326c6e626d56304c6d78755a433573626d39795969356a623232430a4248567561586943436e56756158687759574e725a58534342324a315a6d4e76626d3648424838414141474845414141414141414141414141414141414141410a41414748424b775741415177436759494b6f5a497a6a30454177494453414177525149676377525376544e714a5072563678642b53464b5a566738416a4951770a6a59635136644e51305039775479454349514434566a3361632b622b33357456656459525835734f4a374b5741456448656d77766c354f515334456733773d3d0a2d2d2d2d2d454e442043455254494649434154452d2d2d2d2d",
     )[node_type]
     mac = dict(
         cln="02010b632d6c696768746e696e67023e5475652041756720323320323032322030313a30383a323320474d542b303030302028436f6f7264696e6174656420556e6976657273616c2054696d652900000620f3760d5a3cc139d75c9f4ef895df847ea436ae94c2cd8ebfa07f2cce505ff5e5",
@@ -179,7 +189,7 @@ def create_orb_public(
         node_type=node_type,
         protocol=protocol,
         network=network,
-        cert_plain=cert,
+        cert_hex=cert,
         rest_port=rest_port,
         grpc_port=grpc_port,
         use_node=use_node,
@@ -197,7 +207,7 @@ def create(
     network: str = typer.Option(
         ..., help="IP address or DNS-resovable name for this host."
     ),
-    cert_plain: str = typer.Option(..., help="Plain node certificate."),
+    cert_hex: str = typer.Option(..., help="The node certificate in hex format."),
     rest_port: int = typer.Option(8080, help="REST port."),
     grpc_port: int = typer.Option(10009, help="GRPC port."),
     use_node: bool = typer.Option(True, help="Whether to set as default."),
@@ -222,12 +232,14 @@ def create(
     * :ref:`orb-node-create-orb-public`
     * :ref:`orb-node-create-from-cert-files`
     * :ref:`orb-node-ssh-wizard`
+
+    .. asciinema:: /_static/orb-node-create.cast
     """
 
     pprint_from_ansi(chalk().cyan(f"Encrypting mac"))
     mac_secure = MacaroonSecure.init_from_plain(mac_hex).macaroon_secure.decode()
     pprint_from_ansi(chalk().cyan(f"Encrypting cert"))
-    cert_secure = CertificateSecure.init_from_plain(cert_plain).cert_secure.decode()
+    cert_secure = CertificateSecure.init_from_hex(cert_hex).cert_secure.decode()
     pprint_from_ansi(chalk().cyan(f"Connecting to: {hostname}"))
     ln = Ln(
         node_type=node_type,
@@ -296,15 +308,17 @@ def create_from_cert_files(
     `--cert-file-path=...`
 
     This is practical for creating nodes after certificates and macaroons have been copied locally.
+
+    .. asciinema:: /_static/orb-node-create-from-cert-files.cast
     """
     pprint_from_ansi(chalk().cyan(f"Reading mac: {mac_file_path}"))
-    cert_plain, mac_hex = "", ""
+    cert_hex, mac_hex = "", ""
     with open(mac_file_path, "rb") as f:
         mac_hex = codecs.encode(f.read(), "hex")
     if cert_file_path:
         pprint_from_ansi(chalk().cyan(f"Reading cert: {cert_file_path}"))
-        with open(cert_file_path, "r") as f:
-            cert_plain = f.read()
+        with open(cert_file_path, "rb") as f:
+            cert_hex = codecs.encode(f.read(), "hex")
 
     create(
         hostname=hostname,
@@ -312,7 +326,7 @@ def create_from_cert_files(
         node_type=node_type,
         protocol=protocol,
         network=network,
-        cert_plain=cert_plain,
+        cert_hex=cert_hex,
         rest_port=rest_port,
         grpc_port=grpc_port,
         use_node=use_node,
@@ -351,10 +365,12 @@ def ssh_wizard(
     The command sshes into a host, and copies the certificate and macaroon from the paths specified with `--ln-cert-path=...` and `--ln-macaroon-path=...` flags.
 
     The remainder of the operations is invoking the :ref:`orb_node_create` command.
+
+    .. asciinema:: /_static/orb-node-ssh-wizard.cast
     """
     connect_kwargs = {}
     if ssh_cert_path:
-        connect_kwargs["key_filename"] = ssh_cert_path
+        connect_kwargs["key_filename"] = ssh_cert_path.as_posix()
     elif ssh_password:
         connect_kwargs["password"] = ssh_password
     with Connection(
@@ -393,8 +409,8 @@ def ssh_wizard(
 
             with tmp_ln_macaroon_path.open("rb") as f:
                 mac_hex = codecs.encode(f.read(), "hex")
-            with tmp_ln_cert_path.open("r") as f:
-                cert_plain = f.read()
+            with tmp_ln_cert_path.open("rb") as f:
+                cert_hex = codecs.encode(f.read(), "hex")
             from orb.ln import Ln
 
             create(
@@ -403,8 +419,58 @@ def ssh_wizard(
                 node_type=node_type,
                 protocol=protocol,
                 network=network,
-                cert_plain=cert_plain,
+                cert_hex=cert_hex,
                 rest_port=rest_port,
                 grpc_port=grpc_port,
                 use_node=use_node,
             )
+
+
+@app.command()
+def ssh_fetch_certs(
+    hostname: str = typer.Option(
+        ..., help="IP address or DNS-resolvable name for this host."
+    ),
+    ssh_cert_path: Path = typer.Option(
+        None, help="Certificate to use for the SSH session."
+    ),
+    ssh_password: str = typer.Option(None, help="Password to use for the SSH session."),
+    ln_cert_path: Path = typer.Option(
+        None, help="Path of the node certificate on the target host."
+    ),
+    ln_macaroon_path: Path = typer.Option(
+        None, help="Path of the node macaroon on the target host."
+    ),
+    ssh_user: str = typer.Option("ubuntu", help="Username for SSH session."),
+    ssh_port: int = typer.Option(22, help="Port for SSH session."),
+):
+    """
+    SSH into the node, copy the cert and mac into the current folder.
+
+    .. asciinema:: /_static/orb-node-ssh-fetch-certs.cast
+    """
+    connect_kwargs = {}
+    if ssh_cert_path:
+        connect_kwargs["key_filename"] = ssh_cert_path.as_posix()
+    elif ssh_password:
+        connect_kwargs["password"] = ssh_password
+    with Connection(
+        hostname, connect_kwargs=connect_kwargs, user=ssh_user, port=ssh_port
+    ) as con:
+        pprint_from_ansi(chalk().magenta("ssh session connected!"))
+        try:
+            pprint_from_ansi(
+                chalk().green(f'OS:       {con.run("uname", hide=True).stdout.strip()}')
+            )
+            pprint_from_ansi(
+                chalk().green(
+                    f'Hostname: {con.run("hostname", hide=True).stdout.strip()}'
+                )
+            )
+        except:
+            pass
+
+        pprint_from_ansi(chalk().cyan(f"Copying: {ln_cert_path}"))
+        con.get(f"{ln_cert_path.as_posix()}", ln_cert_path.name)
+        pprint_from_ansi(chalk().cyan(f"Copying: {ln_macaroon_path}"))
+        con.get(f"{ln_macaroon_path.as_posix()}", ln_macaroon_path.name)
