@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-09 15:39:50
+# @Last Modified time: 2022-09-10 09:26:14
 
 import re
 import os
@@ -308,6 +308,8 @@ def create_from_cert_files(
     `--cert-file-path=...`
 
     This is practical for creating nodes after certificates and macaroons have been copied locally.
+
+    .. asciinema:: /_static/orb-node-create-from-cert-files.cast
     """
     pprint_from_ansi(chalk().cyan(f"Reading mac: {mac_file_path}"))
     cert_hex, mac_hex = "", ""
@@ -315,7 +317,7 @@ def create_from_cert_files(
         mac_hex = codecs.encode(f.read(), "hex")
     if cert_file_path:
         pprint_from_ansi(chalk().cyan(f"Reading cert: {cert_file_path}"))
-        with open(cert_file_path, "r") as f:
+        with open(cert_file_path, "rb") as f:
             cert_hex = codecs.encode(f.read(), "hex")
 
     create(

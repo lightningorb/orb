@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-10 06:37:37
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 16:59:17
+# @Last Modified time: 2022-09-09 16:19:10
 
 from typing import Optional
 from invoke import task
@@ -51,7 +51,7 @@ def get_route(
 
     .. note::
 
-        This common supports circular routes for both LND and CLN.
+        This command supports circular routes for both LND and CLN.
 
     .. asciinema:: /_static/orb-network-get-route.cast
 
