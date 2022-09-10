@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-10 09:26:14
+# @Last Modified time: 2022-09-10 10:14:41
 
 import re
 import os
@@ -365,10 +365,12 @@ def ssh_wizard(
     The command sshes into a host, and copies the certificate and macaroon from the paths specified with `--ln-cert-path=...` and `--ln-macaroon-path=...` flags.
 
     The remainder of the operations is invoking the :ref:`orb_node_create` command.
+
+    .. asciinema:: /_static/orb-node-ssh-wizard.cast
     """
     connect_kwargs = {}
     if ssh_cert_path:
-        connect_kwargs["key_filename"] = ssh_cert_path
+        connect_kwargs["key_filename"] = ssh_cert_path.as_posix()
     elif ssh_password:
         connect_kwargs["password"] = ssh_password
     with Connection(
