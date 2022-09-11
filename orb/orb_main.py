@@ -73,11 +73,11 @@ def main():
         with config_path.open("w") as f:
             f.write("")
     config.read(config_path.as_posix())
-    try:
-        config.add_section("host")
-        config.add_section("ln")
-    except:
-        pass
+    for section in ["host", "ln"]:
+        try:
+            config.add_section(section)
+        except:
+            pass
     try:
         pk = config.get("ln", "identity_pubkey", fallback="")
         if not pk:

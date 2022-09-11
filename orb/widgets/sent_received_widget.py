@@ -57,6 +57,7 @@ class SentReceivedWidget(Widget):
 
         self.anim_to_pos(self.i, self.r)
 
+    @mainthread
     def anim_to_pos(self, i, r):
         """
         Specify location when orb changes.

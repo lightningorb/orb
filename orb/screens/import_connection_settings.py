@@ -31,7 +31,6 @@ class ImportConnectionSettings(MDScreen):
         "network",
         "protocol",
         "macaroon_admin",
-        "type",
         "identity_pubkey",
     ]
 
@@ -47,6 +46,7 @@ class ImportConnectionSettings(MDScreen):
         pk = config["ln"]["identity_pubkey"]
         app = App.get_running_app()
         app.node_settings["host.hostname"] = config["host"]["hostname"]
+        app.node_settings["host.type"] = config["host"]["type"]
         for s in self.ln_settings_to_copy:
             app.node_settings[f"ln.{s}"] = config["ln"][s]
         if mobile:
@@ -70,7 +70,7 @@ class ImportConnectionSettings(MDScreen):
                 cache=False,
                 use_prefs=False,
                 hostname=app.node_settings["host.hostname"],
-                node_type="cln",
+                node_type=app.node_settings["host.type"],
                 protocol=app.node_settings["ln.protocol"],
                 mac_secure=app.node_settings["ln.macaroon_admin"],
                 cert_secure=app.node_settings["ln.tls_certificate"],
