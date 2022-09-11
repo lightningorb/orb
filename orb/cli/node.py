@@ -368,6 +368,9 @@ def ssh_wizard(
 
     .. asciinema:: /_static/orb-node-ssh-wizard.cast
     """
+    if type(ssh_cert_path) is str:
+        ssh_cert_path = Path(ssh_cert_path)
+
     connect_kwargs = {}
     if ssh_cert_path:
         connect_kwargs["key_filename"] = ssh_cert_path.as_posix()
@@ -449,6 +452,9 @@ def ssh_fetch_certs(
 
     .. asciinema:: /_static/orb-node-ssh-fetch-certs.cast
     """
+    if type(ssh_cert_path) is str:
+        ssh_cert_path = Path(ssh_cert_path)
+
     connect_kwargs = {}
     if ssh_cert_path:
         connect_kwargs["key_filename"] = ssh_cert_path.as_posix()
