@@ -36,12 +36,12 @@ class SendCoins(PopupDropShadow):
         super(SendCoins, self).dismiss()
 
     @guarded
-    def send_coins(self, addr, amount, sat_per_vbyte):
-        amount = int(amount)
+    def send_coins(self, addr, satoshi, sat_per_vbyte):
+        satoshi = int(satoshi)
         sat_per_vbyte = int(sat_per_vbyte)
-        print(f"sending: {amount} sats to {addr} at {sat_per_vbyte}")
+        print(f"sending: {satoshi} sats to {addr} at {sat_per_vbyte}")
         self.ids.send_button.disabled = True
-        out = Ln().send_coins(addr, amount, sat_per_vbyte)
+        out = Ln().send_coins(addr, satoshi, sat_per_vbyte)
         popup = PopupDropShadow(
             title="Send Output", size_hint=(None, None), size=(dp(200), dp(200))
         )
