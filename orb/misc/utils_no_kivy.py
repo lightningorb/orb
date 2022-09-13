@@ -27,7 +27,16 @@ platform = _get_platform()
 
 
 def get_user_data_dir_static():
-    if platform == "win":
+    if platform == "ios":
+        data_dir = os.path.expanduser("~/Documents")
+    elif platform == "android":
+        from jnius import autoclass, cast
+
+        PythonActivity = autoclass("org.kivy.android.PythonActivity")
+        context = cast("android.content.Context", PythonActivity.mActivity)
+        file_p = cast("java.io.File", context.getFilesDir())
+        data_dir = (Path(file_p.getAbsolutePath())).as_posix()
+    elif platform == "win":
         data_dir = os.environ["APPDATA"]
     elif platform == "macosx":
         data_dir = os.path.expanduser(f"~/Library/Application Support/")
