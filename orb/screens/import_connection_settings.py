@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-30 14:26:36
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-05 16:23:13
+# @Last Modified time: 2022-09-13 15:45:41
 
 from kivymd.uix.screen import MDScreen
 
@@ -40,7 +40,7 @@ class ImportConnectionSettings(MDScreen):
 
         d = mkdtemp()
         p = (
-            Path(utils_no_kivy._get_user_data_dir_static())
+            Path(utils_no_kivy.get_user_data_dir_static())
             / "orbconnector/orbconnector_tmp.ini"
         )
         with p.open("w") as f:
@@ -53,7 +53,7 @@ class ImportConnectionSettings(MDScreen):
         app = App.get_running_app()
         config = ConfigParser()
         config_path = (
-            Path(utils_no_kivy._get_user_data_dir_static())
+            Path(utils_no_kivy.get_user_data_dir_static())
             / "orbconnector/orbconnector_tmp.ini"
         )
         config.read(config_path.as_posix())
