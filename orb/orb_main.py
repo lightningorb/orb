@@ -83,13 +83,6 @@ def main():
         if not pk:
             app = OrbConnectorApp()
             app.run()
-            print(app.node_settings)
-            for k, v in app.node_settings.items():
-                section, key = k.split(".")
-                config.set(section, key, v)
-                print("section", section, "key", key, "value", v)
-            print(f"writing config to: {config_path}")
-            assert config.write()
             sys.exit(0)
         else:
             from orb.core_ui.orb_app import OrbApp

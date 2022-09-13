@@ -36,29 +36,40 @@ class ImportConnectionSettings(MDScreen):
 
     @guarded
     def import_node_settings(self):
+        from orb.misc import utils_no_kivy
+
         d = mkdtemp()
-        p = Path(d) / "orb.ini"
+        p = (
+            Path(utils_no_kivy._get_user_data_dir_static())
+            / "orbconnector/orbconnector_tmp.ini"
+        )
         with p.open("w") as f:
             f.write(self.ids.text_import.text)
-        config = ConfigParser()
-        config.read(p.as_posix())
-        target_config = ConfigParser()
-        pk = config["ln"]["identity_pubkey"]
-        app = App.get_running_app()
-        app.node_settings["host.hostname"] = config["host"]["hostname"]
-        app.node_settings["host.type"] = config["host"]["type"]
-        for s in self.ln_settings_to_copy:
-            app.node_settings[f"ln.{s}"] = config["ln"][s]
-        if mobile:
-            app.node_settings["ln.protocol"] = "rest"
 
     @guarded
     def connect(self):
+        from orb.misc import utils_no_kivy
+
         app = App.get_running_app()
+        config = ConfigParser()
+        config_path = (
+            Path(utils_no_kivy._get_user_data_dir_static())
+            / "orbconnector/orbconnector_tmp.ini"
+        )
+        config.read(config_path.as_posix())
         if self.connected:
-            RestartDialog(
+            rd = RestartDialog(
                 title="After exit, please restart Orb to launch new settings."
-            ).open()
+            )
+
+            def save_and_quit(*args):
+                config_path.rename(config_path.parents[0] / "orbconnector.ini")
+                from kivy.app import App
+
+                App.get_running_app().stop()
+
+            rd.buttons[-1].on_release = save_and_quit
+            rd.open()
             return
 
         error = ""
@@ -69,13 +80,13 @@ class ImportConnectionSettings(MDScreen):
                 fallback_to_mock=False,
                 cache=False,
                 use_prefs=False,
-                hostname=app.node_settings["host.hostname"],
-                node_type=app.node_settings["host.type"],
-                protocol=app.node_settings["ln.protocol"],
-                mac_secure=app.node_settings["ln.macaroon_admin"],
-                cert_secure=app.node_settings["ln.tls_certificate"],
-                rest_port=app.node_settings["ln.rest_port"],
-                grpc_port=10009,
+                hostname=config.get("host", "hostname"),
+                node_type=config.get("host", "type"),
+                protocol=config.get("ln", "protocol"),
+                mac_secure=config.get("ln", "macaroon_admin"),
+                cert_secure=config.get("ln", "tls_certificate"),
+                rest_port=config.get("ln", "rest_port"),
+                grpc_port=config.get("ln", "grpc_port"),
             )
 
             info = ln.get_info()
