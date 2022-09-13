@@ -1,19 +1,19 @@
 name: CI
 on:
   push:
-    branches: [ lnurl2 ]
+    branches: [ build_android ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - uses: actions/setup-python@v2
-      #   with:
-      #     python-version: '3.9'
-      #     cache: 'pip'
-      # - run: pip install fabric
-      # - run: python ./build.py android.cython
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install fabric
+      - run: python ./build.py android.cython
       - uses: ArtemSBulgakov/buildozer-action@v1
         with:
           command: buildozer android debug
