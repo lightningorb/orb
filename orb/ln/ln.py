@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-13 11:31:45
+# @Last Modified time: 2022-09-13 14:54:46
 
 from configparser import ConfigParser
 from copy import copy
@@ -369,11 +369,11 @@ class Ln:
 
 
 def factory(pk: str) -> Ln:
-    from orb.misc.utils_no_kivy import _get_user_data_dir_static
+    from orb.misc.utils_no_kivy import get_user_data_dir_static
 
     lnd_conf = ConfigParser()
     lnd_conf.read(
-        (Path(_get_user_data_dir_static()) / f"orb_{pk}/orb_{pk}.ini").as_posix()
+        (Path(get_user_data_dir_static()) / f"orb_{pk}/orb_{pk}.ini").as_posix()
     )
     return Ln(
         node_type=lnd_conf.get("host", "type"),

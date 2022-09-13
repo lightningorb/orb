@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-10 10:14:41
+# @Last Modified time: 2022-09-13 14:54:09
 
 import re
 import os
@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Optional
 from tempfile import TemporaryDirectory
 from pathlib import Path
-from orb.misc.utils_no_kivy import _get_user_data_dir_static
+from orb.misc.utils_no_kivy import get_user_data_dir_static
 from orb.cli.utils import get_default_id
 from fabric import Connection
 from orb.misc.macaroon_secure import MacaroonSecure
@@ -53,7 +53,7 @@ def delete(
     if not pubkey:
         pprint_from_ansi("No node pubkey provided. Quitting.")
         return
-    conf_path = Path(_get_user_data_dir_static()) / f"orb_{pubkey}"
+    conf_path = Path(get_user_data_dir_static()) / f"orb_{pubkey}"
     if conf_path.exists():
         from shutil import rmtree
 
@@ -85,7 +85,7 @@ def list(
     .. asciinema:: /_static/orb-node-list.cast
     """
 
-    data_dir = Path(_get_user_data_dir_static())
+    data_dir = Path(get_user_data_dir_static())
     for x in data_dir.glob("orb_*"):
         m = re.match(r"^orb_([a-zA-Z0-9]{66})$", x.name)
         if m and x.is_dir():
@@ -134,7 +134,7 @@ def use(pubkey: str = typer.Argument(None, help="The pubkey of the node.")):
 
     .. asciinema:: /_static/orb-node-use.cast
     """
-    conf_dir = Path(_get_user_data_dir_static()) / "orbconnector"
+    conf_dir = Path(get_user_data_dir_static()) / "orbconnector"
     if not conf_dir.is_dir():
         os.makedirs(conf_dir.as_posix(), exist_ok=True)
     conf_path = conf_dir / "orbconnector.ini"
@@ -259,7 +259,7 @@ def create(
     except Exception as e:
         pprint_from_ansi(chalk().red(f"Failed to connect: {e}"))
         return
-    conf_dir = Path(_get_user_data_dir_static()) / f"orb_{pubkey}"
+    conf_dir = Path(get_user_data_dir_static()) / f"orb_{pubkey}"
     if not conf_dir.is_dir():
         conf_dir.mkdir()
         pprint_from_ansi(chalk().green(f"{conf_dir} created"))

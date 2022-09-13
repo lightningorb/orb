@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 14:32:04
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-10 10:03:35
+# @Last Modified time: 2022-09-13 14:55:08
 
 import os
 from pathlib import Path
@@ -26,7 +26,7 @@ def _get_platform():
 platform = _get_platform()
 
 
-def _get_user_data_dir_static():
+def get_user_data_dir_static():
     if platform == "win":
         data_dir = os.environ["APPDATA"]
     elif platform == "macosx":
