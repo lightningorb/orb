@@ -19,13 +19,11 @@ class RestartDialog(MDDialog):
                 MDFlatButton(
                     text="Cancel",
                     theme_text_color="Custom",
-                    # text_color=self.theme_cls.primary_color,
                     on_release=lambda x: self.dismiss(),
                 ),
                 MDFlatButton(
                     text="Quit",
                     theme_text_color="Custom",
-                    # text_color=self.theme_cls.primary_color,
                     on_release=lambda x: App.get_running_app().stop(),
                 ),
             ]
