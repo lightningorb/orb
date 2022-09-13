@@ -8,7 +8,7 @@ import os
 import shutil
 from orb.logic.cron import Cron
 from orb.logic import cli_thread_manager
-from orb.misc.utils_no_kivy import platform
+from orb.misc.utils_no_kivy import platform, get_user_data_dir_static
 from orb.store.db_meta import *
 from orb.misc.conf_defaults import set_conf_defaults
 from orb.misc.utils_no_kivy import pref_path, pref
@@ -99,17 +99,7 @@ class App:
 
     @classmethod
     def _get_user_data_dir_static(cls):
-        if platform == "win":
-            data_dir = os.environ["APPDATA"]
-        elif platform == "macosx":
-            data_dir = os.path.expanduser(f"~/Library/Application Support/")
-        else:
-            data_dir = os.path.expanduser(
-                os.path.join(os.environ.get("XDG_CONFIG_HOME", "~/.config"))
-            )
-        if not os.path.exists(data_dir):
-            os.mkdir(data_dir)
-        return data_dir
+        return get_user_data_dir_static()
 
     def make_dirs(self):
         """

@@ -71,9 +71,29 @@ class OrbConnectorApp(AppCommon):
 
         def do_open(_, pk):
             self.node_settings["ln.identity_pubkey"] = pk
-            RestartDialog(
+            p = (
+                Path(self._get_user_data_dir()).parent
+                / f"orbconnector/orbconnector.ini"
+            )
+            from kivy.config import ConfigParser
+
+            rs = RestartDialog(
                 title="After exit, please restart Orb to launch new settings."
-            ).open()
+            )
+
+            def ok(*args):
+                from kivy.app import App
+
+                config = ConfigParser()
+                config.add_section("ln")
+                config.set("ln", "identity_pubkey", pk)
+                config.filename = p.as_posix()
+                print(p.as_posix())
+                config.write()
+                self.stop()
+
+            rs.buttons[-1].on_release = ok
+            rs.open()
 
         def rm_node(_, pk, bl):
             p = Path(self._get_user_data_dir()).parent / f"orb_{pk}"
