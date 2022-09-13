@@ -338,7 +338,7 @@ class LndGRPC(LndBase):
         tx, output = channel.channel_point.split(":")
         cp = ln.ChannelPoint(funding_txid_str=tx, output_index=int(output))
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        request = ln.PolicyUpdateRequest(*args, **kwargs, chan_point=cp)
+        request = ln.PolicyUpdateRequest(**kwargs, chan_point=cp)
         return self.stub.UpdateChannelPolicy(request)
 
     def get_htlc_events(self):
