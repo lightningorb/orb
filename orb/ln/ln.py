@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-10 08:01:01
+# @Last Modified time: 2022-09-13 11:31:45
 
 from configparser import ConfigParser
 from copy import copy
@@ -368,10 +368,9 @@ class Ln:
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)
 
 
-from orb.misc.utils_no_kivy import _get_user_data_dir_static
-
-
 def factory(pk: str) -> Ln:
+    from orb.misc.utils_no_kivy import _get_user_data_dir_static
+
     lnd_conf = ConfigParser()
     lnd_conf.read(
         (Path(_get_user_data_dir_static()) / f"orb_{pk}/orb_{pk}.ini").as_posix()
