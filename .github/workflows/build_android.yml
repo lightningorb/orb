@@ -12,7 +12,7 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip'
-      - run: pip install fabric
+      - run: pip install fabric semver
       - run: python ./build.py android.cython
       - uses: ArtemSBulgakov/buildozer-action@v1
         with:
