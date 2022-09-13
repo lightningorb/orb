@@ -12,7 +12,19 @@ from sys import platform as _sys_platform
 
 
 def _get_platform():
-    if _sys_platform in ("win32", "cygwin"):
+    # On Android sys.platform returns 'linux2', so prefer to check the
+    # existence of environ variables set during Python initialization
+    kivy_build = os.environ.get("KIVY_BUILD", "")
+    if kivy_build in {"android", "ios"}:
+        return kivy_build
+    elif "P4A_BOOTSTRAP" in os.environ:
+        return "android"
+    elif "ANDROID_ARGUMENT" in os.environ:
+        # We used to use this method to detect android platform,
+        # leaving it here to be backwards compatible with `pydroid3`
+        # and similar tools outside kivy's ecosystem
+        return "android"
+    elif _sys_platform in ("win32", "cygwin"):
         return "win"
     elif _sys_platform == "darwin":
         return "macosx"
