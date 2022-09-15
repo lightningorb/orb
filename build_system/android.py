@@ -74,12 +74,11 @@ def upload_to_site(path):
 def deploy(
     c,
 ):
+    import os
+    import json
+    from urllib import request, parse
     import googleapiclient.discovery
     from google.oauth2 import service_account
-    import json
-    import boto3
-    import os
-    from urllib import request, parse
 
     path = sign(c)
 
