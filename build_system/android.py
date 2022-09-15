@@ -122,6 +122,39 @@ def deploy(
 
     print(f"Version code {bundle_response['versionCode']} has been uploaded")
 
+    track_response = (
+        service.edits()
+        .tracks()
+        .update(
+            editId=edit_id,
+            track="beta",
+            packageName=package_name,
+            body={
+                "releases": [
+                    {
+                        "versionCodes": [str(bundle_response["versionCode"])],
+                        "status": "completed",
+                    }
+                ]
+            },
+        )
+        .execute()
+    )
+
+    print("The bundle has been committed to the beta track")
+
+    #   Create a commit request to commit the edit to BETA track
+    commit_request = (
+        service.edits().commit(editId=edit_id, packageName=package_name).execute()
+    )
+
+    print(f"Edit {commit_request['id']} has been committed")
+
+    message = f"Version code {bundle_response['versionCode']} has been uploaded from the bucket {bucket_name}.\nEdit {commit_request['id']} has been committed"
+    send_slack_message(message)
+
+    print("Successfully executed the app bundle release to beta")
+
 
 @task
 def upload(c, ext):
