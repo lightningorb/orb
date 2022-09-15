@@ -15,10 +15,10 @@ jobs:
           cache: 'pip'
       - run: pip install fabric semver
       - run: python ./build.py android.cython
-      - uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          command: buildozer android debug
-          buildozer_version: stable
+      # - uses: ArtemSBulgakov/buildozer-action@v1
+      #   with:
+      #     command: buildozer android debug
+      #     buildozer_version: stable
       - uses: ArtemSBulgakov/buildozer-action@v1
         with:
           command: buildozer android release
@@ -28,5 +28,7 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - run: pip install fabric semver
-      - run: python ./build.py android.upload --ext apk
+      # - run: python ./build.py android.upload --ext apk
       - run: python ./build.py android.upload --ext aab
+      - run: pip install fabric semver google-api-python-client google-auth
+      - run: python ./build.py android.deploy

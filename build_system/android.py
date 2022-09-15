@@ -150,9 +150,6 @@ def deploy(
 
     print(f"Edit {commit_request['id']} has been committed")
 
-    message = f"Version code {bundle_response['versionCode']} has been uploaded from the bucket {bucket_name}.\nEdit {commit_request['id']} has been committed"
-    send_slack_message(message)
-
     print("Successfully executed the app bundle release to beta")
 
 
