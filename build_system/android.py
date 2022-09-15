@@ -64,73 +64,133 @@ def upload_to_site(path):
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as c:
-        c.run("rm -rf /home/ubuntu/lnorb_com/*.apk")
-        c.run("rm -rf /home/ubuntu/lnorb_com/*.aab")
+        name = Path(path).name
+        c.run(f"rm -f /home/ubuntu/lnorb_com/{name}", warn=True)
+        print(f"Uploading: {path}")
         c.put(path, "/home/ubuntu/lnorb_com/")
 
 
 @task
-def upload(c):
-    apk = next(iter(Path("bin/").glob("*.apk")), None)
-    if apk:
-        upload_to_site(apk.as_posix())
-    aab = next(iter(Path("bin/").glob("*.aab")), None)
-    if aab:
-        upload_to_site(aab.as_posix())
+def deploy(
+    c,
+):
+    import os
+    import json
+    from urllib import request, parse
+    import googleapiclient.discovery
+    from google.oauth2 import service_account
 
+    path = sign(c)
 
-def do_upload(ext):
-    build_name = next(iter(Path("bin/").glob(ext)), None)
-    if build_name:
-        upload_to_s3(
-            env,
-            build_name.as_posix(),
-            "lnorb",
-            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
-            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
-            object_name=f"customer_builds/{build_name.name}",
+    SCOPES = ["https://www.googleapis.com/auth/androidpublisher"]
+
+    with open("pc-api-6008359505353802256-381-7c4cef527151.json", "w") as f:
+        f.write(os.environ["PCAPI"])
+
+    SERVICE_ACCOUNT_FILE = "pc-api-6008359505353802256-381-7c4cef527151.json"
+    APP_BUNDLE = path
+
+    package_name = "com.lnorb.orb"
+
+    credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES
+    )
+    service = googleapiclient.discovery.build(
+        "androidpublisher", "v3", credentials=credentials, cache_discovery=False
+    )
+    edit_request = service.edits().insert(body={}, packageName=package_name)
+    result = edit_request.execute()
+    edit_id = result["id"]
+
+    print(edit_id)
+
+    try:
+        bundle_response = (
+            service.edits()
+            .bundles()
+            .upload(
+                editId=edit_id,
+                packageName=package_name,
+                media_body=APP_BUNDLE,
+                media_mime_type="application/octet-stream",
+            )
+            .execute()
         )
+    except Exception as err:
+        message = f"There was an error while uploading a new version of {package_name}"
+        raise err
+
+    print(f"Version code {bundle_response['versionCode']} has been uploaded")
+
+    track_response = (
+        service.edits()
+        .tracks()
+        .update(
+            editId=edit_id,
+            track="beta",
+            packageName=package_name,
+            body={
+                "releases": [
+                    {
+                        "versionCodes": [str(bundle_response["versionCode"])],
+                        "status": "completed",
+                    }
+                ]
+            },
+        )
+        .execute()
+    )
+
+    print("The bundle has been committed to the beta track")
+
+    #   Create a commit request to commit the edit to BETA track
+    commit_request = (
+        service.edits().commit(editId=edit_id, packageName=package_name).execute()
+    )
+
+    print(f"Edit {commit_request['id']} has been committed")
+
+    print("Successfully executed the app bundle release to beta")
 
 
 @task
-def build(
-    c,
-    env=os.environ,
-    AWS_ACCESS_KEY_ID=None,
-    AWS_SECRET_ACCESS_KEY=None,
-):
-    stdout = c.run(f"buildozer android debug", env=env).stdout
-    stdout = c.run(f"buildozer android release", env=env).stdout
+def upload(c, ext):
+    f = next(iter(Path("bin/").glob(f"*.{ext}")), None)
+    print(f"Found: {f} for upload")
+    if f:
+        upload_to_site(f.as_posix())
+
+
+@task
+def build(c, env=os.environ):
+    c.run(f"buildozer android debug", env=env).stdout
+    c.run(f"buildozer android release", env=env).stdout
 
 
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.20.1.0-armeabi-v7a_arm64-v8a-release.aab",
-    password="",
+    release_path="/home/ubuntu/lnorb_com/orb-0.21.10-armeabi-v7a_arm64-v8a-release.aab",
+    password=os.environ.get("KEYSTORE_PASS"),
 ):
-    keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
-    aligned_path = Path(release_path).with_suffix(
-        f".aligned{Path(release_path).suffix}"
-    )
     cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as con:
-        responder = Responder(
-            pattern=r"Enter Passphrase for keystore:.*",
-            response=password,
+        keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
+        aligned_path = Path(release_path).with_suffix(
+            f".aligned{Path(release_path).suffix}"
         )
         con.run(
-            f"jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore {keystore_path} {release_path} cb-play",
-            watchers=[responder],
+            f"jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass {password} -keystore {keystore_path} {release_path} cb-play",
         )
         if con.run(f"test -f {aligned_path}", warn=True).ok:
             con.run(f"rm {aligned_path}")
         con.run(
             f"/home/ubuntu/.buildozer/android/platform/android-sdk/build-tools/33.0.0/zipalign -v 4 {release_path} {aligned_path}"
         )
-        con.get(aligned_path, os.path.expanduser("~/Downloads/"))
+        con.get(aligned_path, (Path(os.getcwd()) / aligned_path.name).as_posix())
+        return aligned_path.name
 
 
 @task
@@ -238,3 +298,16 @@ def upload_to_s3(
         logging.error(e)
         return False
     return True
+
+
+def upload_to_s3(ext):
+    build_name = next(iter(Path("bin/").glob(ext)), None)
+    if build_name:
+        upload_to_s3(
+            env,
+            build_name.as_posix(),
+            "lnorb",
+            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
+            object_name=f"customer_builds/{build_name.name}",
+        )
