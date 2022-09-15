@@ -159,7 +159,7 @@ def sign(
         con.run(
             f"/home/ubuntu/.buildozer/android/platform/android-sdk/build-tools/33.0.0/zipalign -v 4 {release_path} {aligned_path}"
         )
-        # con.get(aligned_path, os.getcwd())
+        con.get(aligned_path, os.getcwd())
         return aligned_path.name
 
 
