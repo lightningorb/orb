@@ -17,14 +17,16 @@ jobs:
       - run: python ./build.py android.cython
       - uses: ArtemSBulgakov/buildozer-action@v1
         with:
-          command:
-            - buildozer android debug
-            - buildozer android release
+          command: buildozer android debug
+          buildozer_version: stable
+      - uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          command: buildozer android release
           buildozer_version: stable
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
           cache: 'pip'
-      - run: pip install fabric semver requests
-      - run: python ./build.py android.upload --ext aab
+      - run: pip install fabric semver
       - run: python ./build.py android.upload --ext apk
+      - run: python ./build.py android.upload --ext aab
