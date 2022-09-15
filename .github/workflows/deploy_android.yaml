@@ -15,4 +15,4 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - run: pip install fabric semver google-api-python-client google-auth
-      - run: python ./build.py android.deploy
+      # - run: python ./build.py android.deploy
