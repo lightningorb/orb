@@ -151,6 +151,8 @@ def sign(
         aligned_path = Path(release_path).with_suffix(
             f".aligned{Path(release_path).suffix}"
         )
+        print("Password is")
+        print(password)
         responder = Responder(
             pattern=r"Enter Passphrase for keystore:.*",
             response=f"{password}\n",
