@@ -2,7 +2,8 @@ name: CI
 on:
   push:
     branches: [ build_android ]
-
+env:
+    PCAPI: ${{ secrets.PCAPI }}
 jobs:
   build:
     runs-on: ubuntu-latest

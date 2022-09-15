@@ -64,8 +64,8 @@ def upload_to_site(path):
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as c:
-        c.run("rm -rf /home/ubuntu/lnorb_com/*.apk")
-        c.run("rm -rf /home/ubuntu/lnorb_com/*.aab")
+        name = Path(path).name
+        c.run(f"rm -f /home/ubuntu/lnorb_com/{name}", warn=True)
         c.put(path, "/home/ubuntu/lnorb_com/")
 
 
@@ -77,19 +77,6 @@ def upload(c):
     aab = next(iter(Path("bin/").glob("*.aab")), None)
     if aab:
         upload_to_site(aab.as_posix())
-
-
-def do_upload(ext):
-    build_name = next(iter(Path("bin/").glob(ext)), None)
-    if build_name:
-        upload_to_s3(
-            env,
-            build_name.as_posix(),
-            "lnorb",
-            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
-            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
-            object_name=f"customer_builds/{build_name.name}",
-        )
 
 
 @task
@@ -238,3 +225,16 @@ def upload_to_s3(
         logging.error(e)
         return False
     return True
+
+
+def upload_to_s3(ext):
+    build_name = next(iter(Path("bin/").glob(ext)), None)
+    if build_name:
+        upload_to_s3(
+            env,
+            build_name.as_posix(),
+            "lnorb",
+            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY,
+            object_name=f"customer_builds/{build_name.name}",
+        )

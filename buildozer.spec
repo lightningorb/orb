@@ -28,11 +28,11 @@ source.exclude_dirs = apps, bin, build, build_system, calc, dist, docs, icons, i
 source.exclude_patterns = fabfile.py, build.py
 
 # (str) Application versioning (method 1)
-version = 0.21.10.0
+#version = 0.21.10.0
 
 # (str) Application versioning (method 2)
-# version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/main.py
+version.regex = (.*)
+version.filename = %(source.dir)s/VERSION
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
