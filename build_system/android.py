@@ -143,6 +143,7 @@ def sign(
     release_path="/home/ubuntu/lnorb_com/orb-0.21.10-armeabi-v7a_arm64-v8a-release.aab",
     password=os.environ.get("KEYSTORE_PASS"),
 ):
+    password = "e89h33e89h33"
     cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
@@ -151,8 +152,6 @@ def sign(
         aligned_path = Path(release_path).with_suffix(
             f".aligned{Path(release_path).suffix}"
         )
-        print("Password is")
-        print(password)
         responder = Responder(
             pattern=r"Enter Passphrase for keystore:.*",
             response=f"{password}\n",
@@ -166,7 +165,7 @@ def sign(
         con.run(
             f"/home/ubuntu/.buildozer/android/platform/android-sdk/build-tools/33.0.0/zipalign -v 4 {release_path} {aligned_path}"
         )
-        con.get(aligned_path, os.getcwd())
+        # con.get(aligned_path, os.getcwd())
         return aligned_path.name
 
 
