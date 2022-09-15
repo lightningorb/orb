@@ -71,6 +71,60 @@ def upload_to_site(path):
 
 
 @task
+def deploy(
+    c,
+):
+    import googleapiclient.discovery
+    from google.oauth2 import service_account
+    import json
+    import boto3
+    import os
+    from urllib import request, parse
+
+    path = sign(c)
+
+    SCOPES = ["https://www.googleapis.com/auth/androidpublisher"]
+
+    with open("pc-api-6008359505353802256-381-7c4cef527151.json", "w") as f:
+        f.write(os.environ["PCAPI"])
+
+    SERVICE_ACCOUNT_FILE = "pc-api-6008359505353802256-381-7c4cef527151.json"
+    APP_BUNDLE = path
+
+    package_name = "com.lnorb.orb"
+
+    credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES
+    )
+    service = googleapiclient.discovery.build(
+        "androidpublisher", "v3", credentials=credentials, cache_discovery=False
+    )
+    edit_request = service.edits().insert(body={}, packageName=package_name)
+    result = edit_request.execute()
+    edit_id = result["id"]
+
+    print(edit_id)
+
+    try:
+        bundle_response = (
+            service.edits()
+            .bundles()
+            .upload(
+                editId=edit_id,
+                packageName=package_name,
+                media_body=APP_BUNDLE,
+                media_mime_type="application/octet-stream",
+            )
+            .execute()
+        )
+    except Exception as err:
+        message = f"There was an error while uploading a new version of {package_name}"
+        raise err
+
+    print(f"Version code {bundle_response['versionCode']} has been uploaded")
+
+
+@task
 def upload(c, ext):
     f = next(iter(Path("bin/").glob(f"*.{ext}")), None)
     print(f"Found: {f} for upload")
@@ -87,20 +141,20 @@ def build(c, env=os.environ):
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/orb/bin/orb-0.20.1.0-armeabi-v7a_arm64-v8a-release.aab",
-    password="",
+    release_path="/home/ubuntu/lnorb_com/orb-0.21.10-armeabi-v7a_arm64-v8a-release.aab",
+    password=os.environ.get("KEYSTORE_PASS"),
 ):
-    keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
-    aligned_path = Path(release_path).with_suffix(
-        f".aligned{Path(release_path).suffix}"
-    )
     cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as con:
+        keystore_path = "/home/ubuntu/keystores/com.orb.orb.keystore"
+        aligned_path = Path(release_path).with_suffix(
+            f".aligned{Path(release_path).suffix}"
+        )
         responder = Responder(
             pattern=r"Enter Passphrase for keystore:.*",
-            response=password,
+            response=f"{password}\n",
         )
         con.run(
             f"jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore {keystore_path} {release_path} cb-play",
@@ -111,7 +165,8 @@ def sign(
         con.run(
             f"/home/ubuntu/.buildozer/android/platform/android-sdk/build-tools/33.0.0/zipalign -v 4 {release_path} {aligned_path}"
         )
-        con.get(aligned_path, os.path.expanduser("~/Downloads/"))
+        con.get(aligned_path, os.getcwd())
+        return aligned_path.name
 
 
 @task
