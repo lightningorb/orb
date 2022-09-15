@@ -66,28 +66,22 @@ def upload_to_site(path):
     ) as c:
         name = Path(path).name
         c.run(f"rm -f /home/ubuntu/lnorb_com/{name}", warn=True)
+        print(f"Uploading: {path}")
         c.put(path, "/home/ubuntu/lnorb_com/")
 
 
 @task
-def upload(c):
-    apk = next(iter(Path("bin/").glob("*.apk")), None)
-    if apk:
-        upload_to_site(apk.as_posix())
-    aab = next(iter(Path("bin/").glob("*.aab")), None)
-    if aab:
-        upload_to_site(aab.as_posix())
+def upload(c, ext):
+    f = next(iter(Path("bin/").glob(f"*.{ext}")), None)
+    print(f"Found: {f} for upload")
+    if f:
+        upload_to_site(f.as_posix())
 
 
 @task
-def build(
-    c,
-    env=os.environ,
-    AWS_ACCESS_KEY_ID=None,
-    AWS_SECRET_ACCESS_KEY=None,
-):
-    stdout = c.run(f"buildozer android debug", env=env).stdout
-    stdout = c.run(f"buildozer android release", env=env).stdout
+def build(c, env=os.environ):
+    c.run(f"buildozer android debug", env=env).stdout
+    c.run(f"buildozer android release", env=env).stdout
 
 
 @task

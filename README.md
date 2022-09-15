@@ -1,3 +1,13 @@
+[![android](https://github.com/lightningorb/orb/actions/workflows/build_android.yml/badge.svg?branch=build_android)](https://github.com/lightningorb/orb/actions/workflows/build_android.yml)
+
+[![tests](https://github.com/lightningorb/orb/actions/workflows/tests.yaml/badge.svg)](https://github.com/lightningorb/orb/actions/workflows/tests.yaml)
+
+[![windows](https://github.com/lightningorb/orb/actions/workflows/build_windows.yaml/badge.svg?branch=build_windows)](https://github.com/lightningorb/orb/actions/workflows/build_windows.yaml)
+
+[![macosx](https://github.com/lightningorb/orb/actions/workflows/build_macosx.yaml/badge.svg?branch=build_macosx)](https://github.com/lightningorb/orb/actions/workflows/build_macosx.yaml)
+
+[![linux](https://github.com/lightningorb/orb/actions/workflows/build_linux.yml/badge.svg?branch=build_linux)](https://github.com/lightningorb/orb/actions/workflows/build_linux.yml)
+
 # Installation
 
 First create a github access token:
