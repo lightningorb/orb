@@ -27,7 +27,7 @@ class CLNCloseChannel(Popup):
     def close_channel(self, id: str, unilateral_timeout: str, dest: str):
         def func():
             print(f"Closing: {id}")
-            result = Ln().close_channel(
+            result = Ln().concrete.close_channel(
                 id=id,
                 unilateral_timeout=int(unilateral_timeout),
                 dest=dest,
@@ -45,7 +45,7 @@ class LNDCloseChannel(Popup):
             print(
                 f"Closing: {channel_point}, force: {self.ids.force.active}, sats v/b: {int(sats_per_vbyte)}"
             )
-            result = Ln().close_channel(
+            result = Ln().concrete.close_channel(
                 channel_point=channel_point,
                 force=self.ids.force.active,
                 sat_per_vbyte=int(sats_per_vbyte),
