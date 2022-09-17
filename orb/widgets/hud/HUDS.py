@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 02:12:49
+# @Last Modified time: 2022-09-18 06:55:28
 
 import os
 import time
@@ -326,16 +326,13 @@ class HUDBTCPrice(FloatLayout, Hideable):
     def update_rect(self, *args):
         @silent
         def func():
-            # this probably shouldn't be in update_rect
-            d = requests.get(
-                "https://api.coindesk.com/v1/bpi/historical/close.json"
-            ).json()["bpi"]
-            min_price, max_price, g = min(d.values()), max(d.values()), []
-            for i, key in enumerate(d):
+            url = f"https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily"
+            p = requests.get(url).json()["prices"]
+            d = [x[1] for x in p]
+            min_price, max_price, g = min(d), max(d), []
+            for i, v in enumerate(d):
                 g.append(i / len(d) * self.size[0])
-                g.append(
-                    ((d[key] - min_price) / (max_price - min_price)) * self.size[1]
-                )
+                g.append(((v - min_price) / (max_price - min_price)) * self.size[1])
             rate = str(
                 int(
                     requests.get(
