@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-13 14:54:46
+# @Last Modified time: 2022-09-18 09:19:24
 
 from configparser import ConfigParser
 from copy import copy
@@ -189,13 +189,16 @@ class Ln:
                         h.msatoshi = msatoshi
                         h.amount_msat = f"{msatoshi}msat"
                         h.delay = delay
-                        policy = self.get_policy_from(h.channel)
-                        fee = policy.fee_base_msat
+                        channels = self.listchannels(short_channel_id=h.channel)
+                        policy = next(
+                            c for c in channels.channels if c.destination == h.id
+                        )
+                        fee = policy.base_fee_millisatoshi
                         fee += (
-                            policy.fee_rate_milli_msat * (msatoshi) + 10 ** 6 - 1
-                        ) // 10 ** 6
+                            policy.fee_per_millionth * (msatoshi) + 10**6 - 1
+                        ) // 10**6
                         msatoshi += fee
-                        delay += policy.time_lock_delta
+                        delay += policy.delay
 
             else:
                 if outgoing_chan_id:
