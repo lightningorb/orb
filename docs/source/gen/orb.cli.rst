@@ -15,6 +15,7 @@ Submodules
    orb.cli.chain
    orb.cli.chalk
    orb.cli.channel
+   orb.cli.console
    orb.cli.invoice
    orb.cli.network
    orb.cli.node

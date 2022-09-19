@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-13 14:54:46
+# @Last Modified time: 2022-09-19 04:35:58
 
 from configparser import ConfigParser
 from copy import copy
@@ -189,13 +189,16 @@ class Ln:
                         h.msatoshi = msatoshi
                         h.amount_msat = f"{msatoshi}msat"
                         h.delay = delay
-                        policy = self.get_policy_from(h.channel)
-                        fee = policy.fee_base_msat
+                        channels = self.listchannels(short_channel_id=h.channel)
+                        policy = next(
+                            c for c in channels.channels if c.destination == h.id
+                        )
+                        fee = policy.base_fee_millisatoshi
                         fee += (
-                            policy.fee_rate_milli_msat * (msatoshi) + 10 ** 6 - 1
-                        ) // 10 ** 6
+                            policy.fee_per_millionth * (msatoshi) + 10**6 - 1
+                        ) // 10**6
                         msatoshi += fee
-                        delay += policy.time_lock_delta
+                        delay += policy.delay
 
             else:
                 if outgoing_chan_id:
@@ -408,6 +411,13 @@ class Ln:
         a database and an LRU cache, so is thus safe to call in rapid succession.
         """
         return self.concrete.get_node_alias(pub_key)
+
+    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
+        return self.concrete.open_channel(
+            node_pubkey_string=node_pubkey_string,
+            sat_per_vbyte=sat_per_vbyte,
+            amount_sat=amount_sat,
+        )
 
     def __getattr__(self, name):
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)

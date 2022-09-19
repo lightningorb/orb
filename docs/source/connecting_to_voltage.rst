@@ -32,11 +32,12 @@ In your node's dashboard:
 
 |br|
 
-- In Orb, click `Orb > Voltage Node`
+- In OrbConnector, select Voltage.
 
-.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/Orb+2022-06-19+14-24-16.png
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/OrbConnector_2022-09-19_10-05-27.png
    :alt: protocol
    :align: center
+   :width: 300px
 
 |br|
 
@@ -44,7 +45,7 @@ In your node's dashboard:
 - Click Save
 
 
-.. image:: https://lnorb.s3.us-east-2.amazonaws.com/docs/Orb+2022-06-19+14-24-55.png
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/OrbConnector_2022-09-19_10-35-10.png
    :alt: protocol
    :align: center
 

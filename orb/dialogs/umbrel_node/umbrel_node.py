@@ -2,9 +2,10 @@
 # @Author: lnorb.com
 # @Date:   2022-06-18 12:39:39
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-07 14:04:59
+# @Last Modified time: 2022-09-19 07:53:12
 
 import codecs
+from traceback import format_exc
 
 from kivy.app import App
 from kivymd.uix.screen import MDScreen
@@ -35,9 +36,19 @@ class UmbrelNode(MDScreen):
     @guarded
     def connect(self):
         if self.connected:
-            RestartDialog(
+            rd = RestartDialog(
                 title="After exit, please restart Orb to launch new settings."
-            ).open()
+            )
+
+            app = App.get_running_app()
+
+            def save_and_quit(*args):
+                app.save_node_settings_to_config()
+                app.stop()
+
+            rd.buttons[-1].on_release = save_and_quit
+
+            rd.open()
             return
         error = ""
         try:
@@ -53,6 +64,7 @@ class UmbrelNode(MDScreen):
                 cert_encrypted = cert_secure.cert_secure.decode()
 
                 ln = Ln(
+                    node_type="lnd",
                     fallback_to_mock=False,
                     cache=False,
                     use_prefs=False,
@@ -71,14 +83,16 @@ class UmbrelNode(MDScreen):
                 self.ids.connect.md_bg_color = (0.2, 0.8, 0.2, 1)
                 app = App.get_running_app()
 
-                app.node_settings["lnd.macaroon_admin"] = mac_encrypted
+                app.node_settings["ln.macaroon_admin"] = mac_encrypted
                 app.node_settings["host.hostname"] = host
-                app.node_settings["lnd.tls_certificate"] = cert_encrypted
-                app.node_settings["lnd.protocol"] = prot[port]
-                app.node_settings["lnd.identity_pubkey"] = info.identity_pubkey
-                app.node_settings[f"lnd.{prot[port]}_port"] = str(port)
+                app.node_settings["host.type"] = "lnd"
+                app.node_settings["ln.tls_certificate"] = cert_encrypted
+                app.node_settings["ln.protocol"] = prot[port]
+                app.node_settings["ln.identity_pubkey"] = info.identity_pubkey
+                app.node_settings[f"ln.{prot[port]}_port"] = str(port)
             except Exception as e:
                 print(e)
+                print(format_exc)
                 error = "Error connecting to LND"
 
         if error:

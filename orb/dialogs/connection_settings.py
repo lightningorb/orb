@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-20 10:06:30
+# @Last Modified time: 2022-09-19 10:45:21
 
 from traceback import format_exc
 
@@ -92,20 +92,30 @@ class ConnectionSettings(MDScreen):
     def copy_cert_encrypt_command(self):
         _, public_key = get_sec_keys()
         from kivy.core.clipboard import Clipboard
+
         Clipboard.copy(self.get_cert_command(public_key))
 
     def copy_mac_encrypt_command(self):
         _, public_key = get_sec_keys()
         from kivy.core.clipboard import Clipboard
+
         Clipboard.copy(self.get_mac_command(public_key))
 
     @guarded
     def connect(self):
         app = App.get_running_app()
         if self.connected:
-            RestartDialog(
+            rd = RestartDialog(
                 title="After exit, please restart Orb to launch new settings."
-            ).open()
+            )
+
+            def save_and_quit(*args):
+                app.save_node_settings_to_config()
+                app.stop()
+
+            rd.buttons[-1].on_release = save_and_quit
+
+            rd.open()
             return
         error = ""
         try:
