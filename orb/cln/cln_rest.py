@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-08 14:02:58
+# @Last Modified time: 2022-09-19 08:32:32
 
 from typing import Union
 
@@ -36,7 +36,9 @@ class ClnREST(ClnBase):
 
     @property
     def fqdn(self):
-        return f"https://{self.hostname}:{self.rest_port}"
+        return (
+            f"http{['', 's'][bool(self.cert_path)]}://{self.hostname}:{self.rest_port}"
+        )
 
     def get_balance(self):
         """

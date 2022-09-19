@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-18 09:19:24
+# @Last Modified time: 2022-09-19 04:35:58
 
 from configparser import ConfigParser
 from copy import copy
@@ -411,6 +411,13 @@ class Ln:
         a database and an LRU cache, so is thus safe to call in rapid succession.
         """
         return self.concrete.get_node_alias(pub_key)
+
+    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
+        return self.concrete.open_channel(
+            node_pubkey_string=node_pubkey_string,
+            sat_per_vbyte=sat_per_vbyte,
+            amount_sat=amount_sat,
+        )
 
     def __getattr__(self, name):
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)

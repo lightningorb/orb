@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-08 19:12:26
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-13 14:54:09
+# @Last Modified time: 2022-09-19 08:33:33
 
 import re
 import os
@@ -207,7 +207,7 @@ def create(
     network: str = typer.Option(
         ..., help="IP address or DNS-resovable name for this host."
     ),
-    cert_hex: str = typer.Option(..., help="The node certificate in hex format."),
+    cert_hex: str = typer.Option("", help="The node certificate in hex format."),
     rest_port: int = typer.Option(8080, help="REST port."),
     grpc_port: int = typer.Option(10009, help="GRPC port."),
     use_node: bool = typer.Option(True, help="Whether to set as default."),
@@ -239,7 +239,10 @@ def create(
     pprint_from_ansi(chalk().cyan(f"Encrypting mac"))
     mac_secure = MacaroonSecure.init_from_plain(mac_hex).macaroon_secure.decode()
     pprint_from_ansi(chalk().cyan(f"Encrypting cert"))
-    cert_secure = CertificateSecure.init_from_hex(cert_hex).cert_secure.decode()
+    if cert_hex:
+        cert_secure = CertificateSecure.init_from_hex(cert_hex).cert_secure.decode()
+    else:
+        cert_secure = ""
     pprint_from_ansi(chalk().cyan(f"Connecting to: {hostname}"))
     ln = Ln(
         node_type=node_type,

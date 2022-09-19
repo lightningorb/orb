@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 05:12:28
+# @Last Modified time: 2022-09-19 10:42:15
 
 import shutil
 from pathlib import Path
@@ -34,7 +34,6 @@ class OrbConnectorApp(AppCommon):
     data = {
         "LNDConnect URL": "alpha-u-circle-outline",
         "Voltage": "lightning-bolt-outline",
-        "SSH Connection Wizard": "wizard-hat",
         "Manual Config": "cogs",
         "Import Connection Settings": "import",
         "Export Connection Settings": "export",
@@ -142,9 +141,6 @@ class OrbConnectorApp(AppCommon):
         grid.add_widget(filler)
 
     def build(self):
-        if mobile:
-            if "SSH Connection Wizard" in self.data:
-                del self.data["SSH Connection Wizard"]
         self.store = JsonStore(Path(self._get_user_data_dir()) / "orb.json")
         self.override_stdout()
         self.load_kvs()
@@ -165,6 +161,14 @@ class OrbConnectorApp(AppCommon):
         Default config values.
         """
         config.add_section("host")
-        config.add_section("lnd")
-        # set_lnd_defaults(config, {})
-        # set_host_defaults(config, {})
+        config.add_section("ln")
+
+    def save_node_settings_to_config(self):
+        for section in self.config.sections():
+            self.config.remove_section(section)
+        for k, v in self.node_settings.items():
+            section, option = k.split(".")
+            if not self.config.has_section(section):
+                self.config.add_section(section)
+            self.config.set(section, option, v)
+            self.config.write()

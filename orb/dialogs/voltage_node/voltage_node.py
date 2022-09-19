@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2021-12-15 07:15:28
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-20 16:22:15
+# @Last Modified time: 2022-09-19 10:40:27
 
 from threading import Thread
 from traceback import format_exc
@@ -34,9 +34,17 @@ class VoltageNode(MDScreen):
         app = App.get_running_app()
 
         if self.connected:
-            RestartDialog(
+            rd = RestartDialog(
                 title="After exit, please restart Orb to launch new settings."
-            ).open()
+            )
+
+            def save_and_quit(*args):
+                app.save_node_settings_to_config()
+                app.stop()
+
+            rd.buttons[-1].on_release = save_and_quit
+
+            rd.open()
         error = ""
         if not error:
             try:

@@ -1,7 +1,30 @@
 .. _umbrel-lndconnect:
 
 Umbrel / lndconnect URL
------------------------
+=======================
+
+Core Lightning
+--------------
+
+CLN users simply need to click on 'connect wallet'.
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Lightning_Node__Umbrel_2022-09-19_09-05-22.png
+   :alt: protocol
+   :align: center
+
+Then copy the hex macaroon.
+
+.. image:: https://s3-us-east-2.amazonaws.com/lnorb/docs/Core_Lightning_-_Umbrel_2022-09-19_09-07-12.png
+   :alt: protocol
+   :align: center
+
+Then the easiest approach would be to invoke the `orb node create` command.
+
+.. asciinema:: /_static/orb-node-create.cln.umbrel.cast
+
+
+LND
+---
 
 In your Umbrel interface:
 
