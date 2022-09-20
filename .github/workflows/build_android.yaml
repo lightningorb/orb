@@ -1,0 +1,27 @@
+name: deploy android
+on:
+  push:
+    branches: [ build_android ]
+env:
+    PCAPI: ${{ secrets.PCAPI }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install fabric semver
+      - run: python ./build.py android.cython
+      - uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          command: buildozer android release
+          buildozer_version: stable
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install fabric semver google-api-python-client google-auth
+      - run: python ./build.py android.deploy
