@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-19 10:42:15
+# @Last Modified time: 2022-09-20 16:13:37
 
 import shutil
 from pathlib import Path
@@ -57,9 +57,17 @@ class OrbConnectorApp(AppCommon):
         self.node_settings[
             "ln.identity_pubkey"
         ] = "0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47"
-        RestartDialog(
+        rd = RestartDialog(
             title="After exit, please restart Orb to launch new settings."
-        ).open()
+        )
+
+        def save_and_quit(*args):
+            app.save_node_settings_to_config()
+            app.stop()
+
+        rd.buttons[-1].on_release = save_and_quit
+
+        rd.open()
 
     @guarded
     def update_node_buttons(self):
