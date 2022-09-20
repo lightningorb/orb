@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-20 19:53:12
+# @Last Modified time: 2022-09-21 07:29:49
 
 import re
 import os
@@ -86,7 +86,14 @@ def update_install_script(c):
 
 @task
 def merge(c, push=False):
-    for branch in ["build_linux", "build_macosx", "build_windows", "docs", "site"]:
+    for branch in [
+        "build_linux",
+        "build_macosx",
+        "build_windows",
+        "build_android",
+        "docs",
+        "site",
+    ]:
         c.run(f"git checkout {branch}")
         c.run("git pull")
         c.run("git merge main -m 'merging changes from main'")
