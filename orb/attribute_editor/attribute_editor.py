@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-06 10:41:12
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-04 14:31:00
+# @Last Modified time: 2022-09-18 05:11:09
 
 from threading import Thread
 
@@ -200,6 +200,9 @@ class AttributeEditor(BoxLayout):
                 "helped_earn",
                 "fee_rate_milli_msat",
                 "fee_base_msat",
+                "max_htlc_msat",
+                "min_htlc_msat",
+                "time_lock_delta",
             ]:
                 continue
             if type(c[field]) is bool:

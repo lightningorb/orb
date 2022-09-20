@@ -348,3 +348,36 @@ The point here is not code-golf, but to prove Orb API is **succinct**, and as Pa
     Same as for the CLI, the API will likely continue changing until v1. Once Orb reaches v1, the classes that have been included as being part of the official API will not change between minor versions, but only between major versions.
 
     Major version upgrades will also come with code migration guides.
+
+
+
+Closing channels inactive channels
+----------------------------------
+
+Let's imagine a scenario where you opened channels, and are not even able to send payments through them at a reasonable PPM.
+
+After some time, you may want to ask the following questions:
+
+- Which channels have a high ratio?
+- Of these, which sent less than 100_000 sats?
+
+Then prompt the user whether to close them:
+
+.. code:: python
+    from orb.ln import factory
+
+    ln = factory("03fbffb45604f2e0d481c323612e6681fd77eacf9bbe853e83300991de75cc7f78")
+
+    for c in ln.get_channels():
+        ratio = c.local_balance / c.capacity
+        if ratio > 0.8:
+            alias = ln.get_node_alias(c.remote_pubkey)
+            print(alias)
+            print(f"Total amount sent:     {c.total_satoshis_sent:_}")
+            print(f"Total amount received: {c.total_satoshis_received:_}")
+            if c.total_satoshis_sent < 100_000:
+                if input(f"Close channel with: {alias} y/n: ").strip() == "y":
+                    print(f"Closing: {c.chan_id}")
+                    result = ln.close_channel(c.chan_id)
+                    print(result)
+

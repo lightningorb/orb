@@ -1,7 +1,26 @@
 MacOSX
-------
+======
 
-Security on OSX can be a little overzealous. Please follow these steps carefully, in order.
+Install Script
+~~~~~~~~~~~~~~
+
+If you are feeling brave, then:
+
+- read the contents of `install.lnorb.com <https://install.lnorb.com>`_.
+- if you feel comfortable with what it does, then run the code below.
+
+.. code:: bash
+
+    curl install.lnorb.com | bash
+
+You should then be able to run the `orb` command from a terminal, or launch the `lnorb` application from spotlight.
+
+If you are not feeling brave, the follow the steps below.
+
+Manual install
+~~~~~~~~~~~~~~
+
+Security on OSX can be a little overzealous when installing DMGs by hand. Please follow these steps carefully, in order.
 
 - open the DMG
 - drag & drop `lnorb` into the `Applications` folder

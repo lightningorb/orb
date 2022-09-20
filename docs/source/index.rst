@@ -14,6 +14,7 @@ Orb
    installing
    connecting_to_your_node
    concepts
+   cln
    lightning
    script_editor
    extending

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-27 05:12:28
+# @Last Modified time: 2022-09-20 16:13:37
 
 import shutil
 from pathlib import Path
@@ -34,7 +34,6 @@ class OrbConnectorApp(AppCommon):
     data = {
         "LNDConnect URL": "alpha-u-circle-outline",
         "Voltage": "lightning-bolt-outline",
-        "SSH Connection Wizard": "wizard-hat",
         "Manual Config": "cogs",
         "Import Connection Settings": "import",
         "Export Connection Settings": "export",
@@ -58,9 +57,17 @@ class OrbConnectorApp(AppCommon):
         self.node_settings[
             "ln.identity_pubkey"
         ] = "0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47"
-        RestartDialog(
+        rd = RestartDialog(
             title="After exit, please restart Orb to launch new settings."
-        ).open()
+        )
+
+        def save_and_quit(*args):
+            app.save_node_settings_to_config()
+            app.stop()
+
+        rd.buttons[-1].on_release = save_and_quit
+
+        rd.open()
 
     @guarded
     def update_node_buttons(self):
@@ -71,9 +78,29 @@ class OrbConnectorApp(AppCommon):
 
         def do_open(_, pk):
             self.node_settings["ln.identity_pubkey"] = pk
-            RestartDialog(
+            p = (
+                Path(self._get_user_data_dir()).parent
+                / f"orbconnector/orbconnector.ini"
+            )
+            from kivy.config import ConfigParser
+
+            rs = RestartDialog(
                 title="After exit, please restart Orb to launch new settings."
-            ).open()
+            )
+
+            def ok(*args):
+                from kivy.app import App
+
+                config = ConfigParser()
+                config.add_section("ln")
+                config.set("ln", "identity_pubkey", pk)
+                config.filename = p.as_posix()
+                print(p.as_posix())
+                config.write()
+                self.stop()
+
+            rs.buttons[-1].on_release = ok
+            rs.open()
 
         def rm_node(_, pk, bl):
             p = Path(self._get_user_data_dir()).parent / f"orb_{pk}"
@@ -122,9 +149,6 @@ class OrbConnectorApp(AppCommon):
         grid.add_widget(filler)
 
     def build(self):
-        if mobile:
-            if "SSH Connection Wizard" in self.data:
-                del self.data["SSH Connection Wizard"]
         self.store = JsonStore(Path(self._get_user_data_dir()) / "orb.json")
         self.override_stdout()
         self.load_kvs()
@@ -145,6 +169,14 @@ class OrbConnectorApp(AppCommon):
         Default config values.
         """
         config.add_section("host")
-        config.add_section("lnd")
-        # set_lnd_defaults(config, {})
-        # set_host_defaults(config, {})
+        config.add_section("ln")
+
+    def save_node_settings_to_config(self):
+        for section in self.config.sections():
+            self.config.remove_section(section)
+        for k, v in self.node_settings.items():
+            section, option = k.split(".")
+            if not self.config.has_section(section):
+                self.config.add_section(section)
+            self.config.set(section, option, v)
+            self.config.write()

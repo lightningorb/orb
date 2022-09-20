@@ -316,7 +316,7 @@ class Route(PrintableType):
             self.original = route.todict()
             self.total_amt = total_amt
             self.total_amt_msat = total_amt * 1000
-            if hasattr(route, 'error'):
+            if hasattr(route, "error"):
                 return
             self.total_fees_msat = route.route[0].msatoshi - route.route[-1].msatoshi
             self.total_fees = self.total_fees_msat // 1000
@@ -492,8 +492,8 @@ class Channel(PrintableType):
             self.local_balance = int(c.msatoshi_to_us / 1000) - total_pending_out
             self.remote_balance = int((c.msatoshi_total - c.msatoshi_to_us) / 1000)
             self.channel_point = c.funding_txid
-            self.total_satoshis_sent = 0
-            self.total_satoshis_received = 0
+            self.total_satoshis_sent = c.out_msatoshi_fulfilled // 1000
+            self.total_satoshis_received = c.in_msatoshi_fulfilled // 1000
             self.initiator = c.opener == "local"
             self.commit_fee = 0
             self.unsettled_balance = 0

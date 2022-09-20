@@ -105,6 +105,31 @@
    },
    {
       "type":"title",
+      "title":"C-Lighning-Events"
+   },
+   {
+      "type":"string",
+      "title":"hostname",
+      "desc":"The hostname of for the c-lightning events plugin",
+      "section":"c-lightning-events",
+      "key":"hostname"
+   },
+   {
+      "type":"string",
+      "title":"protocol",
+      "desc":"The protocol of for the c-lightning events plugin (ws, or wss)",
+      "section":"c-lightning-events",
+      "key":"protocol"
+   },
+   {
+      "type":"string",
+      "title":"port",
+      "desc":"The port of for the c-lightning events plugin",
+      "section":"c-lightning-events",
+      "key":"port"
+   },
+   {
+      "type":"title",
       "title":"Display"
    },
    {

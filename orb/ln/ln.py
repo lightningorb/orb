@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 13:35:10
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-10 08:01:01
+# @Last Modified time: 2022-09-19 04:35:58
 
 from configparser import ConfigParser
 from copy import copy
@@ -189,13 +189,16 @@ class Ln:
                         h.msatoshi = msatoshi
                         h.amount_msat = f"{msatoshi}msat"
                         h.delay = delay
-                        policy = self.get_policy_from(h.channel)
-                        fee = policy.fee_base_msat
+                        channels = self.listchannels(short_channel_id=h.channel)
+                        policy = next(
+                            c for c in channels.channels if c.destination == h.id
+                        )
+                        fee = policy.base_fee_millisatoshi
                         fee += (
-                            policy.fee_rate_milli_msat * (msatoshi) + 10**6 - 1
+                            policy.fee_per_millionth * (msatoshi) + 10**6 - 1
                         ) // 10**6
                         msatoshi += fee
-                        delay += policy.time_lock_delta
+                        delay += policy.delay
 
             else:
                 if outgoing_chan_id:
@@ -364,17 +367,68 @@ class Ln:
         pr = self.concrete.generate_invoice(amount=amount, memo=memo)
         return PaymentRequest(impl=self.node_type, bolt11=pr[0], **pr[1].__dict__)
 
+    def close_channel(self, chan_id):
+        """
+        This is a general close_channel method, that provides no options
+        besides providing the channel id. If more control is required, then
+        use the .concrete attribute to call close_channel on the implementation
+        itself.
+
+        CLN note:
+
+        With CLN, an unilateral_close of 60 seconds is used, with a 50%
+        fee_negotiation_step.
+
+        LND note:
+
+        With LND, the channel is not force-closed, and sat_per_vbyte is set
+        to mempool's 'halfHourFee' policy.
+        """
+        if self.node_type == "lnd":
+            from orb.misc.mempool import get_fees
+
+            sat_per_vbyte = get_fees(which="halfHourFee")
+            app = App.get_running_app()
+            if app:
+                channels = app.channels.channels.values()
+            else:
+                channels = self.get_channels()
+            cp = next(iter(c.chan_id == chan_id for c in channels)).channel_point
+            return self.concrete.close_channel(
+                channel_point=cp, force=False, sat_per_vbyte=sat_per_vbyte
+            )
+        elif self.node_type == "cln":
+            return self.concrete.close_channel(
+                id=chan_id,
+                unilateral_timeout=60,
+                dest="",
+                fee_negotiation_step="50%",
+            )
+
+    def get_node_alias(self, pub_key):
+        """
+        Get the alias for the given pubkey. Note this command is cached, using
+        a database and an LRU cache, so is thus safe to call in rapid succession.
+        """
+        return self.concrete.get_node_alias(pub_key)
+
+    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
+        return self.concrete.open_channel(
+            node_pubkey_string=node_pubkey_string,
+            sat_per_vbyte=sat_per_vbyte,
+            amount_sat=amount_sat,
+        )
+
     def __getattr__(self, name):
         return lambda *args, **kwargs: getattr(self.concrete, name)(*args, **kwargs)
 
 
-from orb.misc.utils_no_kivy import _get_user_data_dir_static
-
-
 def factory(pk: str) -> Ln:
+    from orb.misc.utils_no_kivy import get_user_data_dir_static
+
     lnd_conf = ConfigParser()
     lnd_conf.read(
-        (Path(_get_user_data_dir_static()) / f"orb_{pk}/orb_{pk}.ini").as_posix()
+        (Path(get_user_data_dir_static()) / f"orb_{pk}/orb_{pk}.ini").as_posix()
     )
     return Ln(
         node_type=lnd_conf.get("host", "type"),

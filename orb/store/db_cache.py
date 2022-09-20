@@ -36,28 +36,33 @@ def aliases_cache(func):
         # loading the model
         from orb.app import App
 
-        if App.get_running_app().title != "Orb":
+        if App.get_running_app() and App.get_running_app().title != "Orb":
             return to_ascii(func(*args, **kwargs))
 
         from orb.store import model
 
         if pk in cache:
             return cache[pk]
-        try:
-            with lock:
-                db = get_db(aliases_db_name)
-                db.connect()
-                alias = model.Alias().select().where(model.Alias.pk == pk)
-                if alias:
-                    cache[pk] = to_ascii(alias.get().alias)
+        db = get_db(aliases_db_name)
+        if db:
+            try:
+                with lock:
+                    db = get_db(aliases_db_name)
+                    db.connect()
+                    alias = model.Alias().select().where(model.Alias.pk == pk)
+                    if alias:
+                        cache[pk] = to_ascii(alias.get().alias)
+                        db.close()
+                        return cache[pk]
+                    alias = to_ascii(func(*args, **kwargs))
+                    model.Alias(pk=pk, alias=alias).save()
+                    cache[pk] = alias
                     db.close()
-                    return cache[pk]
+            except:
+                print(format_exc())
                 alias = to_ascii(func(*args, **kwargs))
-                model.Alias(pk=pk, alias=alias).save()
                 cache[pk] = alias
-                db.close()
-        except:
-            print(format_exc())
+        else:
             alias = to_ascii(func(*args, **kwargs))
             cache[pk] = alias
 
