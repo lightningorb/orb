@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-29 12:20:35
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-20 16:13:37
+# @Last Modified time: 2022-09-21 07:49:40
 
 import shutil
 from pathlib import Path
@@ -62,8 +62,8 @@ class OrbConnectorApp(AppCommon):
         )
 
         def save_and_quit(*args):
-            app.save_node_settings_to_config()
-            app.stop()
+            self.save_node_settings_to_config()
+            self.stop()
 
         rd.buttons[-1].on_release = save_and_quit
 

@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-08-03 15:17:26
+# @Last Modified time: 2022-09-21 08:36:08
 
 import os
 from hashlib import sha256
@@ -170,9 +170,12 @@ def build(c, env=os.environ):
 @task
 def sign(
     c,
-    release_path="/home/ubuntu/lnorb_com/orb-0.21.10-armeabi-v7a_arm64-v8a-release.aab",
     password=os.environ.get("KEYSTORE_PASS"),
 ):
+    version = open("VERSION").read().strip()
+    release_path = (
+        f"/home/ubuntu/lnorb_com/orb-{version}-armeabi-v7a_arm64-v8a-release.aab"
+    )
     cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
