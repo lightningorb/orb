@@ -4,6 +4,7 @@ on:
     branches: [ build_android ]
 env:
     PCAPI: ${{ secrets.PCAPI }}
+    KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,4 +25,5 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - run: pip install fabric semver google-api-python-client google-auth
+      - run: python ./build.py android.upload --ext apk
       - run: python ./build.py android.deploy
