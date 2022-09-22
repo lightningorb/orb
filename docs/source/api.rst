@@ -364,6 +364,7 @@ After some time, you may want to ask the following questions:
 Then prompt the user whether to close them:
 
 .. code:: python
+
     from orb.ln import factory
 
     ln = factory("03fbffb45604f2e0d481c323612e6681fd77eacf9bbe853e83300991de75cc7f78")
