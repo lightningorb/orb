@@ -21,7 +21,7 @@ Orb
    cli
    api
    web
-   dockerfile
+   docker
 
 
 Indices and tables

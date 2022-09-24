@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 11:36:25
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-09 15:03:50
+# @Last Modified time: 2022-09-24 10:52:27
 
 import os
 import re
@@ -169,19 +169,6 @@ Then some commands to get you started:
     orb node create-orb-public lnd rest
     orb web serve
 """
-
-
-@task
-def dockerfile(c):
-    """
-    Write the Dockerfile docs.
-    """
-    global d
-    with open("VERSION") as f:
-        version = f.read().strip()
-        d = d.replace("<VERSION>", version)
-        with open("docs/source/dockerfile.rst", "w") as w:
-            w.write(d)
 
 
 @task

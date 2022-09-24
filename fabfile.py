@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-21 07:29:49
+# @Last Modified time: 2022-09-22 14:02:38
 
 import re
 import os
@@ -65,6 +65,7 @@ def release(c, minor=False, patch=False, hotfix=False):
         tags.tag(c)
         tags.push(c)
     merge(c, push=True)
+    update_install_script()
 
 
 @task

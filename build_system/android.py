@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-06-26 10:22:54
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-21 08:36:08
+# @Last Modified time: 2022-09-21 16:08:14
 
 import os
 from hashlib import sha256
@@ -172,7 +172,7 @@ def sign(
     c,
     password=os.environ.get("KEYSTORE_PASS"),
 ):
-    version = open("VERSION").read().strip()
+    version = open("VERSION").read().strip() + ".0"
     release_path = (
         f"/home/ubuntu/lnorb_com/orb-{version}-armeabi-v7a_arm64-v8a-release.aab"
     )

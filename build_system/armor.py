@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-03 19:29:32
+# @Last Modified time: 2022-09-24 10:25:04
 
 try:
     # not all actions install all requirements
@@ -267,3 +267,19 @@ def dmg(c, env=os.environ):
     build_name = f"orb-{VERSION}-{os.environ.get('os-name', 'macos-11')}-x86_64.dmg"
     os.rename(f"{name}.dmg", build_name)
     return build_name
+
+
+@task
+def build_docker(c, env=os.environ):
+    ORB_VERSION = open("VERSION").read().strip()
+    DOCKERHUB_USERNAME = env["DOCKERHUB_USERNAME"]
+    DOCKERHUB_PASSWORD = env["DOCKERHUB_PASSWORD"]
+
+    c.run(
+        f"docker build --build-arg ORB_VERSION={ORB_VERSION} -t lnorb/orb:{ORB_VERSION} .",
+        env=env,
+    )
+    c.run(f"docker login -u {DOCKERHUB_USERNAME} -p {DOCKERHUB_PASSWORD}", env=env)
+    c.run(f"docker tag lnorb/orb:{ORB_VERSION} lnorb/orb:latest", env=env)
+    c.run(f"docker push lnorb/orb:{ORB_VERSION}", env=env)
+    c.run("docker push lnorb/orb:latest", env=env)
