@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-08-06 14:44:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-08 17:13:30
+# @Last Modified time: 2022-09-22 16:08:11
 
 import json
 from orb.misc.auto_obj import dict2obj
@@ -471,7 +471,7 @@ class ChannelHTLC(PrintableType):
         if impl == "cln":
             self.incoming = h.direction == "in"
             self.amount = int(h.msatoshi / 1000)
-            self.htlc_index = h.payment_hash[:5]
+            self.htlc_index = str(h.payment_hash)[:5]
             self.id = h.id
         elif impl == "lnd":
             self.incoming = h.incoming
