@@ -4,12 +4,15 @@ on:
     branches: [ build_docker ]
 jobs:
   build_docker:
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     env:
-      os-name: ubuntu-20.04
+      os-name: ${{ matrix.os }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-21.04, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2

@@ -2,11 +2,13 @@ FROM ubuntu:20.04
 MAINTAINER admin@lnorb.com
 
 ARG ORB_VERSION
+ARG OS_NAME
 
 RUN apt-get update
 RUN apt-get install curl sudo -y
 
-ENV TARBALL=orb-${ORB_VERSION}-ubuntu-20.04-x86_64.tar.gz
+########### orb-0.21.12-ubuntu-20.04-x86_64.tar.gz
+ENV TARBALL=orb-${ORB_VERSION}-${OS_NAME}-x86_64.tar.gz
 
 COPY tmp/${TARBALL} .
 RUN tar xvf ${TARBALL}
