@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-28 05:46:08
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-24 10:25:04
+# @Last Modified time: 2022-09-25 10:28:42
 
 try:
     # not all actions install all requirements
@@ -208,6 +208,7 @@ def build_linux(c, do_upload=True, env=os.environ):
         build_name = (
             f"orb-{VERSION}-{os.environ.get('os-name', 'undefined')}-x86_64.tar.gz"
         )
+        print(f"BUILD NAME: {build_name}")
         c.run(f"tar czvf {build_name} orb;")
         if do_upload:
             upload_to_s3(
@@ -271,15 +272,26 @@ def dmg(c, env=os.environ):
 
 @task
 def build_docker(c, env=os.environ):
+    OS_NAME = env["os-name"]
+    assert OS_NAME
     ORB_VERSION = open("VERSION").read().strip()
     DOCKERHUB_USERNAME = env["DOCKERHUB_USERNAME"]
     DOCKERHUB_PASSWORD = env["DOCKERHUB_PASSWORD"]
+    r = c.run
+    docker = lambda cmd: r(f"docker {cmd}", env=env)
 
-    c.run(
-        f"docker build --build-arg ORB_VERSION={ORB_VERSION} -t lnorb/orb:{ORB_VERSION} .",
-        env=env,
-    )
-    c.run(f"docker login -u {DOCKERHUB_USERNAME} -p {DOCKERHUB_PASSWORD}", env=env)
-    c.run(f"docker tag lnorb/orb:{ORB_VERSION} lnorb/orb:latest", env=env)
-    c.run(f"docker push lnorb/orb:{ORB_VERSION}", env=env)
-    c.run("docker push lnorb/orb:latest", env=env)
+    # log in
+    docker(f"login -u {DOCKERHUB_USERNAME} -p {DOCKERHUB_PASSWORD}")
+
+    # build: lnorb/orb:0.21.12
+    cmd = f"build --build-arg ORB_VERSION={ORB_VERSION} --build-arg OS_NAME={OS_NAME} -t lnorb/orb:{ORB_VERSION} ."
+    print("CMD:")
+    print(cmd)
+    docker(cmd)
+    docker(f"push lnorb/orb:{ORB_VERSION}")
+
+    variants = ["latest", f"{OS_NAME}_latest", f"{OS_NAME}_{ORB_VERSION}"]
+
+    for v in variants:
+        docker(f"tag lnorb/orb:{ORB_VERSION} lnorb/orb:{v}")
+        docker(f"push lnorb/orb:{v}")
