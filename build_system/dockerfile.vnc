@@ -7,6 +7,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER ubuntu
 WORKDIR /home/ubuntu
-RUN curl https://install.lnorb.com | bash
+RUN curl https://install.lnorb.com | bash 
 USER root
 WORKDIR /
+COPY startup.sh /
+RUN chmod 755 startup.sh
+COPY bg.jpeg /usr/local/share/doro-lxde-wallpapers/bg1.jpg

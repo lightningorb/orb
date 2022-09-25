@@ -28,3 +28,24 @@ Getting a list of tags
 .. code::
 
     curl -L -s 'https://registry.hub.docker.com/v2/repositories/lnorb/orb/tags?page_size=1024'|jq '."results"[]["name"]'
+
+Orb VNC
+~~~~~~~
+
+Running Orb in VNC is an easy and convenient way of getting up and running. It is also a convenient way to keep Orb running for node automation.
+
+.. image:: https://upload.wikimedia.org/wikipedia/en/5/51/Virtual_Network_Computing_%28logo%29.svg
+    :width: 100px
+    :align: center
+
+.. code::
+
+    # pull the latest image
+    docker run -d --name orb-vnc -p 6080:80 -e USER=ubuntu -e PASSWORD=moneyprintergobrrr -v /dev/shm:/dev/shm lnorb/orb-vnc
+
+Getting a list of tags
+----------------------
+
+.. code::
+
+    curl -L -s 'https://registry.hub.docker.com/v2/repositories/lnorb/orb-vnc/tags?page_size=1024'|jq '."results"[]["name"]'
