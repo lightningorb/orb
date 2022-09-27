@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-25 19:51:34
+# @Last Modified time: 2022-09-27 11:09:53
 
 import re
 import os
@@ -94,6 +94,7 @@ def merge(c, push=False):
         "build_macosx",
         "build_windows",
         "build_android",
+        "build_vnc",
         "docs",
         "site",
     ]:
