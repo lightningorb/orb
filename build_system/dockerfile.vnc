@@ -7,9 +7,22 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER ubuntu
 WORKDIR /home/ubuntu
+RUN echo 'installing'
 RUN curl https://install.lnorb.com | bash 
 USER root
 WORKDIR /
 COPY startup.sh /
 RUN chmod 755 startup.sh
 COPY bg.jpeg /usr/local/share/doro-lxde-wallpapers/bg1.jpg
+RUN wget https://download.sublimetext.com/sublime-text_build-3211_amd64.deb
+RUN dpkg -i sublime-text_build-3211_amd64.deb
+COPY orb-256x256.png /usr/share/icons/hicolor/256x256/apps/orb.png
+COPY orb-128x128.png /usr/share/icons/hicolor/128x128/apps/orb.png
+COPY orb-48x48.png /usr/share/icons/hicolor/48x48/apps/orb.png
+COPY orb-32x32.png /usr/share/icons/hicolor/32x32/apps/orb.png
+COPY orb-16x16.png /usr/share/icons/hicolor/16x16/apps/orb.png
+COPY orb.desktop /
+COPY pcmanfm.conf /
+RUN echo '${HOME}/orb/venv/bin/python3 ${HOME}/orb/main.py' > /usr/bin/orb
+RUN chmod 755 /usr/bin/orb
+RUN apt-get install lshw -y

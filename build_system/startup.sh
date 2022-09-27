@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-09-25 15:56:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-25 18:43:11
+# @Last Modified time: 2022-09-27 09:46:29
 
 if [ -n "$VNC_PASSWORD" ]; then
     echo -n "$VNC_PASSWORD" > /.password1
@@ -50,8 +50,24 @@ if [ ! -x "$HOME/.config/pcmanfm/LXDE/" ]; then
 fi
 
 mkdir -p ${HOME}/Desktop/
-echo '${HOME}/orb/venv/bin/python3 ${HOME}/orb/main.py' > ${HOME}/Desktop/orb.sh
-chmod 755 ${HOME}/Desktop/orb.sh
+cp /usr/share/applications/sublime_text.desktop ${HOME}/Desktop/
+cp /usr/share/applications/lxterminal.desktop ${HOME}/Desktop/
+mv /orb.desktop ${HOME}/Desktop/
+mkdir -p ${HOME}/.config/pcmanfm/LXDE
+mv /pcmanfm.conf ${HOME}/.config/pcmanfm/LXDE
+chown -r $USER ${HOME}/.config/
+chown -r $USER ${HOME}/Desktop
+hostname orb
+
+cat <<EOT >> ${HOME}/.bashrc
+echo "Welcome to Orb"
+echo ""
+echo "https://lnorb.com/docs/cli.html"
+echo ""
+echo "orb --help"
+echo ""
+orb chain balance
+EOT
 
 # nginx workers
 sed -i 's|worker_processes .*|worker_processes 1;|' /etc/nginx/nginx.conf

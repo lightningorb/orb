@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-09-25 11:25:52
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-25 19:30:12
+# @Last Modified time: 2022-09-26 12:49:12
 
 import os
 from pathlib import Path
@@ -18,6 +18,14 @@ def orb_vcn(c):
     ) as con:
         con.run("mkdir -p /tmp/asdf")
         with con.cd("/tmp/asdf"):
+            con.put("images/orb-256x256.png", "/tmp/asdf/orb-256x256.png")
+            con.put("images/orb-128x128.png", "/tmp/asdf/orb-128x128.png")
+            con.put("images/orb-48x48.png", "/tmp/asdf/orb-48x48.png")
+            con.put("images/orb-32x32.png", "/tmp/asdf/orb-32x32.png")
+            con.put("images/orb-16x16.png", "/tmp/asdf/orb-16x16.png")
+            con.put("images/orb-16x16.png", "/tmp/asdf/orb-16x16.png")
+            con.put("build_system/pcmanfm.conf", "/tmp/asdf/pcmanfm.conf")
+            con.put("build_system/orb.desktop", "/tmp/asdf/orb.desktop")
             con.put("build_system/dockerfile.vnc", "/tmp/asdf/dockerfile.vnc")
             con.put("build_system/startup.sh", "/tmp/asdf/startup.sh")
             con.put("images/bg.jpeg", "/tmp/asdf/bg.jpeg")
