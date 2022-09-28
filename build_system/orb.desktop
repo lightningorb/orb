@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Orb
+GenericName=Lightning Manager
+Comment=Multiplatform application for managing a lightning node
+Exec=/usr/bin/orb %F
+Terminal=true
+MimeType=text/plain;
+Icon=orb
+Categories=TextEditor;Development;
+StartupNotify=false
+Actions=Window;Document;
