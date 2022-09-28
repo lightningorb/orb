@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-09-25 11:25:52
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-28 10:35:00
+# @Last Modified time: 2022-09-28 11:29:41
 
 import os
 from pathlib import Path
@@ -14,6 +14,7 @@ from invoke import task, Responder
 @task
 def orb_vnc(c):
     cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    VERSION = open("VERSION").read().strip()
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as con:
