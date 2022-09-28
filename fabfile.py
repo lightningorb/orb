@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-01-13 06:45:34
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-25 13:12:00
+# @Last Modified time: 2022-09-27 11:09:53
 
 import re
 import os
@@ -31,6 +31,7 @@ from build_system import site
 from build_system import katching
 from build_system import alembic
 from build_system import cln_regtest
+from build_system import docker
 
 
 @task
@@ -93,6 +94,7 @@ def merge(c, push=False):
         "build_macosx",
         "build_windows",
         "build_android",
+        "build_vnc",
         "docs",
         "site",
     ]:
@@ -128,4 +130,5 @@ namespace = Collection(
     cln_regtest,
     merge,
     update_install_script,
+    docker,
 )

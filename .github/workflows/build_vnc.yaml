@@ -1,0 +1,17 @@
+name: build vnc
+on:
+  push:
+    branches: [ build_vnc ]
+jobs:
+  build_linux:
+    runs-on: ubuntu-20.04
+    env:
+      os-name: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+      - run: pip install fabric semver
+      - run: python ./build.py docker.orb-vnc
