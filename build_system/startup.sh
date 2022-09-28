@@ -2,7 +2,7 @@
 # @Author: lnorb.com
 # @Date:   2022-09-25 15:56:17
 # @Last Modified by:   lnorb.com
-# @Last Modified time: 2022-09-27 09:46:29
+# @Last Modified time: 2022-09-28 09:09:53
 
 if [ -n "$VNC_PASSWORD" ]; then
     echo -n "$VNC_PASSWORD" > /.password1
@@ -55,9 +55,6 @@ cp /usr/share/applications/lxterminal.desktop ${HOME}/Desktop/
 mv /orb.desktop ${HOME}/Desktop/
 mkdir -p ${HOME}/.config/pcmanfm/LXDE
 mv /pcmanfm.conf ${HOME}/.config/pcmanfm/LXDE
-chown -r $USER ${HOME}/.config/
-chown -r $USER ${HOME}/Desktop
-hostname orb
 
 cat <<EOT >> ${HOME}/.bashrc
 echo "Welcome to Orb"
@@ -68,6 +65,17 @@ echo "orb --help"
 echo ""
 orb chain balance
 EOT
+
+if [ -n "$HOSTNAME" ]; then
+    echo 'mac file path'
+    echo ${MAC_FILE_PATH}
+    echo 'cert file path'
+    echo ${CERT_FILE_PATH}
+    ${HOME}/orb/venv/bin/python3 ${HOME}/orb/main.py node create-from-cert-files --hostname ${HOSTNAME} --node-type ${NODE_TYPE} --protocol ${PROTOCOL} --network ${NETWORK} --rest-port ${REST_PORT} --grpc-port ${GRPC_PORT} --mac-file-path ${MAC_FILE_PATH} --cert-file-path ${CERT_FILE_PATH}
+fi
+
+sudo chown -R $USER ${HOME}/.config/
+sudo chown -R $USER ${HOME}/Desktop
 
 # nginx workers
 sed -i 's|worker_processes .*|worker_processes 1;|' /etc/nginx/nginx.conf

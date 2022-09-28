@@ -40,8 +40,24 @@ Running Orb in VNC is an easy and convenient way of getting up and running. It i
 
 .. code::
 
-    # pull the latest image
-    docker run -d --name orb-vnc -p 6080:80 -e USER=ubuntu -e PASSWORD=moneyprintergobrrr -v /dev/shm:/dev/shm lnorb/orb-vnc
+    docker run \
+        -d \
+        -h orb \
+        --name orb-vnc \
+        -p 6080:80 \
+        -e USER=ubuntu \
+        -e HTTP_PASSWORD=moneyprintergobrrr \
+        -e HOSTNAME=signet.lnd.lnorb.com \
+        -e NODE_TYPE=lnd \
+        -e PROTOCOL=rest \
+        -e NETWORK=signet \
+        -e REST_PORT=8080 \
+        -e GRPC_PORT=10009 \
+        -e MAC_FILE_PATH=/certs/data/chain/bitcoin/signet/admin.macaroon \
+        -e CERT_FILE_PATH=/certs/tls.cert \
+        -v /dev/shm:/dev/shm \
+        -v ${HOME}/dev/plebnet-playground-docker/volumes/lnd_datadir:/certs \
+        lnorb/orb-vnc
 
 Getting a list of tags
 ----------------------
