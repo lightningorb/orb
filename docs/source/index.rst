@@ -22,6 +22,7 @@ Orb
    api
    web
    docker
+   automation
 
 
 Indices and tables

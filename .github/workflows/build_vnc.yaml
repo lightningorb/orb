@@ -1,4 +1,4 @@
-name: test linux
+name: build vnc
 on:
   push:
     branches: [ build_vnc ]
