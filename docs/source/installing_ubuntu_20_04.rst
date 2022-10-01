@@ -1,3 +1,5 @@
+.. _installing-ubuntu:
+
 Ubuntu 20.04
 ------------
 

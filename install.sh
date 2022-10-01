@@ -1,11 +1,10 @@
 # @Author: w
 # @Date:   2022-09-03 21:24:13
-# @Last Modified by:   w
-# @Last Modified time: 2022-09-06 08:54:34
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-10-01 07:08:37
 # Determine OS platform
 
 set -e
-shopt -s expand_aliases
 
 function main() {
     cd
@@ -22,24 +21,18 @@ function main() {
     unset UNAME
 
     if [[ $DISTRO == 'Ubuntu' ]]; then
-        RELEASE=$(cat /etc/lsb-release | grep DISTRIB_RELEASE | cut -d = -f 2)
-        if [[ $RELEASE == '20.04' ]]; then
-            curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-<VERSION>-ubuntu-20.04-x86_64.tar.gz | tar xvz;
-            sudo apt-get update;
-            sudo apt-get install python3.8-venv -y;
-            cd orb;
-            python3 -m venv venv;
-            source venv/bin/activate;
-            bash bootstrap_ubuntu_20_04.sh;
-            ALIAS_CMD="alias orb='~/orb/venv/bin/python ~/orb/main.py ${*}'"
-            eval $ALIAS_CMD
-            if ! grep -q 'alias orb' ~/.bashrc; then
-                echo $ALIAS_CMD >> ~/.bashrc;
-            fi
-            print_success_message '~/.bashrc';
-        else
-            not_supported;
-        fi
+        curl https://lnorb.s3.us-east-2.amazonaws.com/customer_builds/orb-<VERSION>-ubuntu-20.04-x86_64.tar.gz | tar xvz;
+        sudo apt-get update;
+        sudo apt-get install python3.8-venv -y;
+        cd orb;
+        python3 -m venv venv;
+        source venv/bin/activate;
+        bash bootstrap_ubuntu_20_04.sh;
+        sudo 
+        sudo sh -c "echo '~/orb/venv/bin/python ~/orb/main.py \${*}' > /usr/local/bin/orb;"
+        sudo chmod 755 /usr/local/bin/orb;
+        hash -r;
+        print_success_message;
     elif [[ $DISTRO == 'darwin' ]]; then
         cd /tmp/;
         OSX_MAJOR_VERSION=$(sw_vers | grep ProductVersion | cut -d : -f 2 | xargs | cut -d . -f 1);
@@ -51,12 +44,10 @@ function main() {
         sudo hdiutil attach ${DMG};
         sudo rm -rf /Applications/lnorb.app;
         sudo cp -r /Volumes/Orb/lnorb.app /Applications/;
-        ALIAS_CMD="alias orb='/Applications/lnorb.app/Contents/MacOS/lnorb'"
-        eval $ALIAS_CMD
-        if ! grep -q 'alias orb' ~/.bash_profile; then
-            echo $ALIAS_CMD >> ~/.bash_profile;
-        fi
-        print_success_message '~/.bash_profile';
+        sudo echo '/Applications/lnorb.app/Contents/MacOS/lnorb' > /usr/local/bin/orb;
+        sudo chmod 755 /usr/local/bin/orb;
+        hash -r;
+        print_success_message;
     else
         not_supported;
     fi
@@ -91,7 +82,6 @@ function print_success_message(){
     echo -e "==========================="
     echo -e "Orb successfully installed."
     echo -e "===========================\n"
-    echo -e "Please run ${LIGHTBLUE}source ${1};${NOCOLOR} or launch a NEW TERMINAL:\n"
     echo -e "To launch the UI: ${LIGHTBLUE}orb${NOCOLOR}"
     echo -e "To explore the CLI: ${LIGHTBLUE}orb --help${NOCOLOR}"
     echo -e "To read the docs, head over to: ${LIGHTGREEN}https://lnorb.com/docs${NOCOLOR}"

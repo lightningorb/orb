@@ -1,5 +1,9 @@
+.. _orb-docker
+
 Docker
 ======
+
+.. _orb-docker-cli:
 
 Orb CLI
 ~~~~~~~
@@ -28,6 +32,8 @@ Getting a list of tags
 .. code::
 
     curl -L -s 'https://registry.hub.docker.com/v2/repositories/lnorb/orb/tags?page_size=1024'|jq '."results"[]["name"]'
+
+.. _orb-docker-vnc:
 
 Orb VNC
 ~~~~~~~
