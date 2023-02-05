@@ -103,6 +103,8 @@ def zipdir(path, ziph):
 
 @task
 def register(c, env=os.environ):
+    with open("pyarmor-regcode-2364.txt", "w") as f:
+        f.write(env["PYARMOR"])
     c.run("pyarmor register pyarmor-regcode-2364.txt", env=env)
 
 
