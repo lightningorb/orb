@@ -1,0 +1,32 @@
+//
+// authentication.scss
+//
+
+.bg-account-pages {
+  background: $bg-gradient;
+  opacity: 0.9;
+}
+
+.account-home-btn {
+  position: absolute;
+  top: 18px;
+  right: 28px;
+  z-index: 1;
+}
+
+.account-pages-logo {
+  letter-spacing: 2px;
+}
+
+.account-card form .form-control {
+  height: 45px;
+}
+
+.account-card form label {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.account-card .alert {
+  font-size: 14px;
+}

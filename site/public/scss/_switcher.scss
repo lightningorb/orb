@@ -1,0 +1,113 @@
+//
+// switcher.scss
+//
+
+
+#style-switcher div h3 {
+  font-size: 16px;
+  margin: 8px 3px 12px;
+}
+
+#style-switcher {
+  background: none repeat scroll 0 0 #ffff;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.08);
+  left: -189px;
+  position: fixed;
+  top: 17%;
+  width: 189px;
+  z-index: 9999;
+  padding: 10px 5px;
+}
+
+#style-switcher div {
+  padding: 5px 10px;
+}
+
+#style-switcher .bottom {
+  background: none repeat scroll 0 0 #FFFFFF;
+  color: $dark;
+  padding: 0;
+}
+
+#style-switcher .bottom a.settings {
+  background: none repeat scroll 0 0 #2b2424;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.08);
+  display: block;
+  height: 41px;
+  position: absolute;
+  right: -40px;
+  top: 0;
+  width: 40px;
+  padding: 3px;
+}
+
+#style-switcher .bottom a {
+  text-decoration: none;
+}
+
+#style-switcher .bottom a.settings i {
+  margin-left: 5px;
+  color: $white;
+  font-size: 24px;
+  position: absolute;
+}
+
+ul.pattern {
+  list-style: none outside none;
+  margin: 0 0 0px;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 0px;
+}
+
+ul.pattern li {
+  float: left;
+  margin: 2px;
+}
+
+ul.pattern li a {
+  cursor: pointer;
+  display: block;
+  height: 35px;
+  width: 35px;
+  border-radius: 30% 70% 64% 36% / 30% 42% 58% 70%;
+  margin: 5px;
+}
+
+ul.pattern .color1 {
+  background-color: #1bbc9d;
+}
+
+ul.pattern .color2 {
+  background-color: #ee6352;
+}
+
+ul.pattern .color3 {
+  background-color: #59CD90;
+}
+
+ul.pattern .color4 {
+  background-color: #f85f89;
+}
+
+ul.pattern .color5 {
+  background-color: #3fa7d6;
+}
+
+ul.pattern .color6 {
+  background-color: #704fff;
+}
+
+ul.pattern .color7 {
+  background-color: #f28123;
+}
+
+ul.pattern .color8 {
+  background-color: #f6cb42;
+}
+
+@media only screen and (max-width: 479px) {
+  #style-switcher {
+      display: none;
+  }
+}

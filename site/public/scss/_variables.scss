@@ -1,0 +1,62 @@
+//
+// variables.scss
+//
+
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&family=Sarabun:wght@400;500;600;700&display=swap');
+
+$primary:   #4341cc;
+$success:   #1bbc9d;
+$info:      #10a6ba;
+$warning:   #f6cb42;
+$danger:    #fb3e3e;
+$orange:    #f09105;
+$purple:    #704fff;
+$cyan:      #1bbc9d;
+$blue:      #2762da;
+$pink:      #f85f89;
+$white:     #ffffff;
+$dark:      #272a33;
+$light:     #fafbfe;
+$muted:     #858d96;
+
+// stylelint-disable
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #efefef;
+$gray-400: #e6effe;
+$gray-500: #adb5bd;
+$gray-600: #89a2b5;
+$gray-700: #495057;
+$gray-800: #2d2d2d;
+$gray-900: #1d262d;
+
+$colors: (
+    "primary": $primary,
+    "success": $success,
+    "info": $info,
+    "warning": $warning,
+    "danger": $danger,
+    "orange": $orange,
+    "dark": $dark,
+    "cyan": $cyan,
+    "blue": $blue,
+    "muted": $muted,
+    "purple": $purple,
+    "pink": $pink,
+    "white": $white,
+    "light": $light
+);
+
+
+// Body Background
+$body-bg:                   #f5f5f5;
+$bg-gradient:               linear-gradient(to right, #363795, #005C97);
+$box-shadow:                0px 3px 6px 1px rgba(38, 107, 193, 0.08);
+
+
+// Base font
+$font-size-base:            14px;
+
+$font-family-base:          'Sarabun', sans-serif;
+$font-family-secondary:     'Rubik', sans-serif;

@@ -1,0 +1,32 @@
+//
+// team.scss
+//
+
+.about-title{
+  max-width: 800px;
+  h2 {
+    line-height: 42px;
+  }
+  p {
+    font-size: 17px;
+    line-height: 30px;
+    font-weight: 300;
+  }
+}
+
+
+.team-box {
+  border-bottom: 1px solid #ecf0f5;
+  .team-name {
+    font-size: 16px;
+    padding-top: 20px;
+    margin-bottom: 7px;
+  }
+  
+  .team-designation {
+    font-size: 13px;
+    color: #a8aeb4;
+  }
+  
+}
+

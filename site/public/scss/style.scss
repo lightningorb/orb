@@ -1,0 +1,53 @@
+/*
+* @Author: lnorb.com
+* @Date:   2022-02-01 21:17:10
+* @Last Modified by:   lnorb.com
+* @Last Modified time: 2022-02-02 05:21:05
+*/
+/* Template Name: Hiric
+   Author: Themesbrand
+   Version: 2.0.0
+   File Description: Main Css file of the template
+*/
+
+/****************************************\
+
+01.general
+02.helper
+03.components
+04.menu
+05.home
+06.features
+07.sevices
+08.cta
+90.pricing
+10.team
+11.testimonial
+12.blog
+13.contact
+14.footer
+15.authentication
+16.switcher
+17.responsive
+
+*****************************************/
+
+
+@import "variables";
+@import "general";
+@import "helper";
+@import "components";
+@import "menu";
+@import "home";
+@import "features";
+@import "services";
+@import "cta";
+@import "pricing";
+@import "team";
+@import "testimonial";
+@import "blog";
+@import "contact";
+@import "footer";
+@import "authentication";
+@import "switcher";
+@import "responsive";

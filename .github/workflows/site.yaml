@@ -3,7 +3,7 @@ on:
   push:
     branches: [ site ]
 jobs:
-  build_linux:
+  build_site:
     runs-on: ubuntu-20.04
     env:
       os-name: ubuntu-20.04

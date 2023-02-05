@@ -1,0 +1,200 @@
+//
+// helper.scss
+//
+
+.section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  position: relative;
+}
+
+.section-sm {
+  padding: 50px 0;
+}
+
+.section-lg {
+  padding: 100px 0;
+}
+
+.vertical-content {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+}
+
+.bg-overlay {
+  background: $bg-gradient;
+  opacity: 0.95;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  top: 0;
+}
+
+.btn-rounded {
+  border-radius: 30px;
+}
+
+.box-shadow {
+  box-shadow: $box-shadow;
+}
+
+hr {
+  border-top: 1px solid #e7ebf3;
+}
+
+::-moz-selection {
+  background-color: $dark;
+  color: $white;
+ }
+
+::selection {
+  background-color: $dark;
+  color: $white;
+ }
+
+
+
+.h1,
+h1 {
+  font-size: 36px;
+}
+
+.h2,
+h2 {
+  font-size: 30px;
+}
+
+.h3,
+h3 {
+  font-size: 24px;
+}
+
+.h4,
+h4 {
+  font-size: 18px;
+}
+
+.h5,
+h5 {
+  font-size: 14px;
+}
+
+.h6,
+h6 {
+  font-size: 12px;
+}
+
+b {
+  font-weight: 500;
+}
+
+// font-size
+
+.f-10 {
+  font-size: 10px;
+}
+
+.f-12 {
+  font-size: 12px;
+}
+
+.f-13 {
+  font-size: 13px;
+}
+
+.f-14 {
+  font-size: 14px;
+}
+
+.f-15 {
+  font-size: 15px;
+}
+
+.f-16 {
+  font-size: 16px;
+}
+
+.f-18 {
+  font-size: 18px;
+}
+
+.f-19 {
+  font-size: 19px;
+}
+
+.f-20 {
+  font-size: 20px;
+}
+
+.line-height_1_4 {
+  line-height: 1.4;
+}
+
+.line-height_1_6 {
+  line-height: 1.6;
+}
+
+.line-height_1_8 {
+  line-height: 1.8;
+}
+
+// font-weight
+
+.font-weight-500 {
+  font-weight: 500;
+}
+
+.font-weight-600 {
+  font-weight: 600;
+}
+
+// heading
+
+.section-title {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0px;
+  padding-bottom: 1rem;
+  line-height: 1;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.section-title-border {
+  width: 50px;
+  height: 2px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: $primary;
+}
+
+.section-subtitle {
+  letter-spacing: 0.02em;
+}
+
+.svg-pattern {
+  width: 100%;
+  position: relative;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+.hover-effect {
+  transition: all 0.3s ease-in-out;
+}
+.hover-effect:hover {
+  transform: translateY(-1rem);
+}

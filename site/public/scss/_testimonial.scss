@@ -1,0 +1,28 @@
+//
+// testimonial.scss
+//
+
+
+.testimonial-decs {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: all .3s ease-in-out;
+  box-shadow: 0 0 1.25rem rgba(108,118,134,.1)!important;
+  img {
+    height: 68px;
+    width: 68px;
+  }
+  .testi-icon {
+    i{
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #f4f4f4;
+    }
+  }
+  p {
+    line-height: 24px;
+    font-style: italic;
+  }
+}
