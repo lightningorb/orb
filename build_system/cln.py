@@ -18,11 +18,25 @@ releases = [
 
 @task
 def install_requirements(c, env=os.environ):
+    """
+    Install the required packages using pip3
+
+    :param c: Connection object
+    :param env: Environment variables
+    :return: None
+    """
     c.run("pip3 install grpcio grpcio-tools googleapis-common-protos")
 
 
 @task
 def generate_grpc_libs(c, env=os.environ):
+    """
+    Generate grpc libraries for different releases
+
+    :param c: Connection object
+    :param env: Environment variables
+    :return: None
+    """
     c.run("mkdir -p tmp")
     protos = [
         "lightning/cln-grpc/proto/node.proto",
@@ -53,8 +67,3 @@ def generate_grpc_libs(c, env=os.environ):
                     env=env,
                 )
                 c.run(f"mv *.py {release_dir}")
-
-
-# @task
-# def copy(c, env=os.environ):
-#     c.run("")
