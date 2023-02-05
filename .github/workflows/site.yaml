@@ -17,4 +17,4 @@ jobs:
           node-version: '14'
       - run: cd site && npm install
       - run: cd site && npm run build
-      - run: aws s3 cp --recursive site/public s3://lnorb/site/public/
+      - run: aws s3 cp site/public s3://lnorb/site/public/ --recursive
