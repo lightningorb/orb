@@ -15,10 +15,31 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      - run: unzip awscliv2.zip
-      - run: sudo ./aws/install --update
-      - run: cd site && npm install
-      - run: cd site && npm run build
-      - run: ls site/public/
-      - run: aws s3 cp site/public/ s3://lnorb/site/public/ --recursive
+      - name: Install NodeJS dependencies
+        env:
+          NODE_ENV: production
+        run: |
+          cd site
+          npm install
+      - name: Build NodeJS site
+        run: |
+          cd site
+          npm run build
+      - name: List built site
+        run: |
+          ls site/public/
+
+  deploy_site:
+    runs-on: ubuntu-20.04
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+    steps:
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+      - name: Deploy site to S3
+        run: |
+          aws s3 cp site/public/ s3://lnorb/site/public/ --recursive
