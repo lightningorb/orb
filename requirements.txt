@@ -1,5 +1,6 @@
 # IOS and DESKTOP
 
+wheel
 bdist_wheel
 websocket-client
 cython
