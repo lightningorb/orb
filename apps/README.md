@@ -8,3 +8,4 @@ You can also check out:
 
 Please note a lot of these apps were written before CLN support. Therefor they may be written using the LND API rather than the Orb API that supports both CLN and LND.
 
+Related docs: https://lnorb.com/docs/extending.html#apps-folder
