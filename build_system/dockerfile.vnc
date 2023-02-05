@@ -17,6 +17,8 @@ env TERM=xterm
 # Add a new user without password and with a blank description
 RUN adduser --disabled-password --gecos '' ubuntu
 
+RUN sudo apt install libsqlite3-dev
+
 # Add the new user to the sudo group
 RUN adduser ubuntu sudo
 
