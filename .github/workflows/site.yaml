@@ -15,6 +15,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: ./aws/install --update
       - run: cd site && npm install
       - run: cd site && npm run build
       - run: ls site/public/
