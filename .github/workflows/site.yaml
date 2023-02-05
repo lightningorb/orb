@@ -2,6 +2,9 @@ name: build and deploy site
 on:
   push:
     branches: [ site ]
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 jobs:
   build_site:
     runs-on: ubuntu-20.04
@@ -18,5 +21,9 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip'
-      - run: pip install fabric semver requests
-      - run: python ./build.py site.upload
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: ./aws/install
+      - run: aws s3 cp --recursive site/public s3://lnorb/site/public/
+      # - run: pip install fabric semver requests
+      # - run: python ./build.py site.upload
