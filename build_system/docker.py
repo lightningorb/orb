@@ -15,7 +15,7 @@ from invoke import task, Responder
 def orb_vnc(c):
     cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
     VERSION = open("VERSION").read().strip()
-    c.local("mkdir -p /tmp/asdf")
+    c.run("mkdir -p /tmp/asdf")
     with c.cd("/tmp/asdf"):
         c.run("cp images/orb-256x256.png /tmp/asdf/orb-256x256.png")
         c.run("cp images/orb-128x128.png /tmp/asdf/orb-128x128.png")
