@@ -5,6 +5,7 @@ on:
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+    PYARMOR: ${{ secrets.PYARMOR }}
 jobs:
   build_macosx:
     runs-on: ${{ matrix.os }}
