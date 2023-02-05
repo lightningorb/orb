@@ -30,17 +30,7 @@
 					<ul class="list-unstyled footer-list">
 						<li><a href={'/privacy'}>Privacy Policy</a></li>
 						<li><a href={'/terms-and-conditions'}>Terms and Conditions</a></li>
-						<li><a href={'/investor-relations'}>Investor Relations</a></li>
 						<li><a href={'/security'}>Security</a></li>
-					</ul>
-				</div>
-			</Col>
-			<Col lg="3" class="mt-4">
-				<h4>Misc.</h4>
-				<div class="text-muted mt-4">
-					<ul class="list-unstyled footer-list">
-						<li><a href={'/foss'}>FOSS</a></li>
-						<li><a href={'/advertise'}>Advertise</a></li>
 					</ul>
 				</div>
 			</Col>
