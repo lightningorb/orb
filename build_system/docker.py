@@ -25,10 +25,9 @@ def orb_vnc(c):
     c.run("cp build_system/pcmanfm.conf /tmp/asdf/pcmanfm.conf")
     c.run("cp build_system/orb.desktop /tmp/asdf/orb.desktop")
     c.run("cp build_system/startup.sh /tmp/asdf/startup.sh")
+    c.run("cp build_system/dockerfile.vnc /tmp/asdf/")
     c.run("cp images/bg.jpeg /tmp/asdf/bg.jpeg")
     with c.cd("/tmp/asdf/"):
-        c.run(
-            f"docker build -t lnorb/orb-vnc:{VERSION} -f build_system/dockerfile.vnc ."
-        )
+        c.run(f"docker build -t lnorb/orb-vnc:{VERSION} -f dockerfile.vnc .")
         c.run(f"docker tag lnorb/orb-vnc:{VERSION} lnorb/orb-vnc:latest")
         c.run("docker push lnorb/orb-vnc:latest")
