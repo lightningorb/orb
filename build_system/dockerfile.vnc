@@ -19,6 +19,7 @@ RUN adduser --disabled-password --gecos '' ubuntu
 
 RUN sudo apt-get update -y
 RUN sudo apt install libsqlite3-dev -y
+RUN sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 
 # Add the new user to the sudo group
 RUN adduser ubuntu sudo
