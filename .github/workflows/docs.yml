@@ -2,6 +2,9 @@ name: docs
 on:
   push:
     branches: [ docs ]
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 jobs:
   build_linux:
     runs-on: ubuntu-20.04
@@ -15,6 +18,5 @@ jobs:
           cache: 'pip'
       - run: sudo apt-get install pandoc -y
       - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: python ./build.py documentation.build-cli-docs
-      - run: python ./build.py documentation.build
-      - run: python ./build.py documentation.upload
+      - run: python ./build.py documentation.build-cli-docs documentation.build
+      - run: aws s3 cp docs/docsbuild/ s3://lnorb/docs/ --recursive --region us-east-2

@@ -44,6 +44,8 @@ def build(c, api_doc: bool = True, env=os.environ):
     Build the docs. Requires sphinx.
     """
     for app in Path("apps/").glob("*"):
+        if not app.is_dir():
+            continue
         py = next(app.glob("*.py"))
         kv = next(app.glob("*.kv"), None)
         app = app.parts[-1]
