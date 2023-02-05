@@ -15,7 +15,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: cd site && npm install
-      - run: cd site && npm run build
-      - run: ls site/public/
+      - run: cd site && npm install && npm run build
+
+  deploy_site:
+    runs-on: ubuntu-20.04
+    env:
+      os-name: ubuntu-20.04
+    steps:
       - run: aws s3 cp site/public/ s3://lnorb/site/public/ --recursive --region us-east-2
