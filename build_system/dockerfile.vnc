@@ -1,28 +1,78 @@
+# This is a Dockerfile used to run the Orb application in VNC, 
+# utilizing the dorowu/ubuntu-desktop-lxde-vnc image as a base.
+#
+# By building a Docker image using this Dockerfile, one can run the
+# Orb application in an isolated environment within a VNC session,
+# without affecting the host system.
+
+# Use an existing Docker image as the base image
 FROM dorowu/ubuntu-desktop-lxde-vnc
+
+# Maintainer of the Dockerfile
 MAINTAINER admin@lnorb.com
+
+# Set environment variable for the terminal type
 env TERM=xterm
+
+# Add a new user without password and with a blank description
 RUN adduser --disabled-password --gecos '' ubuntu
+
+# Add the new user to the sudo group
 RUN adduser ubuntu sudo
+
+# Add Google Linux package signing key to apt
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+
+# Add sudo privilege to the sudo group
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Switch to the new user
 USER ubuntu
+
+# Set working directory for the new user
 WORKDIR /home/ubuntu
+
+# Install package
 RUN echo 'installing'
 RUN curl https://install.lnorb.com | bash 
+
+# Switch back to root user
 USER root
+
+# Set the working directory back to root
 WORKDIR /
+
+# Copy startup script
 COPY startup.sh /
+
+# Set executable permission for the startup script
 RUN chmod 755 startup.sh
+
+# Copy wallpaper image
 COPY bg.jpeg /usr/local/share/doro-lxde-wallpapers/bg1.jpg
+
+# Download and install Sublime Text editor
 RUN wget https://download.sublimetext.com/sublime-text_build-3211_amd64.deb
 RUN dpkg -i sublime-text_build-3211_amd64.deb
+
+# Copy icons
 COPY orb-256x256.png /usr/share/icons/hicolor/256x256/apps/orb.png
 COPY orb-128x128.png /usr/share/icons/hicolor/128x128/apps/orb.png
 COPY orb-48x48.png /usr/share/icons/hicolor/48x48/apps/orb.png
 COPY orb-32x32.png /usr/share/icons/hicolor/32x32/apps/orb.png
 COPY orb-16x16.png /usr/share/icons/hicolor/16x16/apps/orb.png
+
+# Copy desktop entry file
 COPY orb.desktop /
+
+# Copy PCManFM configuration file
 COPY pcmanfm.conf /
+
+# Create orb executable
 RUN echo '${HOME}/orb/venv/bin/python3 ${HOME}/orb/main.py' > /usr/bin/orb
+
+# Set executable permission for orb
 RUN chmod 755 /usr/bin/orb
+
+# Install the lshw package
 RUN apt-get install lshw -y
