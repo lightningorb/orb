@@ -24,12 +24,3 @@ def create_db(c, env=os.environ):
         c.run(
             "/Library/Frameworks/Python.framework/Versions/3.9/bin/python3 create_db.py"
         )
-
-
-@task
-def start_katching_service(c, env=os.environ):
-    with c.cd("server"):
-        c.run(
-            "nameko run workers.katching_service --config workers/nameko-dev.yaml",
-            env=env,
-        )

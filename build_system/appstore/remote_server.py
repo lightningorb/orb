@@ -12,8 +12,6 @@ import os
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.install-service
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.create-tables
 # ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.drop-tables
-# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.stop-katching-service
-# ./build.py -H ubuntu@lnorb.com -i lnorb_com.cer appstore.remote.start-katching-service
 
 
 @task
@@ -106,16 +104,6 @@ def certbot(c):
     c.sudo("pip3 install pip --upgrade")
     c.sudo("pip3 install certbot certbot-nginx")
     c.sudo("certbot --nginx -d lnappstore.com")
-
-
-@task
-def stop_katching_service(c):
-    c.sudo("supervisorctl stop katching_service")
-
-
-@task
-def start_katching_service(c):
-    c.sudo("supervisorctl start katching_service")
 
 
 @task

@@ -1,0 +1,277 @@
+//
+// home.scss
+//
+
+.bg-home {
+  background: url("../images/bg-home.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.home-title {
+  font-size: 46px;
+  line-height: 64px;
+}
+
+.home-small-title {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+}
+
+.display-table-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.display-table {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+.play-btn {
+  border: 2px solid;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: block;
+  font-size: 30px;
+  margin-right: auto;
+  margin-left: auto;
+  line-height: 56px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.play-shadow {
+  border-radius: 50%;
+  border: 1px solid transparent;
+  width: 82px;
+  height: 82px;
+  margin: 20px auto 0px auto;
+}
+
+.home-desc {
+  color: rgba($white, 0.7);
+  font-size: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ------------- Demo 1 bg-pattern ------------- */
+
+.home-half {
+  padding-bottom: 150px;
+  padding-top: 220px;
+}
+
+.bg-pattern-effect {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  img {
+    max-width: 100%;
+  }
+}
+
+.home-modal{
+  border: 0;
+  background-color: transparent;
+  .btn-close{
+    width: 36px;
+    height: 36px;
+    background-color: rgba($white, 0.5);
+    border-radius: 10px;
+    position: relative;
+    top: 70px;
+    z-index: 3;
+    &:hover,
+    &:focus{
+      opacity: 0.5;
+    }
+  }
+  video{
+    &:focus{
+      outline: none;
+    }
+  }
+}
+
+.video-box{
+ width: 100%;
+}
+
+/* ------- Demo 2 wave animation --------- */
+
+.wave-effect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  height: 150px;
+  overflow: hidden;
+}
+
+.shape-one {
+  z-index: 15;
+  opacity: 0.5;
+}
+.shape-two {
+  z-index: 10;
+  opacity: 0.75;
+}
+.shape-three {
+  z-index: 5;
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-repeat: repeat no-repeat;
+  background-position: 0 bottom;
+  transform-origin: center bottom;
+}
+
+.waves-shape {
+  position: absolute;
+  bottom: -1px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wave-one {
+  background-size: 50% 100px;
+}
+
+.wave-anim .wave-one {
+animation: move-wave 3s;
+ -webkit-animation: move-wave 3s;
+ -webkit-animation-delay: 1s;
+ animation-delay: 1s;
+}
+.wave-two {
+  background-size: 50% 120px;
+}
+.wave-anim .wave-two {
+  animation: move_wave 10s linear infinite;
+}
+.wave-three {
+  background-size: 50% 100px;
+}
+.wave-anim .wave-three {
+  animation: move_wave 15s linear infinite;
+}
+
+
+@keyframes move_wave {
+  0% {
+      transform: translateX(0) translateZ(0) scaleY(1)
+  }
+  50% {
+      transform: translateX(-25%) translateZ(0) scaleY(0.55)
+  }
+  100% {
+      transform: translateX(-50%) translateZ(0) scaleY(1)
+  }
+}
+
+
+
+/*-------Demo 3 Rgistartion form ------*/
+
+.home-registration{
+  padding-top: 190px;
+}
+
+.home-registration-form .form-heading {
+  margin-bottom: 25px;
+}
+
+.home-registration-form {
+  padding: 15px 32px 32px 32px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px 0px #000000;
+}
+
+.home-subtitle-width-100 {
+  max-width: 100%;
+}
+
+.small-text {
+  font-size: 14px;
+}
+
+
+
+
+/*----Demo 4 Dashboard image ----*/
+
+.home-cell-bottom {
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.home-padding-t-150 {
+  padding-top: 150px;
+}
+
+
+
+/*---Demo 6 Subscribe -----*/
+
+.subscribe-form input {
+  padding: 15px 20px;
+  width: 100%;
+  font-size: 17px;
+  color: #4c5667 !important;
+  border: none;
+  outline: none !important;
+  padding-right: 180px;
+  padding-left: 30px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 30px;
+}
+
+.subscribe-form button {
+  position: absolute;
+  text-transform: uppercase;
+  top: 6px;
+  right: 8px;
+  outline: none !important;
+  border-radius: 30px;
+  font-size: 16px;
+  padding: 9px 30px;
+}
+
+.subscribe-form form {
+  position: relative;
+  max-width: 600px;
+  margin: 0px auto;
+}
+
+
+/*----Demo 8 Home with video --------*/
+
+.frame-border {
+  border: 9px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px 5px 5px 5px;
+}
+
+
+/*---Demo 9 Animated ---*/
+
+.slidero {
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index: 100;
+  left: 0;
+  right: 0;
+}

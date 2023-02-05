@@ -1,0 +1,53 @@
+//
+// contact.scss
+//
+
+textarea.form-control {
+  height: auto !important;
+}
+.form-control {
+  margin-bottom: 20px;
+  box-shadow: none !important;
+  height: 50px;
+  padding-left: 20px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  &:focus {
+    border-color: #ccc;
+  }
+}
+
+textarea.form-control {
+  height: auto;
+  padding-top: 13.5px;
+}
+
+.alert-warning {
+  padding: 10px;
+}
+
+// contact social
+
+.contact-social {
+  padding: 20px 0px;
+  .social-icon {
+    border: 3px solid #dadcdf;
+    border-radius: 50%;
+    color: #dadcdf;
+    width: 48px;
+    height: 48px;
+    display: block;
+    font-size: 16px;
+    line-height: 42px;
+    text-align: center;
+  }
+  .contact-title {
+    font-size: 20px;
+  }
+}
+
+#success_page {
+  background-color: rgba($success, 0.25);
+  padding: 10px 20px;
+  border-radius: 4px;
+}

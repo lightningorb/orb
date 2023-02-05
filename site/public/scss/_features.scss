@@ -1,0 +1,33 @@
+//
+// features.scss
+//
+
+.features-box {
+  h3 {
+    margin-bottom: 25px;
+    margin-top: 0;
+    line-height: 36px;
+  }
+  .features-item-list {
+    li {
+      position: relative;
+      line-height: 24px;
+      font-size: 15px;
+      padding: 7px 0 7px 20px;
+      &:before {
+        content: "";
+        border-radius: 50%;
+        width: 7px;
+        height: 7px;
+        position: absolute;
+        left: 0;
+        top: 14px;
+      }
+    }
+  }
+}
+
+.features-img {
+  max-width: 500px;
+  margin: 0 0 0 auto;
+}

@@ -28,7 +28,6 @@ from build_system import appstore
 from build_system import host
 from build_system import armor
 from build_system import site
-from build_system import katching
 from build_system import alembic
 from build_system import cln_regtest
 from build_system import docker
@@ -110,7 +109,6 @@ namespace = Collection(
     lnd,
     cln,
     ssh,
-    katching,
     release,
     deploy_ios,
     third_party,
