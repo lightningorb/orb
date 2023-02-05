@@ -8,18 +8,23 @@ env:
 jobs:
   build_site:
     runs-on: ubuntu-20.04
-    env:
-      os-name: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
       - run: cd site && npm install && npm run build
-
+      - name: cache site/public folder
+        uses: actions/cache@v2
+        with:
+          path: site/public
+          key: site-public-${{ hashFiles('site/public/**') }}
   deploy_site:
     runs-on: ubuntu-20.04
-    env:
-      os-name: ubuntu-20.04
     steps:
+      - name: restore site/public folder from cache
+        uses: actions/cache@v2
+        with:
+          path: site/public
+          key: site-public-${{ hashFiles('site/public/**') }}
       - run: aws s3 cp site/public/ s3://lnorb/site/public/ --recursive --region us-east-2
