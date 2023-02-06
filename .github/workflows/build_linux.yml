@@ -44,6 +44,7 @@ jobs:
       #     prerelease: false
 
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,17 +64,3 @@ jobs:
           asset_path: tmp/orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
           asset_name: orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
           asset_content_type: application/zip
-
-      # - name: Upload file to Release
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: tmp/orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
-      #     asset_name: orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
-      #     asset_content_type: application/zip
-
-
-
-
