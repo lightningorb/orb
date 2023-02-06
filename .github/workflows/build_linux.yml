@@ -8,6 +8,7 @@ env:
     PYARMOR: ${{ secrets.PYARMOR }}
 jobs:
   build_linux:
+    permissions: write-all
     runs-on: ubuntu-20.04
     env:
       os-name: ubuntu-20.04
