@@ -27,6 +27,7 @@
 		"svelte-fullscreen": "^2.0.0",
 		"svelte-markdown": "^0.2.3",
 		"svelte-scrollto": "^0.2.0",
-		"sveltestrap": "^5.10.0"
+		"sveltestrap": "^5.10.0",
+		"web-streams-node": "^0.4.0"
 	}
 }
