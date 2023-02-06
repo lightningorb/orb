@@ -69,10 +69,6 @@
             >
           </li>
           <li class="nav-item">
-            <a use:scrollto={"#about"} href={"#about"} class="nav-link"
-              >About</a>
-          </li>
-          <li class="nav-item">
             <a use:scrollto={"#download"} href={"#download"} class="nav-link">Download</a>
           </li>
         </ul>
