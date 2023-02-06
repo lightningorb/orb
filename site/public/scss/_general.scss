@@ -9,9 +9,9 @@
 //
 
 body {
-  font-family: "Rubik", sans-serif;
-  overflow-x: hidden !important;
-  position: relative;
+	font-family: 'Rubik', sans-serif;
+	overflow-x: hidden !important;
+	position: relative;
 }
 
 h1,
@@ -20,27 +20,27 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Sarabun", sans-serif;
-  font-weight: 600;
+	font-family: 'Sarabun', sans-serif;
+	font-weight: 600;
 }
 
 .btn,
 .btn:focus,
 button,
 button:focus {
-  outline: none !important;
+	outline: none !important;
 }
 
 a {
-  text-decoration: none !important;
-  outline: none;
+	text-decoration: none !important;
+	outline: none;
 }
 
 p {
-  font-size: 14.4px;
-  line-height: 24px;
+	font-size: 14.4px;
+	line-height: 24px;
 }
 
 .row > * {
-  position: relative;
+	position: relative;
 }

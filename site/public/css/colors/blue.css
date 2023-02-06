@@ -4,27 +4,36 @@
     File Description: Main CSS file of the template
 */
 
-
-.text-primary,.read-btn,
+.text-primary,
+.read-btn,
 .navbar-custom.navbar-white .navbar-nav li.active a,
 .navbar-custom.navbar-white .navbar-nav li a:hover,
 .navbar-custom.navbar-white .navbar-nav li a:focus,
 .navbar-custom.navbar-white .navbar-nav li a:active,
-.play-btn,.blog-title:hover,.social-icon:hover i{
-    color: #3FA7D6 !important;
+.play-btn,
+.blog-title:hover,
+.social-icon:hover i {
+	color: #3fa7d6 !important;
 }
 
-.navbar-custom.navbar-white .navbar-nav li a.active{
-    color: #3FA7D6 !important;
+.navbar-custom.navbar-white .navbar-nav li a.active {
+	color: #3fa7d6 !important;
 }
 
-.section-title-border, .bg-primary, .btn-primary,.features-item-list li:before,.process-left-icon-1 i,
-.process-left-icon-2 i, .account-card .form-check-input:checked {
-    background-color: #3FA7D6 !important;
+.section-title-border,
+.bg-primary,
+.btn-primary,
+.features-item-list li:before,
+.process-left-icon-1 i,
+.process-left-icon-2 i,
+.account-card .form-check-input:checked {
+	background-color: #3fa7d6 !important;
 }
 
-.btn-primary,.play-btn,.account-card .form-check-input:checked {
-    border-color:#3FA7D6 !important;
+.btn-primary,
+.play-btn,
+.account-card .form-check-input:checked {
+	border-color: #3fa7d6 !important;
 }
 
 .btn-primary:hover,
@@ -35,7 +44,7 @@
 .btn-primary:active,
 .btn-primary:focus,
 .btn-primary:hover,
-.open > .dropdown-toggle.btn-primary{
+.open > .dropdown-toggle.btn-primary {
 	background-color: #3f9dc7;
 }
 
@@ -47,17 +56,6 @@
 .btn-primary:active,
 .btn-primary:focus,
 .btn-primary:hover,
-.open > .dropdown-toggle.btn-primary{
+.open > .dropdown-toggle.btn-primary {
 	border-color: #3f9dc7;
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,7 @@
 # IOS and DESKTOP
 
+wheel
+bdist_wheel
 websocket-client
 cython
 kivymd==0.104.2

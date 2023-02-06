@@ -1,33 +1,19 @@
-<!-- Navbar component -->
 <script>
-  import { Link } from "svelte-routing";
-
   import { scrollto } from "svelte-scrollto";
   import { onMount } from "svelte";
   import { Button } from "sveltestrap";
-
   export let extraclass;
-
-  /**
-   * Toggle menu
-   */
   const toggleMenu = () => {
     document.getElementById("navbarCollapse").classList.toggle("show");
   };
-
-  /**
-   * Component mount
-   */
   onMount(() => {
     var section = document.querySelectorAll(".common-section");
-
     var sections = {};
     var i = 0;
-
     Array.prototype.forEach.call(section, function (e) {
       sections[e.id] = e.offsetTop;
     });
-
+    if (window)
     window.onscroll = function () {
       var scrollPosition =
         document.documentElement.scrollTop || document.body.scrollTop;
@@ -40,11 +26,10 @@
         }
       }
     };
+    if (window)
+      window.addEventListener("scroll", handleScroll, { passive: false });
   });
 
-  /**
-   * Scroll method
-   */
   const handleScroll = () => {
     var navbar = document.getElementById("navbar");
     if (
@@ -56,20 +41,13 @@
       navbar.classList.remove("is-sticky");
     }
   };
-
-  window.addEventListener("scroll", handleScroll, { passive: false });
 </script>
-
-<!-- STRAT NAVBAR -->
-
 <div id="navbar">
   <nav
     class="navbar navbar-expand-lg fixed-top navbar-custom sticky sticky-dark {extraclass}"
     id="navbar"
   >
     <div class="container">
-      <!-- LOGO -->
-      <Link class="navbar-brand logo text-uppercase" to="/"><i class="mdi mdi:circle-outline"></i> Orb </Link>
       <Button class="navbar-toggler" on:click={toggleMenu}>
         <i class="mdi mdi-menu" />
       </Button>
@@ -94,28 +72,11 @@
             <a use:scrollto={"#about"} href={"#about"} class="nav-link"
               >About</a>
           </li>
-<!--           <li class="nav-item">
-            <a use:scrollto={"#pricing"} href={"#pricing"} class="nav-link">Pricing</a>
-          </li> -->
           <li class="nav-item">
             <a use:scrollto={"#download"} href={"#download"} class="nav-link">Download</a>
           </li>
         </ul>
-<!-- 
-        <div class="nav-button ms-auto">
-          <ul class="nav navbar-nav navbar-end">
-            <li>
-              <a href='/hire-me' class='my-0 py-0'>
-              <Button
-                class="btn btn-primary navbar-btn btn-rounded waves-effect waves-light"
-                >Hire me!</Button
-              >
-              </a>
-            </li>
-          </ul>
-        </div> -->
       </div>
     </div>
   </nav>
 </div>
-<!-- END NAVBAR -->

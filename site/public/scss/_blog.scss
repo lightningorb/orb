@@ -3,19 +3,19 @@
 //
 
 .blog-box {
-  .blog-title {
-    color: $dark;
-    transition: all 0.5s;
-    &:hover {
-      color: $primary;
-    }
-  }
+	.blog-title {
+		color: $dark;
+		transition: all 0.5s;
+		&:hover {
+			color: $primary;
+		}
+	}
 
-  .read-btn {
-    font-size: 15px;
-    color: $primary;
-    &:hover {
-      color: $dark !important;
-    }
-  }
+	.read-btn {
+		font-size: 15px;
+		color: $primary;
+		&:hover {
+			color: $dark !important;
+		}
+	}
 }

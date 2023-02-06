@@ -1,33 +1,19 @@
-<!-- Navbar component -->
-<script>
+<!-- <script>
   import { Link } from "svelte-routing";
-
   import { scrollto } from "svelte-scrollto";
   import { onMount } from "svelte";
   import { Button } from "sveltestrap";
-
   export let extraclass;
-
-  /**
-   * Toggle menu
-   */
   const toggleMenu = () => {
     document.getElementById("navbarCollapse").classList.toggle("show");
   };
-
-  /**
-   * Component mount
-   */
   onMount(() => {
     var section = document.querySelectorAll(".common-section");
-
     var sections = {};
     var i = 0;
-
     Array.prototype.forEach.call(section, function (e) {
       sections[e.id] = e.offsetTop;
     });
-
     window.onscroll = function () {
       var scrollPosition =
         document.documentElement.scrollTop || document.body.scrollTop;
@@ -43,10 +29,6 @@
       }
     };
   });
-
-  /**
-   * Scroll method
-   */
   const handleScroll = () => {
     var navbar = document.getElementById("navbar");
     if (
@@ -58,19 +40,14 @@
       navbar.classList.remove("is-sticky");
     }
   };
-
   window.addEventListener("scroll", handleScroll, { passive: false });
 </script>
-
-<!-- STRAT NAVBAR -->
-
 <div id="navbar">
   <nav
     class="navbar navbar-expand-lg fixed-top navbar-custom sticky sticky-dark {extraclass}"
     id="navbar"
   >
     <div class="container">
-      <!-- LOGO -->
       <Link class="navbar-brand logo text-uppercase" to="/"><i class="mdi mdi:circle-outline"></i> Orb </Link>
       <Button class="navbar-toggler" on:click={toggleMenu}>
         <i class="mdi mdi-menu" />
@@ -87,4 +64,4 @@
     </div>
   </nav>
 </div>
-<!-- END NAVBAR -->
+ -->
