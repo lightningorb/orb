@@ -1,10 +1,10 @@
 <script>
-    import Footer from '../Components/Footer.svelte';
-    import NavbarPlain from '../Components/NavbarPlain.svelte';
-    import { Modal, ModalBody, ModalHeader , Container, Row, Col } from 'sveltestrap';
-  import SvelteMarkdown from 'svelte-markdown'
+	import Footer from '../../Components/Footer.svelte';
+	import NavbarPlain from '../../Components/NavbarPlain.svelte';
+	import { Styles, Modal, ModalBody, ModalHeader, Container, Row, Col } from 'sveltestrap';
+	import SvelteMarkdown from 'svelte-markdown';
 
-  const source = `
+	const source = `
 
 
 v0.21.13
@@ -427,28 +427,29 @@ Brought back rankings, which had been temporarily removed due to ongoing work wi
 Batch opens were not working on REST (previous, it only worked over GRPC).
 
 On mobile, in the console output section, disabled the ability to select text, as it brings up the keyboard, preventing the ability to scroll.
-`
-
+`;
 </script>
 
 <NavbarPlain extraclass="" />
 
 <section class="section common-section text-black" id="priv">
-    <div class="display-table">
-        <div class="display-table-cell">
-            <Container>
-                <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <h1 class="home-title">Release Notes</h1>
-                        <br/>
-                        <div class='terms'>
-                            <SvelteMarkdown {source} />
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-    </div>
+	<div class="display-table">
+		<div class="display-table-cell">
+			<Container>
+				<Row>
+					<Col lg={{ size: 8, offset: 2 }}>
+						<h1 class="home-title">Release Notes</h1>
+						<br />
+						<div class="terms">
+							<SvelteMarkdown {source} />
+						</div>
+					</Col>
+				</Row>
+			</Container>
+		</div>
+	</div>
 </section>
+
+<Styles/>
 
 <Footer />

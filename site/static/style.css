@@ -1292,13 +1292,13 @@ iframe {
 }
 
 .navbar-custom .navbar-nav li a.active {
-    color: #fff !important;
+	color: #fff !important;
 }
 
-@media (min-width: 992px){
+@media (min-width: 992px) {
 	.navbar-custom .navbar-nav li a {
-		padding-right: .5rem;
-		padding-left: .5rem;
+		padding-right: 0.5rem;
+		padding-left: 0.5rem;
 	}
 }
 
@@ -2245,32 +2245,34 @@ ul.pattern .color8 {
 	top: 0px;
 }
 
-.home-modal .modal-content{
+.home-modal .modal-content {
 	border: 0;
-    background-color: transparent;
+	background-color: transparent;
 }
 .home-modal .close {
-    width: 36px;
-    height: 36px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
-    position: relative;
-    top: 70px;
-    z-index: 3;
+	width: 36px;
+	height: 36px;
+	background-color: rgba(255, 255, 255, 0.5);
+	border-radius: 10px;
+	position: relative;
+	top: 70px;
+	z-index: 3;
 }
 
-
-.terms h1,h2,h3,h4 {
-	 padding-top:  24px;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 7px;
-    padding-top: 30px;
-    padding-bottom: 10px;
+.terms h1,
+h2,
+h3,
+h4 {
+	padding-top: 24px;
+	font-size: 16px;
+	text-transform: uppercase;
+	letter-spacing: 7px;
+	padding-top: 30px;
+	padding-bottom: 10px;
 }
 
 .terms p {
-	padding-top: 1rem!important;
+	padding-top: 1rem !important;
 	font-size: 14.4px;
 	line-height: 24px;
 }
@@ -2280,24 +2282,40 @@ ul.pattern .color8 {
 	line-height: 24px;
 }
 
+#left,
+#middle,
+#right {
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	vertical-align: top;
+	font-size: 12px;
+}
+#left {
+	width: 25%;
+	background: blue;
+}
+#middle {
+	width: 50%;
+	background: green;
+}
+#right {
+	width: 25%;
+	background: yellow;
+}
 
-#left, #middle, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
-#left {width: 25%; background: blue;}
-#middle {width: 50%; background: green;}
-#right {width: 25%; background: yellow;}
-
-.upload{
-	display:flex;
-	height:50px;
-	width:50px;
+.upload {
+	display: flex;
+	height: 50px;
+	width: 50px;
 	margin-left: auto;
 	margin-right: auto;
-	cursor:pointer;
+	cursor: pointer;
 }
-.avatar{
-	display:flex;
-	height:100px;
-	width:500px;
+.avatar {
+	display: flex;
+	height: 100px;
+	width: 500px;
 	margin-left: auto;
 	margin-right: auto;
 }

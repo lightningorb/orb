@@ -1,10 +1,10 @@
 <script>
-    import Footer from '../Components/Footer.svelte';
-    import NavbarPlain from '../Components/NavbarPlain.svelte';
-    import { Modal, ModalBody, ModalHeader , Container, Row, Col } from 'sveltestrap';
-  import SvelteMarkdown from 'svelte-markdown'
+	import Footer from '../../Components/Footer.svelte';
+	import NavbarPlain from '../../Components/NavbarPlain.svelte';
+	import { Modal, ModalBody, ModalHeader, Container, Row, Col } from 'sveltestrap';
+	import SvelteMarkdown from 'svelte-markdown';
 
-  const source = `
+	const source = `
 SECURITY.md
 ===========
 
@@ -104,28 +104,27 @@ There is currently a plan to:
 
 1. add a review process before apps are made available to other users, this process may be sat-incentivized.
 1. sign all commits with the author's private key, and verify those signatures during app installs.
-`
-
+`;
 </script>
 
 <NavbarPlain extraclass="" />
 
 <section class="section common-section text-black" id="priv">
-    <div class="display-table">
-        <div class="display-table-cell">
-            <Container>
-                <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <h1 class="home-title">Security</h1>
-                        <br/>
-                        <div class='terms'>
-                            <SvelteMarkdown {source} />
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-    </div>
+	<div class="display-table">
+		<div class="display-table-cell">
+			<Container>
+				<Row>
+					<Col lg={{ size: 8, offset: 2 }}>
+						<h1 class="home-title">Security</h1>
+						<br />
+						<div class="terms">
+							<SvelteMarkdown {source} />
+						</div>
+					</Col>
+				</Row>
+			</Container>
+		</div>
+	</div>
 </section>
 
 <Footer />

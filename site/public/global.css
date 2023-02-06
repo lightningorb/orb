@@ -5,10 +5,7 @@
 * @Last Modified time: 2022-02-05 12:14:48
 */
 
-
 :root {
---toastBackground: #abcdef;
---toastColor: #123456;
+	--toastBackground: #abcdef;
+	--toastColor: #123456;
 }
-
-

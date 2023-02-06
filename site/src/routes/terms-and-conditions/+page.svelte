@@ -1,9 +1,9 @@
 <script>
-    import NavbarPlain from '../Components/NavbarPlain.svelte';
-    import { Modal, ModalBody, ModalHeader , Container, Row, Col } from 'sveltestrap';
-  import SvelteMarkdown from 'svelte-markdown'
+    import NavbarPlain from '../../Components/NavbarPlain.svelte';
+    import { Styles, Modal, ModalBody, ModalHeader, Container, Row, Col } from 'sveltestrap';
+    import SvelteMarkdown from 'svelte-markdown';
 
-  const source = `
+    const source = `
 # Orb as a legal entity
 
 Currenty Orb has no legal status as it is not a registered business. As such, Orb's creators make no guarantees whatsoever and strongly advise you against the use of Orb on mainnet nodes.
@@ -46,9 +46,10 @@ We strongly advise against the use of Orb on the mainnet. By agreeing to our Ter
 # Node Profitability
 
 Running a profitable node is hard, and requires a lot of skill. Automating node profitability is an extremely hard. Our current approach is providing our users with a set of powerful automation tools. Once we have released Orb into the world, we'll look forwards to getting feedback from our users, and fine-tuning our automation tools for automated profitability.
-`
-
+`;
 </script>
+
+<Styles/>
 
 <NavbarPlain extraclass="" />
 
@@ -57,10 +58,10 @@ Running a profitable node is hard, and requires a lot of skill. Automating node 
         <div class="display-table-cell">
             <Container>
                 <Row>
-                    <Col lg={{size: 8, offset: 2}}>
+                    <Col lg={{ size: 8, offset: 2 }}>
                         <h1 class="home-title">Terms and Conditions</h1>
-                        <br/>
-                        <div class='terms'>
+                        <br />
+                        <div class="terms">
                             <SvelteMarkdown {source} />
                         </div>
                     </Col>
