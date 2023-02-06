@@ -1,16 +1,6 @@
-<!-- Footer Component -->
 <script>
 	import { Col, Row, Container } from 'sveltestrap';
 </script>
-
-<style type="text/css">
-.link-unstyled, .link-unstyled:link, .link-unstyled:hover {
-  color: red !important;
-  text-decoration: inherit  !important;
-}
-</style>
-
-<!--START FOOTER-->
 <footer class="footer">
 	<Container>
 		<Row>
@@ -37,9 +27,6 @@
 		</Row>
 	</Container>
 </footer>
-<!--END FOOTER-->
-
-<!--START FOOTER ALTER-->
 <div class="footer-alt">
 	<Container>
 		<Row>
@@ -47,31 +34,19 @@
 				<div class="float-start pull-none ">
 					<p class="copy-rights text-muted mb-3 mb-sm-0">
 						{new Date().getFullYear()}
-						© lnorb.com - made with <a href='/love'>♥</a>
+						© lnorb.com
 					</p>
 				</div>
-<!-- 				<div class="float-end pull-none ">
-					<ul class="list-inline social m-0">
-						<li class="list-inline-item">
-							<a href={"#"} class="social-icon"><i class="mdi mdi-facebook" /></a>
-						</li>
-						<li class="list-inline-item">
-							<a href={"#"} class="social-icon"><i class="mdi mdi-twitter" /></a>
-						</li>
-						<li class="list-inline-item">
-							<a href={"#"} class="social-icon"><i class="mdi mdi-linkedin" /></a>
-						</li>
-						<li class="list-inline-item">
-							<a href={"#"} class="social-icon"><i class="mdi mdi-google-plus" /></a>
-						</li>
-						<li class="list-inline-item">
-							<a href={"#"} class="social-icon"><i class="mdi mdi-dribbble" /></a>
-						</li>
-					</ul>
-				</div> -->
 				<div class="clearfix" />
 			</Col>
 		</Row>
 	</Container>
 </div>
-<!--START FOOTER ALTER-->
+<style type="text/css">
+	.link-unstyled,
+	.link-unstyled:link,
+	.link-unstyled:hover {
+		color: red !important;
+		text-decoration: inherit !important;
+	}
+</style>

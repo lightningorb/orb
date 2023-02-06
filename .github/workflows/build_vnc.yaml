@@ -3,7 +3,7 @@ on:
   push:
     branches: [ build_vnc ]
 jobs:
-  build_linux:
+  build_vnc:
     runs-on: ubuntu-20.04
     env:
       os-name: ubuntu-20.04
