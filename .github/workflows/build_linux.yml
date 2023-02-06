@@ -26,8 +26,21 @@ jobs:
         run: python ./build.py test.test
       - name: Build for Linux
         run: python ./build.py armor.build-linux
-      - name: Upload requirements.txt
-        uses: actions/upload-artifact@v2
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: requirements.txt
-          path: requirements.txt
+          tag_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
+          release_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
+          draft: true
+          prerelease: true
+      - name: Upload file to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: tmp/orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
+          asset_name: orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
+          asset_content_type: application/zip
