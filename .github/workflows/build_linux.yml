@@ -51,8 +51,8 @@ jobs:
         with:
           tag_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
           release_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
-          draft: true
-          prerelease: true
+          draft: false
+          prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset 
