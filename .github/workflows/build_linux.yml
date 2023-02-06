@@ -12,11 +12,22 @@ jobs:
     env:
       os-name: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python environment
+        uses: actions/setup-python@v2
         with:
           python-version: '3.8'
           cache: 'pip'
-      - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: python ./build.py test.test
-      - run: python ./build.py armor.build-linux
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt -r requirements-dev.txt
+      - name: Run tests
+        run: python ./build.py test.test
+      - name: Build for Linux
+        run: python ./build.py armor.build-linux
+      - name: Upload requirements.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: requirements.txt
+          path: requirements.txt
