@@ -42,9 +42,6 @@ def deploy_ios(c, bump: bool = False):
 
 @task
 def release(c, minor=False, patch=False, hotfix=False):
-    # if not hotfix or not "working tree clean" in c.run("git status").stdout:
-    #     print("Working directory not clean")
-    #     return
     merge(c, push=False)
     if not hotfix:
         if minor and patch:
