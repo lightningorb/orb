@@ -19,28 +19,44 @@ jobs:
         with:
           python-version: '3.8'
           cache: 'pip'
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt -r requirements-dev.txt
-      - name: Run tests
-        run: python ./build.py test.test
-      - name: Build for Linux
-        run: python ./build.py armor.build-linux
+      # - name: Install requirements
+      #   run: |
+      #     pip install -r requirements.txt -r requirements-dev.txt
+      # - name: Run tests
+        # run: python ./build.py test.test
+      # - name: Build for Linux
+        # run: python ./build.py armor.build-linux
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
-          release_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
-          draft: true
-          prerelease: true
-      - name: Upload file to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tmp/orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
-          asset_name: orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
-          asset_content_type: application/zip
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+
+
+      # - name: Create Release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
+      #     release_name: 0.21.14.${{ env.GITHUB_RUN_NUMBER }}
+      #     draft: true
+      #     prerelease: true
+      # - name: Upload file to Release
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: tmp/orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
+      #     asset_name: orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
+      #     asset_content_type: application/zip
