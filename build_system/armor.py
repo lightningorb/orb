@@ -248,7 +248,7 @@ def build_windows(c, env=os.environ):
         c.run("lnorb.exe test run-all-tests")
     zipdir("dist", zipf)
     zipf.close()
-    upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
+    # upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
 
 
 def dmg(c, env=os.environ):
