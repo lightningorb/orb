@@ -85,6 +85,8 @@ jobs:
   #         asset_name: orb-0.21.14-ubuntu-20.04-x86_64.tar.gz
   #         asset_content_type: application/zip
   build_windows:
+    permissions: write-all
+    needs: create_release
     runs-on: ${{ matrix.os }}
     env:
       os-name: ${{ matrix.os }}
