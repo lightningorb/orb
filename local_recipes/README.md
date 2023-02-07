@@ -1,0 +1,1 @@
+These are buildozer (python-for-android) recipies that are either ours or overridden from the pool of existing python-for-android recipes.

@@ -6,20 +6,10 @@
 
 import os
 import re
-import zipfile
 from pathlib import Path
 from fabric import Connection
 from textwrap import dedent
 from invoke import task
-
-
-def zipdir(path, ziph):
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(
-                os.path.join(root, file),
-                os.path.relpath(os.path.join(root, file), path),
-            )
 
 
 @task
@@ -34,7 +24,6 @@ def clean(c):
 def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer[all]", env=env)
     c.run("pip3 install typer-cli")
-    # c.run("pip3 install click==7.1.2")
     c.run("PYTHONPATH=. ./build_system/typer main.py utils docs --name orb", env=env)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
@@ -55,6 +44,8 @@ def build(c, api_doc: bool = True, env=os.environ):
     Build the docs. Requires sphinx.
     """
     for app in Path("apps/").glob("*"):
+        if not app.is_dir():
+            continue
         py = next(app.glob("*.py"))
         kv = next(app.glob("*.kv"), None)
         app = app.parts[-1]
@@ -104,25 +95,6 @@ def build(c, api_doc: bool = True, env=os.environ):
             env=env,
         )
     c.run("sphinx-build -b html docs/source docs/docsbuild", env=env)
-
-
-@task
-def upload(c):
-    """
-    Upload docs to site.
-    """
-    zipf = zipfile.ZipFile("docs.zip", "w", zipfile.ZIP_DEFLATED)
-    zipdir("docs/docsbuild", zipf)
-    zipf.close()
-    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
-    with Connection(
-        "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
-    ) as c:
-        c.run("rm -rf /home/ubuntu/lnorb_com/docs")
-        c.run("mkdir -p /home/ubuntu/lnorb_com/docs")
-        c.put("docs.zip", "/home/ubuntu/lnorb_com/docs")
-        with c.cd("/home/ubuntu/lnorb_com/docs"):
-            c.run("unzip docs.zip")
 
 
 @task

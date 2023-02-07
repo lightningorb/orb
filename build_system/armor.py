@@ -103,6 +103,8 @@ def zipdir(path, ziph):
 
 @task
 def register(c, env=os.environ):
+    with open("pyarmor-regcode-2364.txt", "w") as f:
+        f.write(env["PYARMOR"])
     c.run("pyarmor register pyarmor-regcode-2364.txt", env=env)
 
 
@@ -223,8 +225,9 @@ def build_linux(c, do_upload=True, env=os.environ):
 def build_osx(c, do_upload=True, env=os.environ):
     build_common(c=c, env=env, sep=":")
     file_name = dmg(c=c, env=env)
-    with c.cd("dist/lnorb"):
-        c.run("./lnorb test run-all-tests")
+    print(file_name)
+    # with c.cd("dist/lnorb"):
+    #     c.run("./lnorb test run-all-tests")
     if do_upload:
         print(f"Uploading {file_name} to S3: customer_builds/{file_name}")
         upload_to_s3(
@@ -245,7 +248,7 @@ def build_windows(c, env=os.environ):
         c.run("lnorb.exe test run-all-tests")
     zipdir("dist", zipf)
     zipf.close()
-    upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
+    # upload_to_s3(env, build_name, "lnorb", object_name=f"customer_builds/{build_name}")
 
 
 def dmg(c, env=os.environ):

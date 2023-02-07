@@ -1,0 +1,11 @@
+/*
+* @Author: lnorb.com
+* @Date:   2022-02-01 21:17:10
+* @Last Modified by:   lnorb.com
+* @Last Modified time: 2022-02-05 12:14:48
+*/
+
+:root {
+	--toastBackground: #abcdef;
+	--toastColor: #123456;
+}

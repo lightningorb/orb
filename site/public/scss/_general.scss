@@ -1,0 +1,46 @@
+/*
+* @Author: lnorb.com
+* @Date:   2022-02-02 05:25:32
+* @Last Modified by:   lnorb.com
+* @Last Modified time: 2022-02-02 05:34:05
+*/
+//
+// general.scss
+//
+
+body {
+	font-family: 'Rubik', sans-serif;
+	overflow-x: hidden !important;
+	position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Sarabun', sans-serif;
+	font-weight: 600;
+}
+
+.btn,
+.btn:focus,
+button,
+button:focus {
+	outline: none !important;
+}
+
+a {
+	text-decoration: none !important;
+	outline: none;
+}
+
+p {
+	font-size: 14.4px;
+	line-height: 24px;
+}
+
+.row > * {
+	position: relative;
+}

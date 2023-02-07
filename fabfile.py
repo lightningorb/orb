@@ -15,7 +15,6 @@ fix_annotations()
 from build_system import lnd
 from build_system import cln
 from build_system import ssh
-from build_system import android
 from build_system import ios
 from build_system import osx
 from build_system import ubuntu
@@ -28,7 +27,6 @@ from build_system import appstore
 from build_system import host
 from build_system import armor
 from build_system import site
-from build_system import katching
 from build_system import alembic
 from build_system import cln_regtest
 from build_system import docker
@@ -43,9 +41,6 @@ def deploy_ios(c, bump: bool = False):
 
 @task
 def release(c, minor=False, patch=False, hotfix=False):
-    # if not hotfix or not "working tree clean" in c.run("git status").stdout:
-    #     print("Working directory not clean")
-    #     return
     merge(c, push=False)
     if not hotfix:
         if minor and patch:
@@ -93,7 +88,6 @@ def merge(c, push=False):
         "build_docker",
         "build_macosx",
         "build_windows",
-        "build_android",
         "build_vnc",
         "docs",
         "site",
@@ -110,7 +104,6 @@ namespace = Collection(
     lnd,
     cln,
     ssh,
-    katching,
     release,
     deploy_ios,
     third_party,
@@ -126,7 +119,6 @@ namespace = Collection(
     armor,
     site,
     alembic,
-    android,
     cln_regtest,
     merge,
     update_install_script,
