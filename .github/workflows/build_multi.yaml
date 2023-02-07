@@ -24,6 +24,7 @@ jobs:
           draft: false
           prerelease: false
   build_linux:
+    permissions: write-all
     needs: create_release
     runs-on: ubuntu-20.04
     env:
