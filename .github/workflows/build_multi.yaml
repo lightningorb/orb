@@ -25,6 +25,7 @@ jobs:
           draft: false
           prerelease: false
   build_linux:
+    needs: create_release
     runs-on: ubuntu-20.04
     env:
       os-name: ubuntu-20.04
