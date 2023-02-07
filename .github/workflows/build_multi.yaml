@@ -50,8 +50,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: orb-0.21.14-${os-name}-x86_64.dmg
-          asset_name: orb-0.21.14-${os-name}-x86_64.dmg
+          asset_path: orb-0.21.14-${{env.os-name}}-x86_64.dmg
+          asset_name: orb-0.21.14-${{env.os-name}}-x86_64.dmg
           asset_content_type: application/zip
   build_linux:
     permissions: write-all
