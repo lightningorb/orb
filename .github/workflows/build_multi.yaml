@@ -24,144 +24,144 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}/v${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
           release_name: v${{ env.VERSION }}
           draft: false
           prerelease: false
-  build_macosx:
-    permissions: write-all
-    needs: create_release
-    runs-on: ${{ matrix.os }}
-    env:
-      os-name: ${{ matrix.os }}
-      KIVY_GL_BACKEND: 'angle_sdl2'
-    strategy:
-      matrix:
-        os: [macos-10.15, macos-11]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-          cache: 'pip'
-      - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: brew install create-dmg
-      - run: python ./build.py armor.build-osx
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.dmg
-          asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.dmg
-          asset_content_type: application/zip
-  build_linux:
-    permissions: write-all
-    needs: create_release
-    runs-on: ubuntu-20.04
-    env:
-      os-name: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Python environment
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-          cache: 'pip'
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt -r requirements-dev.txt
-      - name: Build for Linux
-        run: python ./build.py armor.build-linux
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: tmp/orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
-          asset_name: orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
-          asset_content_type: application/zip
-  build_windows:
-    permissions: write-all
-    needs: create_release
-    runs-on: ${{ matrix.os }}
-    env:
-      os-name: ${{ matrix.os }}
-      KIVY_GL_BACKEND: 'angle_sdl2'
-    strategy:
-      matrix:
-        os: [windows-2022, windows-2019]
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: python ./build.py armor.build-windows
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
-          asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
-          asset_content_type: application/zip
-  build_android:
-    permissions: write-all
-    needs: create_release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-          cache: 'pip'
-      - run: pip install fabric semver
-      - run: python ./build.py android.cython
-      - uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          command: buildozer android debug
-          buildozer_version: stable
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a-debug.apk
-          asset_name: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a-debug.apk
-          asset_content_type: application/zip
-  build_docs:
-    runs-on: ubuntu-20.04
-    env:
-      os-name: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-          cache: 'pip'
-      - run: sudo apt-get install pandoc -y
-      - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: python ./build.py documentation.build-cli-docs documentation.build
-      - run: aws s3 cp docs/docsbuild/ s3://lnorb/docs/ --recursive --region us-east-2
-  build_site:
-    runs-on: ubuntu-20.04
-    env:
-      os-name: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-      - run: cd site && npm install && npm run build
-      - run: aws s3 cp site/build/ s3://lnorb/ --recursive --region us-east-2
+  # build_macosx:
+  #   permissions: write-all
+  #   needs: create_release
+  #   runs-on: ${{ matrix.os }}
+  #   env:
+  #     os-name: ${{ matrix.os }}
+  #     KIVY_GL_BACKEND: 'angle_sdl2'
+  #   strategy:
+  #     matrix:
+  #       os: [macos-10.15, macos-11]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9'
+  #         cache: 'pip'
+  #     - run: pip install -r requirements.txt -r requirements-dev.txt
+  #     - run: brew install create-dmg
+  #     - run: python ./build.py armor.build-osx
+  #     - name: Upload Release Asset
+  #       id: upload-release-asset 
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ needs.create_release.outputs.upload_url }}
+  #         asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.dmg
+  #         asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.dmg
+  #         asset_content_type: application/zip
+  # build_linux:
+  #   permissions: write-all
+  #   needs: create_release
+  #   runs-on: ubuntu-20.04
+  #   env:
+  #     os-name: ubuntu-20.04
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Setup Python environment
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.8'
+  #         cache: 'pip'
+  #     - name: Install requirements
+  #       run: |
+  #         pip install -r requirements.txt -r requirements-dev.txt
+  #     - name: Build for Linux
+  #       run: python ./build.py armor.build-linux
+  #     - name: Upload Release Asset
+  #       id: upload-release-asset 
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ needs.create_release.outputs.upload_url }}
+  #         asset_path: tmp/orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
+  #         asset_name: orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
+  #         asset_content_type: application/zip
+  # build_windows:
+  #   permissions: write-all
+  #   needs: create_release
+  #   runs-on: ${{ matrix.os }}
+  #   env:
+  #     os-name: ${{ matrix.os }}
+  #     KIVY_GL_BACKEND: 'angle_sdl2'
+  #   strategy:
+  #     matrix:
+  #       os: [windows-2022, windows-2019]
+  #   timeout-minutes: 30
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9'
+  #     - run: pip install -r requirements.txt -r requirements-dev.txt
+  #     - run: python ./build.py armor.build-windows
+  #     - name: Upload Release Asset
+  #       id: upload-release-asset 
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ needs.create_release.outputs.upload_url }}
+  #         asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
+  #         asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
+  #         asset_content_type: application/zip
+  # build_android:
+  #   permissions: write-all
+  #   needs: create_release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9'
+  #         cache: 'pip'
+  #     - run: pip install fabric semver
+  #     - run: python ./build.py android.cython
+  #     - uses: ArtemSBulgakov/buildozer-action@v1
+  #       with:
+  #         command: buildozer android debug
+  #         buildozer_version: stable
+  #     - name: Upload Release Asset
+  #       id: upload-release-asset 
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ needs.create_release.outputs.upload_url }}
+  #         asset_path: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a-debug.apk
+  #         asset_name: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a-debug.apk
+  #         asset_content_type: application/zip
+  # build_docs:
+  #   runs-on: ubuntu-20.04
+  #   env:
+  #     os-name: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9'
+  #         cache: 'pip'
+  #     - run: sudo apt-get install pandoc -y
+  #     - run: pip install -r requirements.txt -r requirements-dev.txt
+  #     - run: python ./build.py documentation.build-cli-docs documentation.build
+  #     - run: aws s3 cp docs/docsbuild/ s3://lnorb/docs/ --recursive --region us-east-2
+  # build_site:
+  #   runs-on: ubuntu-20.04
+  #   env:
+  #     os-name: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '16'
+  #     - run: cd site && npm install && npm run build
+  #     - run: aws s3 cp site/build/ s3://lnorb/ --recursive --region us-east-2
