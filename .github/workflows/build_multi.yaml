@@ -8,7 +8,6 @@ env:
     PYARMOR: ${{ secrets.PYARMOR }}
 jobs:
   build_linux:
-    permissions: write-all
     runs-on: ubuntu-20.04
     env:
       os-name: ubuntu-20.04
@@ -27,9 +26,9 @@ jobs:
         run: python ./build.py test.test
       - name: Build for Linux
         run: python ./build.py armor.build-linux
-
   create_release:
     needs: build_linux
+    permissions: write-all
     runs-on: ubuntu-20.04
     steps:
       - name: Create Release
