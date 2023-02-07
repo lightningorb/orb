@@ -10,7 +10,6 @@ jobs:
   create_release:
     outputs: 
       upload_url: ${{ steps.create_release.outputs.upload_url }} 
-    needs: build_linux
     permissions: write-all
     runs-on: ubuntu-20.04
     steps:
@@ -25,7 +24,6 @@ jobs:
           draft: false
           prerelease: false
   build_linux:
-
     needs: create_release
     runs-on: ubuntu-20.04
     env:
