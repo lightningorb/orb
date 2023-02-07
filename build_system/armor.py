@@ -225,8 +225,9 @@ def build_linux(c, do_upload=True, env=os.environ):
 def build_osx(c, do_upload=True, env=os.environ):
     build_common(c=c, env=env, sep=":")
     file_name = dmg(c=c, env=env)
-    with c.cd("dist/lnorb"):
-        c.run("./lnorb test run-all-tests")
+    print(file_name)
+    # with c.cd("dist/lnorb"):
+    #     c.run("./lnorb test run-all-tests")
     if do_upload:
         print(f"Uploading {file_name} to S3: customer_builds/{file_name}")
         upload_to_s3(

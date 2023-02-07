@@ -23,6 +23,36 @@ jobs:
           release_name: v0.21.14.${{ env.GITHUB_RUN_NUMBER }}
           draft: false
           prerelease: false
+  build_macosx:
+    permissions: write-all
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    env:
+      os-name: ${{ matrix.os }}
+      KIVY_GL_BACKEND: 'angle_sdl2'
+    strategy:
+      matrix:
+        os: [macos-10.15, macos-11]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: brew install create-dmg
+      # - run: python ./build.py test.test
+      - run: python ./build.py armor.build-osx
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: orb-0.21.14-${os-name}-x86_64.dmg
+          asset_name: orb-0.21.14-${os-name}-x86_64.dmg
+          asset_content_type: application/zip
   build_linux:
     permissions: write-all
     needs: create_release
