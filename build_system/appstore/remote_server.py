@@ -103,7 +103,7 @@ def install_nginx_conf(c):
 def certbot(c):
     c.sudo("pip3 install pip --upgrade")
     c.sudo("pip3 install certbot certbot-nginx")
-    c.sudo("certbot --nginx -d lnappstore.com")
+    c.sudo("certbot --nginx -d lnorb.com")
 
 
 @task
