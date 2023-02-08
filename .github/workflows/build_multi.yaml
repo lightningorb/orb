@@ -6,6 +6,7 @@ env:
     AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
     PYARMOR: ${{ secrets.PYARMOR }}
+    VERSION: 0.21.14
 jobs:
   create_release:
     outputs: 
@@ -13,18 +14,18 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-20.04
     steps:
-      - name: Set variables
-        run: |
-          VER=$(cat VERSION  | sed 's/ *$//g')
-          echo "VERSION=$VER" >> $GITHUB_ENV
+      # - name: Set variables
+      #   run: |
+      #     VER=$(cat VERSION  | sed 's/ *$//g')
+      #     echo "VERSION=$VER" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}/v${{ env.VERSION }}.${{ env.GITHUB_RUN_NUMBER }}
-          release_name: v${{ env.VERSION }}.${{ env.GITHUB_RUN_NUMBER }}
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
           draft: false
           prerelease: false
   build_macosx:

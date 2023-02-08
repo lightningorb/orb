@@ -76,7 +76,7 @@ def set_other_defaults(config, node_config):
     config.set("path", "download", ".downloads")
     config.set("path", "PYTHONPATH", "")
     config.add_section("url")
-    config.set("url", "appstore", "https://lnappstore.com")
+    config.set("url", "appstore", "https://lnorb.com")
     config.add_section("system")
     config.set("system", "orb_version", "undefined")
 

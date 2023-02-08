@@ -1,4 +1,6 @@
-[![android](https://github.com/lightningorb/orb/actions/workflows/build_android.yml/badge.svg?branch=build_android)](https://github.com/lightningorb/orb/actions/workflows/build_android.yml) [![tests](https://github.com/lightningorb/orb/actions/workflows/tests.yaml/badge.svg)](https://github.com/lightningorb/orb/actions/workflows/tests.yaml) [![windows](https://github.com/lightningorb/orb/actions/workflows/build_windows.yaml/badge.svg?branch=build_windows)](https://github.com/lightningorb/orb/actions/workflows/build_windows.yaml) [![macosx](https://github.com/lightningorb/orb/actions/workflows/build_macosx.yaml/badge.svg?branch=build_macosx)](https://github.com/lightningorb/orb/actions/workflows/build_macosx.yaml) [![linux](https://github.com/lightningorb/orb/actions/workflows/build_linux.yml/badge.svg?branch=build_linux)](https://github.com/lightningorb/orb/actions/workflows/build_linux.yml)
+[![multi](https://github.com/lightningorb/orb/actions/workflows/build_multi.yml/badge.svg?branch=build_multi)](https://github.com/lightningorb/orb/actions/workflows/build_multi.yml)
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+</p>
 
 
 We're pleased to announce that Orb is now fully FOSS, under the GNU GENERAL PUBLIC LICENSE. We've had to clean up the repo of old files, so this is a new Repo: we've lost:
@@ -24,6 +26,16 @@ Available tasks:
   update-install-script
   alembic.revision
   alembic.upgrade
+  android.build
+  android.build-remote
+  android.clean
+  android.create-keystore
+  android.cython
+  android.deploy
+  android.install
+  android.sign
+  android.sync
+  android.upload
   appstore.local-server.create-db
   appstore.local-server.start
   appstore.local-site.deploy
