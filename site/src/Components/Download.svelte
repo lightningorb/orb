@@ -84,6 +84,21 @@
 						</Col>
 					</Row>
 					<br />
+					<br />
+					<Row class="justify-content-center">
+						<Col lg={{ size: 3 }} class="text-white text-center">
+							<p>We've moved downloads to reproducible Github Releases:</p>
+							<br />
+							<a href="https://github.com/lightningorb/orb/releases">
+								<img
+									style="width: 200px;"
+									src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png"
+								/>
+							</a>
+							<p class="pt-3 home-desc mx-auto" />
+						</Col>
+					</Row>
+					<br />
 					{#if versions}
 						<Row>
 							<Col lg={{ size: 4, offset: 3 }}>
