@@ -359,18 +359,7 @@ class ClnREST(ClnBase):
             return self.withdraw(**kwargs)
 
     def sign_message(self, msg):
-        """
-        SignMessage signs a message with the key specified in
-        the key locator. The returned signature is fixed-size
-        LN wire format encoded.
-
-        The main difference to SignMessage in the main RPC is
-        that a specific key is used to sign the message instead
-        of the node identity private key.
-        """
-        return self._post(
-            f"/v1/signmessage", data=dict(msg=base64.b64encode(msg.encode()).decode())
-        ).signature
+        return self.signmessage(message=msg).signature
 
     def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
         import secrets

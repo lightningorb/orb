@@ -8,6 +8,7 @@ from threading import Thread
 
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivy.clock import mainthread
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
@@ -26,14 +27,8 @@ class LoginDialogContent(BoxLayout):
     def __init__(self, *args, **kwargs):
         super(LoginDialogContent, self).__init__(*args, **kwargs)
 
-        def get_pk():
-            self.pk = Ln().get_info().identity_pubkey
-
-        def get_store_password():
-            self.password = get_password()
-
-        Thread(target=get_pk).start()
-        Thread(target=get_store_password).start()
+        self.pk = Ln().get_info().identity_pubkey
+        self.password = get_password()
 
         creds = get_creds()
         if "access_token" in creds:
