@@ -1,106 +1,75 @@
-[![multi](https://github.com/lightningorb/orb/actions/workflows/build_multi.yml/badge.svg?branch=build_multi)](https://github.com/lightningorb/orb/actions/workflows/build_multi.yml)
-<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
-</p>
+# ⚡🔮 is now Free & Open Source
+
+🤗We're pleased to announce that Orb is now fully **free** 💸 and **open source**🎊 under the *GNU GENERAL PUBLIC LICENSE*.🍾🚀💥
+
+![orb](https://lnorb.s3.us-east-2.amazonaws.com/images/photo_2022-03-29%2007.25.51.jpeg)
+
+# Downloading the Desktop builds ⬇️
+
+Windows and OSX binary builds can be found in the repo's [releases](https://github.com/lightningorb/orb/releases) page. Please install on your 💻📱 not your node.
+
+# Downloading the Mobile builds ⬇️
+
+[Android](https://play.google.com/store/apps/details?id=com.lnorb.orb).
+
+[IOS](https://testflight.apple.com/join/i8wfm9TH) (dev license ran out. Consider dating to our [Apple dev license fund](https://mempool.space/address/bc1qxvjxpqrjxvtq4732sn52weq53r7sxu7zahzs0u)).
 
 
-We're pleased to announce that Orb is now fully FOSS, under the GNU GENERAL PUBLIC LICENSE. We've had to clean up the repo of old files, so this is a new Repo: we've lost:
+# Running Orb from source 🐍 
 
-- issues
-- pull requests
-
-Since Orb targets many different platforms, the build system is **complex** to say the least. We'll spend some time getting the various builds working again.
-
-We'll spend some time documenting every inch of this repo so everyone can contribute.
-
-
-# Build System
-
-The build system is huge due to the many targets:
+If you have Python3 & git on a unix-like device:
 
 ```
-Available tasks:
-
-  deploy-ios
-  merge
-  release
-  update-install-script
-  alembic.revision
-  alembic.upgrade
-  android.build
-  android.build-remote
-  android.clean
-  android.create-keystore
-  android.cython
-  android.deploy
-  android.install
-  android.sign
-  android.sync
-  android.upload
-  appstore.local-server.create-db
-  appstore.local-server.start
-  appstore.local-site.deploy
-  appstore.local-site.start
-  appstore.remote-server.certbot
-  appstore.remote-server.clone
-  appstore.remote-server.create-db
-  appstore.remote-server.create-tables
-  appstore.remote-server.create-user
-  appstore.remote-server.drop-tables
-  appstore.remote-server.install-nginx-conf
-  appstore.remote-server.install-service
-  appstore.remote-server.install-stack
-  appstore.remote-server.requirements
-  appstore.remote-server.start
-  appstore.remote-server.start-dev
-  appstore.remote-server.start-rabbit
-  appstore.remote-server.stop-rabbit
-  armor.build-docker
-  armor.build-linux
-  armor.build-osx
-  armor.build-windows
-  armor.register
-  cln.generate-grpc-libs
-  cln.install-requirements
-  cln-regtest.setup
-  docker.orb-vnc
-  documentation.asciinema
-  documentation.build                             Build the docs. Requires sphinx.
-  documentation.build-cli-docs
-  documentation.clean                             Delete the built docs. Useful when renaming modules etc.
-  documentation.upload                            Upload docs to site.
-  documentation.view                              View docs in the browser.
-  host.ssh
-  ios.clean                                       Clean all XCode libs and modules
-  ios.create                                      Create the xcode project.
-  ios.tmp
-  ios.toolchain                                   Build and install all libs and modules required for XCode.
-  ios.toolchain-build
-  ios.toolchain-pip
-  ios.update                                      Update the xcode project with the latest changes.
-  lnd.generate-grpc-libs
-  lnd.install-requirements
-  osx.cython
-  osx.dmg
-  osx.gen-license
-  osx.python
-  osx.requirements
-  osx.run
-  osx.upload
-  site.build
-  site.run
-  site.spawn-mac-build
-  site.upload                                     Upload site.
-  ssh.mosh
-  tags.push
-  tags.tag
-  test.test                                       Run the unit tests and doctests.
-  third-party.clean                               Stub.
-  third-party.clone                               Stub.
-  ubuntu.requirements
-  ubuntu.upload
-  versioning.bump-build                           Bump the build number using semver and store in VERSION.
-  versioning.bump-major                           Bump the major version using semver and store in VERSION.
-  versioning.bump-minor                           Bump the minor version using semver and store in VERSION.
-  versioning.bump-patch                           Bump the patch version using semver and store in VERSION.
-  versioning.bump-pre                             Bump the pre-release using semver and store in VERSION.
+git clone https://github.com/lightningorb/orb.git
+cd orb
+pip3 install -r requirements.txt
+python3 main.py
 ```
+
+## With venv
+
+Consider installing Orb's dependencies in a virtual 📦 to keep things clean:
+
+```
+git clone https://github.com/lightningorb/orb.git
+cd orb
+python3 -m venv venv
+. venv/bin/activate
+pip3 install -r requirements.txt
+python3 main.py
+```
+
+# Don't trust: verify🕵️
+
+It's prudent to 🔎 code before running it on a mainnet node:
+
+- [Fork the repo](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
+- [Enable actions for your fork](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow)
+- [Create a new branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository) called 'build_multi'
+- 🔬 the code whilst it's building
+- ⬇️ your build from your fork's 'releases' page
+
+# Documentation
+
+🤓Every inch 📏 of 🔮 is documented: [Read the docs](https://lnorb.com/docs).
+
+# Call to action💪
+
+## Non-devs
+
+Do you believe in ₿ and ⚡ and want to help? 👊 Then pick any one of these at random:
+
+- Bookmark 🔖 this repo.
+- Use Orb.
+- ⭐ this repo.
+- Tweet / Note about trying out 🔮.
+- Write a blog post.
+- Create Youtube 🔮 tutorial.
+- Find bugs & [Log issues](https://github.com/lightningorb/orb/issues).
+- Triage issues.
+- Contribute to the docs.
+
+## Devs
+
+- ➡️ Fork ➡️  Use ➡️  PR 🚀
+
