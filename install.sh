@@ -66,7 +66,6 @@ function main() {
         sudo echo '/Applications/lnorb/Contents/MacOS/lnorb' > /usr/local/bin/orb; # create a symlink to the Orb executable in /usr/local/bin/
         sudo chmod 755 /usr/local/bin/orb; # make the symlink executable
         hash -r; # reset the shell's command cache
-        sudo umount /Volumes/Orb; # unmount the Orb volume
         print_success_message; # print a success message
     else
         not_supported; # if the operating system is not Ubuntu or macOS, print a not supported message
