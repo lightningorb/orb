@@ -1,5 +1,3 @@
-.. _CLI:
-
 Orb CLI
 =======
 
@@ -169,6 +167,7 @@ Now that are you are a bit more familiar with Orb's CLI, here's the full command
    cli/orb_chain_send
    cli/orb_channel_list-forwards
    cli/orb_channel_open
+   cli/orb_channel_rebalance
    cli/orb_invoice_generate
    cli/orb_network_get-route
    cli/orb_node_create
@@ -177,12 +176,11 @@ Now that are you are a bit more familiar with Orb's CLI, here's the full command
    cli/orb_node_delete
    cli/orb_node_info
    cli/orb_node_list
+   cli/orb_node_ssh-fetch-certs
    cli/orb_node_ssh-wizard
    cli/orb_node_use
-   cli/orb_pay_invoices
    cli/orb_pay_lnurl
    cli/orb_peer_connect
    cli/orb_peer_list
-   cli/orb_rebalance_rebalance
    cli/orb_test_run-all-tests
    cli/orb_web_serve

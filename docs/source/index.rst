@@ -23,6 +23,7 @@ Orb
    web
    docker
    automation
+   misc/index
 
 
 Indices and tables

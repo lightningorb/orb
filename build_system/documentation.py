@@ -23,7 +23,7 @@ def clean(c):
 @task
 def build_cli_docs(c, env=os.environ):
     c.run("pip3 install typer[all]", env=env)
-    c.run("pip3 install typer-cli")
+    c.run("pip3 install typer-cli==0.0.12")
     c.run("PYTHONPATH=. ./build_system/typer main.py utils docs --name orb", env=env)
     with open("docs/source/cli.rst.template") as f:
         template = f.read()
