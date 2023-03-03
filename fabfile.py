@@ -69,12 +69,12 @@ def update_install_script(c):
     from fabric import Connection
 
     with open("VERSION") as f:
-        VERSION = f.read()
+        VERSION = f.read().strip()
     with open("install.sh") as f:
         installsh = f.read().replace("<VERSION>", VERSION)
         with open("/tmp/install.sh", "w") as w:
             w.write(installsh)
-    cert = (Path(os.getcwd()) / "lnorb_com.cer").as_posix()
+    cert = (Path(os.path.expanduser("~/.ssh")) / "lnorb_com.cer").as_posix()
     with Connection(
         "lnorb.com", connect_kwargs={"key_filename": cert}, user="ubuntu"
     ) as con:
