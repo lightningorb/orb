@@ -1,5 +1,7 @@
 from kivy.lang import Builder
-Builder.load_string('''
+
+Builder.load_string(
+    """
 <AttributeEditor>:
     orientation: "vertical"
     padding: "8dp"
@@ -47,8 +49,10 @@ Builder.load_string('''
         DrawerList:
             id: md_list
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <ImportConnectionSettings>:
     name: 'import_node_settings'
     BoxLayout:
@@ -85,8 +89,10 @@ Builder.load_string('''
             size_hint_y: None
             height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Factory kivy.factory.Factory
 #:import get_available_nodes orb.misc.utils.get_available_nodes
 
@@ -134,8 +140,10 @@ Builder.load_string('''
             size_hint_y: None
             height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
@@ -247,8 +255,10 @@ Builder.load_string('''
                     with_previous: False
 
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp 
 #:import Window kivy.core.window.Window
 
@@ -351,8 +361,10 @@ Builder.load_string('''
 
 <Tab>
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 ########################################################################################
 # NEW ADDRESS
 ########################################################################################
@@ -378,8 +390,10 @@ Builder.load_string('''
         Image:
             id: img
             source: ''
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 
@@ -409,8 +423,10 @@ Builder.load_string('''
             size_hint_y: None
             on_release: root.connect(address.text)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -451,8 +467,10 @@ Builder.load_string('''
             text: "Send"
             on_release: root.send_coins(addr=address.text, satoshi=amount.text, sat_per_vbyte=sats_per_vbyte.text)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 
 <Rebalance>:
@@ -538,8 +556,10 @@ Builder.load_string('''
             size_hint: 1, None
             height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
 #:import desktop orb.misc.utils.desktop
@@ -611,8 +631,10 @@ Builder.load_string('''
         # BoxLayout:
         #     id: vid_box
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 
 <PopupDropShadow@Popup>:
     background_color: .6, .6, .8, .9
@@ -623,8 +645,10 @@ Builder.load_string('''
             border: 0,0,0,0
             pos: self.x + 10, self.y - 30
             size: self.width * 1.025, self.height * 1.025
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 
 ########################################################################################
@@ -665,8 +689,10 @@ Builder.load_string('''
     StatusLineOutput:
         id: line_output
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <OrbConnector>:
     orientation: 'vertical'
     ScreenManager:
@@ -680,8 +706,10 @@ Builder.load_string('''
         ConsoleScreen:
     StatusLine
         id: status_line
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <OrbConnectorMain>:
     name: "main"
     FitImage:
@@ -717,8 +745,10 @@ Builder.load_string('''
         root_button_anim: True
         callback: root.add_released
         icon: 'orbit'
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
@@ -936,8 +966,10 @@ Builder.load_string('''
             size_hint_y: None
             height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 
 <FeeDistribution>:
@@ -968,8 +1000,10 @@ Builder.load_string('''
             width: dp(100)
             height: dp(40)
             md_bg_color: 0.3,0.3,0.3,1
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -982,8 +1016,10 @@ Builder.load_string('''
         id: input
         size_hint_x: 0.8
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
@@ -1046,8 +1082,10 @@ Builder.load_string('''
             size_hint_y: None
             size_hint_x: 1
             height: dp(40)
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
@@ -1127,8 +1165,10 @@ Builder.load_string('''
                 size_hint_y: None
                 height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
@@ -1172,8 +1212,10 @@ Builder.load_string('''
 
 <Tab>
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
 #:import Ln orb.ln.Ln
 
@@ -1215,8 +1257,10 @@ Builder.load_string('''
             pos: self.x + 10, self.y - 30
             size: self.width * 1.025, self.height * 1.025
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 
 
 <AppDetails>:
@@ -1305,8 +1349,10 @@ Builder.load_string('''
         #     text: "Delete app from store"
         #     on_release: root.delete_app()
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 
 <AppSummary>:
     orientation: "vertical"
@@ -1372,8 +1418,10 @@ Builder.load_string('''
         StarButton:
         StarButton:
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
 
 <LoginDialogContent>
@@ -1409,8 +1457,10 @@ Builder.load_string('''
             pos: self.x + 10, self.y - 30
             size: self.width * 1.025, self.height * 1.025
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 ########################################################################################
 # INGEST INVOICES
 ########################################################################################
@@ -1475,8 +1525,10 @@ Builder.load_string('''
                     width: dp(200)
                     on_release: root.dismiss()
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 ########################################################################################
 # INVOICE
 ########################################################################################
@@ -1575,8 +1627,10 @@ Builder.load_string('''
             text_size: self.size
 
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -1634,8 +1688,10 @@ Builder.load_string('''
                 on_release: root.upload()
                 disabled: True
                 md_bg_color_disabled: .2,.2,.2,1
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 
@@ -1650,8 +1706,10 @@ Builder.load_string('''
         on_text_validate: root.validate(self.text)
         multiline: False
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 #:import Ln orb.ln.Ln
@@ -1723,8 +1781,10 @@ Builder.load_string('''
             size_hint: 1, None
             height: dp(50)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #: import dp kivy.metrics.dp
 
 <About>:
@@ -1736,8 +1796,10 @@ Builder.load_string('''
     Label:
         id: label
         size_hint: 1, 1
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
@@ -1795,8 +1857,10 @@ Builder.load_string('''
                 size_hint_x: 1
                 height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 
@@ -1837,8 +1901,10 @@ Builder.load_string('''
             width: dp(200)
             on_release: root.dismiss()
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import Window kivy.core.window.Window
 #:import Factory kivy.factory.Factory
 
@@ -1921,8 +1987,10 @@ Builder.load_string('''
             width: dp(80)
             height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
@@ -1987,8 +2055,10 @@ Builder.load_string('''
             size_hint_y: None
             size_hint_x: 1
             height: dp(40)
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -2060,8 +2130,10 @@ Builder.load_string('''
             size_hint_x: 1
             height: dp(40)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:kivy 2.0.0
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
@@ -2354,8 +2426,10 @@ Builder.load_string('''
                             text: "BitcoinFaucet"
                             on_release: webbrowser.open("https://bitcoinfaucet.uo1.net")
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <AFView>:
     title: 'Auto Fees'
     size_hint: .9, .9
@@ -2466,8 +2540,10 @@ Builder.load_string('''
         pos_hint: {"center_x": .5, "center_y": .5}
         on_release: root.parent_view.delete_rule(root.index)
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #: import dp kivy.metrics.dp
 #: import webbrowser webbrowser
 
@@ -2634,8 +2710,10 @@ Builder.load_string('''
         on_release: root.parent_view.delete_rule(root.index)
 
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #: import dp kivy.metrics.dp
 #: import webbrowser webbrowser
 
@@ -2670,11 +2748,15 @@ Builder.load_string('''
             pos_hint: {"center_x": .5, "center_y": .5}
             on_release: root.start()
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import pref orb.misc.utils.pref
 #:import prefs_col orb.misc.utils.prefs_col
 
@@ -2707,8 +2789,10 @@ Builder.load_string('''
     canvas.after:
         PopMatrix
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import prefs_col orb.misc.utils.prefs_col
 #:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
@@ -2734,19 +2818,13 @@ Builder.load_string('''
         Line:
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import prefs_col orb.misc.utils.prefs_col
 #:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
-
-<HUDEvaluation>:
-    text: root.get_text()
-    color: 1,1,1,0.1
-    font_size: '40sp'
-    size_hint: None, None
-    size: self.texture_size
-    halign: 'center'
 
 <HUDBanner>:
     size_hint: None, None
@@ -2947,8 +3025,10 @@ Builder.load_string('''
         Line:
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import prefs_col orb.misc.utils.prefs_col
 
 
@@ -3003,13 +3083,14 @@ Builder.load_string('''
 <HUDN>:
     anchor_x: 'center'
     anchor_y: 'top'
-    # HUDEvaluation
     # HUDBanner
     Widget:
     
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <ChannelsWidget>:
     size_hint: 20, 20
     pos: [-self.width/8, -self.height/8]
@@ -3037,8 +3118,10 @@ Builder.load_string('''
 
 
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 #:import prefs_col orb.misc.utils.prefs_col
 
 <ChannelsScreen>:
@@ -3075,8 +3158,10 @@ Builder.load_string('''
         text_color: [1, 1, 1, 1]
 
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <FeeWidgetLabel>:
     font_size: '24sp'
     size: [self.texture_size[0]*0.2, self.texture_size[1]*.2]
@@ -3087,8 +3172,10 @@ Builder.load_string('''
             xyz: .2, .2, 1
     canvas.after:
         PopMatrix
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <SegmentLabel>:
     font_size: '84sp'
     size: [self.texture_size[0]*0.2, self.texture_size[1]*.2]
@@ -3099,8 +3186,10 @@ Builder.load_string('''
             xyz: .2, .2, 1
     canvas.after:
         PopMatrix
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <ContextMenu>:
     cols: 1
     size_hint: None, None
@@ -3227,8 +3316,10 @@ Builder.load_string('''
     padding: dp(7), dp(3)
     multiline: False
 
-''')
-Builder.load_string('''
+"""
+)
+Builder.load_string(
+    """
 <AppMenu>:
     height: dp(30)
     size_hint: 1, None
@@ -3255,4 +3346,5 @@ Builder.load_string('''
     size: self.texture_size[0], dp(30)
     padding_x: dp(10)
 
-''')
+"""
+)

@@ -7,7 +7,6 @@ from kivy_garden.graph import Graph, SmoothLinePlot
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 
-from orb.logic.licensing import is_free
 from orb.misc.decorators import guarded
 from orb.components.popup_drop_shadow import PopupDropShadow
 from orb.math.normal_distribution import NormalDistribution
@@ -25,22 +24,19 @@ class FeeDistribution(PopupDropShadow):
         Invoked when the dialog opens. Fetches the rourting events and
         prepares the data for normal distribution analysis.
         """
-        if not is_free():
-            from orb.store import model
+        from orb.store import model
 
-            self.chan_routing_data = {}
-            self.channel_n = 0
-            i = 0
+        self.chan_routing_data = {}
+        self.channel_n = 0
+        i = 0
 
-            for c in Ln().get_channels():
-                routing_events = get_descritized_routing_events(c)
-                if routing_events:
-                    self.chan_routing_data[i] = routing_events
-                    i += 1
+        for c in Ln().get_channels():
+            routing_events = get_descritized_routing_events(c)
+            if routing_events:
+                self.chan_routing_data[i] = routing_events
+                i += 1
 
-            self.next_channel()
-        else:
-            print("Fee distribution not available in free version")
+        self.next_channel()
         super(FeeDistribution, self).open(*args)
 
     @guarded

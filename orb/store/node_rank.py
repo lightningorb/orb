@@ -6,8 +6,6 @@
 
 from collections import defaultdict
 import json
-from orb.logic.licensing import is_satoshi
-from orb.logic.licensing import is_digital_gold
 from orb.misc.decorators import db_connect
 from orb.store.db_meta import path_finding_db_name
 
@@ -93,8 +91,6 @@ def ingest(path):
 
 @db_connect(path_finding_db_name)
 def count_successes_failures():
-    if not (is_satoshi() or is_digital_gold()):
-        return {}, []
     ln = Ln()
     payments = get_payments()
     nodes = defaultdict(lambda: dict(successes=0, failures=0))

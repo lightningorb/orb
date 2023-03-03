@@ -134,7 +134,7 @@ def build_common(c, env, sep=":"):
     )
     data = " ".join(f"--add-data {s}{sep}{d}" for s, d in data)
     hidden_imports = "--hidden-import orb.orb_main --hidden-import orb.core --hidden-import orb.core_ui.hidden_imports --hidden-import kivy --hidden-import plyer.platforms.macosx.uniqueid --hidden-import orb.core_ui.kvs --hidden-import orb.misc --hidden-import jaraco.text --hidden-import kivymd.effects.stiffscroll.StiffScrollEffect  --hidden-import fabric --hidden-import=pkg_resources"  # --hidden-import pandas.plotting._matplotlib
-    pyinstall_flags = f" {paths} {data} {hidden_imports} --onedir --{'windowed' if sep == ':' else 'console'} --name lnorb"
+    pyinstall_flags = f" -y {paths} {data} {hidden_imports} --onedir --{'windowed' if sep == ':' else 'console'} --name lnorb"
 
     print("=" * 50)
     print(pyinstall_flags)
@@ -146,14 +146,14 @@ def build_common(c, env, sep=":"):
 @task
 def build_linux(c, do_upload=True, env=os.environ):
     c.run("rm -rf dist tmp;")
-    c.run("mkdir -p tmp;")
-    c.run("cp -r main.py tmp/;")
-    c.run("cp -r third_party tmp/;")
-    c.run("cp -r orb tmp/;")
+    c.run("mkdir -p tmp/orb/;")
+    c.run("cp -r main.py tmp/orb/;")
+    c.run("cp -r third_party tmp/orb/;")
+    c.run("cp -r orb tmp/orb/;")
     with c.cd("tmp"):
         for source, target in data:
             c.run(f"mkdir -p {target}")
-            c.run(f"cp -r ../{source} {target}")
+            c.run(f"cp -r ../{source} orb/{target}")
         # with c.cd("orb"):
         # c.run("python main.py test run-all-tests")
         with open("tmp/orb/bootstrap_ubuntu_20_04.sh", "w") as f:
@@ -162,7 +162,7 @@ def build_linux(c, do_upload=True, env=os.environ):
             f"orb-{VERSION}-{os.environ.get('os-name', 'undefined')}-x86_64.tar.gz"
         )
         print(f"BUILD NAME: {build_name}")
-        c.run(f"tar czvf {build_name} orb;")
+        c.run(f"tar czvf ../{build_name} .;")
 
 
 @task
@@ -198,7 +198,7 @@ def dmg(c, env=os.environ):
           --icon "lnorb" 200 190 \
           --app-drop-link 600 185 \
           "{name}.dmg" \
-          "dist/{name}"
+          "dist/lnorb.app"
         """,
         env=env,
     )

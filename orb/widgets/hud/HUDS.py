@@ -32,7 +32,6 @@ from orb.store.db_meta import forwarding_events_db_name
 from orb.misc.decorators import db_connect
 from orb.misc.utils import desktop, pref
 from orb.misc.forex import forex
-from orb.logic import licensing
 from orb.misc import mempool
 from orb.ln import Ln
 
@@ -578,16 +577,6 @@ class HUDUIMode(Button):
         app = App.get_running_app()
         mode = app.channels_widget_ux_mode
         app.channels_widget_ux_mode = [1, 0][mode]
-
-
-class HUDEvaluation(Label):
-    def get_text(self):
-        if licensing.is_trial():
-            e = licensing.get_edition()
-            e = e[0].upper() + e[1:]
-            return f"Orb {e} Edition\nEvaluation Copy"
-        else:
-            return ""
 
 
 class HUDBanner(AsyncImage):

@@ -8,7 +8,6 @@ from traceback import print_exc
 from kivy.properties import ObjectProperty
 
 from orb.ln import Ln
-from orb.logic import licensing
 from orb.misc.decorators import db_connect
 from orb.store.db_meta import invoices_db_name
 from orb.dialogs.ingest_invoices.invoice import Invoice
@@ -53,12 +52,6 @@ class IngestInvoices(PopupDropShadow):
             .where(model.Invoice.expired() == False, model.Invoice.paid == False)
         )
         self.count.text = f"{len(invoices)}"
-        is_satoshi = licensing.is_satoshi()
-        is_trial = licensing.is_trial()
-        restrict = (not is_satoshi) or is_trial
-        if restrict and len(invoices) >= 1:
-            self.ids.ingest_button.disabled = True
-
         return [x for x in invoices]
 
     def do_ingest(self, text):
@@ -71,10 +64,6 @@ class IngestInvoices(PopupDropShadow):
         @db_connect(invoices_db_name)
         def func():
             from orb.store import model
-
-            is_satoshi = licensing.is_satoshi()
-            is_trial = licensing.is_trial()
-            restrict = (not is_satoshi) or is_trial
 
             ingested_count = 0
             not_ingested = []
@@ -96,9 +85,6 @@ class IngestInvoices(PopupDropShadow):
                         ingested_count += 1
                         invoice.save()
                         add_invoice_widget(Invoice(**invoice.__data__))
-                        if restrict:
-                            print(f"Non Satoshi & trial edition invoice limit: 1")
-                            break
                     except:
                         print(f"Problem decoding: {line}")
                         print_exc()
@@ -107,7 +93,5 @@ class IngestInvoices(PopupDropShadow):
             num_invoices = int(self.count.text) + ingested_count
             self.count.text = str(num_invoices)
             update(not_ingested)
-            if restrict and num_invoices >= 1:
-                self.ids.ingest_button.disabled = True
 
         func()

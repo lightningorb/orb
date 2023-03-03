@@ -62,8 +62,10 @@ function main() {
         fi
         sudo hdiutil attach ${DMG}; # mount the DMG file
         sudo rm -rf /Applications/lnorb; # remove any existing Orb installation
-        sudo cp -r /Volumes/Orb/lnorb /Applications/; # copy the new Orb installation to the /Applications directory
-        sudo echo '/Applications/lnorb/Contents/MacOS/lnorb' > /usr/local/bin/orb; # create a symlink to the Orb executable in /usr/local/bin/
+        sudo rm -rf /Applications/lnorb.app; # remove any existing Orb installation
+        sudo cp -r /Volumes/Orb/lnorb.app /Applications/; # copy the new Orb installation to the /Applications directory
+        echo '/Applications/lnorb.app/Contents/MacOS/lnorb' > /tmp/orb_link; # create a symlink to the Orb executable in /usr/local/bin/
+        sudo cp /tmp/orb_link /usr/local/bin/
         sudo chmod 755 /usr/local/bin/orb; # make the symlink executable
         hash -r; # reset the shell's command cache
         print_success_message; # print a success message

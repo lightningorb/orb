@@ -83,7 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: tmp/orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
+          asset_path: orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
           asset_name: orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
           asset_content_type: application/zip
   build_windows:
