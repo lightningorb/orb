@@ -191,21 +191,24 @@
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuDivider
-                ContextMenuTextItem:
-                    id: app_store_login
-                    text: "App Store Login"
-                    on_press: LoginDialog().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    id: app_store
-                    text: "App Store"
-                    on_press: AppStoreDialog().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    id: upload_app
-                    text: "Upload App"
-                    on_press: UploadAppDialog().open()
-                    on_release: app_menu.close_all()
+                # ContextMenuTextItem:
+                #     id: app_store_login
+                #     text: "App Store Login"
+                #     disabled: True
+                #     on_press: LoginDialog().open()
+                #     on_release: app_menu.close_all()
+                #     Label:
+                #         color: 0.5, 0.5, 0.5, 1
+                # ContextMenuTextItem:
+                #     id: app_store
+                #     text: "App Store"
+                #     on_press: AppStoreDialog().open()
+                #     on_release: app_menu.close_all()
+                # ContextMenuTextItem:
+                #     id: upload_app
+                #     text: "Upload App"
+                #     on_press: UploadAppDialog().open()
+                #     on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Channels"

@@ -69,11 +69,6 @@ class ClnREST(ClnBase):
         r = requests.get(url, headers=self.headers, verify=self.cert_path)
         return dict2obj(r.json())
 
-    def channel_balance(self):
-        url = f"{self.fqdn}/v1/balance/channels"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
-
     def get_channels(self):
         """
         Conversion Done
@@ -270,11 +265,6 @@ class ClnREST(ClnBase):
                 )
         return r
 
-    def get_pending_channels(self):
-        url = f"{self.fqdn}/v1/channels/pending"
-        r = requests.get(url, headers=self.headers, verify=self.cert_path)
-        return dict2obj(r.json())
-
     def set_channel_fee(self, channel, *args, **kwargs):
         """
         Conversion done.
@@ -360,46 +350,6 @@ class ClnREST(ClnBase):
 
     def sign_message(self, msg):
         return self.signmessage(message=msg).signature
-
-    def keysend(self, target_pubkey, msg, amount, fee_limit, timeout):
-        import secrets
-        from hashlib import sha256
-
-        secret = secrets.token_bytes(32)
-        hashed_secret = sha256(secret).digest()
-        custom_records = {5482373484: base64.b64encode(secret).decode()}
-        msg = str(msg)
-        if len(msg) > 0:
-            custom_records[34349334] = base64.b64encode(msg.encode("utf-8")).decode()
-
-        data = {
-            "amt": amount,
-            "dest": encode_pk(target_pubkey),
-            "timeout_seconds": timeout,
-            "dest_custom_records": custom_records,
-            "fee_limit_sat": fee_limit,
-            "payment_hash": base64.b64encode(hashed_secret).decode(),
-        }
-
-        jdata = json.dumps(data)
-
-        r = requests.post(
-            f"{self.fqdn}/v2/router/send",
-            headers=self.headers,
-            verify=self.cert_path,
-            stream=True,
-            data=jdata,
-        )
-
-        for raw_response in r.iter_lines():
-            json_data = json.loads(raw_response)
-            if json_data.get("error"):
-                print(json_data["error"])
-                break
-            response = dict2obj(json_data)
-            print(response.status)
-            if response.status == "FAILED":
-                print(response.failure_reason)
 
     def list_peers(self):
         """

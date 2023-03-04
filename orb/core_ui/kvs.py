@@ -1,7 +1,5 @@
 from kivy.lang import Builder
-
-Builder.load_string(
-    """
+Builder.load_string('''
 <AttributeEditor>:
     orientation: "vertical"
     padding: "8dp"
@@ -49,10 +47,8 @@ Builder.load_string(
         DrawerList:
             id: md_list
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <ImportConnectionSettings>:
     name: 'import_node_settings'
     BoxLayout:
@@ -89,10 +85,8 @@ Builder.load_string(
             size_hint_y: None
             height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Factory kivy.factory.Factory
 #:import get_available_nodes orb.misc.utils.get_available_nodes
 
@@ -140,10 +134,8 @@ Builder.load_string(
             size_hint_y: None
             height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
@@ -255,10 +247,8 @@ Builder.load_string(
                     with_previous: False
 
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp 
 #:import Window kivy.core.window.Window
 
@@ -361,10 +351,8 @@ Builder.load_string(
 
 <Tab>
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 ########################################################################################
 # NEW ADDRESS
 ########################################################################################
@@ -390,10 +378,8 @@ Builder.load_string(
         Image:
             id: img
             source: ''
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 
@@ -423,10 +409,8 @@ Builder.load_string(
             size_hint_y: None
             on_release: root.connect(address.text)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -467,10 +451,8 @@ Builder.load_string(
             text: "Send"
             on_release: root.send_coins(addr=address.text, satoshi=amount.text, sat_per_vbyte=sats_per_vbyte.text)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 
 <Rebalance>:
@@ -556,10 +538,8 @@ Builder.load_string(
             size_hint: 1, None
             height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import App kivy.app.App
 #:import desktop orb.misc.utils.desktop
@@ -631,10 +611,8 @@ Builder.load_string(
         # BoxLayout:
         #     id: vid_box
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 
 <PopupDropShadow@Popup>:
     background_color: .6, .6, .8, .9
@@ -645,10 +623,8 @@ Builder.load_string(
             border: 0,0,0,0
             pos: self.x + 10, self.y - 30
             size: self.width * 1.025, self.height * 1.025
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 
 ########################################################################################
@@ -689,10 +665,8 @@ Builder.load_string(
     StatusLineOutput:
         id: line_output
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <OrbConnector>:
     orientation: 'vertical'
     ScreenManager:
@@ -706,10 +680,8 @@ Builder.load_string(
         ConsoleScreen:
     StatusLine
         id: status_line
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <OrbConnectorMain>:
     name: "main"
     FitImage:
@@ -745,10 +717,8 @@ Builder.load_string(
         root_button_anim: True
         callback: root.add_released
         icon: 'orbit'
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
@@ -966,10 +936,8 @@ Builder.load_string(
             size_hint_y: None
             height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 
 <FeeDistribution>:
@@ -1000,10 +968,8 @@ Builder.load_string(
             width: dp(100)
             height: dp(40)
             md_bg_color: 0.3,0.3,0.3,1
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -1016,10 +982,8 @@ Builder.load_string(
         id: input
         size_hint_x: 0.8
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
@@ -1082,10 +1046,8 @@ Builder.load_string(
             size_hint_y: None
             size_hint_x: 1
             height: dp(40)
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
@@ -1165,10 +1127,8 @@ Builder.load_string(
                 size_hint_y: None
                 height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import pref orb.misc.utils.pref
 #:import Window kivy.core.window.Window
@@ -1212,10 +1172,8 @@ Builder.load_string(
 
 <Tab>
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
 #:import Ln orb.ln.Ln
 
@@ -1257,10 +1215,8 @@ Builder.load_string(
             pos: self.x + 10, self.y - 30
             size: self.width * 1.025, self.height * 1.025
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 
 
 <AppDetails>:
@@ -1349,10 +1305,8 @@ Builder.load_string(
         #     text: "Delete app from store"
         #     on_release: root.delete_app()
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 
 <AppSummary>:
     orientation: "vertical"
@@ -1418,10 +1372,8 @@ Builder.load_string(
         StarButton:
         StarButton:
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import TipDialogContent orb.dialogs.app_store.TipDialogContent
 
 <LoginDialogContent>
@@ -1457,10 +1409,8 @@ Builder.load_string(
             pos: self.x + 10, self.y - 30
             size: self.width * 1.025, self.height * 1.025
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 ########################################################################################
 # INGEST INVOICES
 ########################################################################################
@@ -1525,10 +1475,8 @@ Builder.load_string(
                     width: dp(200)
                     on_release: root.dismiss()
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 ########################################################################################
 # INVOICE
 ########################################################################################
@@ -1627,10 +1575,8 @@ Builder.load_string(
             text_size: self.size
 
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -1688,10 +1634,8 @@ Builder.load_string(
                 on_release: root.upload()
                 disabled: True
                 md_bg_color_disabled: .2,.2,.2,1
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 
@@ -1706,10 +1650,8 @@ Builder.load_string(
         on_text_validate: root.validate(self.text)
         multiline: False
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 #:import Ln orb.ln.Ln
@@ -1781,10 +1723,8 @@ Builder.load_string(
             size_hint: 1, None
             height: dp(50)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #: import dp kivy.metrics.dp
 
 <About>:
@@ -1796,10 +1736,8 @@ Builder.load_string(
     Label:
         id: label
         size_hint: 1, 1
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
@@ -1857,10 +1795,8 @@ Builder.load_string(
                 size_hint_x: 1
                 height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import dp kivy.metrics.dp
 
@@ -1901,10 +1837,8 @@ Builder.load_string(
             width: dp(200)
             on_release: root.dismiss()
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import Window kivy.core.window.Window
 #:import Factory kivy.factory.Factory
 
@@ -1987,10 +1921,8 @@ Builder.load_string(
             width: dp(80)
             height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
@@ -2055,10 +1987,8 @@ Builder.load_string(
             size_hint_y: None
             size_hint_x: 1
             height: dp(40)
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import dp kivy.metrics.dp
 #:import Window kivy.core.window.Window
 
@@ -2130,10 +2060,8 @@ Builder.load_string(
             size_hint_x: 1
             height: dp(40)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:kivy 2.0.0
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
@@ -2327,21 +2255,24 @@ Builder.load_string(
                     on_press: app_menu.close_all()
                     on_release: app.open_settings()
                 ContextMenuDivider
-                ContextMenuTextItem:
-                    id: app_store_login
-                    text: "App Store Login"
-                    on_press: LoginDialog().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    id: app_store
-                    text: "App Store"
-                    on_press: AppStoreDialog().open()
-                    on_release: app_menu.close_all()
-                ContextMenuTextItem:
-                    id: upload_app
-                    text: "Upload App"
-                    on_press: UploadAppDialog().open()
-                    on_release: app_menu.close_all()
+                # ContextMenuTextItem:
+                #     id: app_store_login
+                #     text: "App Store Login"
+                #     disabled: True
+                #     on_press: LoginDialog().open()
+                #     on_release: app_menu.close_all()
+                #     Label:
+                #         color: 0.5, 0.5, 0.5, 1
+                # ContextMenuTextItem:
+                #     id: app_store
+                #     text: "App Store"
+                #     on_press: AppStoreDialog().open()
+                #     on_release: app_menu.close_all()
+                # ContextMenuTextItem:
+                #     id: upload_app
+                #     text: "Upload App"
+                #     on_press: UploadAppDialog().open()
+                #     on_release: app_menu.close_all()
                 ContextMenuDivider
                 ContextMenuTextItem:
                     text: "Channels"
@@ -2426,10 +2357,45 @@ Builder.load_string(
                             text: "BitcoinFaucet"
                             on_release: webbrowser.open("https://bitcoinfaucet.uo1.net")
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
+# -*- coding: utf-8 -*-
+# @Author: lnorb.com
+# @Date:   2022-02-01 13:04:42
+# @Last Modified by:   lnorb.com
+# @Last Modified time: 2022-02-01 13:04:44
+
+<Content>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "500dp"
+
+    MDTextField:
+        id: _from
+        text: 'USD'
+        hint_text: "From currency"
+        on_text: root.convert()
+
+    MDTextField:
+        id: _amount
+        text: '10'
+        hint_text: "Amount"
+        on_text: root.convert()
+
+    MDTextField:
+        id: _to
+        text: 'BTC'
+        hint_text: "To currency"
+        on_text: root.convert()
+
+    MDTextField:
+        id: _result
+        text: '0'
+        hint_text: "Result"
+
+''')
+Builder.load_string('''
 <AFView>:
     title: 'Auto Fees'
     size_hint: .9, .9
@@ -2540,10 +2506,95 @@ Builder.load_string(
         pos_hint: {"center_x": .5, "center_y": .5}
         on_release: root.parent_view.delete_rule(root.index)
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
+#: import dp kivy.metrics.dp
+
+<TodoView>:
+    title: 'Todo'
+    size_hint: None, None
+    size: dp(600), dp(600)
+    background_color: .6, .6, .8, .9
+    overlay_color: 0, 0, 0, 0
+    BoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            size_hint: 1, 1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            GridLayout:
+                id: todos
+                cols: 1
+                padding: 10
+                spacing: 10
+                size_hint: 1, None
+                height: self.minimum_height
+                do_scroll_x: False
+        MDTextField:
+            id: todo_input
+            text: ''
+            helper_text: 'Todo content'
+            helper_text_mode: "persistent"
+            on_text_validate: root.insert_todo(self.text)
+
+<TodoItem@BoxLayout>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(30)
+    Label:
+        text: root.content
+    MDIconButton:
+        id: done
+        icon: "check"
+        pos_hint: {"center_x": .5, "center_y": .5}
+    MDIconButton:
+        id: delete
+        icon: "delete-forever"
+        pos_hint: {"center_x": .5, "center_y": .5}
+''')
+Builder.load_string('''
+<KeysendDialogContent>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        id: alias
+        hint_text: "Recipient Alias"
+        text: ''
+        disabled: True
+
+    MDTextField:
+        hint_text: "Recipient PubKey"
+        id: pubkey
+        on_text: root.update_alias(self.text)
+        text: ''
+        disabled: False
+
+    MDTextField:
+        id: sats
+        text: '1000'
+        hint_text: "Sats"
+
+    MDTextField:
+        id: message
+        text: 'Keysending you some sats!'
+        hint_text: "Message"
+
+<KeysendDialog>
+    title: 'Keysend'
+    type: 'custom'
+    md_bg_color: .1, .1, .15, .9
+    overlay_color: 0, 0, 0, 0
+    canvas.before:
+        BorderImage:
+            source: 'orb/images/shadow_inverted.png'
+            border: 0,0,0,0
+            pos: self.x + 10, self.y - 30
+            size: self.width * 1.025, self.height * 1.025
+
+''')
+Builder.load_string('''
 #: import dp kivy.metrics.dp
 #: import webbrowser webbrowser
 
@@ -2710,10 +2761,8 @@ Builder.load_string(
         on_release: root.parent_view.delete_rule(root.index)
 
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #: import dp kivy.metrics.dp
 #: import webbrowser webbrowser
 
@@ -2748,15 +2797,11 @@ Builder.load_string(
             pos_hint: {"center_x": .5, "center_y": .5}
             on_release: root.start()
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import pref orb.misc.utils.pref
 #:import prefs_col orb.misc.utils.prefs_col
 
@@ -2789,10 +2834,8 @@ Builder.load_string(
     canvas.after:
         PopMatrix
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import prefs_col orb.misc.utils.prefs_col
 #:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
@@ -2818,10 +2861,8 @@ Builder.load_string(
         Line:
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import prefs_col orb.misc.utils.prefs_col
 #:import pref orb.misc.utils.pref
 #:import dp kivy.metrics.dp
@@ -3025,10 +3066,8 @@ Builder.load_string(
         Line:
             points: [self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height]
             width: 1
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import prefs_col orb.misc.utils.prefs_col
 
 
@@ -3087,10 +3126,8 @@ Builder.load_string(
     Widget:
     
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <ChannelsWidget>:
     size_hint: 20, 20
     pos: [-self.width/8, -self.height/8]
@@ -3118,10 +3155,8 @@ Builder.load_string(
 
 
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 #:import prefs_col orb.misc.utils.prefs_col
 
 <ChannelsScreen>:
@@ -3158,10 +3193,8 @@ Builder.load_string(
         text_color: [1, 1, 1, 1]
 
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <FeeWidgetLabel>:
     font_size: '24sp'
     size: [self.texture_size[0]*0.2, self.texture_size[1]*.2]
@@ -3172,10 +3205,8 @@ Builder.load_string(
             xyz: .2, .2, 1
     canvas.after:
         PopMatrix
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <SegmentLabel>:
     font_size: '84sp'
     size: [self.texture_size[0]*0.2, self.texture_size[1]*.2]
@@ -3186,10 +3217,8 @@ Builder.load_string(
             xyz: .2, .2, 1
     canvas.after:
         PopMatrix
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <ContextMenu>:
     cols: 1
     size_hint: None, None
@@ -3316,10 +3345,8 @@ Builder.load_string(
     padding: dp(7), dp(3)
     multiline: False
 
-"""
-)
-Builder.load_string(
-    """
+''')
+Builder.load_string('''
 <AppMenu>:
     height: dp(30)
     size_hint: 1, None
@@ -3346,5 +3373,4 @@ Builder.load_string(
     size: self.texture_size[0], dp(30)
     padding_x: dp(10)
 
-"""
-)
+''')

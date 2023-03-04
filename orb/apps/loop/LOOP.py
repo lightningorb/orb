@@ -5,8 +5,7 @@
 # @Last Modified time: 2022-08-07 12:24:17
 
 from orb.ln import Ln
-from orb.misc.mempool import get_fees
-
+from orb.misc import mempool
 from orb.misc.plugin import Plugin
 
 

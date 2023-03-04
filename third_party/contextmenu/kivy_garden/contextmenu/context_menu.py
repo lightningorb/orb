@@ -90,7 +90,6 @@ class ContextMenu(GridLayout, AbstractMenu):
     def hide(self):
         self.visible = False
 
-
     def show(self, x=None, y=None):
         self.visible = True
         self._add_to_parent()
@@ -116,10 +115,12 @@ class ContextMenu(GridLayout, AbstractMenu):
             if fits_x:
                 pos_x = x
             else:
-                parent_is_context = issubclass(self.parent.__class__, ContextMenuTextItem)
+                parent_is_context = issubclass(
+                    self.parent.__class__, ContextMenuTextItem
+                )
                 parent_is_abstract = issubclass(self.parent.__class__, AbstractMenuItem)
                 if not parent_is_context:
-                    self.mod = ((x + self.width) - root_parent.width)
+                    self.mod = (x + self.width) - root_parent.width
                     pos_x = x - self.mod
                 else:
                     pos_x = x - self.mod - self.parent.width - self.width

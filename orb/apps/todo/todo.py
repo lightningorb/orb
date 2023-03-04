@@ -18,6 +18,7 @@ from kivy.properties import StringProperty
 
 from orb.misc.plugin import Plugin
 from orb.store.db_meta import get_db
+from orb.misc.decorators import db_connect
 
 
 class Todo(Model):
@@ -78,6 +79,7 @@ class TodoView(Popup):
         todo.done = True
         todo.save()
 
+    @db_connect("todo")
     def open(self, *args, **kwargs):
         """
         This gets called when the popup is first opened.
@@ -93,14 +95,8 @@ class TodoPlugin(Plugin):
         Main function. The caller must call this.
         """
         db = get_db("todo")
-        try:
-            # this throws if already connected
-            db.connect()
-        except:
-            pass
-        with db:
-            db.create_tables([Todo])
+        db.create_tables([Todo])
         kv_path = (Path(__file__).parent / "todo.kv").as_posix()
-        Builder.unload_file(kv_path)
-        Builder.load_file(kv_path)
+        # Builder.unload_file(kv_path)
+        # Builder.load_file(kv_path)
         TodoView().open()

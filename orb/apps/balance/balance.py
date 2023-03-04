@@ -18,9 +18,12 @@ from orb.misc.plugin import Plugin
 class Balance(Plugin):
     def main(self):
         ln = Ln()
+        if ln.node_type != "LND":
+            print("This app currently only works for LND")
+            return
         remote, local, pending_in, pending_out, commit = 0, 0, 0, 0, 0
 
-        cbal = Ln().channel_balance()
+        cbal = Ln().local_remote_bal()
 
         # For each channel (including inactive channels)
         for c in ln.get_channels():

@@ -1,2 +1,0 @@
-jq
-python-telegram-bot

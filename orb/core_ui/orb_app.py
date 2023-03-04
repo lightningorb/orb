@@ -48,17 +48,6 @@ if platform == "windows":
 sys.path.append("orb/lnd/grpc_generate")
 sys.path.append("orb/lnd")
 
-is_dev = "main.py" in sys.argv[0]
-
-try:
-    from pytransform import get_license_info
-
-    is_dev = False
-except:
-    pass
-
-print(f"sys.argv[0] is {sys.argv[0]}")
-
 
 class OrbApp(AppCommon):
     title = "Orb"

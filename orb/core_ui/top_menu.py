@@ -18,7 +18,6 @@ from orb.misc.plugin import Plugin
 
 
 class TopMenu(AppMenu):
-
     hovered_menu_item = ObjectProperty()
 
     script_widgets = []
@@ -80,6 +79,7 @@ class TopMenu(AppMenu):
         try:
             exec(text)
         except:
+            print(text)
             exc = format_exc()
             if exc:
                 print(exc)

@@ -1,6 +1,0 @@
-menu: examples > REST Template
-name: REST Template
-description: A simple app that provides a template for directly interacting with the REST LND API
-author: 02234cf94dd9a4b76cb4767bf3da03b046c299307063b17c9c2e1886829df6a23a
-uuid: rest_template
-icon: template.png
