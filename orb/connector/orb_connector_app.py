@@ -124,26 +124,29 @@ class OrbConnectorApp(AppCommon):
             bl.add_widget(button)
             self.node_buttons.append(bl)
             grid.add_widget(bl)
-        button = MDRaisedButton(
-            text=f"Open orb-public (signet)",
-            size_hint=[1, None],
-            height=dp(40),
-            md_bg_color=[79 / 255.0, 51 / 255.0, 95 / 255.0, 1],
-            on_release=self.add_public_testnet_node,
-        )
-        bl = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50))
-        self.node_buttons.append(bl)
-        ib = MDIconButton(
-            icon="delete-forever",
-            on_release=partial(
-                rm_node,
-                pk="0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47",
-                bl=bl,
-            ),
-        )
-        bl.add_widget(ib)
-        bl.add_widget(button)
-        grid.add_widget(bl)
+
+        def add_orb_public():
+            button = MDRaisedButton(
+                text=f"Open orb-public (signet)",
+                size_hint=[1, None],
+                height=dp(40),
+                md_bg_color=[79 / 255.0, 51 / 255.0, 95 / 255.0, 1],
+                on_release=self.add_public_testnet_node,
+            )
+            bl = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50))
+            self.node_buttons.append(bl)
+            ib = MDIconButton(
+                icon="delete-forever",
+                on_release=partial(
+                    rm_node,
+                    pk="0227750e13a6134c1f1e510542a88e3f922107df8ef948fc3ff2a296fca4a12e47",
+                    bl=bl,
+                ),
+            )
+            bl.add_widget(ib)
+            bl.add_widget(button)
+            grid.add_widget(bl)
+
         filler = Widget()
         self.node_buttons.append(filler)
         grid.add_widget(filler)

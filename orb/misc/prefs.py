@@ -54,9 +54,11 @@ def cert_path(use_tmp=False, node_type="lnd"):
         return Path(tempfile.gettempdir()) / f"{node_type}_f66d6b24ccfb"
     if desktop:
         app = App.get_running_app()
-        return Path(app.user_data_dir) / pref("path.cert") / f"{node_type}_tls.cert"
+        if app:
+            return Path(app.user_data_dir) / pref("path.cert") / f"{node_type}_tls.cert"
     else:
         return Path(tempfile.gettempdir()) / f"{node_type}_f66d6b24ccfb"
+    return Path(tempfile.gettempdir()) / f"{node_type}_f66d6b24ccfb"
 
 
 def inverted_channels():
