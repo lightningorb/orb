@@ -56,8 +56,12 @@ jobs:
         # Specify the macOS versions to use
         os: [macos-10.15, macos-11]
     steps:
-      # Check out the repository code
+      # Checkout the code
       - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       # Set up Python 3.9
       - uses: actions/setup-python@v2
         with:
@@ -97,9 +101,12 @@ jobs:
       # Set the name of the operating system as an environment variable
       os-name: ubuntu-20.04
     steps:
-      # Check out the repository code
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # Checkout the code
+      - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       # Set up Python 3.8
       - name: Setup Python environment
         uses: actions/setup-python@v2
@@ -149,8 +156,12 @@ jobs:
     # Set a 30-minute timeout for the job
     timeout-minutes: 30
     steps:
-      # Check out the repository code
+      # Checkout the code
       - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       # Set up Python 3.9
       - uses: actions/setup-python@v2
         with:
@@ -184,8 +195,12 @@ jobs:
     # Use the latest version of Ubuntu as the operating system for the job
     runs-on: ubuntu-latest
     steps:
-      # Check out the repository code
+      # Checkout the code
       - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       # Set up Python 3.9 and cache pip packages
       - uses: actions/setup-python@v2
         with:
@@ -224,8 +239,12 @@ jobs:
       # Set the name of the operating system as an environment variable
       os-name: ubuntu-20.04
     steps:
-      # Check out the repository code
+      # Checkout the code
       - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       # Set up Python 3.9 and cache pip packages
       - uses: actions/setup-python@v2
         with:
@@ -249,8 +268,12 @@ jobs:
       # Set the name of the operating system as an environment variable
       os-name: ubuntu-20.04
     steps:
-      # Check out the repository code
+      # Checkout the code
       - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       # Set up Node.js 16 and its dependencies
       - uses: actions/setup-node@v2
         with:
