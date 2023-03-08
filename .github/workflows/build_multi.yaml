@@ -211,7 +211,7 @@ jobs:
           # Set the path to the built APK file, including the version number from the environment variable
           asset_path: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
           # Set the name of the asset to the same as the file name
-          asset_name: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
+          asset_name: orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
           # Set the content type of the asset as a ZIP file
           asset_content_type: application/zip
   # Build documentation
