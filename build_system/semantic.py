@@ -11,4 +11,3 @@ get_ver = lambda: semver.VersionInfo.parse(open("VERSION").read().strip())
 
 def save_ver(ver):
     open("VERSION", "w").write(str(ver))
-    open("VERSION.ANDROID", "w").write(str(ver) + ".0")

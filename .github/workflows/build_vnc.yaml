@@ -1,17 +1,33 @@
-name: build vnc
+# Name of the GitHub Action
+name: Build VNC
+
+# Trigger the action when code is pushed to the "build_vnc" branch
 on:
   push:
     branches: [ build_vnc ]
+
+# Define the job to be executed
 jobs:
+  # Name of the job
   build_vnc:
+    # The type of virtual environment to run the job
     runs-on: ubuntu-20.04
     env:
       os-name: ubuntu-20.04
+
+    # Define the steps to be executed in the job
     steps:
+      # Checkout the code from the repository
       - uses: actions/checkout@v2
+      
+      # Setup the Python environment
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8'
           cache: 'pip'
+          
+      # Install required packages
       - run: pip install fabric semver
+      
+      # Build the Orb VNC Docker image
       - run: python ./build.py docker.orb-vnc

@@ -1,23 +1,32 @@
 name: build all platforms
+# Trigger the workflow when a push event happens on the versioning branch
 on:
   push:
     branches: [ build_multi ]
+# Define environment variables
 env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-    PYARMOR: ${{ secrets.PYARMOR }}
-    VERSION: 0.21.15
+  AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+# Define jobs to run
 jobs:
+  # Create a release
   create_release:
-    outputs: 
-      upload_url: ${{ steps.create_release.outputs.upload_url }} 
+    # Define output variables
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    # Define permissions
     permissions: write-all
+    # Define the operating system to run on
     runs-on: ubuntu-20.04
+    # Define steps to run
     steps:
-      # - name: Set variables
-      #   run: |
-      #     VER=$(cat VERSION  | sed 's/ *$//g')
-      #     echo "VERSION=$VER" >> $GITHUB_ENV
+      # Checkout the code
+      - uses: actions/checkout@v2
+      # Set the VERSION environment variable to the contents of the VERSION file
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+      # Create a GitHub release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -28,140 +37,225 @@ jobs:
           release_name: v${{ env.VERSION }}
           draft: false
           prerelease: false
+  # Build the macOS release
   build_macosx:
+    # Allow the job to write to the repository
     permissions: write-all
+    # Require the 'create_release' job to complete before running this job
     needs: create_release
+    # Use either macOS 10.15 or macOS 11 for the job
     runs-on: ${{ matrix.os }}
     env:
+      # Set the name of the operating system as an environment variable
       os-name: ${{ matrix.os }}
+      # Set the Kivy GL backend to use
       KIVY_GL_BACKEND: 'angle_sdl2'
     strategy:
+      # Use a matrix strategy to run the job on multiple operating systems
       matrix:
+        # Specify the macOS versions to use
         os: [macos-10.15, macos-11]
     steps:
+      # Check out the repository code
       - uses: actions/checkout@v2
+      # Set up Python 3.9
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
           cache: 'pip'
+      # Install Python packages for building the release
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      # Install create-dmg to create a macOS disk image
       - run: brew install create-dmg
+      # Build the macOS release using a Python script
       - run: python ./build.py armor.build-osx
+      # Upload the built release as a release asset
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
+          # Set the Github token secret to allow uploading the release asset
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Use the upload URL from the 'create_release' job output to upload the asset
           upload_url: ${{ needs.create_release.outputs.upload_url }}
+          # Set the path to the built release file, including the version number and operating system name from the environment variables
           asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.dmg
+          # Set the name of the asset to the same as the file name
           asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.dmg
+          # Set the content type of the asset as a ZIP file
           asset_content_type: application/zip
+  # Build the Linux release
   build_linux:
+    # Allow the job to write to the repository
     permissions: write-all
+    # Require the 'create_release' job to complete before running this job
     needs: create_release
+    # Use the Ubuntu 20.04 operating system for the job
     runs-on: ubuntu-20.04
     env:
+      # Set the name of the operating system as an environment variable
       os-name: ubuntu-20.04
     steps:
+      # Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v2
+      # Set up Python 3.8
       - name: Setup Python environment
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
           cache: 'pip'
+      # Install Python packages for building the release
       - name: Install requirements
         run: |
           pip install -r requirements.txt -r requirements-dev.txt
+      # Build the Linux release using a Python script
       - name: Build for Linux
         run: python ./build.py armor.build-linux
+      # Upload the built release as a release asset
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
+          # Set the Github token secret to allow uploading the release asset
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Use the upload URL from the 'create_release' job output to upload the asset
           upload_url: ${{ needs.create_release.outputs.upload_url }}
+          # Set the path to the built release file, including the version number and operating system name from the environment variables
           asset_path: orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
+          # Set the name of the asset to the same as the file name
           asset_name: orb-${{ env.VERSION }}-ubuntu-20.04-x86_64.tar.gz
+          # Set the content type of the asset as a ZIP file
           asset_content_type: application/zip
+  # Build the Windows release
   build_windows:
+    # Allow the job to write to the repository
     permissions: write-all
+    # Require the 'create_release' job to complete before running this job
     needs: create_release
+    # Use the operating system specified in the matrix as the job's operating system
     runs-on: ${{ matrix.os }}
     env:
+      # Set the name of the operating system as an environment variable
       os-name: ${{ matrix.os }}
+      # Set the graphics backend for Kivy
       KIVY_GL_BACKEND: 'angle_sdl2'
     strategy:
+      # Define a matrix of operating systems to test on
       matrix:
         os: [windows-2022, windows-2019]
+    # Set a 30-minute timeout for the job
     timeout-minutes: 30
     steps:
+      # Check out the repository code
       - uses: actions/checkout@v2
+      # Set up Python 3.9
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+      # Install Python packages for building the release
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      # Build the Windows release using a Python script
       - run: python ./build.py armor.build-windows
+      # Upload the built release as a release asset
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
+          # Set the Github token secret to allow uploading the release asset
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Use the upload URL from the 'create_release' job output to upload the asset
           upload_url: ${{ needs.create_release.outputs.upload_url }}
+          # Set the path to the built release file, including the version number and operating system name from the environment variables
           asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
+          # Set the name of the asset to the same as the file name
           asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
+          # Set the content type of the asset as a ZIP file
           asset_content_type: application/zip
+  # Build the Android APK
   build_android:
+    # Allow the job to write to the repository
     permissions: write-all
+    # Require the 'create_release' job to complete before running this job
     needs: create_release
+    # Use the latest version of Ubuntu as the operating system for the job
     runs-on: ubuntu-latest
     steps:
+      # Check out the repository code
       - uses: actions/checkout@v2
+      # Set up Python 3.9 and cache pip packages
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
           cache: 'pip'
+      # Install Fabric and Semver Python packages
       - run: pip install fabric semver
-      # - run: python ./build.py android.cython
+      # Use the ArtemSBulgakov/buildozer-action to build the APK using Buildozer
       - uses: ArtemSBulgakov/buildozer-action@v1
         with:
           command: buildozer android debug
           buildozer_version: stable
+      # Upload the built APK as a release asset
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
+          # Set the Github token secret to allow uploading the release asset
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Use the upload URL from the 'create_release' job output to upload the asset
           upload_url: ${{ needs.create_release.outputs.upload_url }}
+          # Set the path to the built APK file, including the version number from the environment variable
           asset_path: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
+          # Set the name of the asset to the same as the file name
           asset_name: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
+          # Set the content type of the asset as a ZIP file
           asset_content_type: application/zip
+  # Build documentation
   build_docs:
+    # Run this job only if the repository is 'lightningorb/orb'
+    if: github.repository == 'lightningorb/orb'
+    # Use Ubuntu 20.04 as the operating system for the job
     runs-on: ubuntu-20.04
     env:
+      # Set the name of the operating system as an environment variable
       os-name: ubuntu-20.04
     steps:
+      # Check out the repository code
       - uses: actions/checkout@v2
+      # Set up Python 3.9 and cache pip packages
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
           cache: 'pip'
+      # Install Pandoc to convert markdown to other formats
       - run: sudo apt-get install pandoc -y
+      # Install Python packages for building documentation
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      # Build documentation using a Python script
       - run: python ./build.py documentation.build-cli-docs documentation.build
+      # Upload built documentation to an S3 bucket
       - run: aws s3 cp docs/docsbuild/ s3://lnorb/docs/ --recursive --region us-east-2
+  # Build website
   build_site:
+    # Run this job only if the repository is 'lightningorb/orb'
+    if: github.repository == 'lightningorb/orb'
+    # Use Ubuntu 20.04 as the operating system for the job
     runs-on: ubuntu-20.04
     env:
+      # Set the name of the operating system as an environment variable
       os-name: ubuntu-20.04
     steps:
+      # Check out the repository code
       - uses: actions/checkout@v2
+      # Set up Node.js 16 and its dependencies
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
+      # Install dependencies and build the website using NPM
       - run: cd site && npm install && npm run build
+      # Upload built website to an S3 bucket
       - run: aws s3 cp site/build/ s3://lnorb/ --recursive --region us-east-2

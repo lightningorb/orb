@@ -1,7 +1,10 @@
-name: build docker
+# Define the workflow name and trigger
+name: Build Docker
 on:
   push:
     branches: [ build_docker ]
+
+# Define the job to build the Docker image
 jobs:
   build_docker:
     runs-on: ${{ matrix.os }}
@@ -10,16 +13,31 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+    # Define the matrix of operating systems to run the job on
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-21.04, ubuntu-22.04]
+    
+    # Define the steps to build the Docker image
     steps:
+      # Check out the code from the repository
       - uses: actions/checkout@v2
+      
+      # Set up the Python environment
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8'
           cache: 'pip'
+      
+      # Install the dependencies
       - run: pip install -r requirements.txt -r requirements-dev.txt
+      
+      # Run the tests
       - run: python ./build.py test.test
+      
+      # Build the Linux executable
       - run: python ./build.py armor.build-linux --no-do-upload
+      
+      # Build the Docker image
       - run: python ./build.py armor.build-docker
