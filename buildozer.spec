@@ -36,12 +36,12 @@ version.filename = %(source.dir)s/VERSION
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.1.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome,bech32,psutil,websocket-client,custom_lib
+requirements = python3,kivy==2.1.0,kivymd==0.104.2,peewee==3.14.8,simplejson==3.17.6,python-dateutil==2.8.2,kivy_garden.graph==0.4.0,PyYaml==6.0,plyer,rsa,memoization,pillow,requests,urllib3,charset-normalizer,idna,pygments,pyasn1,pyarmor,pycryptodome,bech32,psutil,websocket-client,chardet
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
-requirements.source.custom_lib = lib/custom_lib
+# requirements.source.custom_lib = lib/custom_lib
 
 # (str) Presplash of the application
 presplash.filename = images/bg_big_square.jpeg
@@ -50,7 +50,7 @@ presplash.filename = images/bg_big_square.jpeg
 icon.filename = %(source.dir)s/images/bg.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
-# orientation = all
+orientation = portrait,landscape
 
 # (list) List of service to declare
 #services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
@@ -223,7 +223,7 @@ android.api = 30
 #android.copy_libs = 1
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
-android.arch = armeabi-v7a,arm64-v8a
+android.arch = armeabi-v7a,arm64-v8a,x86_64
 
 # (int) overrides automatic versionCode computation (used in build.gradle)
 # this is not the same as app version and should only be edited if you know what you're doing

@@ -114,32 +114,32 @@ jobs:
           asset_path: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
           asset_name: orb-${{ env.VERSION }}-${{env.os-name}}-x86_64.zip
           asset_content_type: application/zip
-  # build_android:
-  #   permissions: write-all
-  #   needs: create_release
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-python@v2
-  #       with:
-  #         python-version: '3.9'
-  #         cache: 'pip'
-  #     - run: pip install fabric semver
-  #     - run: python ./build.py android.cython
-  #     - uses: ArtemSBulgakov/buildozer-action@v1
-  #       with:
-  #         command: buildozer android debug
-  #         buildozer_version: stable
-  #     - name: Upload Release Asset
-  #       id: upload-release-asset 
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         upload_url: ${{ needs.create_release.outputs.upload_url }}
-  #         asset_path: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a-debug.apk
-  #         asset_name: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a-debug.apk
-  #         asset_content_type: application/zip
+  build_android:
+    permissions: write-all
+    needs: create_release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - run: pip install fabric semver
+      # - run: python ./build.py android.cython
+      - uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          command: buildozer android debug
+          buildozer_version: stable
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
+          asset_name: bin/orb-${{ env.VERSION }}-armeabi-v7a_arm64-v8a_x86_64-debug.apk
+          asset_content_type: application/zip
   build_docs:
     runs-on: ubuntu-20.04
     env:

@@ -53,63 +53,6 @@ def update(c, env=dict(PATH=os.environ["PATH"])):
         c.run("toolchain update lnorb-ios", env=env)
 
 
-# @task()
-# def update(c, env=os.environ):
-#     """
-#     Try to deploy in obfuscated mode.
-#     """
-#     update_version(c)
-#     c.run("rm -rf dist tmp;")
-#     c.run("mkdir -p tmp;")
-#     c.run("cp -r main.py tmp/;")
-#     c.run("cp -r third_party tmp/;")
-#     c.run("cp -r orb tmp/;")
-#     with c.cd("tmp"):
-#         c.run(
-#             "pyarmor obfuscate --no-cross-protection --platform darwin.arm64.0 --recursive main.py;",
-#             env=env,
-#         )
-#         c.run("cp -r orb/lnd/grpc_generated dist/orb/lnd/grpc_generated")
-#         c.run("mkdir -p dist/orb/images")
-#         c.run("cp -r orb/images/shadow_inverted.png dist/orb/images/")
-#         c.run("cp -r orb/misc/settings.json dist/orb/misc/")
-#         c.run("cp -r orb/apps/auto_fees/autofees.kv dist/orb/apps/auto_fees/")
-#         c.run("cp -r orb/apps/auto_fees/autofees.png dist/orb/apps/auto_fees/")
-#         c.run("cp -r orb/apps/auto_fees/appinfo.yaml dist/orb/apps/auto_fees/")
-#         c.run(
-#             "cp -r orb/apps/auto_rebalance/autobalance.kv dist/orb/apps/auto_rebalance/"
-#         )
-#         c.run(
-#             "cp -r orb/apps/auto_rebalance/autobalance.png dist/orb/apps/auto_rebalance/"
-#         )
-#         c.run(
-#             "cp -r orb/apps/auto_rebalance/appinfo.yaml dist/orb/apps/auto_rebalance/"
-#         )
-#         c.run(
-#             "cp -r orb/apps/auto_max_htlcs/update_max_htlcs.png dist/orb/apps/auto_max_htlcs/"
-#         )
-#         c.run(
-#             "cp -r orb/apps/auto_max_htlcs/appinfo.yaml dist/orb/apps/auto_max_htlcs/"
-#         )
-#         c.run("mkdir -p dist/images/")
-#         c.run("cp -r ../images/ln.png dist/images/")
-#         c.run("rm -rf orb main.py third_party")
-#         c.run("mv dist orb")
-#     copy_obfuscated_files(c)
-#     with c.cd("build"):
-#         out = c.run("security find-identity", env=env).stdout
-#         identity = re.search(r'1\) ([A-Z 0-9]{40}) "Apple Development', out).group(1)
-#         c.run("toolchain update lnorb-ios", env=env)
-#         c.run(
-#             f'codesign -f -s "{identity}" ./lnorb-ios/YourApp/pytransform/_pytransform.dylib',
-#             env=env,
-#         )
-#         c.run(
-#             f'codesign -f -s "{identity}" /tmp/lnorb/pytransform/_pytransform.dylib',
-#             env=env,
-#         )
-
-
 @task
 def create(c, env=dict(PATH=os.environ["PATH"])):
     """
@@ -131,9 +74,9 @@ def toolchain_pip(c, env=dict(PATH=os.environ["PATH"])):
         c.run("toolchain pip3 install kivy_garden.graph==0.4.0", env=env)
         c.run("toolchain pip3 install PyYaml==6.0", env=env)
         c.run("toolchain pip3 install simplejson==3.17.6", env=env)
-        # c.run("toolchain pip3 install pycryptodome", env=env)
         c.run("toolchain pip3 install memoization", env=env)
         c.run("toolchain pip3 install rsa", env=env)
+        c.run("toolchain pip3 install bech32", env=env)
 
 
 @task
@@ -143,7 +86,6 @@ def toolchain_build(c, env=os.environ):
         c.run("toolchain build openssl", env=env)
         c.run("toolchain build kivy", env=env)
         c.run("toolchain build pillow", env=env)
-        c.run("toolchain build libzbar", env=env)
         c.run("toolchain build audiostream", env=env)
         c.run("toolchain build pyyaml", env=env)
         c.run("toolchain build plyer", env=env)

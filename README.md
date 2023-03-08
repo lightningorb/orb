@@ -10,9 +10,13 @@ Windows and OSX binary builds can be found in the repo's [releases](https://gith
 
 # Downloading the Mobile builds ⬇️
 
-[Android](https://play.google.com/store/apps/details?id=com.lnorb.orb).
+## Android
 
-[IOS](https://testflight.apple.com/join/i8wfm9TH) (dev license ran out. Consider dating to our [Apple dev license fund](https://mempool.space/address/bc1qxvjxpqrjxvtq4732sn52weq53r7sxu7zahzs0u)).
+Android users please download the latest APK in the [releases](https://github.com/lightningorb/orb/releases) page. The Google Play listing is probably [out of date](https://play.google.com/store/apps/details?id=com.lnorb.orb).
+
+## IOS
+
+You can get [Orb IOS using TestFlight](https://testflight.apple.com/join/i8wfm9TH) (Please consider donating to our [Apple dev license fund](https://mempool.space/address/bc1qxvjxpqrjxvtq4732sn52weq53r7sxu7zahzs0u)).
 
 
 # Running Orb from source 🐍 
