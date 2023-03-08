@@ -334,7 +334,7 @@ class ClnREST(ClnBase):
             feerate = f"{sat_per_vbyte*1000}perkb"
         if send_all:
             kwargs = dict(destination=addr, satoshi="all")
-            kwargs["feerate"] = "normal"
+            kwargs["feerate"] = "urgent"
             # kwargs["feerate"] = feerate
             return self.withdraw(**kwargs)
         else:
@@ -345,7 +345,7 @@ class ClnREST(ClnBase):
             utxos = [f"{o.tx_hash}:{o.tx_index}" for o in outputs]
             kwargs = dict(destination=addr, satoshi=satoshi, utxos=utxos)
             # kwargs["feerate"] = feerate
-            kwargs["feerate"] = "normal"
+            kwargs["feerate"] = "urgent"
             return self.withdraw(**kwargs)
 
     def sign_message(self, msg):
