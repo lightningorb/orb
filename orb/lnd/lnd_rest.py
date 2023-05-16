@@ -371,9 +371,7 @@ class LndREST(LndBase):
                 print(json_data["error"])
                 break
             response = dict2obj(json_data)
-            print(response.status)
-            if response.status == "FAILED":
-                print(response.failure_reason)
+            print(response)
 
     def list_peers(self):
         """

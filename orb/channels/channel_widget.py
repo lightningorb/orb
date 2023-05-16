@@ -227,6 +227,8 @@ class ChannelWidget(Widget):
 
     def anim_htlc(self, htlc):
         col = Colour("white").rgba
+        if htlc.event_type == "UNKNOWN":
+            return
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
         receive = htlc.event_type == "RECEIVE"

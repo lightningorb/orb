@@ -52,10 +52,10 @@ class KeysendDialog(MDDialog):
 class Keysend(Plugin):
     def main(self):
         ln = Ln()
-        if ln.node_type != "LND":
+        if ln.node_type != "lnd":
             print("This app currently only works for LND")
             return
         kv_path = (Path(__file__).parent / "keysend.kv").as_posix()
-        Builder.unload_file(kv_path)
+        # Builder.unload_file(kv_path)
         Builder.load_file(kv_path)
         KeysendDialog().open()

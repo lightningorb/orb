@@ -32,7 +32,7 @@ class HTLCsThread(StoppableThreadHidden):
         @mainthread
         def mainthread_anim(cid, htlc):
             try:
-                self.inst.cn[cid].l.anim_htlc(htlc)
+                self.inst.cn[str(cid)].l.anim_htlc(htlc)
                 self.inst.ids.relative_layout.do_layout()
             except:
                 print(format_exc())
