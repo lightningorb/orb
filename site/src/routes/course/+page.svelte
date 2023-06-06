@@ -90,6 +90,18 @@
             Your browser does not support the video tag.
         </video>
 
+        <h4>Blockstream Green Testnet Wallet</h4>
+        <video class="laptop-video" controls>
+            <source src="https://lnorb.com/course/intro/green_wallet.mov" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <h4>Getting Testnet Bitcoin from Faucets</h4>
+        <video class="laptop-video" controls>
+            <source src="https://lnorb.com/course/intro/faucets.mov" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
         <h4>Installing Orb on IOS</h4>
         <video class="laptop-video" controls>
             <source src="https://lnorb.com/course/intro/install_ios.mov" type="video/mp4">

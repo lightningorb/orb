@@ -1,0 +1,35 @@
+In this guide, we'll demonstrate how to acquire Bitcoin for the testnet using faucets:
+
+Open your web browser and navigate to testnet dash faucet dot com slash btc dash testnet.
+
+Paste your testnet Bitcoin address, obtained from Green Wallet, into the address field, complete the Captcha, and then click "Send Testnet Bitcoin" to request your satoshis.
+
+A successful transaction should be confirmed. To the right of the TX, click on the link to access a Bitcoin explorer. This tool will show you that the transaction was executed and is now visible to the network.
+
+Next, switch back to your Green Wallet app. You should see the new transaction listed as 'unconfirmed' and waiting for confirmations. Different applications, wallets, and services require varying amounts of confirmations before the Bitcoin is "confirmed" and thus spendable. Green Wallet requires six confirmations.
+
+You might have noticed that I use the terms Bitcoin and Satoshis interchangeably. This is because one Bitcoin equals one hundred million satoshis.
+
+So, how many satoshis are in 0.00010769 Bitcoin? The conversion is simple:
+
+Extract the fractional part, i.e., the numbers after the decimal point.
+Ensure there are a total of eight digits. If not, pad zeros to the right of the number.
+From the right, insert a comma after every third digit.
+Remove any leading zeros.
+This is the easiest way to convert Bitcoins to Satoshis.
+
+To convert from satoshis to Bitcoin, reverse the steps:
+
+Remove any commas.
+Pad with zeros on the left until there are eight digits.
+Add a zero and a decimal point on the left.
+
+The faucet only sent us around 10k satoshis. The Lightning network's channels have a minimum capacity requirement. On the testnet, this minimum is typically around 20K satoshis or more. Ideally, we should aim for millions of satoshis to correctly set up a testnet node.
+
+Here's how to get more testnet Bitcoin:
+
+Open your web browser and navigate to kuttler dot e u slash en slash bitcoin slash btc slash faucet.
+
+This faucet provides a substantial amount of Bitcoin, approximately 3 million satoshis. To request coins, paste your wallet address, complete the captcha, and click "get coins". Note that the coins' transfer may take up to 24 hours, so be patient.
+
+For demonstration purposes, I have sent myself 3 million sats. In about 24 hours, you should see something similar. Congratulations, you will soon be a testnet satoshis multi-millionaire.
