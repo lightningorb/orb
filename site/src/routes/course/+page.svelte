@@ -126,6 +126,12 @@
             Your browser does not support the video tag.
         </video>
 
+        <h4>Opening channels</h4>
+        <video class="laptop-video" controls>
+            <source src="https://lnorb.com/course/intro/opening_channels.mov" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
         <br/>
         <br/>
         <br/>
