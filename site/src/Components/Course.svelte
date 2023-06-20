@@ -1,36 +1,16 @@
 <script>
-    import NavbarPlain from './NavbarPlain.svelte';
-    import { Button, Form, FormGroup, FormText, Input, Label } from 'sveltestrap';
-    import { Modal, ModalBody, ModalHeader, Container, Row, Col, Styles } from 'sveltestrap';
-    import { onMount } from 'svelte';
-
-    let email = '';
-    let statusMessage = '';
-
-    async function submitEmail() {
-        try {
-            const response = await fetch('https://4wuzfpyv54z7tykr5jo6nw2cfy0kfhog.lambda-url.us-east-2.on.aws/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email })
-            });
-
-            if (response.ok) {
-                console.log(await response.json());
-                statusMessage = 'Thank you! Your interest has been registered.';
-            } else {
-                statusMessage = 'Oops! Something went wrong. Please try again later.';
-            }
-            console.log(response);
-        } catch (error) {
-            console.error('Error submitting email:', error);
-            statusMessage = 'Oops! Something went wrong. Please try again later.';
-        }
-    }
+  import NavbarPlain from './NavbarPlain.svelte';
+  import { Button, Form, FormGroup, FormText, Input, Label } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader, Container, Row, Col, Styles } from 'sveltestrap';
+  import { onMount } from 'svelte';
+  import { browser } from "$app/environment";
+    $: outerWidth = 0
+    $: innerWidth = 0
+    $: outerHeight = 0
+    $: innerHeight = 0
 </script>
 
+<svelte:window bind:innerWidth bind:outerWidth bind:innerHeight bind:outerHeight />
 
 <style>
     .main-container {
@@ -59,28 +39,19 @@
 </style>
 
 <div class="main-container section bg-light common-section">
-    <h1 class="home-title">Intro to LN</h1>
-    <h4 class="home-small-title">Discover the Lightning Network with our hands-on Orb tutorials.</h4>
-
-    <div class="laptop-frame">
-<!--         <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/intro.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video> -->
-        <iframe width="490" height="320" src="https://www.youtube.com/embed?listType=playlist&list=PL1xGN4d9nOKuCkUZQExTHsYzLPptQ28NM" frameborder="0" allowfullscreen></iframe>
-    </div>
-
-<!--     <form on:submit|preventDefault={submitEmail}>
-        <div class="input-group mb-3">
-            <Input type="email" class="form-control" placeholder="Your Email Address" aria-label="Your Email Address" aria-describedby="basic-addon2" bind:value={email} required />
-            <div class="input-group-append">
-                <Button class="btn btn-primary" on:click|once={submitEmail}>Register Interest</Button>
+    <Container>
+        <Row>
+            <Col lg={{ size: 8, offset: 2 }}>
+            <h1 class="home-title">Intro to LN</h1>
+            <h4 class="home-small-title">Discover the Lightning Network with our hands-on Orb tutorials.</h4>
+            {#if innerWidth < 500}
+            <iframe width="490" height="320" src="https://www.youtube.com/embed?listType=playlist&list=PL1xGN4d9nOKuCkUZQExTHsYzLPptQ28NM" frameborder="0" allowfullscreen></iframe>
+            {:else}
+            <div class="laptop-frame">
+                <iframe width="490" height="320" src="https://www.youtube.com/embed?listType=playlist&list=PL1xGN4d9nOKuCkUZQExTHsYzLPptQ28NM" frameborder="0" allowfullscreen></iframe>
             </div>
-        </div>
-    </form>
-    {#if statusMessage}
-        <p class="pt-3 text-black mx-auto">
-            {statusMessage}
-        </p>
-    {/if} -->
+            {/if}
+            </Col>
+        </Row>
+    </Container>
 </div>
