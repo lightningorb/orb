@@ -1889,7 +1889,7 @@ Builder.load_string('''
 
 <LNDOpenChannel>:
     title: 'Open Channel'
-    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(300))
+    size: min(Window.size[0], dp(500)), min(Window.size[1], dp(400))
     background_color: .6, .6, .8, .9
     overlay_color: 0, 0, 0, 0
     size_hint: [None, None]
@@ -1910,13 +1910,18 @@ Builder.load_string('''
                 helper_text: 'Sats'
                 helper_text_mode: "persistent"
             MDTextField:
+                id: push_sat
+                helper_text: 'Push Sats'
+                helper_text_mode: "persistent"
+                text: '0'
+            MDTextField:
                 id: sats_per_vbyte
                 helper_text: 'Sats per v/byte'
                 helper_text_mode: "persistent"
         Widget:
         MDRaisedButton:
             text: 'open'
-            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text)
+            on_release: root.open_channel(pk.text, sats.text, sats_per_vbyte.text, push_sat.text)
             size_hint: None, None
             width: dp(80)
             height: dp(40)

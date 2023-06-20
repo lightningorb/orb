@@ -1,0 +1,13 @@
+In this tutorial we'll cover the steps to obtain inbound liquidity. Inbound liquidity is crucial for receiving payments, as it allows others in the network to send payments to your node. Without it, you can only send payments but not receive them.
+
+Fortunately, Voltage now provides an option to request a channel. To do this, go back to your Voltage dashboard and navigate to the "Home" section. Look for the "Request Channel" button and click on it. This action initiates the process of channel creation, and you will see that the channel is now pending. To track the progress of the channel creation, click on the "watch the process here" link, which opens an on-chain transaction in a block explorer.
+
+In the block explorer, you will find the unconfirmed transaction associated with the channel creation. This transaction should have two outputs: one for the channel open (in this case, with a balance of twenty thousand satoshis), and the remaining amount that returns to Voltage's wallet.
+
+Now, switch to Orb. At the bottom left, you will notice a pending open output related to the channel. It's important to wait until the block receives confirmations before the channel becomes visible and fully operational.
+
+After some time, your channel will be open. You will observe that the peer alias associated with the channel is "voltage-test." By clicking on your this new peer, you will see that the channel has a balance close to twenty thousand sats. If you click on the channel you opened in a previous tutorial, it should display a balance of one hundred thousand sats.
+
+To summarize, your Lightning Node should now have one hundred thousand sats outbound (for sending payments) and twenty thousand sats inbound (for receiving payments).
+
+If, for any reason, Voltage does not offer the option to request an inbound channel, you can visit LN orb dot come, scroll down to the bottom of the page, and click on "User Group." Join the Telegram User Group and make a request for a testnet inbound channel to be opened for your Node. Ensure that you provide your Node's pubkey when making the request.

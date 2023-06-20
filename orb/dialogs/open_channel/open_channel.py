@@ -23,11 +23,12 @@ class OpenChannel:
 
 class CLNOpenChannel(PopupDropShadow):
     @guarded
-    def open_channel(self, chan_id: str, satoshis: str, fee_rate: str):
+    def open_channel(self, chan_id: str, satoshis: str, fee_rate: str, push_sat: str):
         out = Ln().open_channel(
             node_pubkey_string=chan_id,
             sat_per_vbyte=fee_rate,
             amount_sat=int(satoshis),
+            push_sat=int(push_sat),
         )
         popup = PopupDropShadow(
             title="Open Channel Result", size_hint=(None, None), size=(dp(200), dp(200))
@@ -39,11 +40,12 @@ class CLNOpenChannel(PopupDropShadow):
 
 class LNDOpenChannel(PopupDropShadow):
     @guarded
-    def open_channel(self, pk, sats, sats_per_vbyte):
+    def open_channel(self, pk, sats, sats_per_vbyte, push_sat: str):
         out = Ln().open_channel(
             node_pubkey_string=pk,
             sat_per_vbyte=int(sats_per_vbyte),
             amount_sat=int(sats),
+            push_sat=int(push_sat),
         )
         popup = PopupDropShadow(
             title="Open Channel Result", size_hint=(None, None), size=(dp(200), dp(200))

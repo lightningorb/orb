@@ -63,11 +63,11 @@
     <h4 class="home-small-title">Discover the Lightning Network with this hands-on Orb course.</h4>
 
     <div class="laptop-frame">
-        <video class="laptop-video" controls>
-            <!-- autoplay onclick="this.paused ? this.play() : this.pause();" -->
+<!--         <video class="laptop-video" controls>
             <source src="https://lnorb.com/course/intro/intro.mov" type="video/mp4">
             Your browser does not support the video tag.
-        </video>
+        </video> -->
+        <iframe width="490" height="320" src="https://www.youtube.com/embed?listType=playlist&list=PL1xGN4d9nOKuCkUZQExTHsYzLPptQ28NM" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <form on:submit|preventDefault={submitEmail}>
@@ -83,61 +83,4 @@
             {statusMessage}
         </p>
     {/if}
-
-        <h4>What is lightning?</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/what_is_lightning.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Blockstream Green Testnet Wallet</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/green_wallet.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Getting Testnet Bitcoin from Faucets</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/faucets.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Installing Orb on IOS</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/install_ios.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Installing Orb on Android</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/install_android.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Installing Orb on OSX</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/install_osx.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Creating a Lightning node on Voltage</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/voltage.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <h4>Opening channels</h4>
-        <video class="laptop-video" controls>
-            <source src="https://lnorb.com/course/intro/opening_channels.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-
 </div>

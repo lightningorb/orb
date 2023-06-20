@@ -1,0 +1,19 @@
+This guide will show you how to open channels on your newly created node. Channels are essential for sending and receiving funds over the Lightning Network, but before we can open them, we'll need to fund our node by sending Bitcoin from our mobile wallet to our node.
+
+To do this, open Orb and click on "onChain," then "New Address." Copy the wallet address that starts with TB1 and switch to your mobile wallet. Click on "Send," paste the address, and select "Send All Funds." Note that if you were using mainnet Bitcoin, you should only send a small amount that you're comfortable using for your first channel open. Set the fee rate to 2 sat per Vbyte to ensure that the Bitcoin is sent quickly. Click on "Next" and enter a note, e.g 'funding node', then slide to send.
+
+Click on "Sending Unconfirmed" under Latest Transactions to check the status. Once you have a confirmation, switch back to Orb and check that the funds are available in your on-chain wallet.
+
+Next, you'll need to find nodes to connect to. Open your browser and go to 1ml dot com slash testnet. Search for "boltz" and click on the node. Copy the node's address. A node's address is comprised of a pubkey, which is a 66 characters long alphanumerical string, followed by an at sign and the IP address and port of the node.
+
+Switch back to Orb, and click on "Lightning," then "Connect." Paste the address and click "Connect." To open the channel, click on "Channels," then "Open Channel." Paste in the pubkey field, and delete the part after the @ sign. Enter the amount in satoshis, for example one hundred thousand. Set the fees to 2 satoshis per few bytes. Click "Open". If an error took place during the channel open negotiation then it will be printed in this popup dialog. A common error is that the requested capacity is smaller than our peer's minimum channel size requirement.
+
+In the top left of Orb, you should now see that the channel is pending, and you'll need to wait for it to be confirmed and opened.
+
+After roughly 30 minutes to an hour your channel is now confirmed. You'll notice that at the top left of Orb there are no longer any pending satoshis. Instead we can now see that our Local balance is roughly 100K satoshis. 
+
+I invite you to zoom out using your mouse wheel, or by pinching and dragging if you are on mobile. By clicking on the peer, the Attributes editor opens on the right hand side.
+
+The attributes editor shows us the Alias of the peer, its pubkey as well as many other attributes we will explore in future videos.
+
+Congratulations, you are now connected to the testnet lightning network.
