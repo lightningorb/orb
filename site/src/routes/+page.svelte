@@ -6,6 +6,7 @@
 	import Footer from '../Components/Footer.svelte';
 	import Download from './../Components/Download.svelte';
 	import Navbar from '../Components/Navbar.svelte';
+	import Course from '../Components/Course.svelte';
 	import { Styles } from 'sveltestrap';
 	import { Modal, ModalBody, ModalHeader, Container, Row, Col } from 'sveltestrap';
 	import { Button } from 'sveltestrap';
@@ -42,6 +43,7 @@
 	</div>
 </section>
 
+<Course />
 <AboutUs />
 <Services serviceData={data.SERVICE_DATA} websiteData={data.WEBSITE_DESCRIPTION} />
 <Gallery galleryData={data.GALLERY_DATA} />
