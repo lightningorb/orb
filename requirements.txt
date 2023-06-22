@@ -2,7 +2,7 @@
 
 wheel
 websocket-client
-cython
+cython==0.29.33
 kivymd==0.104.2
 peewee==3.14.8
 simplejson==3.17.6
