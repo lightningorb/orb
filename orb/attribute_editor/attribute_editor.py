@@ -51,7 +51,6 @@ class DrawerList(MDList):
 
 
 class AttributeEditor(BoxLayout):
-
     alias = StringProperty("")
     identity_pubkey = StringProperty("")
 
@@ -392,13 +391,6 @@ class AttributeEditor(BoxLayout):
         self.ids.md_list.add_widget(
             ItemDrawer(
                 icon="abacus", text="Attributes:", size_hint_y=None, height=dp(60)
-            )
-        )
-
-
-class ItemDrawer(OneLineIconListItem):
-    icon = StringProperty()
-"Attributes:", size_hint_y=None, height=dp(60)
             )
         )
 
