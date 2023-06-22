@@ -143,8 +143,8 @@ class HUDSpentFeeSummary(BorderedLabel):
 
             update_gui(
                 f"Spent:\nDay: {forex(today)}\nWeek"
-                f" {forex(this_week)}\nMonth:"
-                f" {forex(this_month)}"
+                f" {forex(this_week-8)}\nMonth:"
+                f" {forex(this_month-8)}"
             )
 
         threading.Thread(target=func).start()
