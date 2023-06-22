@@ -51,6 +51,7 @@ class DrawerList(MDList):
 
 
 class AttributeEditor(BoxLayout):
+
     alias = StringProperty("")
     identity_pubkey = StringProperty("")
 
@@ -133,10 +134,7 @@ class AttributeEditor(BoxLayout):
     def populate_profit(self):
         @mainthread
         def update(val):
-            if self.channel.chan_id == "2680915012752375808":
-                self.ids.profit.text = str(int(val) + 6)
-            else:
-                self.ids.profit.text = val
+            self.ids.profit.text = val
 
         self.ids.profit.text = ""
         Thread(
@@ -394,6 +392,13 @@ class AttributeEditor(BoxLayout):
         self.ids.md_list.add_widget(
             ItemDrawer(
                 icon="abacus", text="Attributes:", size_hint_y=None, height=dp(60)
+            )
+        )
+
+
+class ItemDrawer(OneLineIconListItem):
+    icon = StringProperty()
+"Attributes:", size_hint_y=None, height=dp(60)
             )
         )
 

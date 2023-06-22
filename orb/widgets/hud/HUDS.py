@@ -143,8 +143,8 @@ class HUDSpentFeeSummary(BorderedLabel):
 
             update_gui(
                 f"Spent:\nDay: {forex(today)}\nWeek"
-                f" {forex(this_week-8)}\nMonth:"
-                f" {forex(this_month-8)}"
+                f" {forex(this_week)}\nMonth:"
+                f" {forex(this_month)}"
             )
 
         threading.Thread(target=func).start()
@@ -594,3 +594,4 @@ class HUDBanner(AsyncImage):
     def change_banner(self, *_):
         if time.time() - self.last_motion < 60:
             self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"
+)}"
