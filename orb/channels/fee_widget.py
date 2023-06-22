@@ -48,7 +48,7 @@ class FeeWidget(Widget):
             self.circle_1 = Line(circle=(150, 150, 50))
             self.circle_2 = Line(circle=(150, 150, 50))
             self.line = Line(points=[0, 0, 0, 0])
-            Color(255 / 255.0, 164 / 255.0, 0 / 255.0, 0.4)
+            Color(255 / 255.0, 164 / 255.0, 0 / 255.0, 0.8)
             self.line_balanced_ratio = Line(points=[0, 0, 0, 0])
 
         self.label = FeeWidgetLabel(text="", color=(0.5, 1, 0.5, 0))

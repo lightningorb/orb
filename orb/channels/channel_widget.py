@@ -227,14 +227,13 @@ class ChannelWidget(Widget):
 
     def anim_htlc(self, htlc):
         col = Colour("white").rgba
-        if htlc.event_type == "UNKNOWN":
-            return
         send = htlc.event_type == "SEND"
         forward = htlc.event_type == "FORWARD"
         receive = htlc.event_type == "RECEIVE"
-        settle = htlc.event_outcome == "settle_event"
-        link_fail = htlc.event_outcome == "link_fail_event"
-        forward_fail = htlc.event_outcome == "forward_fail_event"
+        event_outcome = htlc.event_outcome if hasattr(htlc, "event_outcome") else None
+        settle = event_outcome == "settle_event"
+        link_fail = event_outcome == "link_fail_event"
+        forward_fail = event_outcome == "forward_fail_event"
         outgoing = htlc.outgoing_channel_id == self.channel.chan_id
         incoming = htlc.incoming_channel_id == self.channel.chan_id
         c = self.channel
@@ -259,14 +258,14 @@ class ChannelWidget(Widget):
         )
 
         if send and outgoing:
-            if htlc.event_outcome == "forward_fail_event":
+            if event_outcome == "forward_fail_event":
                 col = [255 / 255.0, 71 / 255.0, 71 / 255.0, 0.6]  # Colour("red").rgba
                 pending = get_pending_outgoing_event(htlc)
                 # should always be there...
                 if pending:
                     c.pending_htlcs.remove(pending)
                     c.local_balance += pending.amount
-            elif htlc.event_outcome == "forward_event":
+            elif event_outcome == "forward_event":
                 col = [71 / 255.0, 71 / 255.0, 255 / 255.0, 0.6]
                 self.anim_outgoing()
                 if settle:
@@ -291,7 +290,7 @@ class ChannelWidget(Widget):
                     )
                     c.pending_htlcs.append(phtlc)
                     c.local_balance -= out_amt_sat
-            elif htlc.event_outcome == "settle_event":
+            elif event_outcome == "settle_event":
                 col = [71 / 255.0, 71 / 255.0, 255 / 255.0, 0.6]
                 self.anim_outgoing()
                 audio_manager.play_send_settle()
@@ -300,7 +299,7 @@ class ChannelWidget(Widget):
                     c.pending_htlcs.remove(pending)
                     c.remote_balance += pending.amount
             else:
-                print(htlc.event_outcome)
+                print(event_outcome)
         elif receive and incoming:
             self.anim_incoming()
 

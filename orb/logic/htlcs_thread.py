@@ -32,7 +32,7 @@ class HTLCsThread(StoppableThreadHidden):
         @mainthread
         def mainthread_anim(cid, htlc):
             try:
-                self.inst.cn[str(cid)].l.anim_htlc(htlc)
+                self.inst.cn[cid].l.anim_htlc(htlc)
                 self.inst.ids.relative_layout.do_layout()
             except:
                 print(format_exc())
@@ -63,7 +63,7 @@ class HTLCsThread(StoppableThreadHidden):
                         for x in [htlc.outgoing_channel_id, htlc.incoming_channel_id]
                         if x
                     ]:
-                        mainthread_anim(cid, htlc)
+                        mainthread_anim(str(cid), htlc)
 
             except:
                 print("Exception getting HTLCs - let's sleep")

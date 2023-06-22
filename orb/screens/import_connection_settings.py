@@ -22,7 +22,6 @@ from orb.dialogs.restart_dialog import RestartDialog
 
 
 class ImportConnectionSettings(MDScreen):
-
     connected = False
 
     ln_settings_to_copy = [
@@ -66,7 +65,8 @@ class ImportConnectionSettings(MDScreen):
                 config_path.rename(config_path.parents[0] / "orbconnector.ini")
                 from kivy.app import App
 
-                App.get_running_app().stop()
+                if App.get_running_app():
+                    App.get_running_app().stop()
 
             rd.buttons[-1].on_release = save_and_quit
             rd.open()
