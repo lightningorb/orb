@@ -412,11 +412,12 @@ class Ln:
         """
         return self.concrete.get_node_alias(pub_key)
 
-    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
+    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat, push_sat=0):
         return self.concrete.open_channel(
             node_pubkey_string=node_pubkey_string,
             sat_per_vbyte=sat_per_vbyte,
             amount_sat=amount_sat,
+            push_sat=push_sat,
         )
 
     def __getattr__(self, name):

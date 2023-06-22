@@ -57,7 +57,6 @@ class LndREST(LndBase):
 
     @cached(ttl=5)
     def get_policy_to(self, channel_id):
-
         edge = self.get_edge(channel_id)
         if edge.get("code", 0) == 3:
             print(edge.message)
@@ -279,7 +278,13 @@ class LndREST(LndBase):
         """
         return self._get("/v1/newaddress")
 
-    def open_channel(self, node_pubkey_string, sat_per_vbyte, amount_sat):
+    def open_channel(
+        self,
+        node_pubkey_string,
+        sat_per_vbyte,
+        amount_sat,
+        push_sat=0,
+    ):
         """
         OpenChannelSync is a synchronous version of the OpenChannel
         RPC call. This call is meant to be consumed by clients to
@@ -291,7 +296,7 @@ class LndREST(LndBase):
             sat_per_vbyte=int(sat_per_vbyte),
             node_pubkey_string=node_pubkey_string,
             local_funding_amount=int(amount_sat),
-            push_sat=0,
+            push_sat=int(push_sat),
             private=False,
             spend_unconfirmed=False,
         )
