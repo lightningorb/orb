@@ -260,26 +260,27 @@ jobs:
       # Upload built documentation to an S3 bucket
       - run: aws s3 cp docs/docsbuild/ s3://lnorb/docs/ --recursive --region us-east-2
   # Build website
-  build_site:
-    # Run this job only if the repository is 'lightningorb/orb'
-    if: github.repository == 'lightningorb/orb'
-    # Use Ubuntu 20.04 as the operating system for the job
-    runs-on: ubuntu-20.04
-    env:
-      # Set the name of the operating system as an environment variable
-      os-name: ubuntu-20.04
-    steps:
-      # Checkout the code
-      - uses: actions/checkout@v2
-      # Set the VERSION environment variable to the contents of the VERSION file
-      - run: |
-          VER=$(cat VERSION)
-          echo "VERSION=$VER" >> $GITHUB_ENV
-      # Set up Node.js 16 and its dependencies
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-      # Install dependencies and build the website using NPM
-      - run: cd site && npm install && npm run build
-      # Upload built website to an S3 bucket
-      - run: aws s3 cp site/build/ s3://lnorb/ --recursive --region us-east-2
+  # build_site:
+  #   # Run this job only if the repository is 'lightningorb/orb'
+  #   if: github.repository == 'lightningorb/orb'
+  #   # Use Ubuntu 20.04 as the operating system for the job
+  #   runs-on: ubuntu-20.04
+  #   env:
+  #     # Set the name of the operating system as an environment variable
+  #     os-name: ubuntu-20.04
+  #   steps:
+  #     # Checkout the code
+  #     - uses: actions/checkout@v2
+  #     # Set the VERSION environment variable to the contents of the VERSION file
+  #     - run: |
+  #         VER=$(cat VERSION)
+  #         echo "VERSION=$VER" >> $GITHUB_ENV
+  #     # Set up Node.js 16 and its dependencies
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '16'
+  #     # Install dependencies and build the website using NPM
+  #     - run: cd site && npm install && npm run build
+  #     # Upload built website to an S3 bucket
+  #     - run: aws s3 cp site/build/ s3://lnorb/ --recursive --region us-east-2
+
