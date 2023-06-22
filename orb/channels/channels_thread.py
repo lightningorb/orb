@@ -81,7 +81,7 @@ class ChannelsThread(StoppableThreadHidden):
                             o = e.open_channel
                             if o.chan_id:
                                 self.inst.channels.get()
-                                channel = self.inst.channels.channels[o.chan_id]
+                                channel = self.inst.channels.channels[str(o.chan_id)]
                                 self.inst.add_channel(channel, update=True)
                                 channel.get_policies()
                         if hasattr(e, "pending_open_channel"):

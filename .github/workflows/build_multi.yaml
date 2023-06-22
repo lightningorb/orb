@@ -149,7 +149,7 @@ jobs:
       os-name: ${{ matrix.os }}
       # Set the graphics backend for Kivy
       KIVY_GL_BACKEND: 'angle_sdl2'
-      VERSION: 0.21.15
+      VERSION: 0.21.16
     strategy:
       # Define a matrix of operating systems to test on
       matrix:

@@ -63,7 +63,7 @@ class HTLCsThread(StoppableThreadHidden):
                         for x in [htlc.outgoing_channel_id, htlc.incoming_channel_id]
                         if x
                     ]:
-                        mainthread_anim(cid, htlc)
+                        mainthread_anim(str(cid), htlc)
 
             except:
                 print("Exception getting HTLCs - let's sleep")

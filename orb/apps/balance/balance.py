@@ -18,7 +18,7 @@ from orb.misc.plugin import Plugin
 class Balance(Plugin):
     def main(self):
         ln = Ln()
-        if ln.node_type != "LND":
+        if ln.node_type != "lnd":
             print("This app currently only works for LND")
             return
         remote, local, pending_in, pending_out, commit = 0, 0, 0, 0, 0
