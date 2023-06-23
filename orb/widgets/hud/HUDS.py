@@ -594,4 +594,3 @@ class HUDBanner(AsyncImage):
     def change_banner(self, *_):
         if time.time() - self.last_motion < 60:
             self.source = f"https://lnorb.com/api/ads/any?time={random.random()}"
-)}"
