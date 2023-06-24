@@ -3,9 +3,11 @@
 	import Testimonial from './../Components/Testimonial.svelte';
 	import Services from '../Components/Services.svelte';
 	import AboutUs from '../Components/AboutUs.svelte';
+	import Vids from '../Components/Vids.svelte';
 	import Footer from '../Components/Footer.svelte';
 	import Download from './../Components/Download.svelte';
 	import Navbar from '../Components/Navbar.svelte';
+	import Course from '../Components/Course.svelte';
 	import { Styles } from 'sveltestrap';
 	import { Modal, ModalBody, ModalHeader, Container, Row, Col } from 'sveltestrap';
 	import { Button } from 'sveltestrap';
@@ -24,7 +26,7 @@
 					<Col lg={8} class="text-white text-center">
 						<h1 class="home-title">Orb [beta]</h1>
 						<h4 class="home-small-title">The lightning network just got way more fun.</h4>
-						<Card body color="secondary" class="mb-3">curl https://install.lnorb.com | bash</Card>
+						<!-- <Card body color="secondary" class="mb-3">curl https://install.lnorb.com | bash</Card> -->
 						<p class="pt-3 home-desc mx-auto">
 							Orb is a cross-platform (Mac / Windows / OSX / IOS / Android) application for managing
 							an LND / CLN Lightning node. It features bulk payments, an editor, API, App Store,
@@ -42,7 +44,9 @@
 	</div>
 </section>
 
+<Course />
 <AboutUs />
+<Vids />
 <Services serviceData={data.SERVICE_DATA} websiteData={data.WEBSITE_DESCRIPTION} />
 <Gallery galleryData={data.GALLERY_DATA} />
 <Download />
