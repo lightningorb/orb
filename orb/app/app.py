@@ -6,6 +6,7 @@
 
 import os
 import shutil
+from traceback import format_exc
 from orb.logic.cron import Cron
 from orb.logic import cli_thread_manager
 from orb.misc.utils_no_kivy import platform, get_user_data_dir_static
@@ -117,18 +118,25 @@ class App:
             "trash",
             "download",
         ]:
-            path = pref_path(key)
+            paths = [
+                Path(App()._get_user_data_dir()) / pref(f"path.{key}"),
+                pref_path(key),
+            ]
+            for path in paths:
+                if not path.is_dir():
+                    os.makedirs(path)
+
+        paths = [
+            pref_path("cert"),
+            Path(App()._get_user_data_dir()) / pref(f"path.cert"),
+        ]
+        for path in paths:
             if not path.is_dir():
                 os.makedirs(path)
-
-        path = pref_path("cert")
-        if not path.is_dir():
-            os.makedirs(path)
-        else:
-            path = pref_path("cert")
-            if (path / "tls.cert").is_file():
-                print("Deleting cert from data dir, as it's no longer needed")
-                shutil.rmtree(path.as_posix())
+            else:
+                if (path / "tls.cert").is_file():
+                    print("Deleting cert from data dir, as it's no longer needed")
+                    shutil.rmtree(path.as_posix())
 
     def create_tables(self):
         from orb.store import db_create_tables

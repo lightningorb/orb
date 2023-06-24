@@ -41,11 +41,6 @@ class MainLayout(BoxLayout):
         self.super = []
         self.shift = False
 
-        if ios:
-            self.ids.app_store_login.disabled = True
-            self.ids.app_store.disabled = True
-            self.ids.upload_app.disabled = True
-
         @mainthread
         def delayed():
             app = App.get_running_app()
