@@ -39,7 +39,7 @@ class ConnectionSettings(MDScreen):
 
     @property
     def node_type(self):
-        return self.node_settings["host.type"]
+        return self.node_settings.get("host.type", "lnd")
 
     def on_enter(self, *args):
         self.connected = False

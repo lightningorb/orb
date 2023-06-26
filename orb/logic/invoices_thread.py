@@ -6,7 +6,7 @@
 
 import threading
 from time import sleep
-from traceback import print_exc
+from traceback import format_exc
 
 from kivy.app import App
 from kivy.clock import mainthread
@@ -42,7 +42,7 @@ class InvoicesThread(StoppableThreadHidden):
                     if self.stopped():
                         return
                     if e.state == "SETTLED":
-                        chan_id = e.htlcs[0].chan_id
+                        chan_id = str(e.htlcs[0].chan_id)
                         self.inst.channels.channels[chan_id].local_balance += int(
                             e.amt_paid_msat / 1000
                         )
@@ -55,5 +55,5 @@ class InvoicesThread(StoppableThreadHidden):
 
             except:
                 print("Exception getting Invoices - let's sleep")
-                print_exc()
+                print(format_exc())
                 sleep(10)
