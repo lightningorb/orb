@@ -1,0 +1,31 @@
+One of the primary purposes of a lightning node is to help forward BTC on the lightning network. For this to take place, your node requires:
+
+1. enough channels to well connected nodes with high traffic.
+
+2. competitive fees.
+
+3. balanced channels.
+
+On the left hand side of Orb's interface, you can see that our global ratio is zero point nine eight. In other words, our node is ninety eight percent outbound, and only two percent inbound.
+
+Our total outbound (or local balance) is roughly eight hundred and ninety two thousand satoshis. Our total inbound (or remote balance) is twenty thousand satoshis. So our total capacity is eight hundred and ninety two plus twenty which is nine hundred and twelve thousand satoshis.
+
+Since our total capacity is nearly one million satoshis, and we are nearly all outbound, let's open another two half million satoshi channels that are all inbound. But how can we open channels that are inbound?
+
+Well, when opening channels, we have the option to "push" satoshis to our peers. Pushing means we are willingly giving those satoshis away to our peer. Indeed one way of gaining inbound liquidity in Lightning is to find a trusted peer, and simply opening a channel with them whilst giving away satoshis to them, then asking for those satoshis back on-chain.
+
+If this were a main net node, we might head over to t dot em e slash plebnet on telegram, and request for an inbound channel, i.e for someone to open an inbound channel to our node, or for a submarine swap. There are also a multitude of other ways to gain inbound; please find the link in the description of this video.
+
+But since this is a testnet node, and testnet satoshis will never have any value, we can simply perform a "push open", to give away those satoshis to the network.
+
+Look for two well connected nodes on one ml. In my case I'll use pouch dot ph and nodeless dot io. 
+
+Copy the address, connect, then open a half million satoshis channel whilst pushing four hundred and ninety satoshis.
+
+Repeat the operation for the second node. If this were main net, the last step would be to send those peers an on-chain address and request for four hundred and ninety thousand satoshis back, from each respectively, to complete the submarine swap.
+
+In the heads up display on the left side of Orb, our global ratio is now close to 0.5; in other words our node now has the same amount of inbound and outbound.
+
+As a final step, set the fees on those channels to a prohibitively high PPM, since those channels are currently depleted. In our next video, we'll look at automated rebalancing, to balance our node without having to carry out rebalancing my hand.
+
+Thanks for your attention, and I'll see you in our next video.

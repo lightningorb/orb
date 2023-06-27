@@ -1,0 +1,42 @@
+In this tutorial, we'll learn about batch opening channels. Opening channels one by one is a rather time-consuming and expensive process. Remember that the only time we make on-chain transactions is during channel opens, and channel closes. So opening channels one by one implies one on-chain transaction for each channel open.
+
+For this reason, LND and Core Lightning both allow us to batch open channels: to open multiple channels in a single on-chain transaction. This allows us to open channels a lot faster, and cheaply.
+
+First, in Orb, click on Channels then Batch Open. Next, we'll head over to one ml dot com slash testnet, and click on 'most connected nodes'. Simply copy up to ten node pubkeys, and paste them in the Batch Open dialog.
+
+Next, in the "Total amount in satoshis" field, change the value to one million. Click 'calculate amounts'. As you can see, Orb set the input section of the ingest tab to contain lines of pubkeys, followed by commas, and the amount for each channel evenly divided by the number of nodes to open to, i.e one hundred thousand satoshis per channel.
+
+Click 'ingest'. This tells Orb to remember the list above. Next click "connect". Orb now looks up all available connection to each node, and connects to all online nodes. Next click on the 'confirm' tab. This shows you the aliases of each node as well as the amounts.
+
+Next click on the 'open' tab, and at the bottom of the dialog, click 'open'. This tells your node to perform the batch open operation. The result of the operation will then appear in the tab.
+
+At this point, it's quite possible that a failure occurred, in which case the two most likely reasons are:
+
+1. A node you're trying to open to is not online.
+
+2. A node you're trying to open to expects a channel capacity greater than one hundred thousand satoshis.
+
+If such a failure took place, then take note of the first 4 characters of the pubkey, then switch back to the ingest tab. Remove the offending line and click ingest again. Return to the 'open' tab and click 'open' once again. Repeat this procedure until all problematic nodes have been removed. Eventually the batch open operation should succeed.
+
+Upon success, the open tab contains the pending channels with their output indices and transaction eyedeez. Notice the transaction ID is the same for each channel, that is because they were all opened in the same on-chain transaction.
+
+Now notice that in the top left of Orb, we can see that 'pending open' is roughly eight million satoshis. That is because we are opening eight channels in total.
+
+It may take some time for the channel opens to be fully confirmed. Once confirmed, your newly opened channels appear in Orb's main display area.
+
+Congratulations, you have taken an important step towards having a well connected node.
+
+Please note that with a main net node, blindly opening channels to new nodes, or well connected nodes is not a good strategy. A better strategy is to open channels to nodes you use often.
+
+Orb provides a streamlined way of doing so using the 'Rankings' dialog, which provides you with a list of the nodes you use often, ranked by how successful they are at forwarding your payments. We'll cover this workflow in a future video.
+
+Thanks for your attention.
+
+
+
+
+
+
+
+
+
