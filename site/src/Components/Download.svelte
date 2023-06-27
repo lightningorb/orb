@@ -65,14 +65,14 @@
 						</Col>
 					</Row>
 					<Row class="justify-content-center">
-						<Col lg={{ size: 3 }} class="text-white text-center">
+<!-- 						<Col lg={{ size: 3 }} class="text-white text-center">
 							<a href="https://play.google.com/store/apps/details?id=com.lnorb.orb">
 								<img
 									style="width: 100px"
 									src="https://lnorb.s3.us-east-2.amazonaws.com/images/android.png"
 								/>
 							</a>
-						</Col>
+						</Col> -->
 						<Col lg={{ size: 3 }} class="text-white text-center">
 							<a href="https://testflight.apple.com/join/i8wfm9TH">
 								<img
@@ -87,7 +87,7 @@
 					<br />
 					<Row class="justify-content-center">
 						<Col lg={{ size: 3 }} class="text-white text-center">
-							<p>We've moved downloads to reproducible Github Releases:</p>
+							<p>We've moved the Android / Linux / Windows / OSX downloads to reproducible Github Releases:</p>
 							<br />
 							<a href="https://github.com/lightningorb/orb/releases">
 								<img
