@@ -9,7 +9,6 @@
 #:import IngestInvoices orb.dialogs.ingest_invoices.IngestInvoices
 #:import GenerateInvoice orb.dialogs.generate_invoice.GenerateInvoice
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
-#:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannel orb.dialogs.open_channel.OpenChannel
@@ -123,13 +122,6 @@
                             text: "Pay LNURL"
                             on_release: app_menu.close_all()
                             on_press:  PayLNURLDialog().open()
-                ContextMenuTextItem:
-                    text: "Swap"
-                    ContextMenu:
-                        ContextMenuTextItem:
-                            text: "Deezy.io"
-                            on_release: app_menu.close_all()
-                            on_press: DeezySwapDialog().open()
                 ContextMenuTextItem:
                     text: "Invoices"
                     ContextMenu:

@@ -71,6 +71,7 @@ class App:
 
         App.ln = ln
         self.make_dirs()
+        self.make_dirs_2()
         self.create_tables()
         self.create_json_store()
         self.cron = Cron()
@@ -137,6 +138,37 @@ class App:
                 if (path / "tls.cert").is_file():
                     print("Deleting cert from data dir, as it's no longer needed")
                     shutil.rmtree(path.as_posix())
+
+
+    def make_dirs_2(self):
+        """
+        Create data directories if required
+        """
+        for key in [
+            "video",
+            "yaml",
+            "json",
+            "db",
+            "app",
+            "backup",
+            "export",
+            "app_archive",
+            "trash",
+            "download",
+        ]:
+            path = Path(App()._get_user_data_dir()) / pref(f"path.{key}")
+            if not path.is_dir():
+                os.makedirs(path)
+
+        path = Path(App()._get_user_data_dir()) / pref(f"path.cert")
+        if not path.is_dir():
+            os.makedirs(path)
+        else:
+            path = Path(App()._get_user_data_dir()) / pref(f"path.cert")
+            if (path / "tls.cert").is_file():
+                print("Deleting cert from data dir, as it's no longer needed")
+                shutil.rmtree(path.as_posix())
+
 
     def create_tables(self):
         from orb.store import db_create_tables

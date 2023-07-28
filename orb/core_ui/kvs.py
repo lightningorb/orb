@@ -985,70 +985,6 @@ Builder.load_string('''
 ''')
 Builder.load_string('''
 #:import dp kivy.metrics.dp
-#:import Window kivy.core.window.Window
-#:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
-#:import IngestInvoices orb.dialogs.ingest_invoices.ingest_invoices.IngestInvoices
-
-<SpinnerOption>:
-    size_hint: None, None
-    size: dp(400), dp(25)
-
-<DeezySwapDialog>:
-    title: 'Deezy Swap'
-    size: min(Window.size[0], dp(400)), min(Window.size[1], dp(300))
-    background_color: .6, .6, .8, .9
-    overlay_color: 0, 0, 0, 0
-    size_hint: [None, None]
-    BoxLayout:
-        orientation: 'vertical'
-        Splitter:
-            horizontal: True
-        MDTextField:
-            id: amount_sats
-            text: '100_000'
-            helper_text: 'Sat Amount'
-            helper_text_mode: "persistent"
-            on_text: root.estimate_cost(amount_sats.text)
-        MDTextField:
-            id: cost_estimate
-            text: '10_000'
-            helper_text: 'Cost Estimate'
-            helper_text_mode: "persistent"
-        MDRaisedButton:
-            id: generate_invoice
-            text: 'Generate Invoice'
-            font_size: '12sp'
-            on_release: root.generate_invoice() 
-            size_hint_y: None
-            size_hint_x: 1
-            height: dp(40)
-        Splitter:
-            horizontal: True
-            size_hint_y: None
-            height: dp(5)
-        MDRaisedButton:
-            id: view_invoices
-            text: 'View Invoices'
-            font_size: '12sp'
-            on_release: IngestInvoices().open()
-            size_hint_y: None
-            size_hint_x: 1
-            height: dp(40)
-        Splitter:
-            horizontal: True
-            size_hint_y: None
-            height: dp(5)
-        MDRaisedButton:
-            id: open_pay
-            text: 'Open Pay Dialog'
-            font_size: '12sp'
-            on_release: PayInvoicesDialog().open()
-            size_hint_y: None
-            size_hint_x: 1
-            height: dp(40)
-''')
-Builder.load_string('''
-#:import dp kivy.metrics.dp
 #:import os os
 #:import Factory kivy.factory.Factory
 
@@ -2073,7 +2009,6 @@ Builder.load_string('''
 #:import IngestInvoices orb.dialogs.ingest_invoices.IngestInvoices
 #:import GenerateInvoice orb.dialogs.generate_invoice.GenerateInvoice
 #:import PayInvoicesDialog orb.dialogs.pay_dialogs.pay_invoices_dialog.PayInvoicesDialog
-#:import DeezySwapDialog orb.dialogs.swap_dialogs.deezy_swap.DeezySwapDialog
 #:import PayLNURLDialog orb.dialogs.pay_dialogs.pay_lnurl_dialog.PayLNURLDialog
 #:import ConnectScreen orb.screens.connect_screen.ConnectScreen
 #:import OpenChannel orb.dialogs.open_channel.OpenChannel
@@ -2187,13 +2122,6 @@ Builder.load_string('''
                             text: "Pay LNURL"
                             on_release: app_menu.close_all()
                             on_press:  PayLNURLDialog().open()
-                ContextMenuTextItem:
-                    text: "Swap"
-                    ContextMenu:
-                        ContextMenuTextItem:
-                            text: "Deezy.io"
-                            on_release: app_menu.close_all()
-                            on_press: DeezySwapDialog().open()
                 ContextMenuTextItem:
                     text: "Invoices"
                     ContextMenu:

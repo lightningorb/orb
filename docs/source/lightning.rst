@@ -20,7 +20,6 @@ Click `close` and restart Orb.
    invoice_ingestion
    pay
    pay_lnurl
-   deezy_swap
    rebalance
    connect
    open_channel
