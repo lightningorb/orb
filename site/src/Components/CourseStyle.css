@@ -1,0 +1,20 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.laptop-frame {
+    background-image: url('https://static.wixstatic.com/media/96674d_2fcf62dc94f24e5a96f7d341b006c492~mv2.png/v1/fill/w_1260,h_755,al_c,q_90,enc_auto/96674d_2fcf62dc94f24e5a96f7d341b006c492~mv2.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 640px;
+    height: 400px;
+    padding-top: 35px;
+    padding-left: 27px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+

@@ -48,9 +48,9 @@
 			latest = versions.versions[0];
 		}
 	}
-	onMount(() => {
-		get_versions();
-	});
+	// onMount(() => {
+		// get_versions();
+	// });
 </script>
 
 <div>
@@ -74,10 +74,10 @@
 							</a>
 						</Col> -->
 						<Col lg={{ size: 3 }} class="text-white text-center">
-							<a href="https://testflight.apple.com/join/i8wfm9TH">
+							<a href="https://apps.apple.com/gb/app/lightning-orb/id1603774142">
 								<img
-									style="width: 50px;  position: relative; top: 8px;"
-									src="https://lnorb.s3.us-east-2.amazonaws.com/images/testflight.png"
+									style="width: 150px;  position: relative; top: 8px;"
+									src="https://lnorb.s3.us-east-2.amazonaws.com/images/apple-store-icon-png-8.png"
 								/>
 							</a>
 							<p class="pt-3 home-desc mx-auto" />
@@ -87,7 +87,7 @@
 					<br />
 					<Row class="justify-content-center">
 						<Col lg={{ size: 3 }} class="text-white text-center">
-							<p>We've moved the Android / Linux / Windows / OSX downloads to reproducible Github Releases:</p>
+							<p>We've moved the Android / Linux / Windows / OSX to reproducible Github Releases:</p>
 							<br />
 							<a href="https://github.com/lightningorb/orb/releases">
 								<img

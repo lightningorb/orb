@@ -2,7 +2,7 @@ name: build all platforms
 # Trigger the workflow when a push event happens on the versioning branch
 on:
   push:
-    branches: [ build_multi ]
+    branches: [ build_multi, site ]
 # Define environment variables
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.S3_KEY }}
@@ -11,6 +11,7 @@ env:
 jobs:
   # Create a release
   create_release:
+    if: github.ref == 'refs/heads/build_multi'
     # Define output variables
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -39,6 +40,7 @@ jobs:
           prerelease: false
   # Build the macOS release
   build_macosx:
+    if: github.ref == 'refs/heads/build_multi'
     # Allow the job to write to the repository
     permissions: write-all
     # Require the 'create_release' job to complete before running this job
@@ -91,6 +93,7 @@ jobs:
           asset_content_type: application/zip
   # Build the Linux release
   build_linux:
+    if: github.ref == 'refs/heads/build_multi'
     # Allow the job to write to the repository
     permissions: write-all
     # Require the 'create_release' job to complete before running this job
@@ -138,6 +141,7 @@ jobs:
           asset_content_type: application/zip
   # Build the Windows release
   build_windows:
+    if: github.ref == 'refs/heads/build_multi'
     # Allow the job to write to the repository
     permissions: write-all
     # Require the 'create_release' job to complete before running this job
@@ -189,6 +193,7 @@ jobs:
           asset_content_type: application/zip
   # Build the Android APK
   build_android:
+    if: github.ref == 'refs/heads/build_multi'
     # Allow the job to write to the repository
     permissions: write-all
     # Require the 'create_release' job to complete before running this job
@@ -233,7 +238,7 @@ jobs:
   # Build documentation
   build_docs:
     # Run this job only if the repository is 'lightningorb/orb'
-    if: github.repository == 'lightningorb/orb'
+    if: github.repository == 'lightningorb/orb' && github.ref == 'refs/heads/build_multi'
     # Use Ubuntu 20.04 as the operating system for the job
     runs-on: ubuntu-20.04
     env:
@@ -262,7 +267,7 @@ jobs:
   # Build website
   build_site:
     # Run this job only if the repository is 'lightningorb/orb'
-    if: github.repository == 'lightningorb/orb'
+    if: github.repository == 'lightningorb/orb' && (github.ref == 'refs/heads/site' || github.ref == 'refs/heads/build_multi')
     # Use Ubuntu 20.04 as the operating system for the job
     runs-on: ubuntu-20.04
     env:
