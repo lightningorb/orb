@@ -74,7 +74,10 @@
             document.body.appendChild(res);
             res.onload = () => {
                 const videojs = window.videojs;
-                player = videojs('my-video');
+                player = videojs('my-video', {height: Math.min(innerHeight-30, 320), width: Math.min(innerWidth-30, 490)});
+                player.controlBar.fullscreenToggle.on = function() {
+                    console.log("fullscreen");
+                }
                 player.updateSrc(getSources(selectedVideo));
             };
         };
@@ -82,7 +85,6 @@
 
     afterUpdate(() => {
         if(player) {
-            console.log(getSources(selectedVideo))
             player.updateSrc(getSources(selectedVideo));
             window.history.pushState({}, '', `?video=${selectedVideo}&large=${large}`);
         }
