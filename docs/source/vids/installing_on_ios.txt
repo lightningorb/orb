@@ -1,0 +1,3 @@
+To run Orb on iOS, follow these steps: Visit LN Orb dot com using your iOS device. Click on the "Download" button. Tap on the App Store icon that appears. When prompted, select "Open App Store." In the App Store, tap on the "Get" button, and then select "Open." 
+
+To see the full list of compatible devices, click on the Compatibility card. Orb will run on any iPhone device running iOS 9.0 or later. It is also compatible with iPads running iPadOS 9.0 or later, and with the iPod Touch 6th and 7th generation running iOS 9.0 or later. If you are using a MacBook with macOS 11.0 or later and an Apple M1 chip, the same link will work for you as well. Once the app is downloaded, simply open it, and you're ready to use Orb.
