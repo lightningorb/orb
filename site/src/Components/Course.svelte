@@ -59,13 +59,6 @@
         document.body.appendChild(script);
     
         script.onload = () => {
-            videoElement.setAttribute('data-setup', JSON.stringify({
-                plugins: {
-                    videoJsResolutionSwitcher: {
-                        default: "high"
-                    }
-                }
-            }));
             videoElement.controls = true;
             videoElement.preload = 'auto';
             const res = document.createElement('script');
@@ -73,6 +66,13 @@
             res.async = true;
             document.body.appendChild(res);
             res.onload = () => {
+                videoElement.setAttribute('data-setup', JSON.stringify({
+                    plugins: {
+                        videoJsResolutionSwitcher: {
+                            default: "high"
+                        }
+                    }
+                }));
                 const videojs = window.videojs;
                 player = videojs('my-video', {height: Math.min(innerHeight-30, 320), width: Math.min(innerWidth-30, 490)});
                 player.controlBar.fullscreenToggle.on = function() {
