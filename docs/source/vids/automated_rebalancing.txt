@@ -1,0 +1,38 @@
+In this tutorial, we'll learn how to go from a perfectly imbalanced node to a perfecly balanced node, without having to manually carry out rebalances one by one.
+
+Let's refresh our memories about our node. Going clockwise, our channel capacities are all one hundred thousand satoshis. voltage-test's capacity is twenty thousand satoshis, then nodeless and pouch are five hundred thousand satoshis each.
+
+Similarly to carrying out manual rebalances, we'll want to think about which channels are sending satoshis, and which channels are receiving satoshis. We'll call those our "from" channels and our "to" channels.
+
+In Orb, click on "Lightning", "Channels", "Highlighter". This dialog enables us to highlight channels that match certain criteria. 
+
+Type in "c dot ratio, space, less than, space, c dot balanced underscore ratio". This highlights the channels whose ratios, i.e their outbound divided by their capacities, are smaller than their balanced ratios, i.e where Orb believes your channel liquidity should be.
+
+In other words, this highlights our "to" channels. Our "destination" channels for the rebalances.
+
+Next, in the same dialog, type in "c dot ratio, space, greater than, space, c dot balanced underscore ratio". This highlights the channels whose ratios, i.e their outbound divided by their capacities, are greater than their balanced ratios.
+
+In other words, this highlights our "from" channels. Our "source" channels.
+
+By typing in simple python expressions, the channel highlighter enables you to unearth and directly highlight vital channel information, such as which channels are out of balance, which channels are profitable etc.. It uses what is known as a DSL, a domain specific language. Do not fear these expressions as they are no more complex than the simple expressions you'd type into excel.
+
+Next, click on "Apps", "auto", "balance". This opens up the automated rebalancing dialog. Delete existing rules, and click on the icon at the bottom left to add a new rule. Name the rule "high outbound to low outbound". Set the PPM to five hundred, and the amount to ten thousand.
+
+In the "from" rule type "channel", "dot", "ratio", "space", "greater than", "space", "channel", "dot", "balanced", "underscore", "ratio".
+
+Copy and paste the expression into the "To rule" field, and change the "greater than" sign for a "smaller than" sign.
+
+Next, at the bottom left, click on the third icon to start rebalancing. In the heads up display at the bottom left of Orb, you'll notice a capital "R". This is the Rebalancer's process. You'll also notice capital As. These are the individual rebalancing processes since currently Orb will allow up to 5 rebalancing processes to run concurrently.
+
+You should see the rebalances take place in realtime. Kill the rebalances by clicking on them as we'll want to create a slightly more sophisticated rule.
+
+
+The revised "from" rule subtracts the amount we are rebalancing from our channel selection criteria. This is to prevent a scenario where the rebalancer would overshoot, i.e a scenario where a "high outbound" channel would, after rebalancing, then qualify as a "low outbound" channel.
+
+This amended rule adds a safety margin to our channel selection criteria.
+
+Once you have tested this new rule, input it into the automated rebalancer. In the "from" rule we're subtracting the amount we are sending from the ratio. In the "to" rule, we are adding the amount we are sending.
+
+Once you are done typing in the new rules, and have double checked them for any typos, click the third icon at the bottom left of the dialog to resume automated rebalancing.
+
+
