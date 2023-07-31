@@ -74,10 +74,9 @@
                     }
                 }));
                 const videojs = window.videojs;
-                player = videojs('my-video', {height: Math.min(innerHeight-30, 320), width: Math.min(innerWidth-30, 490)});
-                player.controlBar.fullscreenToggle.on = function() {
-                    console.log("fullscreen");
-                }
+                const height = large ? innerHeight : Math.min(innerHeight-30, 320);
+                const width = large ? innerWidth : Math.min(innerWidth-30, 490);
+                player = videojs('my-video', {height: height, width: width});
                 player.updateSrc(getSources(selectedVideo));
             };
         };
